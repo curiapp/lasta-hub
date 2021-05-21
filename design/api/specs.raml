@@ -1,0 +1,1052 @@
+#%RAML 0.8
+title: Curriculum Development
+version: v1
+protocols: ["HTTPS"]
+baseUri: https://196.216.167.190/api
+
+/short-summary:
+    displayName: Quick overview of programmes
+    description: provide a short summary of recent programmes. The response should contain
+                the latest 5 in-progress, due for review and recently approved programmes
+    get:
+        description: Return the 5 in-progress, due for review and recently approved programmes
+        responses:
+            404:
+                description: Data not found
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "Programme Data Not Found"
+                            }
+            200:
+                body:
+                    application/json:
+                        example: |
+                          {
+                            "in-progress": [
+                                {
+                                    "faculty": "Computing and Informatics",
+                                    "department": "Computer Science",
+                                    "programme": "Data Science"
+                                }
+                            ],
+                            "due-for-review": [
+                                {
+                                    "faculty": "Engineering",
+                                    "department": "Spatial Sciences",
+                                    "programme": "Radio Astronomy"
+                                }
+                            ],
+                            "recently-approved": [
+                                {
+                                    "faculty": "Humanities",
+                                    "department": "Linguistic",
+                                    "programme": "Semiotics in Languages"
+                                }
+                            ]
+                          }
+
+/need-analysis:
+    /start:
+        displayName: Start Need Analysis
+        description: Start the process of a curriculum development by analyzing the needs
+        post:
+            description: Start the engine for a curriculum development workflow
+            body:
+                application/json:
+                    example: |
+                        {
+                            "facultyCode": "fci",
+                            "departmentCode": "CSI",
+                            "programme": {
+                                "renewal": "false",
+                                "label": "Complex Systems"
+                            }
+                        }
+            responses:
+                201:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "programmeId": "aa346774-dadaeff90-34390089"
+                                }
+                400:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /consult:
+        displayName: Consultations
+        description: Consult with organizations during the need analysis process
+        post:
+            description: Record information about all consultations conducted during need analysis
+            body:
+                application/json:
+                    example: |
+                        {
+                            "date": "2016-06-14",
+                            "organization": {
+                                    "designation": "NamPower",
+                                    "address": "5 Storch Street"
+                            },
+                            "attendance": ["Peter St James", "Wilson Ekandjo"],
+                            "minutes-file-name": "relative/file/path",
+                            "programmeId": "aa346774-dadaeff90-34390089"
+                        }
+            responses:
+                201:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /conclude:
+        displayName: Need Analysis Results
+        description: Report on the results of the various consultations during the need analysis
+        post:
+            description: Report the final decision of the need analysis process
+            body:
+                application/json:
+                    example: |
+                        {
+                            "decision": "proceed",
+                            "programmeId": "aa346774-dadaeff90-34390089"
+                        }
+            responses:
+                201:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+/curriculum-development:
+    /bos:
+        /submit:
+            displayName: Submit to BOS
+            description: Seeking authorization from BOS to develop the curriculum
+            post:
+                description: Putting on record the submission to BOS for curriculum development
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "meetingDate": "2016-07-12",
+                                "programmeId": "aa346774-dadaeff90-34390089"
+                            }
+                responses:
+                    201:
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+        /amend:
+            displayName: BOS Amendment
+            description: Recording amendment from BOS
+            post:
+                description: |
+                    Submit all amendments formulated by BOS
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "meetingDate": "2016-07-12",
+                                "programmeId": "aa346774-dadaeff90-34390089",
+                                "amendments": ["issue one", "issue two"]
+                            }
+                responses:
+                    201:
+                        description: |
+                            Successfully recorded the amendments
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error in processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error during request processing
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error§"
+                                    }
+        /authorize:
+            displayName: BOS Authorization
+            description: Record BOS authorization to develop the curriculum
+            post:
+                description: |
+                    Submit BOS authorization to develop the curriculum
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "meetingDate": "2016-07-12",
+                                "programmeId": "aa346774-dadaeff90-34390089"
+                            }
+                responses:
+                    201:
+                        description: |
+                            Succesfully recorded authorization
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error in processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal Error in processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+    /senate:
+        /submit:
+            displayName: Submit to Senate
+            description: Seeking authorization from Senate to develop the curriculum
+            post:
+                description: |
+                    Adding the submission to senate for authorization
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "meetintDate": "2016-06-20",
+                                "programmeId": "aa346774-dadaeff90-34390089"
+                            }
+                responses:
+                    201:
+                        description: |
+                            Succesfully recorded the senate meeting for authorization
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal error"
+                                    }
+        /amend:
+            displayName: Senate Amendment
+            description: Recording amendments from Senate
+            post:
+                description: Adding amendments from the senate during authorization process
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "meetingDate": "2016-07-12",
+                                "programmeId": "aa346774-dadaeff90-34390089",
+                                "amendments": ["issue one", "issue two"]
+                            }
+                responses:
+                    201:
+                        description: Successfully recorded the amendments made during Senate session
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad request"
+                                    }
+                    500:
+                        description: Internal error while processing the senate amendment request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal error"
+                                    }
+        /authorize:
+            displayName: Senate Authorization
+            description: Record Senate authorization to develop the curriculum
+            post:
+                description: Submit Senate authorization to develop the curriculum
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "meetingDate": "2016-07-12",
+                                "programmeId": "aa346774-dadaeff90-34390089"
+                            }
+                responses:
+                    201:
+                        description: Successfully recorded Senate authorization to develop the curriculum
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal error"
+                                    }
+    /appoint:
+        /cdc:
+            displayName: CDC appointment
+            description: Appoint members of the curriculum development committee
+            post:
+                description: |
+                    Submit the list of faculty members appointed to the CDC
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "programmeId": "aa346774-dadaeff90-34390089",
+                                "members":[
+                                    {
+                                        "firstName": "Phius",
+                                        "lastName": "Cloute",
+                                        "emailAddresss": "pcloute@nust.na",
+                                        "cellphone": "0813566629",
+                                        "extension": "2189"
+                                    }
+                                ]
+                            }
+                responses:
+                    201:
+                        description: |
+                            Successfully added CDC members
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+        /pac:
+            displayName: "PAC Appointment"
+            description: "Appoint members of the PAC"
+            post:
+                description: Submit the list of members to the programme advisory committee
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "programmeId": "aa346774-dadaeff90-34390089",
+                                "members":[
+                                    {
+                                        "firstName": "Justin",
+                                        "lastName": "Coetzee",
+                                        "emailAddresss": "jcoetzee@gmail.com",
+                                        "cellphone": "0813569929"
+                                    }
+                                ]
+                            }
+                responses:
+                    201:
+                        description: Successfully added the list of members to PAC
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+    /draft:
+        /revise:
+            displayName: Draft Revision
+            description: Revise current version of the draft
+            post:
+                description: |
+                    Submit contributions as a new version of the draft of the curriculum
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "programmeId": "aa346774-dadaeff90-34390089",
+                                "fileNames": ["file1/to/upload", "file2/to/upload"]
+                            }
+                responses:
+                    201:
+                        description: |
+                            Succesfully added the new contributions
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+        /submit:
+            displayName: Draft Submission
+            description: Submit a revised version of the curriculum draft
+            post:
+                description: Compile a revised version of the curriculum and submit it to PDU
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "programmeId": "aa346774-dadaeff90-34390089"
+                            }
+                responses:
+                    201:
+                        description: Successfully compiled the revised draft and submitted to PDU
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+        /validate:
+            displayName: Validate Draft
+            description: Validate the current version of a curriculum draft
+            post:
+                description: Allow the current version of the curriculum draft to proceed for consultations
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "programmeId": "aa346774-dadaeff90-34390089"
+                            }
+                responses:
+                    201:
+                        description: Successfully validate the the curriculum draft
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "result": "ok"
+                                    }
+                    400:
+                        description: Error processing the form data
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Bad Request"
+                                    }
+                    500:
+                        description: Internal error while processing the request
+                        body:
+                            application/json:
+                                example: |
+                                    {
+                                        "message": "Internal Error"
+                                    }
+/consultations:
+    /start:
+        displayName: Begin Consultations
+        description: Start the consultation rounds
+        post:
+            description: Move the workflow into the consultation stage
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089"
+                        }
+            responses:
+                201:
+                    description: Successfully started the consultation rounds
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Interanal error while processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /end:
+        displayName: End Consultations
+        description: End the consultation rounds
+        post:
+            description: End the consultation rounds
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089"
+                        }
+            responses:
+                201:
+                    description: Successfully ended the consultation rounds
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error while processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /benchmark:
+        displayName: Benchmark
+        description: Submit national and international benchmark results
+        post:
+            description: |
+                Submit the results of a benchmark
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089",
+                            "scope": "national",
+                            "scorecard": [{
+                                "criterion": "Name of criterion",
+                                "ourScore": "value of our score",
+                                "scores": [{
+                                    "institutionName": "name of Institution",
+                                    "institutionScore": "value"
+                                }]
+                            }]
+                        }
+            responses:
+                201:
+                    description: |
+                        Succesfully added benchmarking data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error in processing form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error while processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /submit:
+        displayName: Consultation Documents
+        description: Submit documents produced or exchanged during the consultation stage
+        post:
+            description: |
+                Create or archive the documents created during consultation
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089",
+                            "type": "minutes",
+                            "date": "2016-06-17"
+                        }
+
+            responses:
+                201:
+                    description: |
+                        Succesfully created or archived the support documents during consultations
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error in processing form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error while processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+/review:
+    /amend:
+        displayName: Reviewer Amendments
+        description: Submit amendments during review process
+        post:
+            description: Suggest corrections to the curriculum draft during review
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089",
+                            "reviewUnit": "TLU",
+                            "amendments": ["comment 1", "comment 2"]
+                        }
+            responses:
+                201:
+                    description: Successfully captured the amendments during the review process
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error during request processing
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /recommend:
+        displayName: Reviewer Recommendations
+        description: Provide a recomendation to the curriculum
+        post:
+            description: Finalize the review process within a unit with a recommendation
+            body:
+                application/json:
+                    example: |
+                        {
+                        "programmeId": "aa346774-dadaeff90-34390089",
+                        "reviewUnit": "TLU"
+                        }
+            responses:
+                201:
+                    description: Successfully recorded a unit recommendation
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error while processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+/approval:
+    displayName: BoS or Senate Approval
+    description: Record the approval of either the BOS or Senate
+    post:
+        description: Record approval for the curriculum
+        body:
+            application/json:
+                example: |
+                    {
+                    "programmeId": "aa346774-dadaeff90-34390089"
+                    }
+        responses:
+            201:
+                description: Successfully recorded the approval of either BOS or Senate
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "result": "ok"
+                            }
+            400:
+                description: Error processing form data
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "Bad Request"
+                            }
+            500:
+                description: Internal error while processing the request
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "Internal Error"
+                            }
+/nqa:
+    /submit:
+        displayName: Submit to NQA
+        description: Submit the curriculum draft to NQA
+        post:
+            description: Record the submission of the curriculum draft to NQA
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089"
+                        }
+            responses:
+                201:
+                    description: Successfully recorded the submission of curriculum to NQA
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing the form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /amend:
+        displayName: Amendments from NQA
+        description: Save the changes suggested by NQA
+        post:
+            description: Keep record of all amendments suggested by NQA
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089",
+                            "amendments": ["amendment 1", "amendment 2"]
+                        }
+            responses:
+                201:
+                    description: Successfully recorded amendments from NQA
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing the form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+    /validate:
+        displayName: NQA Validation
+        description: Record approval from NQA
+        post:
+            description: Save NQA's approval of the curriculum
+            body:
+                application/json:
+                    example: |
+                        {
+                            "programmeId": "aa346774-dadaeff90-34390089"
+                        }
+            responses:
+                201:
+                    description: Successfully recorded the NQA approval of the curriculum
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "result": "ok"
+                                }
+                400:
+                    description: Error processing the form data
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Bad Request"
+                                }
+                500:
+                    description: Internal error processing the request
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "Internal Error"
+                                }
+/users:
+    displayName: User Management
+    description: Manage users and the functionality they have access to
+    post:
+        description: Create a new user
+        body:
+            application/json:
+                example: |
+                    {
+                        "username": "lappie",
+                        "password": "ken-a2245",
+                        "firstName": "Andre",
+                        "lastName": "Jean Louis",
+                        "profile": "manager",
+                        "institution": {
+                                "name": "Querts Inc",
+                                "address": "1 Quai Annoline"
+                            }
+                    }
+        responses:
+            201:
+                description: Successfully created a new user
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "result": "ok"
+                            }
+            400:
+                description: Error processing the form data
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "Bad Request"
+                            }
+            500:
+                description: Internal error while processing the request
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "Internal Error"
+                            }
+/summary:
+    displayName: Summary
+    description: Provide summary about the programmes
+    get:
+        description: List all currently running programmes and their statistics
+        queryParameters:
+            programmeId:
+                description: The unique identifier of a programme
+                type: string
+                example: "aa346774-dadaeff90-34390089"
+            withStatistics:
+                description: Indicate whether the result should contain statistics
+                type: boolean
+                example: true
+        responses:
+            200:
+                description: Successfully retrieved information about the programmes
+                body:
+                    application/json:
+                        example: |
+                            {}
+            404:
+                description: Data not found
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "Programme Data Not Found"
+                            }

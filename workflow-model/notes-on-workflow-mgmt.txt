@@ -1,0 +1,13 @@
+a workflow can be represented as a json object with ther following content:
+1 - descriptors, to provide a general description of the workflow or the programme;
+2 - attributes to further indicate which programme the workflow is designed for. These attributesd could include the faculty, department, etc.
+3 - an initial state, called init
+4 - a final state, called final
+5 - Note that in both init and final, specific actions are expected. Namely, initialization as well as cleanup actions
+6 - an array of steps. According to our design we are expecting about nine (9) steps
+7 - each step should have a code, e.g., step-1, the code of ther next step, if any,  and all the states that constitute the step
+8 - a state within a step should have a code, a name, indicate whether it is an initial state within the step or not and the attached transitions
+9 - a transition should have the event it reacts to, the action it takes and the destination state
+10 - Note that initial state might not require any event
+11 - an event is defined by its name and code
+12 - so far I am assuming that a state with no transition will move to the next step immediately

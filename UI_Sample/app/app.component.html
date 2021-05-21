@@ -1,0 +1,36 @@
+<header id="header">
+  <h1 id="logo">
+    <a [routerLink]="['/Home']"></a>
+  </h1>
+
+  <div id="login">
+    <form class="form-inline">
+      <input type="text" [(ngModel)]="username" placeholder="USERNAME">
+      <input type="text" [(ngModel)]="password" placeholder="PASSWORD">
+      <button type="submit" class="btn">Login</button>
+      <button type="submit" class="btn">Register</button>
+    </form>
+  </div>
+
+  <div id="menu">
+    <form class="form-inline">
+      <a [routerLink]="['/home']" class="btn">Home</a>
+      <a [routerLink]="['/notifications']" class="btn">Notifications</a>
+      <a [routerLink]="['/tutorials']" class="btn">Tutorials</a>
+      <a [routerLink]="['/experiments']" class="btn">Programmes</a>
+      <a [routerLink]="['/contact']" class="btn">Contact Us</a>
+
+      <input type="text" [(ngModel)]="search" placeholder="SEARCH">
+      <input type="image" id="mySearch" src="../images/search.png" />
+    </form>
+  </div>
+
+  <div class="color"></div>
+  <div class="clear"></div>
+</header>
+
+<div class="clear"></div>
+
+<div id="container">
+  <router-outlet></router-outlet>
+</div>

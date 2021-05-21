@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="login-wrapper">
+            <form  #consultForm="ngForm">
+                <h3 class="form-title-label">  NQA Course Registration</h3>
+                <hr class="colorgraph">
+                <br>
+                <div class="form-group">
+                    <label for="ProgrammeCode">Proposed Programme Code</label>
+                    <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"  name="devCode" #procode="ngModel">
+                    <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="date">Registration Date</label>
+                    <div class="input-group">
+                        <input id="date" type="Date" class="form-control" required [(ngModel)]="model.regDate" ng2-datetime-picker date-only="true" name="regDate"
+                        placeholder="YYYY-MM-DD" #cdate="ngModel" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div [hidden]="cdate.valid" class="alert alert-danger">Registration Date is required</div>
+                </div>
+                <br>
+                 <div class="form-group">
+                    <label for="organisation">Course Name</label>
+                    <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.courseName" name="courseName" #org="ngModel" >
+                    <div [hidden]="org.valid" class="alert alert-danger">Course Name  is required</div>
+                </div>
+               <br>
+                <div class="form-group">
+                    <label for="organisation">Course Code</label>
+                    <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.courseCode" name="courseCode" #org="ngModel" >
+                    <div [hidden]="org.valid" class="alert alert-danger">Course Code  is required</div>
+                </div>
+               <br>
+               <div class="form-group">
+                    <label for="doc" > Course Document: </label>
+                    <div class="input-group">
+                      <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Browse&hellip; <input class="form-control" #selectedFile type="file" name="consultation" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"/>
+                        </span>
+                    </label>
+                    <input type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" readonly>
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" (click)="removefile();uploader.clearQueue();" [disabled]="!uploader.getNotUploadedItems().length">X</button></span>
+                    </div>
+                </div>
+                 <br>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();" >Cancel</button>
+                  <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
+               submit </button>
+                <button type="submit" class="btn btn-default" (click)="close()" >Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

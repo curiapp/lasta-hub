@@ -1,0 +1,6 @@
+typings/
+node_modules/
+*.js
+*.js.map
+!**/*e2e-spec.js
+_test-output

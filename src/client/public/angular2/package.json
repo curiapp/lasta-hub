@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@angular/common": "2.3.0",
+    "@angular/compiler": "2.3.0",
+    "@angular/core": "2.3.0",
+    "@angular/forms": "2.3.0",
+    "@angular/http": "2.3.0",
+    "@angular/platform-browser": "2.3.0",
+    "@angular/platform-browser-dynamic": "2.3.0",
+    "@angular/router": "^3.3.0",
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "^5.0.0-rc.4",
+    "systemjs": "^0.19.41",
+    "moment": "^2.13.0",
+    "ng2-datetime-picker": "^0.14.1",
+    "ng2-file-upload": "^1.2.1",
+    "zone.js": "^0.7.2"
+  },
+  "devDependencies": {
+    "typescript": "^2.1.4"
+  }
+}

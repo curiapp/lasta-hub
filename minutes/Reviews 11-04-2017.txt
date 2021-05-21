@@ -1,0 +1,6 @@
+Reviews
+
+Start need Analysis Component
+  .add close method 
+  .changed department and faculty attributes to a string type
+ 

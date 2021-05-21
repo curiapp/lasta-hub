@@ -1,0 +1,56 @@
+{
+  "descriptors": {},
+  "attributes": {
+    "faculty": "Computing and Informatics",
+    "department": "Computer Science"
+  },
+  "init": {},
+  "final": {},
+  "steps": [{
+    "code": "step-1",
+    "next": "step-2",
+    "states": [{
+      "code": "st1",
+      "name": "Init First State",
+      "is-init": "true",
+      "transitions": [{
+        "event": {
+          "code": "evt1-step1",
+          "name": "start-process"
+        },
+        "destination": "st2"
+        }, {"code": "st2",
+        "name": "Need Analysis",
+        "is-init": "false",
+        "transitions": [{
+          "event": {
+            "code": "evt2-step1",
+            "name": "consult"
+          },
+          "destination": "st2"
+          }, {
+            "event": {
+              "code": "evt3-step1",
+              "name": "terminate"
+            },
+            "destination": "st3"
+            }, {
+              "event": {
+                "code": "evt4-step1",
+                "name": "proceed"
+              },
+              "destination": "st4"
+              }]}]
+      }, {
+          "code": "st3",
+          "name": "inconclusive survey",
+          "is-init": "false",
+          "transitions": []
+        }, {
+          "code": "st4",
+          "name": "successful market survey",
+          "is-init": "false",
+          "transitions": []
+          }]
+    }]
+}

@@ -1,0 +1,76 @@
+<div class="container-fluid pb-video-container">
+    <div class="col-md-14 col-md-offset-1">
+        <h3 class=" form-title-label text-center"> PDU Tutorial List </h3>
+        <hr class="colorgraph">
+        <div class="row pb-row">
+            <div class="col-md-3 pb-video">
+              <video id="vid1" width="100%" height="230" class=" pb-video-frame embed-responsive-item" (play)="VideoChanges('vid1')" controls allowfullscreen>
+                  <source src="images/FCI.mp4" type="video/mp4">
+              </video>
+                <!-- iframe class="pb-video-frame" width="100%" height="230" src="images/FCI.mp4?rel=0&autoplay=false" frameborder="0" allowfullscreen></iframe -->
+                <label class="form-control label-warning text-center">FCI Overview 222</label>
+            </div>
+            <div class="col-md-3 pb-video">
+              <video id="vid2" width="100%" height="230" class="pb-video-frame embed-responsive-item" (play)="VideoChanges('vid2')" controls allowfullscreen>
+                  <source src="images/FCI.mp4" type="video/mp4">
+              </video>
+                <!-- iframe class="pb-video-frame" width="100%" height="230" src="images/FCI.mp4?rel=0&autoplay=false" frameborder="0" allowfullscreen></iframe -->
+                <label class="form-control label-warning text-center">FCI Overview 3434</label>
+            </div>
+            <div class="col-md-3 pb-video">
+                <iframe class="pb-video-frame " width="100%" height="230" src="https://www.youtube.com/embed/papuvlVeZg8?list=RDzuAcaBkcYGE?ecver=1" frameborder="0" allowfullscreen></iframe>
+                <label class="form-control label-warning text-center">Clean Bandit - Rockabye</label>
+            </div>
+            <div class="col-md-3 pb-video">
+                <iframe class="pb-video-frame" width="100%" height="230" src="https://www.youtube.com/embed/Y1_VsyLAGuk?list=RDzuAcaBkcYGE?ecver=1" frameborder="0" allowfullscreen></iframe>
+                <label class="form-control label-warning text-center">Burak Yeter - Tuesday</label>
+            </div>
+        </div>
+        <div class="row pb-row">
+            <div class="col-md-3 pb-video">
+                <iframe class="pb-video-frame" width="100%" height="230" src="https://www.youtube.com/embed/UY1bt8ilps4?ecver=1" frameborder="0" allowfullscreen></iframe>
+                <label class="form-control label-warning text-center">F.O. and Peeva - Lichnata</label>
+            </div>
+            <div class="col-md-3 pb-video">
+                <iframe class="pb-video-frame" width="100%" height="230" src="https://www.youtube.com/embed/QpbQ4I3Eidg?ecver=1" frameborder="0" allowfullscreen></iframe>
+                <label class="form-control label-warning text-center">Machine Gun - Bad Things</label>
+            </div>
+            <div class="col-md-3 pb-video">
+                <iframe class="pb-video-frame" width="100%" height="230" src="https://www.youtube.com/embed/h3kRIxLruDs?ecver=" frameborder="0" allowfullscreen></iframe>
+                <label class="form-control label-warning text-center">INNA - Say it with your body</label>
+            </div>
+            <div class="col-md-3 pb-video">
+                <iframe class="pb-video-frame" width="100%" height="230" src="https://www.youtube.com/embed/Jr4TMIU9oQ4?ecver=1" frameborder="0" allowfullscreen></iframe>
+                <label class="form-control label-warning text-center">INNA - Gimme Gimme</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pb-video-container {
+        padding-top: 20px;
+        font-family: Lato;
+    }
+
+    .pb-video {
+        border: 1px solid #e6e6e6;
+        padding: 5px;
+    }
+
+        .pb-video:hover {
+            background: #2c3e50;
+        }
+
+    .pb-video-frame {
+        transition: width 2s, height 2s;
+    }
+
+        .pb-video-frame:hover {
+            height: 300px;
+        }
+
+    .pb-row {
+        margin-bottom: 10px;
+    }
+</style>

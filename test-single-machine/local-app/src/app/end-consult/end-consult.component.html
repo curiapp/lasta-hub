@@ -1,0 +1,58 @@
+<div class="container" style="padding-top:70px">
+  <div class="row justify-content-md-center">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="login-wrapper">
+        <form #endconsultForm="ngForm">
+          <h3 class="form-title-label"> Need Identification -- End of Consultation</h3>
+          <hr class="colorgraph">
+          <br>
+          <div class="form-group">
+            <label for="ProgrammeCode">Proposed Programme Code</label>
+            <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
+            <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="doc"> Survey/ Final Report: </label>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label>
+                  <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
+                    Browse
+                    <input class="form-control" #selectedFile type="file" name="check-list" ng2FileSelect [uploader]="uploader" (change)="updateFile()"
+                      style="display: none;" />
+                  </span>
+                </label>
+              </div>
+              <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
+                readonly>
+              <div class="input-group-append">
+                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile();uploader.clearQueue();"
+                  [disabled]="!uploader.getNotUploadedItems().length">X</button>
+              </div>
+            </div>
+
+            <!-- <div class="input-group">
+                      <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Browse&hellip; <input class="form-control" #selectedFile type="file" name="survey" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"/>
+                        </span>
+                    </label>
+                    <input type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" readonly>
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" (click)="removefile();uploader.clearQueue();" [disabled]="!uploader.getNotUploadedItems().length">X</button></span>
+                    </div> -->
+          </div>
+          <br>
+          <div class="form-group">
+            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()">Clear All</button>
+            <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !endconsultForm.form.valid">
+              Submit </button>
+            <button type="submit" class="btn btn-default" (click)="close()">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
