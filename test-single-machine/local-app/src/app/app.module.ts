@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule,Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,7 +11,7 @@ import { StartNeedAnalysisComponent } from './start-need-analysis/start-need-ana
 import { StartNeedAnalysisService } from './services/start-need-analysis.service';
 import {  HttpModule } from '@angular/http';
 import { NeedAnalysisConcludeComponent } from './need-analysis-conclude/need-analysis-conclude.component';
-import { FileSelectDirective } from 'ng2-file-upload';
+import { FileSelectDirective, FileUploadModule } from 'ng2-file-upload';
 import { NeedAnalysisConsultationComponent } from './need-analysis-consult/need-analysis-consult.component';
 import { EndConsultComponent } from './end-consult/end-consult.component';
 import { BosComponent } from './bos/bos.component';
@@ -59,7 +59,6 @@ import { ShortSummaryService } from './services/short-summary.service';
 
 @NgModule({
   declarations: [
-    FileSelectDirective,
     AppComponent,
     HomeComponent,
     ResumeProgrammeComponent,
@@ -108,13 +107,19 @@ import { ShortSummaryService } from './services/short-summary.service';
     CourseRecentlyApprovedComponent
   ],
   imports: [
+    FileUploadModule,
     BrowserModule,
     AppRoutingModule,
     HttpModule,
     MDBBootstrapModule.forRoot(),
     FormsModule, ReactiveFormsModule
   ],
-  providers: [StartNeedAnalysisService,BoSSubmitService,CurriculumDevDraftSubmitPduService,SenateSubmitService, ShortSummaryService],
+  providers: [StartNeedAnalysisService,
+    BoSSubmitService,
+    CurriculumDevDraftSubmitPduService,
+    SenateSubmitService, 
+    ShortSummaryService,
+    Title],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

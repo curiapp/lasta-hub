@@ -11,7 +11,7 @@ export class ResumeProgrammeComponent implements OnInit {
   programme: string;
   public showID = 0;
   public delay = 60000;
-  public pannelID: string;
+  public pannelID: Number;
   constructor() { }
 
   ngOnInit() {
@@ -34,12 +34,12 @@ export class ResumeProgrammeComponent implements OnInit {
   ngAfterViewInit() {
     let currentPanel = localStorage.getItem("pannelID");
     if (!currentPanel)
-      this.pannelID = "1";
+      this.pannelID = 1;
     else
-      this.pannelID = currentPanel;
+      this.pannelID = Number(currentPanel);
   }
-  openPannel(id: string) {
-    localStorage.setItem("pannelID", id);
+  openPannel(id: Number) {
+    localStorage.setItem("pannelID", String(id));
     this.pannelID = id;
   }
 

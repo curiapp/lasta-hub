@@ -1,6 +1,6 @@
 //import files from the angular framework
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormArray, FormBuilder, AbstractControl } from '@angular/forms';
 import { Http, Response, Request, RequestMethod } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
@@ -40,10 +40,23 @@ export class CdcComponent implements OnInit {
         return this._fb.group({
             firstName: ['', Validators.required],
             lastName: ['',Validators.required],
-            emailAddress: ['', Validators.required],
-            cellphone: ['', [Validators.required, Validators.minLength(10)]],
-            workNumber:['', Validators.required]
+            emailAddress: ['', [Validators.required,Validators.email]],
+            cellphone: ['', [Validators.minLength(10)]],
+            workNumber:['',[Validators.required,Validators.minLength(10)]]
         });
+    }
+
+    onCellPhoneValueChanged(value: any,controlAtX:AbstractControl){
+        console.log(value)
+        let phoneNumberControl = controlAtX;
+        if(!value){
+            phoneNumberControl.setValidators([Validators.required, Validators.minLength(11)]);
+        }else {
+            phoneNumberControl.setValidators([]);
+        }
+    
+        phoneNumberControl.updateValueAndValidity(); //Need to call this to trigger a update
+        return null;
     }
 
     addAddress() {

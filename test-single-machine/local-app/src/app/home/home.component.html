@@ -35,7 +35,7 @@
       <!--Mask color-->
       <div class="view">
         <!--Video source-->
-        <video class="video-fluid" autoplay loop muted>
+        <video class="video-fluid" loop muted>
           <source src="../../assets/images/FCI 2.mp4" type="video/mp4" />
         </video>
         <div class="mask rgba-purple-slight"></div>
@@ -56,7 +56,7 @@
       <!--Mask color-->
       <div class="view">
         <!--Video source-->
-        <video class="video-fluid" autoplay loop muted>
+        <video class="video-fluid" loop muted>
           <source src="https://mdbootstrap.com/img/video/cube.mp4" type="video/mp4" />
         </video>
         <div class="mask rgba-black-strong"></div>
@@ -126,8 +126,8 @@
                             </select>
                             </div>
                             <div class="input-group-append">
-                              <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect routerLink='/resume'
-                                [disabled]="!uploader.getNotUploadedItems().length">RESUME</button>
+                              <button routerLink='/resume' class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="button-addon2">
+                                <i class="fas fa-edit fa-2x"></i>Resume</button>
                             </div>
                           </div>
                           </div>

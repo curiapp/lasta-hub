@@ -3,33 +3,36 @@
 
   <!-- Navbar brand -->
   <mdb-navbar-brand>
-    <a class="navbar-brand" href="#">NUST Logo</a>
+    <a class="navbar-brand font-weight-bold" routerLink='/home'>
+        <img src="../assets/NUST_logo.png" height="30" alt="mdb logo"> <span style="padding:20px">PDU </span>|
+      </a>
   </mdb-navbar-brand>
+
 
   <!-- Collapsible content -->
   <links>
 
     <!-- Links -->
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link waves-light" mdbWavesEffect routerLink='/home' routerLinkActive="active">Home
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link waves-light" mdbWavesEffect routerLink='/home' > Home
           <!-- <span class="sr-only">(current)</span> -->
         </a>
       </li>
-      <li class="nav-item" [hidden]="!loggedIn()">
-        <a class="nav-link waves-light" mdbWavesEffect routerLink='/resume' routerLinkActive="active">Resume</a>
+      <li class="nav-item" [hidden]="loggedIn()" routerLinkActive="active">
+        <a class="nav-link waves-light" mdbWavesEffect routerLink='/resume' >Resume</a>
       </li>
       <!-- <li class="nav-item">
         <a class="nav-link waves-light" mdbWavesEffect routerLink='/StartNeedAnalysis' routerLinkActive="active">Need analysis form</a>
       </li> -->
-      <li class="nav-item">
-        <a class="nav-link waves-light" mdbWavesEffect routerLink='/tutorials' routerLinkActive="active">Tutorials</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link waves-light" mdbWavesEffect routerLink='/tutorials' >Tutorials</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link waves-light" mdbWavesEffect routerLink='/our-team' routerLinkActive="active">Our Team</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link waves-light" mdbWavesEffect routerLink='/our-team' >PDU Team</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link waves-light" mdbWavesEffect routerLink='/about-us' routerLinkActive="active">About Us</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link waves-light" mdbWavesEffect routerLink='/about-us' >About Us</a>
       </li>
 
     </ul>
