@@ -25,7 +25,7 @@ module.exports = (grunt) ->
                 options:
                     config: 'khost'
             deployprod:
-                command: ['cd darfur', 'git pull origin master', 'npm install', 'cd test-single-machine/local-app', 'npm install', 'cd', 'export NODE_ENV=production; pm2 restart all'].join(' && ')
+                command: ['cd darfur', 'git pull devs master', 'npm install', 'cd test-single-machine/local-app', 'npm install', 'cd', 'export NODE_ENV=production; pm2 restart all'].join(' && ')
                 options:
                     config: 'niort'
     grunt.initConfig configOptions
