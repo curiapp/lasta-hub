@@ -56,6 +56,7 @@ import { CourseInProgressComponent } from './course-in-progress/course-in-progre
 import { CourseDueForReviewComponent } from './course-due-for-review/course-due-for-review.component';
 import { CourseRecentlyApprovedComponent } from './course-recently-approved/course-recently-approved.component';
 import { ShortSummaryService } from './services/short-summary.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,7 @@ import { ShortSummaryService } from './services/short-summary.service';
     AppRoutingModule,
     HttpModule,
     MDBBootstrapModule.forRoot(),
-    FormsModule, ReactiveFormsModule
+    FormsModule, ReactiveFormsModule, BrowserAnimationsModule
   ],
   providers: [StartNeedAnalysisService,
     BoSSubmitService,

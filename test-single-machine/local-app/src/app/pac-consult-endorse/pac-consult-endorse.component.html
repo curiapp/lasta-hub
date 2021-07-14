@@ -47,11 +47,11 @@
           <br>
           <div class="form-group">
             <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()">
-              <i class="fa fa-refresh"></i> Clear</button>
+              <i class="fa fa-refresh"></i> Clear Form</button>
             <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !pacForm.form.valid">
-              <i class="fa fa-check"></i> Approve</button>
+              <i class="fa fa-check"></i> Endorse</button>
             <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !pacForm.form.valid">
-              <i class="fa fa-times"></i> Decline</button>
+              <i class="fa fa-times"></i> Defered</button>
           </div>
         </form>
       </div>
