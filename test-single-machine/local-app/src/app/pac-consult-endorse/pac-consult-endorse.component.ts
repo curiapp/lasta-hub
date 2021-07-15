@@ -5,6 +5,10 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+
+
+declare var $: any;
+
 const URL = '/api/consultations/pac/endorse';
 
 //create the component properties
@@ -20,6 +24,7 @@ export class  PacConsultEndorseComponent implements OnInit {
     consultationDate: Date;
     devCode:String;
     decision: String;
+    open_Modal: boolean = false;
 
 
 
@@ -57,11 +62,12 @@ export class  PacConsultEndorseComponent implements OnInit {
         };
     }
     //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-    constructor(private http: Http, private el: ElementRef,private router:Router) {
+    constructor(private http: Http, private el: ElementRef,private router:Router) {}
+    
 
-    }
     @ViewChild('selectedFile') selectedFile: any;
     clear(){
+      this.open_Modal = true;
       this.model.programmeCode="";
       this.model.consultationDate=null;
       this.decision = "";
