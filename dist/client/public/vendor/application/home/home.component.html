@@ -1,0 +1,76 @@
+<div class="template-container">
+    <!-- video goes here ->
+    <div class = "page-header" style ="text-align:center">
+      <h3>Curriculum development Workflow</h3>
+    </div -->
+    <div class="hovereffect boxTop" >
+      <div align="center" class="embed-responsive embed-responsive-16by9" >
+        <video autoplay muted loop class="embed-responsive-item" poster="images/FCI_poster.png" controls>
+            <source src="images/FCI.mp4" type="video/mp4">
+        </video>
+        <div class="overlay">
+           <h2>Curriculum development Workflow</h2>
+           <!-- a class="info" href="#"></a -->
+        </div>
+      </div>
+    </div>
+    <!-- hidden div, only shows if logged on -->
+    <div class="container-fluid mx-auto" *ngIf="loggedIn()">
+      <hr>
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                             <button [routerLink]="['/StartNeedAnalysis']" type="button" class="btn btn-primary btn-lg btn-block">Create New Programme</button>
+                        </div>
+                        <div class="col-md-6">
+                             <!--button type="button" class="btn btn-success btn-lg btn-block">Resume Programme</button -->
+                             <div class="row">
+                                <div class="col-lg-offset-3 col-lg-6">
+                                  <div class="input-group">
+                                  <!--select class="selectpicker show-tick form-control input-lg" title="Select Programme"-->
+                                    <select class="selectpicker show-tick form-control input-lg" title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
+                                        <option value="Select programme"></option>
+                                        <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                                    </select>
+                                  <span class="input-group-btn">
+                                  <a routerLink='/resume' class="btn btn-success btn-lg" type="button">
+                                  <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true">	</span>
+                                  RESUME</a>
+                                  </span>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" *ngIf="loggedIn()">
+        <hr>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        <course-due-for-review></course-due-for-review>
+                    </div>
+
+                    <div class="col-md-4">
+                        <course-in-progress></course-in-progress>
+                    </div>
+
+                    <div class="col-md-4">
+                        <course-recently-approved></course-recently-approved>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
