@@ -54,7 +54,7 @@
                   </div>
                   <div class="custom-control custom-checkbox custom-control-inline">
                     <input type="checkbox" class="custom-control-input" id="defaultInline2" required name="isDistance" [(ngModel)]="model.distance" #distance="ngModel">
-                    <label class="custom-control-label" for="defaultInline2">WiL component need to be verified</label>
+                    <label class="custom-control-label" for="defaultInline2">Distance Mode</label>
                   </div>
             </div>
             <div [hidden]="model.wil ===true || model.distance ===true" class="alert alert-danger"></div>
@@ -65,14 +65,14 @@
             <label class="control-label">Recommend to: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
               <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="defaultInline1" name="status" [(ngModel)]="model.recommendto" value="ceu"
+                <input type="radio" class="custom-control-input" id="defaultInline3" name="status" [(ngModel)]="model.recommendto" value="ceu"
                   required #recommendto="ngModel" mdbInput>
-                <label class="custom-control-label" for="defaultInline1">CEU</label>
+                <label class="custom-control-label" for="defaultInline3">CEU</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline" style="margin-right:20%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="defaultInline2" name="status" [(ngModel)]="model.recommendto" value="coll"
+                <input type="radio" class="custom-control-input" id="defaultInline4" name="status" [(ngModel)]="model.recommendto" value="coll"
                   required #recommendto="ngModel" mdbInput>
-                <label class="custom-control-label" for="defaultInline2">COLL</label>
+                <label class="custom-control-label" for="defaultInline4">COLL</label>
               </div>
             </div>
             <div [hidden]="recommendto.valid" class="alert alert-danger">Recommend to body is needed</div>

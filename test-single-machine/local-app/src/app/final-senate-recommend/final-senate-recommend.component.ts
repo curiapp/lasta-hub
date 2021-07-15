@@ -5,6 +5,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+import { Location } from '@angular/common';
 
 const URL = '/api/bos-senate/final-senate';
 
@@ -58,7 +59,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
         };
     }
     //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-    constructor(private http: Http, private el: ElementRef,private router:Router) {
+    constructor(private http: Http, private el: ElementRef,private router:Router,private _location:Location) {
 
     }
     @ViewChild('selectedFile') selectedFile: any;
@@ -86,7 +87,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
 
      close() {
         console.log("closing the window...");
-        this.router.navigate(['/home']);
+        this._location.back();
     }
 
 }
