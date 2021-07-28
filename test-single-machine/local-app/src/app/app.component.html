@@ -19,7 +19,7 @@
           <!-- <span class="sr-only">(current)</span> -->
         </a>
       </li>
-      <li class="nav-item" [hidden]="loggedIn()" routerLinkActive="active">
+      <li class="nav-item" [hidden]="!loggedIn()" routerLinkActive="active">
         <a class="nav-link waves-light" mdbWavesEffect routerLink='/resume' >Resume</a>
       </li>
       <!-- <li class="nav-item">
@@ -46,7 +46,7 @@
       </li>
       <li class="nav-item avatar dropdown" [hidden]="!loggedIn()" dropdown>
         <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
-          <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" alt="" class="img-fluid rounded-circle z-depth-0" style="height:38px"> Welcome, {{this.username}}
+          <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" alt="" class="img-fluid rounded-circle z-depth-0" style="height:38px"> {{this.username}}
         </a>
         <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
           <a class="dropdown-item waves-light" mdbWavesEffect href="#">Faculty:{{this.faculty}}</a>
