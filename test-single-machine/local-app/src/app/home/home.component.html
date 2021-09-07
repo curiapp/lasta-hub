@@ -1,91 +1,83 @@
 <!--Carousel Wrapper-->
-<div id="video-carousel-example2" class="carousel slide carousel-fade" data-ride="carousel">
-  <!--Indicators-->
-  <ol class="carousel-indicators">
-    <li data-target="#video-carousel-example2" data-slide-to="0" class="active"></li>
-    <li data-target="#video-carousel-example2" data-slide-to="1"></li>
-    <li data-target="#video-carousel-example2" data-slide-to="2"></li>
-  </ol>
-  <!--/.Indicators-->
-  <!--Slides-->
-  <div class="carousel-inner" role="listbox">
-    <!-- First slide -->
-    <div class="carousel-item active">
+<mdb-carousel [isControls]="true" class="carousel slide m-0" [animation]="'slide'">
+  <!--First slide-->
+  <mdb-carousel-item>
       <!--Mask color-->
       <div class="view">
-        <!--Video source-->
-        <video class="video-fluid" autoplay loop muted>
-          <source src="../../assets/images/FCI.mp4" type="video/mp4" />
-        </video>
-        <div class="mask rgba-indigo-light"></div>
+          <!--Video source-->
+          <video class="video-fluid" autoplay loop>
+              <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
+          </video>
+          <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
       </div>
 
       <!--Caption-->
-      <div class="carousel-caption">
-        <div class="animated fadeInDown">
-          <h3 class="h3-responsive">Light mask </h3>
-        </div>
+      <div class="carousel-caption flex-center">
+          <div class="animated fadeInDown">
+              <h3 class="h3-responsive">Welcome to the PDU application</h3>
+              <p>
+                The Programme Development Unit is responsible for leading, coordinating and managing all programme development activities (both new and revised programmes) up to the point of registration of the resultant qualifications on the National Qualifications Framework (NQF)
+              </p>
+              <a routerLink='/about-us' mdbBtn color="white" outline="true" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
+              <a routerLink='/login' mdbBtn color="success" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
+              
+          </div>
       </div>
       <!--Caption-->
-    </div>
-    <!-- /.First slide -->
-
-    <!-- Second slide -->
-    <div class="carousel-item">
+  </mdb-carousel-item>
+  <!--/First slide-->
+  <!--Second slide-->
+  <mdb-carousel-item>
       <!--Mask color-->
       <div class="view">
-        <!--Video source-->
-        <video class="video-fluid" loop muted>
-          <source src="../../assets/images/FCI 2.mp4" type="video/mp4" />
-        </video>
-        <div class="mask rgba-purple-slight"></div>
+          <!--Video source-->
+          <video class="video-fluid" autoplay loop>
+              <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
+          </video>
+          <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
       </div>
 
       <!--Caption-->
-      <div class="carousel-caption">
+      <div class="carousel-caption flex-center">
         <div class="animated fadeInDown">
-          <h3 class="h3-responsive">Super light mask</h3>
+            <h3 class="h3-responsive">Welcome to the PDU application</h3>
+            <p>
+              The Programme Development Unit is responsible for leading, coordinating and managing all programme development activities (both new and revised programmes) up to the point of registration of the resultant qualifications on the National Qualifications Framework (NQF)
+            </p>
+            <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
+            <a mdbBtn routerLink='/login' color="success" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
         </div>
-      </div>
-      <!--Caption-->
     </div>
-    <!-- /.Second slide -->
-
-    <!-- Third slide -->
-    <div class="carousel-item">
+      <!--Caption-->
+  </mdb-carousel-item>
+  <!--/Second slide-->
+  <!--Third slide-->
+  <mdb-carousel-item>
       <!--Mask color-->
       <div class="view">
-        <!--Video source-->
-        <video class="video-fluid" loop muted>
-          <source src="https://mdbootstrap.com/img/video/cube.mp4" type="video/mp4" />
-        </video>
-        <div class="mask rgba-black-strong"></div>
+          <!--Video source-->
+          <video class="video-fluid" autoplay loop>
+              <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
+          </video>
+          <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
       </div>
 
       <!--Caption-->
-      <div class="carousel-caption">
+      <div class="carousel-caption flex-center">
         <div class="animated fadeInDown">
-          <h3 class="h3-responsive">Strong mask</h3>
+            <h3 class="h3-responsive">Welcome to the PDU application</h3>
+            <p>
+              The Programme Development Unit is responsible for leading, coordinating and managing all programme development activities (both new and revised programmes) up to the point of registration of the resultant qualifications on the National Qualifications Framework (NQF)
+            </p>
+            <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
+            <a mdbBtn routerLink='/login' color="success" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
         </div>
-      </div>
-      <!--Caption-->
     </div>
-    <!-- /.Third slide -->
-  </div>
-  <!--/.Slides-->
-  <!--Controls-->
-  <a class="carousel-control-prev" href="#video-carousel-example2" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#video-carousel-example2" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-  <!--/.Controls-->
-</div>
+      <!--Caption-->
+  </mdb-carousel-item>
+  <!--/Third slide-->
+</mdb-carousel>
 <!--Carousel Wrapper-->
-
 <!-- hidden div, only shows if logged on -->
 <div class="container-fluid mx-auto" [hidden]="!loggedIn()">
   <hr>

@@ -1,5 +1,5 @@
 <!--Navbar-->
-<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark indigo lighten-1" [containerInside]="false">
+<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark lighten-1 intro-fixed-nav" class="navCss" [containerInside]="false">
 
   <!-- Navbar brand -->
   <mdb-navbar-brand>
@@ -39,11 +39,11 @@
     <!-- Links -->
 
     <ul class="navbar-nav ml-auto nav-flex-icons">
-      <li class="nav-item" >
+      <!-- <li class="nav-item" >
           <a class="nav-link waves-effect waves-light text-md-left" style="padding-top:13px">
               <i class="fas fa-envelope fa-2x" ></i>
             </a>
-      </li>
+      </li> -->
       <li class="nav-item avatar dropdown" [hidden]="!loggedIn()" dropdown>
         <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
           <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" alt="" class="img-fluid rounded-circle z-depth-0" style="height:38px"> {{this.username}}
@@ -73,7 +73,7 @@
 <!--Main layout-->
 
 <!--Footer-->
-<footer class="page-footer text-center font-small mt-4 wow fadeIn ">
+<footer class="page-footer bottom text-center font-medium mt-0 wow fadeIn">
 
   <!--Call to action-->
   <div class="container">
@@ -83,16 +83,19 @@
                   <p class="text-center">
                       <a href="#">Terms of Service</a> | <a href="#">Privacy</a> | <a href="#">Help</a>
                   </p>
+                  <p>
+                    Copyright &copy; {{ currentYear }} Programme Development Unit. All rights reserved 
+                  </p>
               </div>
           </div>
       </div>
   </div>
   <!--/.Call to action-->
 
-  <hr class="my-1">
+  
 
   <!-- Social icons -->
-  <div class="pb-4">
+  <!-- <div class="pb-4">
     <a href="https://www.facebook.com/mdbootstrap" target="_blank">
       <i class="fab fa-facebook-f mr-3"></i>
     </a>
@@ -124,15 +127,8 @@
     <a href="http://codepen.io/mdbootstrap/" target="_blank">
       <i class="fab fa-codepen mr-3"></i>
     </a>
-  </div>
+  </div> -->
   <!-- Social icons -->
-
-  <!--Copyright-->
-  <div class="footer-copyright py-3">
-    © 2019 Copyright:
-    <a href="" target="_blank"> Programme Development Unit. All rights reserved </a>
-  </div>
-  <!--/.Copyright-->
   <hr class="my-1">
 </footer>
 <!--/.Footer-->

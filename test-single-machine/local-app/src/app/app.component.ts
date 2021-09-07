@@ -15,6 +15,7 @@ export class AppComponent {
   faculty: string;
   department: string;
 
+  currentYear: number = new Date().getFullYear();
   constructor(private _location: Location,private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
   }
   ngOnInit() {
