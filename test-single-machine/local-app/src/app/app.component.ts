@@ -39,6 +39,7 @@ export class AppComponent {
     if (currentUser == null) {
       return false;
     } else {
+      console.log("INSIDE HERE");
       this.username = currentUser.usrUnit.username;
       this.faculty = currentUser.usrUnit.faculty;
       this.department = currentUser.usrUnit.department;
@@ -46,7 +47,6 @@ export class AppComponent {
     }
   }
   extractUserDetails() {
-    console.log("INSIDE HERE")
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.username = currentUser.usrUnit.username;
     this.faculty = currentUser.usrUnit.faculty;
