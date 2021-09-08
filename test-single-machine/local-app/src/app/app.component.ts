@@ -36,6 +36,7 @@ export class AppComponent {
   }
   loggedIn() {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log("User data",currentUser);
     if (currentUser == null) {
       return false;
     } else {
