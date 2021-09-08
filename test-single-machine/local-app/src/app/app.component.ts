@@ -45,9 +45,8 @@ export class AppComponent {
       return true;
     }
   }
-
-
   extractUserDetails() {
+    console.log("INSIDE HERE")
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.username = currentUser.usrUnit.username;
     this.faculty = currentUser.usrUnit.faculty;
