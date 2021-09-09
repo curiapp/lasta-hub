@@ -18,7 +18,6 @@ export class UserAuthenticationService {
         return this.commer.post('/api/users/authenticate', {username: loginName, password: loginPass}, authOptions).pipe(
             map((response: Response) => {
                 let user = response.json();
-                
                 if (user && user.token) {
                     console.log("logged in",user);
                     localStorage.setItem('currentUser', JSON.stringify(user));
