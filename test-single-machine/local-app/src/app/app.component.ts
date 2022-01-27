@@ -15,6 +15,7 @@ export class AppComponent {
   faculty: string;
   department: string;
 
+  currentYear: number = new Date().getFullYear();
   constructor(private _location: Location,private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
   }
   ngOnInit() {
@@ -38,14 +39,13 @@ export class AppComponent {
     if (currentUser == null) {
       return false;
     } else {
+      console.log("INSIDE HERE");
       this.username = currentUser.usrUnit.username;
       this.faculty = currentUser.usrUnit.faculty;
       this.department = currentUser.usrUnit.department;
       return true;
     }
   }
-
-
   extractUserDetails() {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.username = currentUser.usrUnit.username;
@@ -54,6 +54,7 @@ export class AppComponent {
     console.log(localStorage.getItem("currentUser"));
   }
   logout() {
+    console.log("User ..",JSON.parse(localStorage.getItem('currentUser')));
     localStorage.removeItem('currentUser');
   }
   isActive(path) {
