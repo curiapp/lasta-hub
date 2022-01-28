@@ -53,3 +53,6 @@ src/client/public/angular2/node_modules
 dist/client/public/vendor/bower_components
 dist/client/public/angular2/node_modules
 dist/client/public/uploads-tmp
+
+# tmp local files
+uploads
