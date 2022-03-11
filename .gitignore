@@ -56,3 +56,6 @@ dist/client/public/uploads-tmp
 
 # tmp local files
 uploads
+
+test-single-machine/local-app/package-lock.json
+package-lock.json
