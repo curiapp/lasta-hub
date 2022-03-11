@@ -3,12 +3,12 @@
   </div>
   <!-- New collapse pannel -->
   <div id="accordion">
-    <div class="card border-danger">
-      <div class="card-header bg-danger" id="headingOne">
+    <div class="card border-muted">
+      <div class="card-header bg-muted" id="headingOne">
         <h5 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
             (click)="openPannel(1)">
-            Need Analysis Stage
+            Stage 1 : Need Analysis (NA)
           </button>
         </h5>
       </div>
@@ -20,11 +20,14 @@
 
               <div class="card col-md-4 border-dark text-center">
                 <div class="text-center">
-                  <button type="button" class="btn btn-default btn-circle btn-xl">
+                  <!-- <button type="button" class="btn btn-circle btn-xl">
                     <i class="fa fa-power-off fa-2x"></i>
-                  </button>
+                  </button> -->
+                  <p></p>
+                  <i class="fa fa-power-off fa-4x"></i>
                 </div>
                 <div class="caption">
+                  <p></p>
                   <h3>Start</h3>
                   <p>This initial step involves identification of the need for a new programme.</p>
                   <a routerLink="/StartNeedAnalysis" class="btn btn-success" role="button">Create New Programme</a>
@@ -181,12 +184,12 @@
         </div>
       </div>
     </div>
-    <div class="card border-default" style="margin-top:10px">
-      <div class="card-header bg-default" id="headingTwo">
-        <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
+    <div class="card border-muted" style="margin-top:10px">
+      <div class="card-header bg-muted" id="headingTwo">
+        <h5 class="text-light">
+          <button class="btn btn-link collapsed " data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
             (click)="openPannel(2)">
-            Curriculum Development Stage
+            Stage 2: Programme/Curriculum Development
           </button>
         </h5>
       </div>
@@ -267,12 +270,12 @@
         </div>
       </div>
     </div>
-    <div class="card border-info" style="margin-top:10px">
-      <div class="card-header bg-info" id="headingThree">
+    <div class="card border-muted" style="margin-top:10px">
+      <div class="card-header bg-muted" id="headingThree">
         <h5 class="mb-0">
           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"
             (click)="openPannel(3)">
-            Consultations & PAC Endorsement Stages
+            Stage 3: External Stakeholder Consultations
           </button>
         </h5>
       </div>
@@ -361,12 +364,12 @@
         </div>
       </div>
     </div>
-    <div class="card border-primary" style="margin-top:10px">
-      <div class="card-header bg-primary" id="headingFour">
+    <div class="card border-muted" style="margin-top:10px">
+      <div class="card-header bg-muted" id="headingFour">
         <h5 class="mb-0">
           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"
             (click)="openPannel(4)">
-            TLU,CEU & QA Review Stages
+            Stage 4: Internal Stakeholder Consultation
           </button>
         </h5>
       </div>
@@ -462,12 +465,12 @@
         </div>
       </div>
     </div>
-    <div class="card border-warning" style="margin-top:10px">
-      <div class="card-header bg-warning" id="headingFive">
+    <div class="card border-muted" style="margin-top:10px">
+      <div class="card-header bg-muted" id="headingFive">
         <h5 class="mb-0">
           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive"
             (click)="openPannel(5)">
-            BOS and Senate Final Decisions
+            Stage 5: BOS, APC and Senate Consultations
           </button>
         </h5>
       </div>
@@ -601,12 +604,12 @@
         </div>
       </div>
     </div>
-    <div class="card border-success" style="margin-top:10px">
-      <div class="card-header bg-success" id="headingSix">
+    <div class="card border-muted" style="margin-top:10px">
+      <div class="card-header bg-muted" id="headingSix">
         <h5 class="mb-0">
           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix"
             (click)="openPannel(6)">
-            NQA Submission and Outcomes
+            Stage 6: NQF Registration
           </button>
         </h5>
       </div>
