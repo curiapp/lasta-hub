@@ -27,7 +27,13 @@
               <br>
                <div class="form-group">
                   <label for="organisation">Organisation Name</label>
-                  <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.organisation" name="organisation" #org="ngModel" >
+                  <ul>
+                    <li *ngFor="let organisation of organisationList">
+                      {{organisation}}
+                    </li>
+                  </ul>
+                  <input type="text" id="organisation" name="organisation"  class="form-control" [(ngModel)]="model.organisation" #org="ngModel">
+                  <button (click)="addOrganisation()">Add Organisation</button> 
                   <div [hidden]="org.valid" class="alert alert-danger">Organisation Name  is required</div>
               </div>
              <br>
@@ -50,10 +56,10 @@
                <br>
                </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();" >Cancel</button>
+                <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();" >Clear</button>
                 <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
              submit </button>
-              <button type="submit" class="btn btn-default" (click)="close()" >Close</button>
+              
               </div>
           </form>
       </div>

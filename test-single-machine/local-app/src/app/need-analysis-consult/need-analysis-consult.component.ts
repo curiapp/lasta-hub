@@ -19,9 +19,11 @@ const URL = '/api/need-analysis/consult';
 export class NeedAnalysisConsultationComponent implements OnInit {
     model:any={};
     consultationDate: Date;
-    organisation: string;
+    //organisation: string;
     devCode:String;
     maxFileSize = 50 * 1024 * 1024;
+    public organisationList = [];
+    public organisation;
 
 
      //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -30,6 +32,12 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     //This is the default title property created by the angular cli. Its responsible for the app works
     title = 'app works!';
 
+addOrganisation() {
+  this.organisationList.push(this.model.organisation);
+  console.log(this.organisationList);
+  this.organisation = '';
+}
+
     ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
       this.uploader.onAfterAddingFile = (file)=> { file.withCredentials = false; };
@@ -37,7 +45,8 @@ export class NeedAnalysisConsultationComponent implements OnInit {
         ,form:any)=>{
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.consultationDate);
-            form.append('organization',this.model.organisation);
+            form.append('organization',this.organisationList);
+            
 
       };
       
