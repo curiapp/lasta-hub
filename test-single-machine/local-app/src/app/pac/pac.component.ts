@@ -60,6 +60,7 @@ export class PacComponent implements OnInit {
             lastName: ['',Validators.required],
             organisation: ['', Validators.required],
             occupation: ['', Validators.required],
+            qualification: ['', Validators.required],
             emailAddress: ['', [Validators.required,Validators.email]],
             cellphone: ['', [Validators.minLength(10)]],
             workNumber:['',[Validators.required,Validators.minLength(10)]]
