@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #consultForm="ngForm">
-          <h3 class="form-title-label"> Curriculum development -- Preparation for PAC Consultation</h3>
+          <h3 class="form-title-label"> 3.1 Circulate Draft Programme</h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -19,8 +19,7 @@
                 name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
               <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
-              </span>
-            </div>
+              </span>            </div>
             <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
           </div>
           <br>
