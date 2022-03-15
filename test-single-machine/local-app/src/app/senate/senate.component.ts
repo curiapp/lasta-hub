@@ -35,7 +35,8 @@ export class  SenateComponent implements OnInit {
       this.uploader.onBuildItemForm=(item:any,form:any)=>{
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.consultationDate);
-            form.append('status',this.model.status);
+            form.append('status',this.model.apc);
+            form.append('senate',this.model.senate);
             form.append('madeBy',this.model.madeBy);
 
       };
@@ -65,7 +66,8 @@ export class  SenateComponent implements OnInit {
     clear(){
       this.model.programmeCode="";
       this.model.consultationDate=null;
-      this.model.status = "";
+      this.model.apc = "";
+      this.model.senate = "";
       this.model.madeBy = "";
       this.selectedFile.nativeElement.value = '';
        (<HTMLInputElement>document.getElementById("file-name")).value = "";

@@ -2,100 +2,150 @@
 <mdb-carousel [isControls]="true" class="carousel slide m-0" [animation]="'slide'">
   <!--First slide-->
   <mdb-carousel-item>
-      <!--Mask color-->
-      <div class="view">
-          <!--Video source-->
-          <video class="video-fluid" autoplay loop>
-              <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
-          </video>
-          <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
-      </div>
+    <!--Mask color-->
+    <div class="view">
+      <!--Video source-->
+      <video class="video-fluid" autoplay loop>
+        <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
+      </video>
+      <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
+    </div>
 
-      <!--Caption-->
-      <div class="carousel-caption flex-center">
-          <div class="animated fadeInDown">
-              <h3 class="h3-responsive"> Welcome to the PDU application</h3>
-              <p>
-                The Programme Development Unit is responsible for leading, coordinating and managing all programme development activities (both new and revised programmes) up to the point of registration of the resultant qualifications on the National Qualifications Framework (NQF)
-              </p>
-              <a routerLink='/about-us' mdbBtn color="white" outline="true" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
-              <a routerLink='/login' [hidden]="loggedIn()" mdbBtn color="success" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
-              
-          </div>
+    <!--Caption-->
+    <div class="carousel-caption flex-center">
+      <div class="animated fadeInDown">
+        <h3 class="h3-responsive"> Welcome to the PDU application</h3>
+        <p>
+          The Programme Development Unit is responsible for leading, coordinating and managing all programme development
+          activities (both new and revised programmes) up to the point of registration of the resultant qualifications
+          on the National Qualifications Framework (NQF)
+        </p>
+        <a routerLink='/about-us' mdbBtn color="white" outline="true" class="wow fadeInLeft waves-light"
+          data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
+        <a routerLink='/login' [hidden]="loggedIn()" mdbBtn color="success" class="wow fadeInLeft waves-light"
+          data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
+
       </div>
-      <!--Caption-->
+    </div>
+    <!--Caption-->
   </mdb-carousel-item>
   <!--/First slide-->
   <!--Second slide-->
   <mdb-carousel-item>
-      <!--Mask color-->
-      <div class="view">
-          <!--Video source-->
-          <video class="video-fluid" autoplay loop>
-              <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
-          </video>
-          <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
-      </div>
-
-      <!--Caption-->
-      <div class="carousel-caption flex-center">
-        <div class="animated fadeInDown">
-            <h3 class="h3-responsive">Welcome to the PDU application </h3>
-            <p>
-              The Programme Development Unit is responsible for leading, coordinating and managing all programme development activities (both new and revised programmes) up to the point of registration of the resultant qualifications on the National Qualifications Framework (NQF)
-            </p>
-            <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
-            <a mdbBtn routerLink='/login' [hidden]="loggedIn()" color="success" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
-        </div>
+    <!--Mask color-->
+    <div class="view">
+      <!--Video source-->
+      <video class="video-fluid" autoplay loop>
+        <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
+      </video>
+      <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
     </div>
-      <!--Caption-->
+
+    <!--Caption-->
+    <div class="carousel-caption flex-center">
+      <div class="animated fadeInDown">
+        <h3 class="h3-responsive">Welcome to the PDU application </h3>
+        <p>
+          The Programme Development Unit is responsible for leading, coordinating and managing all programme development
+          activities (both new and revised programmes) up to the point of registration of the resultant qualifications
+          on the National Qualifications Framework (NQF)
+        </p>
+        <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light"
+          data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
+        <a mdbBtn routerLink='/login' [hidden]="loggedIn()" color="success" class="wow fadeInLeft waves-light"
+          data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
+      </div>
+    </div>
+    <!--Caption-->
   </mdb-carousel-item>
   <!--/Second slide-->
   <!--Third slide-->
   <mdb-carousel-item>
-      <!--Mask color-->
-      <div class="view">
-          <!--Video source-->
-          <video class="video-fluid" autoplay loop>
-              <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
-          </video>
-          <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
-      </div>
-
-      <!--Caption-->
-      <div class="carousel-caption flex-center">
-        <div class="animated fadeInDown">
-            <h3 class="h3-responsive">Welcome to the PDU application 222</h3>
-            <p>
-              The Programme Development Unit is responsible for leading, coordinating and managing all programme development activities (both new and revised programmes) up to the point of registration of the resultant qualifications on the National Qualifications Framework (NQF)
-            </p>
-            <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
-            <a mdbBtn routerLink='/login' [hidden]="loggedIn()" color="success" class="wow fadeInLeft waves-light" data-wow-delay="0.3s" mdbWavesEffect [hidden]="loggedIn()"> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
-        </div>
+    <!--Mask color-->
+    <div class="view">
+      <!--Video source-->
+      <video class="video-fluid" autoplay loop>
+        <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
+      </video>
+      <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
     </div>
-      <!--Caption-->
+
+    <!--Caption-->
+    <div class="carousel-caption flex-center">
+      <div class="animated fadeInDown">
+        <h3 class="h3-responsive">Welcome to the PDU application</h3>
+        <p>
+          The Programme Development Unit is responsible for leading, coordinating and managing all programme development
+          activities (both new and revised programmes) up to the point of registration of the resultant qualifications
+          on the National Qualifications Framework (NQF)
+        </p>
+        <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light"
+          data-wow-delay="0.3s" mdbWavesEffect>Learn about PDU</a>
+        <a mdbBtn routerLink='/login' [hidden]="loggedIn()" color="success" class="wow fadeInLeft waves-light"
+          data-wow-delay="0.3s" mdbWavesEffect [hidden]="loggedIn()"> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
+      </div>
+    </div>
+    <!--Caption-->
   </mdb-carousel-item>
   <!--/Third slide-->
 </mdb-carousel>
 <!--Carousel Wrapper-->
+<section class="page-section pt-5" id="services">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-heading text-uppercase">PDU Services</h2>
+      <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-4">
+        <span class="fa-stack fa-4x">
+          <i class="fas fa-circle fa-stack-2x text-muted"></i>
+          <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="my-3">Programme Development</h4>
+        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto
+          quo inventore harum ex magni, dicta impedit.</p>
+      </div>
+      <div class="col-md-4">
+        <span class="fa-stack fa-4x">
+          <i class="fas fa-circle fa-stack-2x text-muted"></i>
+          <i class="fas fa-history fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="my-3">Programme Review</h4>
+        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto
+          quo inventore harum ex magni, dicta impedit.</p>
+      </div>
+      <div class="col-md-4">
+        <span class="fa-stack fa-4x">
+          <i class="fas fa-circle fa-stack-2x text-muted"></i>
+          <i class="fas fa-clipboard-check fa-stack-1x fa-inverse"></i>
+        </span>
+        <h4 class="my-3">Programme registration</h4>
+        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto
+          quo inventore harum ex magni, dicta impedit.</p>
+      </div>
+    </div>
+  </div>
+</section>
 <!-- hidden div, only shows if logged on -->
-<div class="container-fluid mx-auto" [hidden]="!loggedIn()">
+<div class="container-fluid mx-auto bg-warning" [hidden]="true">
   <hr>
   <div class="row">
-      <div class="col-sm-12">
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-6">
-                         <button [routerLink]="['/StartNeedAnalysis']" type="button" class="btn btn-primary btn-lg btn-block">Create New Programme</button>
-                    </div>
-                    <div class="col-md-6">
-                         <!--button type="button" class="btn btn-success btn-lg btn-block">Resume Programme</button -->
-                         <div class="row">
-                            <div class="col-lg-offset-3 col-lg-6">
-                              <div class="input-group">
-                              <!--select class="selectpicker show-tick form-control input-lg" title="Select Programme"->
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-6">
+              <button [routerLink]="['/StartNeedAnalysis']" type="button"
+                class="btn btn-primary btn-lg btn-block">Create New Programme</button>
+            </div>
+            <div class="col-md-6">
+              <!--button type="button" class="btn btn-success btn-lg btn-block">Resume Programme</button -->
+              <div class="row">
+                <div class="col-lg-offset-3 col-lg-6">
+                  <div class="input-group">
+                    <!--select class="selectpicker show-tick form-control input-lg" title="Select Programme"->
                                 <select class="selectpicker show-tick form-control input-lg" title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
                                     <option value="Select programme"></option>
                                     <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
@@ -110,45 +160,48 @@
                           </div>
 
                           <!-- Apppend input group -->
-                          <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                              <select class="custom-select-lg browser-default" title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
-                                <option selected >Select programme</option>
-                                <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
-                            </select>
-                            </div>
-                            <div class="input-group-append">
-                              <button routerLink='/resume' class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="button-addon2">
-                                <i class="fas fa-edit fa-2x"></i>Resume</button>
-                            </div>
-                          </div>
-                          </div>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <select class="custom-select-lg browser-default" title="Select Programme" [ngModel]="programme"
+                          (ngModelChange)="changed($event)">
+                          <option selected>Select programme</option>
+                          <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                        </select>
+                      </div>
+                      <div class="input-group-append">
+                        <button routerLink='/resume' class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect"
+                          type="button" id="button-addon2">
+                          <i class="fas fa-edit fa-2x"></i>Resume</button>
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
             <div class="col-md-1"></div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 </div>
-
-<div class="container-fluid" [hidden]="!loggedIn()">
-    <hr>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <course-due-for-review></course-due-for-review>
-                </div>
-
-                <div class="col-md-4">
-                    <course-in-progress></course-in-progress>
-                </div>
-
-                <div class="col-md-4">
-                    <course-recently-approved></course-recently-approved>
-                </div>
-            </div>
+<div class="container-fluid bg-light pt-5 pb-5"  [hidden]="loggedIn()">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-md-4 bg-muted">
+          <course-due-for-review></course-due-for-review>
         </div>
+
+        <div class="col-md-4">
+          <course-in-progress></course-in-progress>
+        </div>
+
+        <div class="col-md-4">
+          <course-recently-approved></course-recently-approved>
+        </div>
+      </div>
     </div>
+  </div>
+
 </div>

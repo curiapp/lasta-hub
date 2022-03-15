@@ -14,31 +14,43 @@
               </div>
               <br>
               <div class="form-group">
-                  <label for="date">Consultation Period</label>
+                  <label for="date">Consultation Start Date</label>
                   <div class="input-group">
-                      <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="consultationDate"
-                      placeholder="YYYY-MM-DD" #cdate="ngModel" />
+                      <input id="sdate" type="Date" class="form-control" required [(ngModel)]="model.startDate" ng2-datetime-picker date-only="true" name="startDate"
+                      placeholder="YYYY-MM-DD" #sdate="ngModel" />
                       <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                   </div>
-                  <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
+                  <div [hidden]="sdate.valid" class="alert alert-danger">StartDate is required</div>
+              </div>
+              <br>
+              <div class="form-group">
+                  <label for="date">Consultation End Date</label>
+                  <div class="input-group">
+                      <input id="edate" type="Date" class="form-control" required [(ngModel)]="model.endDate" ng2-datetime-picker date-only="true" name="endDate"
+                      placeholder="YYYY-MM-DD" #edate="ngModel" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+                  </div>
+                  <div [hidden]="edate.valid" class="alert alert-danger">endDate is required</div>
               </div>
               <br>
                <div class="form-group">
-                  <label for="organisation">Organisation Name</label>
+                  <label for="organisation">Stakeholders List</label>
                   <ul>
                     <li *ngFor="let organisation of organisationList">
                       {{organisation}}
                     </li>
                   </ul>
                   <input type="text" id="organisation" name="organisation"  class="form-control" [(ngModel)]="model.organisation" #org="ngModel">
-                  <button (click)="addOrganisation()">Add Organisation</button> 
-                  <div [hidden]="org.valid" class="alert alert-danger">Organisation Name  is required</div>
+                  <button (click)="addOrganisation()">Add Stakeholder name</button> 
+                  <div [hidden]="org.valid" class="alert alert-danger">Stakeholder Name  is required</div>
               </div>
              <br>
              <div class="form-group">
-                  <label for="doc" > Submissions: </label>
+                  <label for="doc" > Questionnaires from Respodents: </label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                     <label>
