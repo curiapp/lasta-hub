@@ -18,6 +18,7 @@ const URL = '/api/consultations/pac/consult';
 export class CurriculumDevPACConsultComponent implements OnInit {
     model:any={};
     consultationDate: Date;
+    private fileMap = new Map();
     devCode:String;
 
 
@@ -52,30 +53,70 @@ export class CurriculumDevPACConsultComponent implements OnInit {
 
         };
     }
+   
     //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
     constructor(private http: Http, private el: ElementRef,private router:Router) {
 
     }
-    @ViewChild('selectedFile') selectedFile: any;
+    
     clear(){
       this.model.programmeCode="";
-      this.model.consultationDate=null;
-      this.selectedFile.nativeElement.value = '';
-       (<HTMLInputElement>document.getElementById("file-name")).value = "";
+      this.model.consultationDate=null; 
+      (<HTMLInputElement>document.getElementById("endorsements")).value = "";
+      (<HTMLInputElement>document.getElementById("benchmarking")).value = "";
+       
     }
-     updateFile(){
-       (<HTMLInputElement>document.getElementById("file-name")).value = "";
-       for(var i = 0;i<this.uploader.queue.length;i++){
-        if(i != 0)
-          (<HTMLInputElement>document.getElementById("file-name")).value += " ; "+this.uploader.queue[i].file.name;
-         else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
-        console.log(this.uploader.queue[i].file.name);
+    uploadFiles(){
+      const request = new XMLHttpRequest();
+      // POST to httpbin which returns the POST data as JSON
+      request.open('POST', URL, /* async = */ false);
+      const newform = new FormData();
+      newform.append('devCode', this.model.programmeCode);
+      newform.append('date',this.model.consultationDate);
+      for (const item of this.uploader.queue) {
+        let label = this.fileMap.get(item._file.name);
+        newform.append(label, item._file, item._file.name);
       }
+      console.log(newform);
+      request.send(newform);
+    }
+     updateFile(id:string){
+      (<HTMLInputElement>document.getElementById(id)).value = "";
+    if(this.uploader.queue.length > 2){
+      for (var i = 0; i < this.uploader.queue.length-1; i++) {
+        this.uploader.queue[i] = this.uploader.queue[i+1];
+        console.log(this.uploader.queue[i]);
+      }
+      this.uploader.queue[2].remove();
+    }
+    this.fileMap.set(this.uploader.queue[this.uploader.queue.length-1].file.name,id);
+    (<HTMLInputElement>document.getElementById(id)).value = this.uploader.queue[this.uploader.queue.length-1].file.name;
+  }
+     
+     removefile(id:string){
+      var label = (<HTMLInputElement>document.getElementById(id)).value;
+      for(var i=0; i<this.uploader.queue.length; i++){
+        if(this.uploader.queue[i].file.name === label){
+          this.fileMap.delete(this.uploader.queue[i].file.name);
+           this.uploader.queue[i].remove();
+           break;
+        }
+      }
+      (<HTMLInputElement>document.getElementById(id)).value = "";
+  
+         
      }
-     removefile(){
-         (<HTMLInputElement>document.getElementById("file-name")).value = "";
-     }
+     allowSubmission(){
+      if(this.model.type == false && this.uploader.queue.length == 2){
+          return false;
+      }
+      else if(this.model.type == true && this.uploader.queue.length == 1)
+        return false;
+      else
+        return true;
+  
+    }
+  
      close() {
         console.log("closing the window...");
         this.router.navigate(['/home']);

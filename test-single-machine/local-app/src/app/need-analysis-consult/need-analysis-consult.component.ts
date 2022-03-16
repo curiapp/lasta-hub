@@ -7,6 +7,7 @@ import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
 import { NgForm } from '@angular/forms';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 const URL = '/api/need-analysis/consult';
 
@@ -21,6 +22,8 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     model:any={};
     showWarning:boolean = false;
     consultationDate: Date;
+    startDate:Date;
+    endDate:Date;
     //organisation: string;
     devCode:String;
     maxFileSize = 50 * 1024 * 1024;
@@ -46,8 +49,9 @@ addOrganisation() {
       this.uploader.onBuildItemForm=(item:any
         ,form:any)=>{
             form.append('devCode',this.model.programmeCode);
-            form.append('date',this.model.consultationDate);
-            form.append('organization',this.organisationList);
+            form.append('sdate',this.model.startDate);
+            form.append('edate',this.model.endDate);
+            form.append('organisation-list',this.organisationList);
             
 
       };
@@ -75,8 +79,9 @@ addOrganisation() {
     @ViewChild('selectedFile') selectedFile: any;
     clear(){
       this.model.programmeCode="";
-      this.model.organisation="";
-      this.model.consultationDate=null;
+      this.model.organisationList="";
+      this.model.startDate=null;
+      this.model.endDate=null;
       this.selectedFile.nativeElement.value = '';
        (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }

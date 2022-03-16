@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #pacForm="ngForm">
-          <h3 class="form-title-label"> PAC Consultation Endorsement </h3>
+          <h3 class="form-title-label">3.3 Final Draft -PDU's Recommendation </h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -13,7 +13,7 @@
           </div>
           <br>
           <div class="form-group">
-            <label for="date">Endorsement Date</label>
+            <label for="date">Date</label>
             <div class="input-group">
               <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true"
                 name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
@@ -25,7 +25,7 @@
           </div>
           <br>
           <div class="form-group">
-            <label for="doc"> Recomendations: </label>
+            <label for="doc"> Final Draft and PDU Inputs: </label>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -46,12 +46,17 @@
           </div>
           <br>
           <div class="form-group">
-            <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue()">
-              <i class="fa fa-refresh"></i> Clear Form</button>
+      
+              <label for="doc"> PDU's Decision: </label>
             <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !pacForm.form.valid">
-               Endorse &nbsp; <i class="fa fa-check"></i></button>
+               Recommended to Bos &nbsp; <i class="fa fa-check"></i></button>
             <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !pacForm.form.valid">
                Defer &nbsp; <i class="fa fa-history"></i></button>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue()">
+              <i class="fa fa-refresh"></i> Clear Form</button>
           </div>
         </form>
       </div>

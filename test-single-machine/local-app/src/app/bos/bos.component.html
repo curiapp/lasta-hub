@@ -58,7 +58,7 @@
                   <div style="text-align:center;">
                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="senate" required #status="ngModel"> Recommend to Senate  </label>
                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="bos" required #status="ngModel">Resubmit to BOS </label>
-                      <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="reject" required #status="ngModel">Rejected </label>   
+                      <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="Decline" required #status="ngModel">Decline </label>   
                   </div></fieldset>
                   <div [hidden]="status.valid" class="alert alert-danger">Recommendations status is needed</div>
               </div>
