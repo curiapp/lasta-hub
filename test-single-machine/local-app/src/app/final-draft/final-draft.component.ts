@@ -17,6 +17,7 @@ const URL = '/api/bos-senate/draft';
 export class FinalDraftComponent implements OnInit {
   model: any = {};
   devCode: String;
+  date:Date;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -30,6 +31,7 @@ export class FinalDraftComponent implements OnInit {
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
+      form.append('date', this.model.bosSubmissionDate);
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
