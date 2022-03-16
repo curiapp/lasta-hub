@@ -6,6 +6,7 @@ import {Location} from '@angular/common';
 import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+import { NgForm } from '@angular/forms';
 
 const URL = '/api/need-analysis/consult';
 
@@ -18,6 +19,7 @@ const URL = '/api/need-analysis/consult';
 })
 export class NeedAnalysisConsultationComponent implements OnInit {
     model:any={};
+    showWarning:boolean = false;
     consultationDate: Date;
     //organisation: string;
     devCode:String;
@@ -99,5 +101,28 @@ addOrganisation() {
       backClicked() {
         this._location.back();
     }
+    getTooltipInfo(formData:NgForm){
+      if(!this.uploader.getNotUploadedItems().length || !formData.valid)
+        return "Not all required info provided "+this.findInvalidControls(formData);
+      else
+        return null
+    }
+    submitInfo(formData:NgForm){
+      if(this.uploader.getNotUploadedItems().length || formData.valid){
+        this.showWarning = false
+        this.uploader.uploadAll()
+      }else
+        this.showWarning = true
+    }
+    public findInvalidControls(formData:NgForm) {
+      const invalid = [];
+      const controls = formData.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              invalid.push(name);
+          }
+      }
+      return invalid;
+  }
 
 }

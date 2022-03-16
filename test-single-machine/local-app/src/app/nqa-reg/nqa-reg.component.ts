@@ -6,6 +6,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+import { NgForm } from '@angular/forms';
 //import the do function to be used with the http library.
 const URL = '/api/nqa/register';
 
@@ -23,7 +24,7 @@ export class NQARegComponent implements OnInit {
     courseName: string;
     courseCode: string;
     devCode:String;
-
+    showWarning:boolean = false;
 
 
      //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -38,8 +39,10 @@ export class NQARegComponent implements OnInit {
       this.uploader.onBuildItemForm=(item:any,form:any)=>{
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.regDate);
-            form.append('courseName',this.model.courseName);
-            form.append('courseCode',this.model.courseCode);
+            // form.append('courseName',this.model.courseName);
+            // form.append('courseCode',this.model.courseCode);
+            form.append('nqfId',this.model.nqfId);
+            form.append('qtitle',this.model.qtitle);
 
       };
     //overide the onCompleteItem property of the uploader so we are
@@ -65,9 +68,11 @@ export class NQARegComponent implements OnInit {
     @ViewChild('selectedFile') selectedFile: any;
     clear(){
       this.model.programmeCode="";
-      this.model.courseCode="";
-      this.model.courseName="";
+      // this.model.courseCode="";
+      // this.model.courseName="";
       this.model.regDate=null;
+      this.model.qtittle = "";
+      this.model.nqfId = "";
       this.selectedFile.nativeElement.value = '';
        (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
@@ -88,6 +93,13 @@ export class NQARegComponent implements OnInit {
     }
     removefile(){
         (<HTMLInputElement>document.getElementById("file-name")).value = "";
+    }
+    submitInfo(formData:NgForm){
+      if(this.uploader.getNotUploadedItems().length || formData.valid){
+        this.showWarning = false
+        this.uploader.uploadAll()
+      }else
+        this.showWarning = true
     }
 
 }

@@ -3,17 +3,31 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #concludeForm="ngForm">
-          <h3 class="form-title-label"> PDU Recommendation before NQA </h3>
+          <h3 class="form-title-label"> NQF Documentation Review - PDU </h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
-            <label for="ProgrammeCode">Proposed Programme Code</label>
+            <div class="row px-3"><label for="ProgrammeCode">Programme Code</label><div [hidden]="!showWarning||procode.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
-            <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
+            <!-- <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
+          </div>
+          <div class="form-group">
+            <div class="row px-3"><label class="control-label">Submission type: </label><div [hidden]="!showWarning||type.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
+            <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
+              <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
+                <input type="radio" class="custom-control-input" id="status1" name="type" [(ngModel)]="model.type" [value]="true" required #type="ngModel" mdbInput>
+                <label class="custom-control-label" for="status1"> Initial Submit </label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline" style="margin-right:20%;margin-top:8px">
+                <input type="radio" class="custom-control-input" id="status2" name="type" [(ngModel)]="model.type" [value]="false" required #type="ngModel" mdbInput>
+                <label class="custom-control-label" for="status2">Resubmission</label>
+              </div>
+            </div>
+            <!-- <div [hidden]="type.valid" class="alert alert-danger">submission type is needed</div> -->
           </div>
 
           <div class="form-group">
-            <label for="doc"> Recommendations: </label>
+            <div class="row px-3"><label for="doc"> Documentation: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -26,18 +40,19 @@
               </div>
               <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
                 readonly>
-              <div class="input-group-append">
+              <!-- <div class="input-group-append">
                 <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile();uploader.clearQueue();"
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Clear All</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+            <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div>
+            <button type="submit" class="btn btn-mutted" (click)="clear();uploader.clearQueue();">Clear </button>
+            <button type="button" class="btn btn-success btn-s" (click)="submitInfo(concludeForm,'approve')"><!-- [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid"-->
               Approve</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Decline</button>
+            <button type="button" class="btn btn-danger btn-s" (click)="submitInfo(concludeForm,'defer')"> <!--/button> [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid"-->
+              Defer</button>
           </div>
         </form>
       </div>
