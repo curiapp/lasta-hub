@@ -48,7 +48,7 @@ addOrganisation() {
             form.append('devCode',this.model.programmeCode);
             form.append('sdate',this.model.startDate);
             form.append('edate',this.model.endDate);
-            form.append('organization',this.organisationList);
+            form.append('organisation-list',this.organisationList);
             
 
       };
