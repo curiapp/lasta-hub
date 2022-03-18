@@ -1,19 +1,29 @@
-<div class="container" style="padding-top:70px">
+<div class="container" style="padding-top:75px">
   <div class="row justify-content-md-center">
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #consultForm="ngForm">
-          <h3 class="form-title-label"> NQA Course Registration</h3>
+          <h3 class="form-title-label"> NQF Registration</h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
-            <label for="ProgrammeCode">Proposed Programme Code</label>
+            <div class="row px-3"><label for="ProgrammeCode">Proposed Programme Code </label><div [hidden]="!showWarning||procode.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
-            <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
+            <!-- <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
+          </div>
+          <div class="form-group">
+            <div class="row px-3"><label for="qualificationTitle">Qualification Title </label><div [hidden]="!showWarning||qtitle.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
+            <input id="qualificationTitle" type="text" class="form-control" required [(ngModel)]="model.qualificationTitle" name="qtitle" #qtitle="ngModel">
+            <!-- <div [hidden]="qtitle.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
+          </div>
+          <div class="form-group">
+            <div class="row px-3"><label for="nqfId">NQF ID</label><div [hidden]="!showWarning||nqfId.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
+            <input id="nqfId" type="text" class="form-control" required [(ngModel)]="model.nqfId" name="nqfId" #nqfId="ngModel">
+            <!-- <div [hidden]="nqfId.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
           </div>
           <br>
           <div class="form-group">
-            <label for="date">Registration Date</label>
+            <div class="row px-3"><label for="date">Registration Date</label><div [hidden]="!showWarning||cdate.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <div class="input-group">
               <input id="date" type="Date" class="form-control" required [(ngModel)]="model.regDate" ng2-datetime-picker date-only="true"
                 name="regDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
@@ -21,10 +31,10 @@
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>
-            <div [hidden]="cdate.valid" class="alert alert-danger">Registration Date is required</div>
+            <!-- <div [hidden]="cdate.valid" class="alert alert-danger">Registration Date is required</div> -->
           </div>
           <br>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="organisation">Course Name</label>
             <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.courseName" name="courseName" #org="ngModel">
             <div [hidden]="org.valid" class="alert alert-danger">Course Name is required</div>
@@ -34,10 +44,10 @@
             <label for="organisation">Course Code</label>
             <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.courseCode" name="courseCode" #org="ngModel">
             <div [hidden]="org.valid" class="alert alert-danger">Course Code is required</div>
-          </div>
+          </div> -->
           <br>
           <div class="form-group">
-            <label for="doc"> Course Document: </label>
+            <div class="row px-3"><label for="doc"> Course Document: </label> <div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -58,10 +68,11 @@
           </div>
           <br>
           <div class="form-group">
-            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Cancel</button>
-            <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
-              submit </button>
-            <button type="submit" class="btn btn-default" (click)="close()">Close</button>
+            <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div>
+            <button type="button" class="btn btn-muted" (click)="clear();uploader.clearQueue();">Clear</button>
+            <button type="submit" class="btn btn-success btn-s" (click)="submitInfo(consultForm)" > <!--[disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid"-->
+              Save </button>
+            <button type="button" class="btn btn-danger" (click)="close()">Close</button>
           </div>
         </form>
       </div>

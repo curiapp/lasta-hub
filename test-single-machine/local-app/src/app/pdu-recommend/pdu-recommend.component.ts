@@ -4,6 +4,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+import { NgForm } from '@angular/forms';
 const URL = '/api/nqa/pdu-recommend';
 
 //create the component properties
@@ -17,6 +18,7 @@ export class PduRecommendComponent implements OnInit {
   model: any = {};
   devCode: String;
   decision: String;
+  showWarning:boolean = false;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -75,6 +77,13 @@ export class PduRecommendComponent implements OnInit {
   removefile(){
       (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
-
+  submitInfo(formData:NgForm,dec:string){
+    this.decision = dec;
+    if(this.uploader.getNotUploadedItems().length || formData.valid){
+      this.showWarning = false
+      this.uploader.uploadAll()
+    }else
+      this.showWarning = true
+  }
 
 }

@@ -4,6 +4,8 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 const URL = '/api/nqa/submit';
 
 //create the component properties
@@ -18,6 +20,7 @@ export class NqaSubmitComponent implements OnInit {
   model: any = {};
   devCode: String;
   private fileMap = new Map();
+  showWarning:boolean = false;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -53,12 +56,13 @@ export class NqaSubmitComponent implements OnInit {
     // };
   }
   //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor() {
+  constructor(private router:Router) {
 
   }
   clear() {
     this.model.programmeCode = "";
     this.model.type = "";
+    this.uploader.clearQueue();
     (<HTMLInputElement>document.getElementById("qualification-doc")).value = "";
     (<HTMLInputElement>document.getElementById("response")).value = "";
   }
@@ -110,5 +114,16 @@ export class NqaSubmitComponent implements OnInit {
       return true;
 
   }
+  close() {
+    console.log("closing the window...");
+    this.router.navigate(['/home']);
+}
+submitInfo(formData:NgForm){
+  if(this.uploader.getNotUploadedItems().length || formData.valid){
+    this.showWarning = false
+    this.uploader.uploadAll()
+  }else
+    this.showWarning = true
+}
 
 }

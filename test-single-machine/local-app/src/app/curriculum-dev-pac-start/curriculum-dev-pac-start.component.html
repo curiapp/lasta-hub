@@ -24,7 +24,7 @@
           </div>
           <br>
           <div class="form-group">
-            <label for="doc"> Draft: </label>
+            <label for="doc"> Programme Draft: </label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <label>
@@ -45,7 +45,7 @@
           </div>
           <br>
           <div class="form-group">
-            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Cancel</button>
+            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Clear</button>
             <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
               submit </button>
             <button type="submit" class="btn btn-default" (click)="close()">Close</button>

@@ -3,7 +3,7 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="login-wrapper">
                 <form #consultForm="ngForm">
-                    <h3 class="form-title-label"> Curriculum Development -- PAC Consult</h3>
+                    <h3 class="form-title-label"> PAC Consultation & Benchmarking</h3>
                     <hr class="colorgraph">
                     <br>
                     <div class="form-group">
@@ -24,32 +24,55 @@
                         <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
                     </div>
                     <br>
-                    <div class="form-group">
-                        <label for="doc"> Minutes/Comments /Support Letters: </label>
+             <div class="form-group">
+                        <label for="doc"> Final Draft/Minutes/Comments/Endorsement Letters: </label>
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label>
-                                    <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
-                                        Browse
-                                        <input class="form-control" #selectedFile type="file" name="check-list" ng2FileSelect [uploader]="uploader" (change)="updateFile()"
-                                            style="display: none;" />
-                                    </span>
-                                </label>
-                            </div>
-                            <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
-                                readonly>
-                            <div class="input-group-append">
-                                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile();uploader.clearQueue();"
-                                    [disabled]="!uploader.getNotUploadedItems().length">X</button>
-                            </div>
+                          <div class="input-group-prepend">
+                            <label>
+                              <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
+                                Browse
+                                <input class="form-control" #selectedFile type="file" name="endorsements" ng2FileSelect [uploader]="uploader" (change)="updateFile('endorsements')"
+                                  style="display: none;" />
+                              </span>
+                            </label>
+                          </div>
+                          <input style="height:40px" type="text" id="endorsements" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
+                            readonly>
+                          <div class="input-group-append">
+                            <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('endorsements')"
+                              [disabled]="!uploader.getNotUploadedItems().length">X</button>
+                          </div>
                         </div>
-                    </div>
+                      </div>
+                      <!-- <span [hidden]="devCode.value"> -->
+                        <div class="form-group">
+                          <label for="doc"> Benchmarking Reports: </label>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <label>
+                                <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
+                                  Browse
+                                  <input class="form-control" #selectedFile type="file" name="benchmarking" ng2FileSelect [uploader]="uploader" (change)="updateFile('benchmarking')"
+                                    style="display: none;" />
+                                </span>
+                              </label>
+                            </div>
+                            <input style="height:40px" type="text" id="benchmarking" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
+                              readonly>
+                            <div class="input-group-append">
+                              <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('benchmarking');"
+                                [disabled]="!uploader.getNotUploadedItems().length">X</button>
+                            </div>
+                          </div>
+                        </div>
+                      <!-- </span> -->
+            
                     <br>
                     <div class="form-group">
                         <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Cancel</button>
-                        <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
+                        <button type="button" class="btn btn-success btn-s" (click)="uploadFiles()" [disabled]="allowSubmission()|| !consultForm.form.valid">
                             submit </button>
-                        <button type="submit" class="btn btn-default" (click)="close()">Close</button>
+                        
                     </div>
                 </form>
             </div>
