@@ -5,6 +5,10 @@ SchemaValidator = require('./schema').SchemaValidator
 
 exports.ConsultationValidator = class ConsultationValidator extends SchemaValidator
 
+    checkAndSanitizeForConsultationRecord: (consultationData, callback) ->
+        @checkAndSanitizeForConsultations consultationData, (consultationDataError, validConsultationData) =>
+            callback consultationDataError, validConsultationData
+
     checkAndSanitizeForConsultations: (consultationData, callback) ->
         consultationDataOptions =
             devCode: (devCodePartialCallback) =>
