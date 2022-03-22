@@ -2,7 +2,7 @@ import { BrowserModule,Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { MDBBootstrapModule, TooltipModule } from 'angular-bootstrap-md';
 import { HomeComponent } from './home/home.component';
 import { RouterModule, Routes, Router } from '@angular/router';
 import { ResumeProgrammeComponent } from './resume-programme/resume-programme.component';
@@ -111,6 +111,7 @@ import { ShortSummaryService } from './services/short-summary.service';
     BrowserModule,
     AppRoutingModule,
     HttpModule,
+    TooltipModule,
     MDBBootstrapModule.forRoot(),
     FormsModule, ReactiveFormsModule,
   ],
