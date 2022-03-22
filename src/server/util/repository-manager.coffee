@@ -156,14 +156,14 @@ exports.RepositoryManager = class RepositoryManager
             console.dir oldFileNames
             addFileFuncs = []
             console.log "creating file functions..."
-            draftFileFunc = (draftPartialCallback) ->
+            draftFileFunc = (draftPartialCallback) =>
                 @addFileToRepo devCode, oldFileNames[0], 'nqa/', 'draft', "Added programme draft file for #{devCode}", true, (fileErr, fileRes) =>
                     draftPartialCallback fileErr, fileRes
             addFileFuncs.push draftFileFunc
             if isInit
                 console.log "this is the initial submission... no response is expected..."
             else
-                respFileFunc = (respPartialCallback) ->
+                respFileFunc = (respPartialCallback) =>
                     @addFileToRepo devCode, oldFileNames[1], 'nqa/', 'response', "Added response file for #{devCode}", true, (fileErr, fileRes) =>
                         respPartialCallback fileErr, fileRes
                 addFileFuncs.push respFileFunc
@@ -177,6 +177,20 @@ exports.RepositoryManager = class RepositoryManager
             console.log addFileFuncs.length
             async.series addFileFuncs, (nqaSubmissionFilesError, nqaSubmissionFilesRes) =>
                 callback nqaSubmissionFilesError, nqaSubmissionFilesRes
+
+        addConsultationRecord: (devCode, oldFileNames, callback) ->
+            theFileFuncs = []
+            endorseFileFunc = (endorsePartialCallback) =>
+                @addFileToRepo devCode, oldFileNames[0], 'consultation/', 'endorsement', "Added endorsement file for #{devCode}", true, (endFileErr, endFileRes) =>
+                    endorsePartialCallback endFileErr, endFileRes
+            benchmarkFileFunc = (benchmarkPartialCallback) =>
+                @addFileToRepo devCode, oldFileNames[0], 'consultation/', 'benchmark', "Added benchmark file for #{devCode}", true, (bmFileErr, bmFileRes) =>
+                    benchmarkPartialCallback bmFileErr, bmFileRes
+            theFileFuncs.push endorseFileFunc
+            theFileFuncs.push benchmarkFileFunc
+            async.series theFileFuncs, (consRecordFileError, consRecordFileRes) =>
+                callback consRecordFileError, consRecordFileRes
+
 
         addFileToRepo: (devCode, oldFile, destFolder, context, commitMsg, withDate, callback) ->
             console.log "inside _addFileToRepo ... oldFile = #{oldFile}"

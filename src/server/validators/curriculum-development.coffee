@@ -66,6 +66,9 @@ exports.CurriculumDevelopmentValidator = class CurriculumDevelopmentValidator ex
             emailAddress: (emailAddressPartialCallback) =>
                 @helper.checkAndSanitizeEmailAddress member.emailAddress, 'Member Email Address', @validator, (emailAddressError, validEmailAddress) =>
                     emailAddressPartialCallback emailAddressError, validEmailAddress
+            qualification:  (qualificationPartialCallback) =>
+                @checkAndSanitizeQualification member.qualification, "Member Qualification", (qualificationError, validQualification) =>
+                    qualificationPartialCallback qualificationError, validQualification
             cellphone: (cellphonePartialCallback) =>
                 cellphonePartialCallback null, member.cellphone
             workNumber: (workNumberPartialCallback) =>
@@ -83,6 +86,10 @@ exports.CurriculumDevelopmentValidator = class CurriculumDevelopmentValidator ex
     checkAndSanitizeName: (name, token, callback) ->
         @helper.checkAndSanitizeName name, token, @validator, (nameError, validName) =>
             callback nameError, validName
+
+    checkAndSanitizeQualification: (qualif, token, callback) ->
+        @helper.checkAndSanitizeWords qualif, token, @validator, (qualifError, validQualif) =>
+            callback qualifError, validQualif
 
     checkAndSanitizeForBOSSubmission: (submissionData, callback) ->
         @checkAndSanitizeCurriculumDevelopmentData submissionData, (bosSubmissionDataError, validBosSubmissionData) =>
