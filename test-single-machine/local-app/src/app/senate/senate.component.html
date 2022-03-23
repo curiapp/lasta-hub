@@ -64,43 +64,23 @@
            
           <br>
           <div class="form-group">
-            <label class="control-label">APC Decision: </label>
+            <label class="control-label">Decision: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
               <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="apc1" name="apc" [(ngModel)]="model.apc" value="approve" required #apc="ngModel" mdbInput>
-                <label class="custom-control-label" for="apc1">Approve</label>
+                <input type="radio" class="custom-control-input" id="status1" name="status" [(ngModel)]="model.status" value="approve" required #status="ngModel" mdbInput>
+                <label class="custom-control-label" for="status1">Approve</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline" style="margin: right 50px;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="apc2" name="apc" [(ngModel)]="model.apc" value="decline" required #apc="ngModel" mdbInput>
-                <label class="custom-control-label" for="apc2">Decline</label>
+                <input type="radio" class="custom-control-input" id="status2" name="status" [(ngModel)]="model.status" value="decline" required #status="ngModel" mdbInput>
+                <label class="custom-control-label" for="status2">Decline</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline" style="margin: right 30px;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="apc3" name="apc" [(ngModel)]="model.apc" value="defer" required #apc="ngModel" mdbInput>
-                <label class="custom-control-label" for="apc3">Defer</label>
+                <input type="radio" class="custom-control-input" id="status3" name="status" [(ngModel)]="model.status" value="defer" required #status="ngModel" mdbInput>
+                <label class="custom-control-label" for="status3">Defer</label>
               </div>
             </div>
-            <div [hidden]="apc.valid" class="alert alert-danger">APC Decision  is required</div>
+            <div [hidden]="status.valid" class="alert alert-danger">APC/ Senate Decision  is required</div>
           </div>
-          <br>
-          <div class="form-group">
-            <label class="control-label">Senate Decision: </label>
-            <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
-              <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="senate1" name="senate" [(ngModel)]="model.senate" value="approve" required #senate="ngModel" mdbInput>
-                <label class="custom-control-label" for="senate1">Approve</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline" style="margin: right 50px;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="senate2" name="senate" [(ngModel)]="model.senate" value="decline" required #senate="ngModel" mdbInput>
-                <label class="custom-control-label" for="senate2">Decline</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline" style="margin: right 30px;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="senate3" name="senate" [(ngModel)]="model.senate" value="defer" required #senate="ngModel" mdbInput>
-                <label class="custom-control-label" for="senate3">Defer</label>
-              </div>
-            </div>
-            <div [hidden]="senate.valid" class="alert alert-danger">Senate Decision status is needed</div>
-          </div>
-          
           <br>
           <div class="form-group">
             <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()">
