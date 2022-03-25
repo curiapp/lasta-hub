@@ -37,6 +37,15 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
         @helper.checkAndSanitizeWords organizationName, 'Organization Name', @validator, (orgNameError, validOrgName) =>
             callback orgNameError, validOrgName
 
+    checkAndSanitizeOrganizationNameCol: (organizationNameCol, callback) ->
+        orgaFuncs = organizationNameCol.map (orgaItem) =>
+            currentOrgaFunc = (partialOrgaCallback) =>
+                @checkAndSanitizeOrganizationName orgaItem, (singleOrgaNameError, validSingleOrgaName) =>
+                    partialOrgaCallback singleOrgaNameError, validSingleOrgaName
+            return currentOrgaFunc
+        @flowController.parallel orgaFuncs,  (orgasError, validOrgaNames) =>
+            callback orgasError, validOrgaNames
+
     checkAndSanitizeStatus: (statusValue, possibleValues, token, callback) ->
         @helper.checkAndSanitizePossibleValues statusValue, possibleValues, token, @validator, (statusError, validStatus) =>
             callback statusError, validStatus
@@ -97,11 +106,14 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
 
     checkAndSanitizeForConsultation: (consultationData, callback) ->
         consultationOptions =
-            date: (datePartialCallback) =>
-                @checkAndSanitizeConsultationDate consultationData.date, (consultationDateError, validConsultationDate) =>
-                    datePartialCallback consultationDateError, validConsultationDate
+            startDate: (date1PartialCallback) =>
+                @checkAndSanitizeConsultationDate consultationData.sDate, (consultationSDateError, validConsultationSDate) =>
+                    date1PartialCallback consultationSDateError, validConsultationSDate
+            endDate: (date2PartialCallback) =>
+                @checkAndSanitizeConsultationDate consultationData.eDate, (consultationEDateError, validConsultationEDate) =>
+                    date2PartialCallback consultationEDateError, validConsultationEDate
             organization: (organizationPartialCallback) =>
-                @checkAndSanitizeOrganizationName consultationData.organization, (organizationNameError, validOrganizationName) =>
+                @checkAndSanitizeOrganizationNameCol consultationData.organization, (organizationNameError, validOrganizationName) =>
                     organizationPartialCallback organizationNameError, validOrganizationName
             devCode: (devCodePartialCallback) =>
                 @checkAndSanitizeDevCode consultationData.devCode, (devCodeError, validDevCode) =>

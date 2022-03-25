@@ -20,6 +20,8 @@ export class  OtherFacultyBosComponent implements OnInit {
     model:any={};
     consultationDate: Date;
     devCode:String;
+    OtherFacultyName:String;
+    recommendTo:String;
 
 
 
@@ -35,6 +37,8 @@ export class  OtherFacultyBosComponent implements OnInit {
       this.uploader.onBuildItemForm=(item:any,form:any)=>{
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.consultationDate);
+            form.append('OtherFacultyName',this.model.OtherFacultyName);
+            form.append('recommendTo',this.model.recommendTo);
            
 
       };
@@ -62,6 +66,8 @@ export class  OtherFacultyBosComponent implements OnInit {
       this.model.programmeCode="";
       this.model.consultationDate=null;
       this.model.status = "";
+      this.model.OtherFacultyName="";
+      this.model.recommendTo="";
       this.selectedFile.nativeElement.value = '';
       (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }

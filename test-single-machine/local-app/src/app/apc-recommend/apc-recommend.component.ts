@@ -4,6 +4,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+import { ConsultationService } from '../../../../../dist/client/public/vendor/application/_services/consultation.service';
 
 const URL = '/api/bos-senate/apc-recommend';
 
@@ -18,6 +19,9 @@ export class ApcRecommendComponent implements OnInit {
   model: any = {};
   devCode: String;
   decision: String;
+  consultationDate:Date;
+
+
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -32,6 +36,7 @@ export class ApcRecommendComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('decision', this.decision);
+      form.append('date', this.model.ConsultationDate);
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
@@ -56,6 +61,7 @@ export class ApcRecommendComponent implements OnInit {
   @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";
+    this.model.ConsultationDate=null;
     this.selectedFile.nativeElement.value = '';
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }

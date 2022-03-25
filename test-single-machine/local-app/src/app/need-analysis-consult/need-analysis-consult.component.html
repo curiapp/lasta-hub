@@ -14,8 +14,7 @@
               </div>
               <br>
               <div class="form-group">
-                <div class="row px-3"><label for="date">Consultation Period</label><div [hidden]="!showWarning||sdate.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-                  <label for="date">Consultation Start Date</label>
+                <div class="row px-3"><label for="date">Consultation Start Date</label><div [hidden]="!showWarning||sdate.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
                   <div class="input-group">
                       <input id="sdate" type="Date" class="form-control" required [(ngModel)]="model.startDate" ng2-datetime-picker date-only="true" name="sDate"
                       placeholder="YYYY-MM-DD" #sdate="ngModel" />
@@ -26,13 +25,13 @@
                   <!-- <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div> -->
               </div>
               <br>
-               <div class="form-group">
+               <!-- <div class="form-group">
                   <div class="row px-3"><label for="organisation">Organisation Name</label><div [hidden]="!showWarning||this.organisationList.length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
                   <div [hidden]="sdate.valid" class="alert alert-danger">StartDate is required</div>
-              </div>
+              </div> -->
               <br>
               <div class="form-group">
-                  <label for="date">Consultation End Date</label>
+                <div class="row px-3"><label for="date">Consultation End Date</label><div [hidden]="!showWarning||edate.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
                   <div class="input-group">
                       <input id="edate" type="Date" class="form-control" required [(ngModel)]="model.endDate" ng2-datetime-picker date-only="true" name="eDate"
                       placeholder="YYYY-MM-DD" #edate="ngModel" />
@@ -44,22 +43,22 @@
               </div>
               <br>
                <div class="form-group">
-                  <label for="organisation">Stakeholders List</label>
+                <div class="row px-3"><label for="organisation">Stakeholders List</label><div [hidden]="!showWarning||org.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
                   <ul>
                     <li *ngFor="let organisation of organisationList">
                       {{organisation}}
                     </li>
                   </ul>
                   <input type="text" id="organisation" name="organisation"  class="form-control" [(ngModel)]="model.organisation" #org="ngModel">
-                  <button (click)="addOrganisation()">Add Organisation</button> 
+                  <button (click)="addOrganisation()">Add Stakeholder name</button> 
                   <!-- <div [hidden]="org.valid" class="alert alert-danger">Organisation Name  is required</div> -->
               </div>
              <br>
-             <div class="form-group">
+             <!-- <div class="form-group">
               <div class="row px-3"><label for="doc" > Submissions: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
                   <button (click)="addOrganisation()">Add Stakeholder name</button> 
                   <div [hidden]="org.valid" class="alert alert-danger">Stakeholder Name  is required</div>
-              </div>
+              </div> -->
              <br>
              <div class="form-group">
                   <label for="doc" > Questionnaires from Respodents: </label>
