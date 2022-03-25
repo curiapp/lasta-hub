@@ -59,6 +59,6 @@ dist/client/public/uploads-tmp
 uploads
 
 # package-lock files
-test-single-machine/local-app/package-lock.json
-package-lock.json
+#test-single-machine/local-app/package-lock.json
+#package-lock.json
 node_modules
