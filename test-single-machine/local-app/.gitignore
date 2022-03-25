@@ -44,3 +44,6 @@ testem.log
 .DS_Store
 Thumbs.db
 *.mp4
+
+# package-lock files
+test-single-machine/local-app/package-lock.json
