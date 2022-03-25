@@ -3,12 +3,12 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #bosForm="ngForm">
-          <h3 class="form-title-label"> Faculty Bos -- Recommendation</h3>
+          <h3 class="form-title-label"> 5.2 Faculty Bos -- Recommendation</h3>
           <!-- <button type="submit" class="btn btn-default" (click)="backClicked()">Go back</button> -->
           <hr class="colorgraph">
           <br>
           <div class="form-group">
-            <label for="ProgrammeCode">Proposed Programme Code</label>
+            <label for="ProgrammeCode">Programme Code</label>
             <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"
               name="devCode" #procode="ngModel">
             <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
@@ -27,7 +27,7 @@
           </div>
           <br>
           <div class="form-group">
-            <label for="doc"> Recommendations: </label>
+            <label for="doc"> Programme Draft: </label>
             <div class="input-group mb-0">
               <div class="input-group-prepend">
                 <label>
@@ -49,7 +49,7 @@
             <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger">Recommendation documents is required</div>
           </div>
           <div class="form-group">
-            <label class="control-label">Recommend / Submit to: </label>
+            <label class="control-label">Recommended to: </label>
             <fieldset style="border:solid 0.4px;border-radius:4px;width:100%;height:30px;border-color:lightgray;">
               <div style="text-align:center;">
                 <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status"
@@ -66,11 +66,11 @@
           </div>
           <br>
           <div class="form-group">
-            <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue()">Clear Form</button>
+            <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue()">Clear</button>
             <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
               [disabled]="!uploader.getNotUploadedItems().length || !bosForm.form.valid">
               Submit &nbsp; <i class="fa fa-check"></i></button>
-            <button type="submit" class="btn btn-danger" (click)="backClicked()">Close &nbsp; <i class="fa fa-times"></i></button>
+            <!-- <button type="submit" class="btn btn-danger" (click)="backClicked()">Close &nbsp; <i class="fa fa-times"></i></button> -->
           </div>
         </form>
       </div>

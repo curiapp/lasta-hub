@@ -69,6 +69,25 @@ exports.ConsultationRequestHandler = class ConsultationRequestHandler
                                 responseObject: response
                             @controller.endorse validEndorsementData, handlerObject
 
+        recordConsultations: (request, response) ->
+            @validator.checkAndSanitizeForConsultationRecord request.body, (consultationDataError, validConsultationData) =>
+                if consultationDataError?
+                    response.status(400).json({message: "Bad Request for consultation record!"})
+                else
+                    repoFiles = [
+                        {name: request.files['endorsements'][0], ind: 0},
+                        {name: request.files['benchmarking'][0], ind: 1}
+                    ]
+                    @repoManager.addConsultationRecord validConsultationData.devCode, repoFiles, (repositoryError, commitHash) =>
+                        if repositoryError?
+                            response.status(500).json({message: "Error storing consultation records in repository"})
+                        else
+                            handlerObject =
+                                handlerRef: @
+                                responseObject: response
+                            @controller.recordConsultations validConsultationData, handlerObject
+
+
         constructor: ->
             super()
             @controller = new ConsultationsController

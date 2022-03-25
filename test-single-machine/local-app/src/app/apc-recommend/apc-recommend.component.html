@@ -3,17 +3,30 @@
   <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
           <form  #concludeForm="ngForm">
-              <h3 class="form-title-label">  Academic Planning Committee Recommendation  </h3>
+              <h3 class="form-title-label">5.4 Academic Planning Committee Recommendation  </h3>
               <hr class="colorgraph">
               <br>
               <div class="form-group">
-                  <label for="ProgrammeCode">Proposed Programme Code</label>
+                  <label for="ProgrammeCode">Programme Code</label>
                   <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"  name="devCode" #procode="ngModel">
                   <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
               </div>
+              <br>
+              <div class="form-group">
+                  <label for="date">APC Date</label>
+                  <div class="input-group">
+                      <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="date"
+                      placeholder="YYYY-MM-DD" #cdate="ngModel" />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+                  </div>
+                  <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
+              </div>
+             <br>
 
               <div class="form-group">
-                  <label for="doc" > Recommendations: </label>
+                  <label for="doc" > Draft Programme: </label>
                   <div class="input-group mb-0">
                       <div class="input-group-prepend">
                     <label>
@@ -31,11 +44,15 @@
               <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger">Recommendation documents is required</div>
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue();" >Clear Form</button>
+                <label for="date">APC Decision</label>
                 <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
               Recommend(senate) &nbsp; <i class="fa fa-check"></i></button>
               <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
               Defer(Faculty) &nbsp; <i class="fa fa-history"></i></button>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue();" >Clear Form</button>
               </div>
           </form>
       </div>

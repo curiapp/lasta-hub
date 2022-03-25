@@ -104,5 +104,8 @@ exports.ConsultationsController = class ConsultationsController extends Abstract
         else
             @continueWithHandler null, handlerObject, null, endorseResult
 
+    recordConsultations: (consultationData, handlerObject) ->
+        @continueWithHandler null, handlerObject, null, "ok"
+
     constructor: ->
         super()

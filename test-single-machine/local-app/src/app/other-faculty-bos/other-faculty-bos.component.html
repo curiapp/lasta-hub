@@ -3,15 +3,21 @@
   <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
           <form  #bosForm="ngForm">
-              <h3 class="form-title-label">  Other Faculty Bos -- Recommendation</h3>
+              <h3 class="form-title-label"> 5.3 Other Faculty Bos -- Recommendation</h3>
               <hr class="colorgraph">
               <br>
               <div class="form-group">
-                  <label for="ProgrammeCode">Proposed Programme Code</label>
+                  <label for="ProgrammeCode">Programme Code</label>
                   <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"  name="devCode" #procode="ngModel">
                   <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
               </div>
               <br>
+              <div class="form-group">
+                <label for="OtherFacultyName">Other Faculty Name</label>
+                <input id="OtherFacultyName" type="text" class="form-control" required [(ngModel)]="model.OtherFacultyName"  name="OtherFacultyName" #othercode="ngModel">
+                <div [hidden]="othercode.valid" class="alert alert-danger">Other Faculty Name  is required</div>
+            </div>
+            <br>
               <div class="form-group">
                   <label for="date">BOS Date</label>
                   <div class="input-group">
@@ -25,7 +31,7 @@
               </div>
              <br>
                <div class="form-group">
-                  <label for="doc" > Recommendations:  </label>
+                  <label for="doc" > Programme Draft:  </label>
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
                     <label>
@@ -41,13 +47,30 @@
                   </div>
               </div>
               <br>
+              <div class="form-group">
+                <label class="control-label">Recommended to: </label>
+                <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
+                  <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
+                    <input type="radio" class="custom-control-input" id="defaultInline1" name="recommendTo" [(ngModel)]="model.recommendTo" value="apc"
+                      required #recommendTo="ngModel" mdbInput>
+                    <label class="custom-control-label" for="defaultInline1">APC</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-inline" style="margin-right:20%;margin-top:8px">
+                    <input type="radio" class="custom-control-input" id="defaultInline2" name="recommendTo" [(ngModel)]="model.recommendTo" value="BOSEC"
+                      required #recommendTo="ngModel" mdbInput>
+                    <label class="custom-control-label" for="defaultInline2">BOSEC</label>
+                  </div>
+                </div>
+                <div [hidden]="recommendTo.valid" class="alert alert-danger">recommendto is required</div>
+              </div>
+              
                </div>
                <br>
               <div class="form-group">
                 <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()" >Clear</button>
                 <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !bosForm.form.valid">
               Submit </button>
-              <button type="submit" class="btn btn-default" (click)="close()" >Close</button>
+              <!-- <button type="submit" class="btn btn-default" (click)="close()" >Close</button> -->
               </div>
           </form>
       </div>

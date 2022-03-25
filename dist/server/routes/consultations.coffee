@@ -23,3 +23,16 @@ module.exports = (app, uploader) ->
     app.route('/api/consultations/pac/endorse').post uploader.single('recommendation'), (request, response) ->
         console.log "new POST request /api/consultations/pac/endorse ..."
         ConsultationRequestHandler.getInstance().endorse request, response
+
+    # merged consultations
+    endorseDocField =
+        name: 'endorsements'
+        maxCount: 1
+    benchmkDocField =
+        name: 'benchmarking'
+        maxCount: 1
+    consultCol = [endorseDocField, benchmkDocField]
+    consultUploads = uploader.fields consultCol
+    app.route('/api/consultations/pac/consult').post consultUploads, (request, response) ->
+        console.log("new POST request to /api/consultations/pac/consult ...")
+        ConsultationRequestHandler.getInstance().recordConsultations request, response
