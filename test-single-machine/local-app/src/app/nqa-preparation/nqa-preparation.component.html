@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #concludeForm="ngForm">
-          <h3 class="form-title-label"> NQF Documentation </h3>
+          <h3 class="form-title-label">6.1 NQF Documentation </h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="row px-3"><label for="doc"> Stateholders Support Document: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
+            <div class="row px-3"><label for="doc">Support Document: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -71,7 +71,7 @@
             <button type="submit" class="btn btn-muted" (click)="clear();uploader.clearQueue();">Clear </button>
             <button type="button" class="btn btn-success btn-s" (click)="submitInfo(concludeForm)"><!--/button> [disabled]="!uploader.getNotUploadedItems().length  || !concludeForm.form.valid"-->
               Submit </button>
-              <button type="button" class="btn btn-danger" (click)="close()">Close</button>
+              <!-- <button type="button" class="btn btn-danger" (click)="close()">Close</button> -->
           </div>
         </form>
       </div>
