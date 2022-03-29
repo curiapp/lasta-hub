@@ -37,7 +37,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.consultationDate);
             form.append('status',this.model.status);
-            form.append('madeBy',this.model.madeBy);
+            // form.append('madeBy',this.model.madeBy);
 
       };
     //overide the onCompleteItem property of the uploader so we are
@@ -67,7 +67,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
       this.model.programmeCode="";
       this.model.consultationDate=null;
       this.model.status = "";
-      this.model.madeBy = "";
+      // this.model.madeBy = "";
       this.selectedFile.nativeElement.value = '';
        (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
