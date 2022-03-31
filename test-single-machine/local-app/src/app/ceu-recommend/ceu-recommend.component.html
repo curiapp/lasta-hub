@@ -7,7 +7,7 @@
           <hr class="colorgraph">
           <br>
           <div class="form-group">
-            <label for="ProgrammeCode">Proposed Programme Code</label>
+            <label for="ProgrammeCode">Programme Code</label>
             <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
             <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
           </div>
