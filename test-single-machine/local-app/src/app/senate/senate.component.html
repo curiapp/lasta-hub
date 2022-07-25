@@ -1,9 +1,9 @@
-<div class="container" style="padding-top:55px">
+<div class="container" style="padding-top:70px">
   <div class="row justify-content-md-center">
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #senateForm="ngForm">
-          <h3 class="form-title-label">1.5 APC and Senate Consultation</h3>
+          <h3 class="form-title-label">1.5 Senate Approval</h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -23,22 +23,7 @@
             </div>
             <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
           </div>
-          <div class="form-group">
-            <label class="control-label">Committe: </label>
-            <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
-              <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="defaultInline1" name="madeBy" [(ngModel)]="model.madeBy" value="apc"
-                  required #madeBy="ngModel" mdbInput>
-                <label class="custom-control-label" for="defaultInline1">APC</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline" style="margin-right:20%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="defaultInline2" name="madeBy" [(ngModel)]="model.madeBy" value="senate"
-                  required #madeBy="ngModel" mdbInput>
-                <label class="custom-control-label" for="defaultInline2">Senate</label>
-              </div>
-            </div>
-            <div [hidden]="madeBy.valid" class="alert alert-danger">Committe is required</div>
-          </div>
+      
           <br>
           <div class="form-group">
             <label for="doc"> Recomendations: </label>
@@ -68,7 +53,7 @@
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
               <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
                 <input type="radio" class="custom-control-input" id="status1" name="status" [(ngModel)]="model.status" value="approve" required #status="ngModel" mdbInput>
-                <label class="custom-control-label" for="status1">Approve</label>
+                <label class="custom-control-label" for="status1">Recommend</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline" style="margin: right 50px;margin-top:8px">
                 <input type="radio" class="custom-control-input" id="status2" name="status" [(ngModel)]="model.status" value="decline" required #status="ngModel" mdbInput>
@@ -79,7 +64,7 @@
                 <label class="custom-control-label" for="status3">Defer</label>
               </div>
             </div>
-            <div [hidden]="status.valid" class="alert alert-danger">APC/ Senate Decision  is required</div>
+            <div [hidden]="status.valid" class="alert alert-danger">Senate Decision  is required</div>
           </div>
           <br>
           <div class="form-group">

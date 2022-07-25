@@ -6,7 +6,7 @@ import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
 import { Location } from '@angular/common';
-const URL = '/api/need-analysis/senate/recommend';
+const URL = '/api/need-analysis/apc/recommend';
 
 //create the component properties
 @Component({
