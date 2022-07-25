@@ -56,6 +56,7 @@ import { CourseInProgressComponent } from './course-in-progress/course-in-progre
 import { CourseDueForReviewComponent } from './course-due-for-review/course-due-for-review.component';
 import { CourseRecentlyApprovedComponent } from './course-recently-approved/course-recently-approved.component';
 import { ShortSummaryService } from './services/short-summary.service';
+import { ApcComponent } from './apc/apc.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { ShortSummaryService } from './services/short-summary.service';
     LoginComponent,
     CourseInProgressComponent,
     CourseDueForReviewComponent,
-    CourseRecentlyApprovedComponent
+    CourseRecentlyApprovedComponent,
+    ApcComponent
   ],
   imports: [
     FileUploadModule,
