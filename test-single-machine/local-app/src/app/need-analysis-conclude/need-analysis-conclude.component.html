@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #concludeForm="ngForm">
-          <h3 class="form-title-label">1.3 Recomendation: NA </h3>
+          <h3 class="form-title-label">1.3.1 Recommendation of Need Analysis </h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -34,10 +34,10 @@
           </div>
           <div class="form-group">
             <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Clear All</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Approve</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Decline</button>
+            <button type="button" class="btn btn-success btn-s" (click)="setDecission('Recommend');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+             Recommend</button>
+            <!-- <button type="button" class="btn btn-success btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+              Decline</button> -->
 
             <button type="button" class="btn btn-success btn-s" (click)="setDecission('defer');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
               Defer</button>
