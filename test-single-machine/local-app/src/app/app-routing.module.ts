@@ -41,6 +41,7 @@ import { OtherFacultyBosComponent } from './other-faculty-bos/other-faculty-bos.
 import { ApcRecommendComponent } from './apc-recommend/apc-recommend.component';
 import { FinalSenateRecommendComponent } from './final-senate-recommend/final-senate-recommend.component';
 import { LoginComponent } from './login/login.component';
+import { ApcComponent } from './apc/apc.component';
 
 const routes: Routes = [
   // { path: '', component: HomeComponent },
@@ -94,6 +95,7 @@ const routes: Routes = [
   { path: 'other-faculty-bos', component: OtherFacultyBosComponent},
   { path: 'apc-recommend', component: ApcRecommendComponent},
   {path: 'final-senate-recommend', component: FinalSenateRecommendComponent},
+  {path:'apc',component:ApcComponent},
 ];
 
 @NgModule({

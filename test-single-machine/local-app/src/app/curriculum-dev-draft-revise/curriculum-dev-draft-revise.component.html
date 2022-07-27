@@ -3,11 +3,11 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #endconsultForm="ngForm">
-          <h3 class="form-title-label">2.2 Curriculum Development - Drafting</h3>
+          <h3 class="form-title-label">2.2 Curriculum - Drafting</h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
-            <label for="ProgrammeCode">Proposed Programme Code</label>
+            <label for="ProgrammeCode">Programme Code</label>
             <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
             <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
           </div>

@@ -8,7 +8,7 @@
         <h5 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
             (click)="openPannel(1)">
-            Stage 1 : Need Analysis (NA)
+            Stage 1 : Need Analysis 
           </button>
         </h5>
       </div>
@@ -28,9 +28,9 @@
                 </div>
                 <div class="caption">
                   <p></p>
-                  <h3>Start</h3>
-                  <p>This initial step involves identification of the need for a new programme.</p>
-                  <a routerLink="/StartNeedAnalysis" class="btn btn-success" role="button">Create New Programme</a>
+                  <h3>1.1 Create a new Programme</h3>
+                  <p>Requires the Curriculum Development Coordinator (CDC) to allocate the proposed programme identification details/specifications.</p>
+                  <a routerLink="/StartNeedAnalysis" class="btn btn-success" role="button">Create</a>
                   <!--<a routerLink='/StartNeedAnalysis' type="button" class="btn btn-default btn-block">Create New Programme</a>-->
                 </div>
               </div>
@@ -42,7 +42,7 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Resume</h3>
+                  <h3>Resume </h3>
                   <p>Select the appropriate programme code to resume the need analysis process.</p>
                   <div class="input-group mb-3">
                     <select class="selectpicker show-tick form-control " title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
@@ -64,12 +64,13 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Consult</h3>
-                  <p>Start consultation and submit surveys/questionnaires etc to the various industries</p>
+                  <h3>1.2 Stakeholders Consultation</h3>
+                  <p>CDC provides relevant information related to stakeholders consultation on the need of the proposed programme
+                  </p>
                   <p>
                     <a routerLink="/NeedAnalysisConsult" class="btn btn-warning" role="button">Consultations </a>
                     <!--<a href="/NeedAnalysisConsult" class="btn btn-primary" role="button">New Consultation</a>-->
-                    <a routerLink="/endconsult" class="btn btn-default" role="button">Submit Survey</a>
+                    <a routerLink="/endconsult" class="btn btn-default" role="button">Submit Survey/Questionaire</a>
 
                   </p>
                 </div>
@@ -110,13 +111,13 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Conclude</h3>
-                  <p>PDU recommend the report to BOS or defer the Need Analysis Report to the department for amendments.</p>
+                  <h3>1.3 PDU's Recomendation</h3>
+                  <p>PDU reviews and make recommendation on the Need Analysis (NA) report. </p>
                   <p> </p>
                   <p>
-                    <a routerLink="/NeedAnalysisConclude" class="btn btn-success" role="button">PDU Approve</a>
+                    <a routerLink="/NeedAnalysisConclude" class="btn btn-success" role="button">PDU Decision</a>
                     <a routerLink="/endconsult" class="btn btn-default" role="button"> Resubmit</a>
-                    <a routerLink="/bossubmit" class="btn btn-default" role="button"> Start BOS</a>
+                    <a routerLink="/bossubmit" class="btn btn-default" role="button"> Submit to BOS</a>
                   </p>
                 </div>
               </div>
@@ -129,8 +130,9 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>BOS Session</h3>
-                  <p>BOS recommend the Needs Analysis Report to Senate or defer to the department.</p>
+                  <h3>1.4 BOS Consultation</h3>
+                  <p>Boards of Studies (BOS) review the NA report and provides recommendation 
+                  </p>
                   <p> </p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
@@ -147,8 +149,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>APC/Senate Session</h3>
-                  <p>APC/Senate approve or disapprove the Need Analysis Report.</p>
+                  <h3>1.5 APC Recommendation</h3>
+                  <p>Department submit programme document to APC for review and APC make recommendations.</p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
                     <a routerLink="/senate" class="btn btn-success" role="button">Recommendations</a>
@@ -180,6 +182,61 @@
               or (Decline) the Need Analysis Report. Should Senate decline (on condition) then the department should make
               the necessary amendments and forward to EXCO for verification and approval.
             </div>
+            <!-- me -->
+            <div class="row" style="overflow: hidden;">
+              <div class="card col-md-4 border-dark text-center">
+                <div class="text-center">
+                  <button class="btn btn-danger btn-circle btn-xl" (click)="titleID(4)">
+                    <i class="far fa-list-alt fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>1.6 Senate Approval</h3>
+                  <p>
+                    Department submit programme document to Senate and Senate makes a decision.
+                  </p>
+                  <p> <a routerLink="/apc" class="btn btn-success" role="button">Recommendations</a></p>
+                  
+                </div>
+              </div>
+
+
+              <!-- <div class="card col-md-4 border-dark text-center">
+                <div class="text-center">
+                  <button class="btn btn-primary btn-circle btn-xl" (click)="titleID(5)">
+                    <i class="fas fa-users fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>1.4 BOS Consultation</h3>
+                  <p>Boards of Studies (BOS) review the NA report and provides recommendation 
+                  </p>
+                  <p> </p>
+                  <p>
+                    <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
+                    <!-- <a routerLink="/bos" class="btn btn-primary" role="button">Ammendments</a>
+                    <a routerLink="/senatesubmit" class="btn btn-default" role="button"> Start Senate</a>
+                  </p>
+                </div>
+              </div> --> 
+
+              <!-- <div class="card col-md-4 border-dark text-center">
+                <div class="text-center">
+                  <button class="btn btn-success btn-circle btn-xl" (click)="titleID(6)">
+                    <i class="fas fa-university fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>1.5 APC Recommendation</h3>
+                  <p>Department submit programme document to APC for review and APC make recommendations.</p>
+                  <p>
+                    <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
+                    <!-- <a routerLink="/senate" class="btn btn-success" role="button">Recommendations</a>
+                  </p>
+                </div>
+              </div> --> 
+            </div>
+            <!-- me  -->
           </div>
         </div>
       </div>
@@ -204,9 +261,9 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Before Drafting</h3>
-                  <p>The department identifies and appoint the Curriculum Development Coordinator (CDC) who facilitates the
-                    appointment of Programme Advisory Committee (PAC) in consultation with PDU.</p>
+                  <h3>2.1 CDC and PAC Appointment </h3>
+                  <p>The department identifies and appoint the Curriculum Development Coordinator (CDC) who will facilitates 
+                    the appointment of Programme Advisory Committee (PAC) members in consultation with PDU.</p>
                   <p>
                     <a routerLink="/cdc" class="btn btn-primary" role="button">Appoint CDC</a>
                     <a routerLink="/pac" class="btn btn-default" role="button">Appoint PAC</a>
@@ -220,11 +277,11 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Draft Preparation</h3>
-                  <p>CDC develops a draft curriculum and syllabi then submits it to PDU for initial review.</p>
+                  <h3>2.2 Curriculum Drafting</h3>
+                  <p>CDC develop the draft programme and submits to PDU for review.</p>
                   <p>
-                    <a routerLink="/curriculum-Revise" class="btn btn-primary" role="button">Revise Version</a>
-                    <a routerLink="/curriculum-dev-draft-submit-pdu" class="btn btn-default" role="button">Submit to PDU</a>
+                    <a routerLink="/curriculum-Revise" class="btn btn-primary" role="button">Submit Draft to PDU</a>
+                    <!-- <a routerLink="/curriculum-dev-draft-submit-pdu" class="btn btn-default" role="button">Submit Draft to PDU</a> -->
                   </p>
                 </div>
               </div>
@@ -235,8 +292,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Draft Version/Approval</h3>
-                  <p>This conludes the first phase of the programme and hence a draft is ready for consultation.</p>
+                  <h3>2.3 Draft Curriculum-PDU Recomendation</h3>
+                  <p>PDU review and provide recommendation on the draft programme. </p>
                   <p>
                     <a routerLink="/curriculum-dev-draft-pdu-approval" class="btn btn-primary" role="button">Recommendations</a>
                   </p>
@@ -484,9 +541,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.1 Circulate Final Draft to BOS </h3>
-                  <p>PDU confirm the incorporation of the proposed recommendations against the relevant requirements (CF, NQF,
-                    etc.).</p>
+                  <h3>5.1 Final Draft Submission to BOS </h3>
+                  <p>On recommendation made by PDU in Stage 4, the department circulate the final draft programme for submission to BOS.</p>
                   <p>
                     <a routerLink="/final-draft" class="btn btn-primary" role="button">BOS Submit</a>
                     <!-- <a routerLink="/bos-submit-final" class="btn btn-default" role="button">BOS Submit</a> -->
@@ -500,10 +556,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.2 Faculty BOS-Recommendations </h3>
-                  <p>This a second final step in the consultation process of programme development. At this stage, BOS of the
-                    faculty concerned consider and comment on the document. BOS, if satisfied, should recommend the programme
-                  to APC.</p>
+                  <h3>5.2 Faculty BOS-Consultation </h3>
+                  <p>BOS review the draft programme and make recommendations .</p>
                   <p>
                     <a routerLink="/faculty-bos-final" class="btn btn-primary" role="button">Recommendations</a>
                     <!-- <a routerLink="/senate-submit-final" class="btn btn-default" role="button">Start Senate </a> -->
@@ -518,9 +572,9 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.3 Other Faculty BOS-Recommendations </h3>
-                  <p>In case of interdisciplinary programme(s) (with courses that cut-across), then other faculty BOS should
-                    also consider and comment on the document.</p>
+                  <h3>5.3 Other Faculty BOS Consultation (Optional) </h3>
+                  <p>This sub stage is only applicable to multi-disciplinary or inter-disciplinary programmes. CDC circulate the draft programme to relevant the faculties programmes for recommendations
+                  </p>
                   <p>
                     <a routerLink="/other-faculty-bos" class="btn btn-default" role="button">Recommendations</a>
                   </p>
@@ -559,8 +613,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.4 Academic Planning Committee (APC) </h3>
-                  <p>The APC can either recommend the programme to senate or defer to department for ammendments.</p>
+                  <h3>5.4 Academic Planning Committee (APC) Recommedation </h3>
+                  <p>APC review the draft programme and provide recommendations</p>
                   <p>
                     <a routerLink="/apc-recommend" class="btn btn-success" role="button">Recommendations</a>
                   </p>
@@ -574,8 +628,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.5 Senate Recomendation</h3>
-                  <p>Senate approve or disapprove the programme. The council then endorses Senate’s decision.</p>
+                  <h3>5.5 Senate Recommedation</h3>
+                  <p>Senate review the draft programme and provide recommendation on approval.</p>
                   <p>
                     <a routerLink="/final-senate-recommend" class="btn btn-warning" role="button">Recommendations</a>
                   </p>
@@ -622,7 +676,7 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>NQA Preparation</h3>
+                  <h3>6.1 NQF Preparation</h3>
                   <p>The programme Coordinator prepares the NQF qualification document for submission to PDU within 14 working
                     days.
                   </p>
@@ -640,7 +694,7 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>PDU Endorse</h3>
+                  <h3>6.2 NQF Documentation Review -PDU</h3>
                   <p>At this stage, the qualification is submitted to Programme Development Unit (PDU) for review before submission
                     to NQA.</p>
                   <p>
@@ -657,11 +711,11 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>NQA</h3>
+                  <h3>6.3 NQA Submission and Response</h3>
                   <p>Programme Development Unit (PDU) submits a complete application to the Namibia Qualification Authority
                     (NQA) for registration on the National Qualification Framework (NQF). </p>
                   <p>
-                    <a routerLink="/nqa-recommend" class="btn btn-primary" role="button"> Recommendation</a>
+                    <!-- <a routerLink="/nqa-recommend" class="btn btn-primary" role="button"> Recommendation</a> -->
                     <a routerLink="/nqa-reg" class="btn btn-success" role="button"> Registration </a>
                   </p>
                 </div>

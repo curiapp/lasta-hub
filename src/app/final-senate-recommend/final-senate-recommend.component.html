@@ -3,17 +3,17 @@
   <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
           <form  #senateForm="ngForm">
-              <h3 class="form-title-label">  Final Senate -- Recommendation</h3>
+              <h3 class="form-title-label">5.5 Senate -- Recommendation</h3>
               <hr class="colorgraph">
               <br>
               <div class="form-group">
-                  <label for="ProgrammeCode">Proposed Programme Code</label>
+                  <label for="ProgrammeCode">Programme Code</label>
                   <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"  name="devCode" #procode="ngModel">
                   <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
               </div>
               <br>
               <div class="form-group">
-                  <label for="date">Consultation Date</label>
+                  <label for="date">Senate Date</label>
                   <div class="input-group">
                       <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="consultationDate"
                       placeholder="YYYY-MM-DD" #cdate="ngModel" />
@@ -21,11 +21,11 @@
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                   </div>
-                  <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
+                  <div [hidden]="cdate.valid" class="alert alert-danger">Senate Date is required</div>
               </div>
              <br>
               <div class="form-group">
-                  <label for="doc" > Recomendations: </label>
+                  <label for="doc" > Draft Programme: </label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                     <label>
@@ -52,7 +52,7 @@
               </div>
                <br>
                <div class="form-group">
-                   <label class="control-label">Status: </label>
+                   <label class="control-label">Senate ----Recommendations: </label>
                    <fieldset style="border:solid 0.4px;border-radius:4px;width:100%;height:30px;border-color:lightgray;">
                    <div style="text-align:center;">
                        <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="approve" required #status="ngModel"> Approve</label>
@@ -64,7 +64,7 @@
                <br>
               <div class="form-group">
                 <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()" ><i class="fa fa-refresh"></i> Clear</button>
-                <button routerLink="/senate" type="button" class="btn btn-success" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !senateForm.form.valid">
+                <button routerLink="/final-senate-recommend" type="button" class="btn btn-success" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !senateForm.form.valid">
                   <i class="fa fa-check"></i> Submit </button>
               <button type="submit" class="btn btn-danger" (click)="close()"> <i class="fa fa-close"></i> Close</button>
               </div>

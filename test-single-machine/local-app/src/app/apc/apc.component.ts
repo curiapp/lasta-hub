@@ -6,18 +6,17 @@ import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
 import { Location } from '@angular/common';
-
-const URL = '/api/bos-senate/final-senate';
+const URL = '/api/need-analysis/apc/recommend';
 
 //create the component properties
 @Component({
     //define the element to be selected from the html structure.
-    selector: 'final-senate-recommend',
+    selector: 'apc',
     //location of our template rather than writing inline templates.
-    templateUrl: 'final-senate-recommend.component.html',
+    templateUrl: 'apc.component.html',
 
 })
-export class  FinalSenateRecommendComponent implements OnInit {
+export class  ApcComponent implements OnInit {
     model:any={};
     consultationDate: Date;
     devCode:String;
@@ -26,7 +25,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
 
      //declare a property called fileuploader and assign it to an instance of a new fileUploader.
     //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-    public uploader:FileUploader = new FileUploader({url: URL, itemAlias: 'final-senate-recommendation'});
+    public uploader:FileUploader = new FileUploader({url: URL, itemAlias: 'recommendation'});
     //This is the default title property created by the angular cli. Its responsible for the app works
     title = 'app works!';
 
@@ -36,8 +35,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
       this.uploader.onBuildItemForm=(item:any,form:any)=>{
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.consultationDate);
-            form.append('status',this.model.status);
-            // form.append('madeBy',this.model.madeBy);
+            form.append('status',this.model.apc);
 
       };
     //overide the onCompleteItem property of the uploader so we are
@@ -49,7 +47,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
             console.log("FileUpload:successfully uploaded:", item, status, response);
             if (status==201){
 
-              alert("FileUpload: successfully");
+              alert("Form data Upload: successfully");
 
             }
             else {
@@ -66,8 +64,6 @@ export class  FinalSenateRecommendComponent implements OnInit {
     clear(){
       this.model.programmeCode="";
       this.model.consultationDate=null;
-      this.model.status = "";
-      // this.model.madeBy = "";
       this.selectedFile.nativeElement.value = '';
        (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
@@ -81,10 +77,10 @@ export class  FinalSenateRecommendComponent implements OnInit {
         console.log(this.uploader.queue[i].file.name);
       }
     }
+
     removefile(){
         (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
-
      close() {
         console.log("closing the window...");
         this._location.back();
