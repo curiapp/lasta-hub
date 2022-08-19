@@ -21,7 +21,8 @@ export class  FinalSenateRecommendComponent implements OnInit {
     model:any={};
     consultationDate: Date;
     devCode:String;
-
+    selectedFiles:String[][] = [];
+    fileList:Array<String>;
 
 
      //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -37,9 +38,11 @@ export class  FinalSenateRecommendComponent implements OnInit {
             form.append('devCode',this.model.programmeCode);
             form.append('date',this.model.consultationDate);
             form.append('status',this.model.status);
+            form.append('fileList',this.selectedFiles);
             // form.append('madeBy',this.model.madeBy);
 
       };
+      this.fileList = ['Programme Document','Submission letters to Senate'];
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
       this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
@@ -48,9 +51,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
         console.log(response, responsePath);// the url will be in the response
             console.log("FileUpload:successfully uploaded:", item, status, response);
             if (status==201){
-
               alert("FileUpload: successfully");
-
             }
             else {
              alert("FileUpload:"+response);
@@ -67,11 +68,17 @@ export class  FinalSenateRecommendComponent implements OnInit {
       this.model.programmeCode="";
       this.model.consultationDate=null;
       this.model.status = "";
-      // this.model.madeBy = "";
+      this.model.documentType = "";
       this.selectedFile.nativeElement.value = '';
+      this.selectedFiles = [];
+      this.fileList = ['Programme Document','Submission letters to Senate'];
        (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
     updateFile(){
+      let end = this.uploader.queue.length;
+      this.selectedFiles.push([this.model.documentType,this.uploader.queue[end-1].file.name]);
+      let removeType = this.fileList.indexOf(this.model.documentType.toString());
+      this.fileList.splice(removeType,1);
       (<HTMLInputElement>document.getElementById("file-name")).value = "";
       for(var i = 0;i<this.uploader.queue.length;i++){
         if(i != 0)
@@ -82,6 +89,9 @@ export class  FinalSenateRecommendComponent implements OnInit {
       }
     }
     removefile(){
+        this.selectedFiles = [];
+        this.fileList = ['Programme Document','Submission letters to Senate'];
+        this.selectedFile.nativeElement.value = '';
         (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
 

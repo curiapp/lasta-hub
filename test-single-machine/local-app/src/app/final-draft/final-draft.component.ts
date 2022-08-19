@@ -18,6 +18,8 @@ export class FinalDraftComponent implements OnInit {
   model: any = {};
   devCode: String;
   date:Date;
+  selectedFiles:String[][] = [];
+  fileList:Array<String>;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -32,7 +34,9 @@ export class FinalDraftComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('date', this.model.bosSubmissionDate);
+      form.append('fileList',this.selectedFiles);
     };
+    this.fileList = ['Support Letters','PAC Minutes','Benchmarking','Draft Document','Checklist'];
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
@@ -56,10 +60,17 @@ export class FinalDraftComponent implements OnInit {
   @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";
+    this.model.documentType = "";
     this.selectedFile.nativeElement.value = '';
+    this.selectedFiles = [];
+    this.fileList = ['Support Letters','PAC Minutes','Benchmarking','Draft Document','Checklist'];
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
   updateFile() {
+    let end = this.uploader.queue.length;
+    this.selectedFiles.push([this.model.documentType,this.uploader.queue[end-1].file.name]);
+    let removeType = this.fileList.indexOf(this.model.documentType.toString());
+    this.fileList.splice(removeType,1);
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
     for (var i = 0; i < this.uploader.queue.length; i++) {
       if (i != 0)
@@ -70,7 +81,10 @@ export class FinalDraftComponent implements OnInit {
     }
   }
   removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+    this.selectedFiles = [];
+    this.fileList = ['Support Letters','PAC Minutes','Benchmarking','Draft Document','Checklist'];
+    this.selectedFile.nativeElement.value = '';
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 
