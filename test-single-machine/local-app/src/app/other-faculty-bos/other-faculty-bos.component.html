@@ -3,7 +3,7 @@
   <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
           <form  #bosForm="ngForm">
-              <h3 class="form-title-label"> 5.3 Other Faculty Bos -- Recommendation</h3>
+              <h3 class="form-title-label"> 5.3 Other Faculty Bos -- Consultation(optional)</h3>
               <hr class="colorgraph">
               <br>
               <div class="form-group">
@@ -27,7 +27,7 @@
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                   </div>
-                  <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
+                  <div [hidden]="cdate.valid" class="alert alert-danger">consultation Date is required</div>
               </div>
              <br>
                <div class="form-group">
@@ -61,7 +61,7 @@
                     <label class="custom-control-label" for="defaultInline2">BOSEC</label>
                   </div>
                 </div>
-                <div [hidden]="recommendTo.valid" class="alert alert-danger">recommendto is required</div>
+                <div [hidden]="recommendTo.valid" class="alert alert-danger">Recommendation is required</div>
               </div>
               
                </div>

@@ -4,7 +4,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #consultForm="ngForm">
-          <h3 class="form-title-label"> Curriculum development -- Start TLU, CEU and QA Session</h3>
+          <h3 class="form-title-label"> 4.1 Start Internal Consultation</h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -49,17 +49,43 @@
           <div class="form-group">
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
                 <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:10px">
-                    <input type="checkbox" class="custom-control-input" id="defaultInline1" [required]="true" name="isWil" [(ngModel)]="model.wil" #wil="ngModel">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline1" [required]="false" name="isWil" [(ngModel)]="model.wil" #wil="ngModel">
                     <label class="custom-control-label" for="defaultInline1">WIL Component</label>
                   </div>
-                  <div class="custom-control custom-checkbox custom-control-inline">
+                  <!-- <div class="custom-control custom-checkbox custom-control-inline">
                     <input type="checkbox" class="custom-control-input" id="defaultInline2" required name="isDistance" [(ngModel)]="model.distance" #distance="ngModel">
                     <label class="custom-control-label" for="defaultInline2">Distance Mode</label>
-                  </div>
+                  </div> -->
             </div>
-            <div [hidden]="model.wil ===true || model.distance ===true" class="alert alert-danger"></div>
+            <!-- <div [hidden]="model.wil ===true || model.distance ===true" class="alert alert-danger"></div> -->
           </div>
           <br>
+
+        <!-- here -->
+        <br>
+          <!-- <div class="form-group">
+            <label for="doc"> Recommend to: </label>
+            <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
+                <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:10px">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline5" required name="tla" [(ngModel)]="model.recommendto" #tla="ngModel">
+                    <label class="custom-control-label" for="defaultInline5">TL & A </label>
+                  </div>
+                  <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline6" required name="ce" 
+                    [(ngModel)]="model.recommendto" value="ce" checked
+                  required #recommendto="ngModel" mdbInput>>
+                    <label class="custom-control-label" for="defaultInline6">CE</label>
+                  </div>
+                  <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline7" required name="qa" [(ngModel)]="model.recommendto" #qa="ngModel">
+                    <label class="custom-control-label" for="defaultInline7">QA</label>
+                  </div>
+            </div>
+            <div [hidden]="model.tla ===true || model.CE ===true || model.QA ===true" class="alert alert-danger">Recommend to atleast one body is required</div>
+          </div> -->
+          <br>
+
+        <!-- end -->
 
           <div class="form-group">
             <label class="control-label">Recommend to: </label>

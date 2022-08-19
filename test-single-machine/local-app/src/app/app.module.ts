@@ -49,7 +49,6 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { OurTeamComponent } from './our-team/our-team.component';
 import { SenateSubmitComponent } from './senate-submit/senate-submit.component';
 import { OtherFacultyBosComponent } from './other-faculty-bos/other-faculty-bos.component';
-import { ApcRecommendComponent } from './apc-recommend/apc-recommend.component';
 import { FinalSenateRecommendComponent } from './final-senate-recommend/final-senate-recommend.component';
 import { LoginComponent } from './login/login.component';
 import { CourseInProgressComponent } from './course-in-progress/course-in-progress.component';
@@ -57,6 +56,8 @@ import { CourseDueForReviewComponent } from './course-due-for-review/course-due-
 import { CourseRecentlyApprovedComponent } from './course-recently-approved/course-recently-approved.component';
 import { ShortSummaryService } from './services/short-summary.service';
 import { ApcComponent } from './apc/apc.component';
+import { InternalReviewPduComponent } from './internal-review-pdu/internal-review-pdu.component';
+import { ApcRecommendComponent } from './apc-recommend/apc-recommend.component';
 
 @NgModule({
   declarations: [
@@ -100,13 +101,16 @@ import { ApcComponent } from './apc/apc.component';
     AboutUsComponent,
     OurTeamComponent,
     OtherFacultyBosComponent,
-    ApcRecommendComponent,
     FinalSenateRecommendComponent,
     LoginComponent,
     CourseInProgressComponent,
     CourseDueForReviewComponent,
     CourseRecentlyApprovedComponent,
-    ApcComponent
+    ApcComponent,
+    InternalReviewPduComponent,
+    ApcRecommendComponent,
+
+  
   ],
   imports: [
     FileUploadModule,

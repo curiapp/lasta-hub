@@ -42,7 +42,6 @@ export class TLUCEUQAStartComponent implements OnInit {
             form.append('date',this.model.consultationDate);
             form.append('recommendto',this.model.recommendto);
             form.append('wil',this.model.wil);
-            form.append('distance',this.model.distance);
 
 
       };
