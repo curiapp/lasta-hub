@@ -29,7 +29,8 @@
                       <div class="input-group-prepend">
                     <label>
                       <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
-                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="bos-draft" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;" [disabled]="!docType.valid"/>
+                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="bos-draft" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"/>
+                           <!-- [disabled]="!docType.valid"/> -->
                       </span>
                   </label>
                   </div>
