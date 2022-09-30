@@ -129,13 +129,33 @@ exports.NeedAnalysisRequestHandler = class NeedAnalysisRequestHandler
                     console.dir request.file
                     @repoManager.addSenateAmendment validAmendmentData.devCode, request.file, validAmendmentData.status, (repositoryError, commitHash) =>
                         if repositoryError?
-                            response.status(500).json({message: "Error addind the Senate amendment file to the repository"})
+                            response.status(500).json({message: "Error adding the Senate amendment file to the repository"})
                         else
                             validAmendmentData["commitHash"] = commitHash
                             handlerObject =
                                 handlerRef: @
                                 responseObject: response
                             @controller.handleSenateRecommendations validAmendmentData, handlerObject
+
+        recordAPCRecommendations: (request, response) ->
+            console.log "the content of the object is"
+            console.dir request.body
+            @validator.checkAndSanitizeForAPCAmendments request.body, (apcAmendmentDataError, validAPCAmendmentData) =>
+                if apcAmendmentDataError?
+                    response.status(400).json({message: "Bad Request!"})
+                else
+                    console.log "testing request content"
+                    console.dir request.body
+                    console.dir request.file
+                    @repoManager.addAPCAmendment validAPCAmendmentData.devCode, request.file, validAPCAmendmentData.status, (repositoryError, commitHash) =>
+                        if repositoryError?
+                            response.status(500).json({message: "Error adding the APC amendment file to the repository"})
+                        else
+                            validAPCAmendmentData["commitHash"] = commitHash
+                            handlerObject =
+                                handlerRef: @
+                                responseObject: response
+                            @controller.handleAPCRecommendations validAPCAmendmentData, handlerObject
 
         startSenatePhase: (request, response) ->
             @validator.checkAndSanitizeForSenateStartup request.body, (senateSubmissionError, validSenateSubmissionData) =>
