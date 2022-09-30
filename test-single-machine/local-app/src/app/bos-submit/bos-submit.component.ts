@@ -29,7 +29,7 @@ export class BosSubmitComponent{
         this._dataService.startNeedAnalysis(this.programmeCode,this.startDate)
           .subscribe(data => this.postMyDataToServer = JSON.stringify(data), // put the data returned from the server in our variable
                 error => console.log("Error HTTP Post Service"), // in case of failure show this message
-                () => console.log("Job Done Post !")//run this code in all cases
+                () => alert("Bos session started !")//run this code in all cases
             );
     }
 
