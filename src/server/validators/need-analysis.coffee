@@ -51,10 +51,10 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
             callback statusError, validStatus
 
     checkAndSanitizeDecision: (decision, callback) ->
-        @helper.checkAndSanitizePossibleValues decision, ['approve', 'decline', 'defer'], 'PDU Decision', @validator, (decisionError, validDecision) =>
+        @helper.checkAndSanitizePossibleValues decision, ['approve', 'decline', 'defer', 'recomment'], 'PDU Decision', @validator, (decisionError, validDecision) =>
             callback decisionError, validDecision
 
-    checkAndSanitizeBosAmendmentStatus: (bosStatus, callback) ->
+    checkAndSanitizeBosAmendmentStatus2: (bosStatus, callback) ->
         @helper.checkAndSanitizeBoolean bosStatus, 'BOS Amendment Status', @validator, (statusError, validStatus) =>
             if statusError?
                 callback statusError, null
@@ -62,6 +62,9 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 callback null, true
             else
                 callback null, false
+    checkAndSanitizeBosAmendmentStatus: (bosStatus, callback) ->
+        @helper.checkAndSanitizePossibleValues bosStatus, ['senate', 'bos', 'decline'], 'BOS decision status', @validator, (bosDecisionError, validBosDecision) =>
+            callback bosDecisionError, validBosDecision
 
     checkAndSanitizeDecisionMaker: (decisionMakerValue, callback) ->
         @helper.checkAndSanitizePossibleValues decisionMakerValue, ['senate', 'apc'], 'Senate Decision Maker', @validator, (decisionMakerError, validDEcisionMaker) =>
@@ -123,7 +126,7 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 @checkAndSanitizeDevCode conclusionData.devCode, (devCodeError, validDevCode) =>
                     devCodePartialCallback devCodeError, validDevCode
             decision: (decisionPartialCallback) =>
-                @checkAndSanitizeDecision conclusionData.decission, (decisionError, validDecision) =>
+                @checkAndSanitizeDecision conclusionData.decission.toLowerCase(), (decisionError, validDecision) =>
                     decisionPartialCallback decisionError, validDecision
         @flowController.parallel conclusionOptons, (conclusionError, validConclusionData) =>
             callback conclusionError, validConclusionData
