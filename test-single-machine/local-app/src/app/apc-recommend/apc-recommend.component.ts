@@ -1,3 +1,4 @@
+import {Router, ActivatedRoute} from '@angular/router';
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin

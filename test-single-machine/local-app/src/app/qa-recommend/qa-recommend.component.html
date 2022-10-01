@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #concludeForm="ngForm">
-          <h3 class="form-title-label"> Curriculum Development -- QA Session </h3>
+          <h3 class="form-title-label"> 4.4 QA Review </h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -13,7 +13,7 @@
           </div>
 
           <div class="form-group">
-            <label for="doc"> Minutes: </label>
+            <label for="doc"> Support Letters/Recommendations: </label>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -34,10 +34,10 @@
           </div>
           <div class="form-group">
             <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Cancel</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Approve</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Decline</button>
+            <button type="button" class="btn btn-success btn-s" (click)="setDecission('endorse');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+             Endorse</button>
+            <button type="button" class="btn btn-success btn-s" (click)="setDecission('defer');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+              Defer</button>
           </div>
         </form>
       </div>

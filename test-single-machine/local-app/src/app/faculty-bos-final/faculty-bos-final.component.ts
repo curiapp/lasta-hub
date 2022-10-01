@@ -6,6 +6,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import {  FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
+// import { ApcRecommendComponent } from '../../../../../dist/client/public/vendor/application/apc-recommend/apc-recommend.component';
 
 const URL = '/api/bos-senate/faculty-bos-recommend';
 
@@ -24,6 +25,7 @@ export class  FacultyBosFinalComponent implements OnInit {
 
 
 
+
      //declare a property called fileuploader and assign it to an instance of a new fileUploader.
     //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
     public uploader:FileUploader = new FileUploader({url: URL, itemAlias: 'faculty-bos'});
@@ -38,6 +40,7 @@ export class  FacultyBosFinalComponent implements OnInit {
             form.append('date',this.model.consultationDate);
             console.log(this.model.status);
             form.append('status',this.model.status);
+            form.append('recommend',this.model.recommend);
 
       };
     //overide the onCompleteItem property of the uploader so we are
@@ -64,6 +67,7 @@ export class  FacultyBosFinalComponent implements OnInit {
       this.model.programmeCode="";
       this.model.consultationDate=null;
       this.model.status = "";
+      this.model.recommend = "";
       this.selectedFile.nativeElement.value = '';
       (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }

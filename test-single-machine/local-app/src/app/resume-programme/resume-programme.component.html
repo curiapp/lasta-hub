@@ -153,7 +153,7 @@
                   <p>Department submit programme document to APC for review and APC make recommendations.</p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
-                    <a routerLink="/senate" class="btn btn-success" role="button">Recommendations</a>
+                    <a routerLink="/apc" class="btn btn-success" role="button">Recommendations</a>
                   </p>
                 </div>
               </div>
@@ -195,7 +195,7 @@
                   <p>
                     Department submit programme document to Senate and Senate makes a decision.
                   </p>
-                  <p> <a routerLink="/apc" class="btn btn-success" role="button">Recommendations</a></p>
+                  <p> <a routerLink="/senate" class="btn btn-success" role="button">Recommendations</a></p>
                   
                 </div>
               </div>
@@ -348,8 +348,9 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>3.1 Circulate Draft Programme</h3>
-                  <p>Upload the list of identified PAC members and disseminate the draft programme document to PAC members.
+                  <h3>3.1 Circulation of Draft Programme</h3>
+                  <p>CDC is required to upload 
+                    the draft programme document for circulation to PAC members as identified in Stage 2.
                   </p>
                   <p>
                     <a routerLink="/curriculum-dev-pac-start" class="btn btn-primary" role="button">Upload draft Programme to start PAC Consultation </a>
@@ -366,7 +367,8 @@
                 </div>
                 <div class="caption">
                   <h3>3.2 PAC Consultation and Benchmarking</h3>
-                  <p>Set-up/convene a PAC meeting to solicit inputs on the curriculum.</p>
+                  <p>CDC convene a meeting with PAC members and benchmark with peer universities, 
+                    others stakeholders to solicit inputs on the draft programme.</p>
                   <p>
                     <a routerLink="/curriculum-dev-pac-consult" class="btn btn-primary" role="button">ConsultationS</a>
                     <!-- <a routerLink="/consult-benchmark" class="btn btn-default" role="button">Add Benchmark Report</a> -->
@@ -381,8 +383,8 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>3.3 Final Draft -PDU's Recomendations</h3>
-                  <p>This includes consultations with external stakeholders.The programme is ready for circulation to BOS </p>
+                  <h3>3.3 Final Draft Programme -PDU's Recomendations</h3>
+                  <p>CDC circulate the final draft programme document to PDU for recommendation to BOS.</p>
                   <p>
                     <!-- <a routerLink="/pac-consult-draft" class="btn btn-primary" role="button"> Add Final Draft</a> -->
                     <a routerLink="/pac-consult-endorse" class="btn btn-default" role="button"> Recommendations </a>
@@ -440,12 +442,12 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>TLU Review</h3>
-                  <p>At this stage, the Teaching and Learning Unit (TLU) advice the departments on appropriate teaching, learning
-                    and assessment strategies of various courses.</p>
+                  <h3>4.1 Start Internal Consultation</h3>
+                  <p>This sub stage requires CDC to identify relevant internal stakeholders for consultation to seek inputs on teaching, learning and assessment (TL &A), delivery,
+                     cooperative education, quality assurance, and circulate the programme document.</p>
                   <p>
-                    <a routerLink="/tlu-ceu-qa-start" class="btn btn-primary" role="button">Start Review (TLU/CEU/QA) </a>
-                    <a routerLink="/tlu-recommend" class="btn btn-default" role="button">TLU Recommendations</a>
+                    <a routerLink="/tlu-ceu-qa-start" class="btn btn-primary" role="button">4.1 Start Internal Consultation </a>
+                    
                   </p>
                 </div>
               </div>
@@ -457,11 +459,14 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>CEU Review</h3>
-                  <p>The Cooperative Education Unit (CEU) ensure the integration of the Work Integrated Learning (WIL) component
-                    in various courses of undergraduate programmes. </p>
+                  <h3>4.2 TL& A Review</h3>
+                  <p>The Unit responsible advice the department on the appropriate teaching, learning and assessment 
+                    strategies on the various courses, makes a recommendation and provide endorsement letter.
+
+                  </p>
                   <p>
-                    <a routerLink="/ceu-recommend" class="btn btn-default" role="button">CEU Recommendations</a>
+                    <a routerLink="/tlu-recommend" class="btn btn-default" role="button">TLU & A Review</a> 
+                    
                   </p>
                 </div>
               </div>
@@ -474,16 +479,52 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>QA Review</h3>
-                  <p>The Quality Assurance Unit (QAU) assess the accuracy of the levelness of courses on the curriculum as reflected
-                    by the learning outcomes of those courses.</p>
+                  <h3>4.3 CE Review</h3>
+                  <p>The Unit responsible ensure the integration of the Work Integrated Learning (WIL) component in the undergraduate
+                     programme, makes a recommendation and provide endorsement letter.</p>
                   <p>
-                    <a routerLink="/qa-recommend" class="btn btn-default" role="button">QA Recommendations</a>
+                    <a routerLink="/ceu-recommend" class="btn btn-default" role="button">CEU Review</a>
+                    
                   </p>
                 </div>
               </div>
 
               <div class="card col-md-6 border-dark text-center">
+                <div class="text-center">
+                  <button class="btn btn-success btn-circle btn-xl" (click)="titleID(100)">
+                    <i class="fa fa-graduation-cap fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>4.4 QA Review</h3>
+                  <p>The Unit responsible institute quality checks to assess the accuracy of the levelness of courses on the curriculum as reflected by the learning outcomes 
+                    of those courses, makes a recommendation and provide endorsement letter.</p>
+                  <p>
+                    <a routerLink="/qa-recommend" class="btn btn-default" role="button">QA Review</a>
+                    <!-- <a routerLink="/coll-recommend" class="btn btn-default" role="button">COLL Recommendations</a> -->
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- here -->
+            <div class="row" style="overflow:hidden;">
+              <div class="card col-md-6 border-dark text-center">
+                <div class="text-center">
+                  <button class="btn btn-info btn-circle btn-xl" (click)="titleID(15)">
+                    <i class="far fa-folder-open fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>4.5 PDU Recommendation</h3>
+                  <p>The Unit review and verify the readiness of the programme
+                     for submission to BOS, makes a recommendation and provide a checklist.</p>
+                  <p>
+                    <a routerLink="/app-internal-review-pdu" class="btn btn-default" role="button">PDU Recommendations</a>
+                  </p>
+                </div>
+              </div>
+
+              <!-- <div class="card col-md-6 border-dark text-center">
                 <div class="text-center">
                   <button class="btn btn-success btn-circle btn-xl" (click)="titleID(100)">
                     <i class="fa fa-graduation-cap fa-2x"></i>
@@ -496,8 +537,10 @@
                     <a routerLink="/coll-recommend" class="btn btn-default" role="button">COLL Recommendations</a>
                   </p>
                 </div>
-              </div>
+              </div> -->
             </div>
+
+            <!-- end -->
             <div class="alert alert-danger" [hidden]="showID != 13">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>TLU Review</h4>
@@ -541,7 +584,7 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.1 Final Draft Submission to BOS </h3>
+                  <h3>5.1 Final Draft  to BOS Submission </h3>
                   <p>On recommendation made by PDU in Stage 4, the department circulate the final draft programme for submission to BOS.</p>
                   <p>
                     <a routerLink="/final-draft" class="btn btn-primary" role="button">BOS Submit</a>
@@ -676,9 +719,9 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>6.1 NQF Preparation</h3>
-                  <p>The programme Coordinator prepares the NQF qualification document for submission to PDU within 14 working
-                    days.
+                  <h3>6.1 NQF Documentation</h3>
+                  <p>The CDC prepares the NQF qualification
+                     documentation for submission to PDU within 14 working days upon Senate approval
                   </p>
                   <p>
                     <a routerLink="/nqa-preparation" class="btn btn-primary" role="button">Preparation for NQA Submission </a>
@@ -694,9 +737,10 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>6.2 NQF Documentation Review -PDU</h3>
-                  <p>At this stage, the qualification is submitted to Programme Development Unit (PDU) for review before submission
-                    to NQA.</p>
+                  <h3>6.2 NQF Submission</h3>
+                  <p>PDU review the NQF submission from the department and prepare NQF application documentation for submission
+
+                  </p>
                   <p>
                     <a routerLink='/pdu-recommend' class="btn btn-primary" role="button">Recommendation</a>
                     <a routerLink="/nqa-submit" class="btn btn-warning" role="button">NQA Submit</a>
@@ -711,9 +755,9 @@
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>6.3 NQA Submission and Response</h3>
-                  <p>Programme Development Unit (PDU) submits a complete application to the Namibia Qualification Authority
-                    (NQA) for registration on the National Qualification Framework (NQF). </p>
+                  <h3>6.3 NQA Submission</h3>
+                  <p>PDU review the NQF submission from the
+                     department and prepare NQF application documentation for submission </p>
                   <p>
                     <!-- <a routerLink="/nqa-recommend" class="btn btn-primary" role="button"> Recommendation</a> -->
                     <a routerLink="/nqa-reg" class="btn btn-success" role="button"> Registration </a>

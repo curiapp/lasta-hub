@@ -62,7 +62,7 @@ addOrganisation() {
             console.log("FileUpload:successfully uploaded:", item, status, response);
             if (status==201){
 
-              alert("FileUpload: successfully");
+              alert("Consultation information successfully submitted");
 
             }
             else {

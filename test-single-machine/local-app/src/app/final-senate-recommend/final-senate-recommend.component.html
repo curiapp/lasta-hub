@@ -3,7 +3,7 @@
   <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
           <form  #senateForm="ngForm">
-              <h3 class="form-title-label">5.5 Senate -- Recommendation</h3>
+              <h3 class="form-title-label">5.5 Final Senate - Recommendation</h3>
               <hr class="colorgraph">
               <br>
               <div class="form-group">
@@ -24,8 +24,17 @@
                   <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
               </div>
              <br>
+             <div class="form-group">
+                <label for="doc"> Document type : </label>
+                <select class="form-control" name="documentName" id="documentName" required [(ngModel)]="model.documentType" #docType="ngModel">
+                  <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
+                  <option *ngFor="let filetag of fileList" value="{{ filetag }}">{{filetag}}</option>
+                </select>
+                <div [hidden]="docType.valid" class="alert alert-danger">Document type is required</div>
+              </div>
               <div class="form-group">
-                  <label for="doc" > Senate Recommendations: </label>
+                  <label for="doc" [hidden]="!docType.valid"> Select and Upload : {{this.model.documentType}} </label>
+                  <label for="doc" class="text-danger h6" [hidden]="docType.valid"> Please select Document type first </label>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                     <label>
@@ -57,17 +66,30 @@
                    <fieldset style="border:solid 0.4px;border-radius:4px;width:100%;height:30px;border-color:lightgray;">
                    <div style="text-align:center;">
                        <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="endorse" required #status="ngModel"> Approve &nbsp;</label>
-                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_faculty" required #status="ngModel"> Defer(Faculty) &nbsp;</label>
-                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_senex" required #status="ngModel"> Defer(SENEX) </label>
+                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_faculty" required #status="ngModel"> Defer (Faculty) &nbsp;</label>
+                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_senex" required #status="ngModel"> Defer (SENEX) </label>
                    </div></fieldset>
-                     <div [hidden]="status.valid" class="alert alert-danger">Recommendations status is needed</div>
+                     <div [hidden]="status.valid" class="alert alert-danger">Recommendations status is required</div>
                 </div>
                <br>
+               <table class="table table-bordered border-primary">
+                <tr >
+                  <th class="h6">Document Type</th>
+                  <th class="h6">Selected File name</th>
+                </tr>
+                <tr *ngFor = "let item of selectedFiles">
+                  <td class="text-primary">
+                    {{item[0]}}
+                  </td>
+                  <td class="text-default">
+                    <i class="fas fa-file-pdf text-danger"></i>  {{item[1]}}
+                  </td>
+                </tr>
+              </table>
               <div class="form-group">
                 <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()" ><i class="fa fa-refresh"></i> Clear</button>
                 <button routerLink="/final-senate-recommend" type="button" class="btn btn-success" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !senateForm.form.valid">
                    Submit &nbsp;<i class="fa fa-check"></i></button>
-             
               </div>
           </form>
       </div>

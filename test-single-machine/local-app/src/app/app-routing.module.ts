@@ -38,10 +38,14 @@ import { TutorialComponent } from './tutorials/tutorials.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { OurTeamComponent } from './our-team/our-team.component';
 import { OtherFacultyBosComponent } from './other-faculty-bos/other-faculty-bos.component';
-import { ApcRecommendComponent } from './apc-recommend/apc-recommend.component';
 import { FinalSenateRecommendComponent } from './final-senate-recommend/final-senate-recommend.component';
 import { LoginComponent } from './login/login.component';
 import { ApcComponent } from './apc/apc.component';
+import { InternalReviewPduComponent } from './internal-review-pdu/internal-review-pdu.component';
+import { ComponentFixture } from '@angular/core/testing';
+import { ApcRecommendComponent } from './apc-recommend/apc-recommend.component';
+
+
 
 const routes: Routes = [
   // { path: '', component: HomeComponent },
@@ -70,7 +74,6 @@ const routes: Routes = [
   { path: 'nqa-reg', component: NQARegComponent},
   { path: 'nqa-submit', component: NqaSubmitComponent},
   { path: 'login', component: LoginComponent},
-    // { path:'apc-recommend',component:ApcRecommendComponent},
     // { path:'pdu-staff',component:PDUStaffComponent},
   { path: 'NeedAnalysisConsult', component: NeedAnalysisConsultationComponent },
   { path: 'endconsult', component: EndConsultComponent},
@@ -93,13 +96,20 @@ const routes: Routes = [
   { path: 'coll-recommend', component: COLLRecommendComponent},
   { path: 'qa-recommend', component: QARecommendComponent },
   { path: 'other-faculty-bos', component: OtherFacultyBosComponent},
-  { path: 'apc-recommend', component: ApcRecommendComponent},
+  // { path: 'apc-recommend', component: ApcRecommendComponent},
   {path: 'final-senate-recommend', component: FinalSenateRecommendComponent},
   {path:'apc',component:ApcComponent},
+  {path:'app-internal-review-pdu',component: InternalReviewPduComponent},
+  {path:'apc-recommend',component:ApcRecommendComponent}
+  
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes,{ useHash: true })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule { 
+
+
+}
+

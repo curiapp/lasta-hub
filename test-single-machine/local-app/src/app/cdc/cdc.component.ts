@@ -96,7 +96,7 @@ export class CdcComponent implements OnInit {
         this.startNeedAnalysis(this.myForm.value)
             .subscribe(data => this.postMyDataToServer = JSON.stringify(data), // put the data returned from the server in our variable
             error => console.log("Error HTTP Post Service"), // in case of failure show this message
-            () => console.log("Job Done Post !")//run this code in all cases
+            () => alert("CDC names added !")//run this code in all cases
             );
     }
 }
