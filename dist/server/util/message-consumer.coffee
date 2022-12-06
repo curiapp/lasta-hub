@@ -7,8 +7,7 @@ exports.MessageConsumer = class MessageConsumer
         @workerManager = wrkManager
         topicNames = ['create-users-res', 'find-users-res','summary-res', 'need-analysis-start-res',
         'need-analysis-conclude-res', 'need-analysis-consult-res', 'need-analysis-survey-res', 'need-analysis-bos-start-res',
-        'need-analysis-bos-recommend-res', 'need-analysis-senate-start-res', 'need-analysis-senate-recommend-res',
-        'cur-dev-appoint-pac-res', 'cur-dev-draft-revise-res', 'cur-dev-draft-submit-res', 'cur-dev-draft-validate-res',
+        'need-analysis-bos-recommend-res', 'need-analysis-apc-recommend-res' ,'need-analysis-senate-start-res', 'need-analysis-senate-recommend-res','cur-dev-appoint-pac-res', 'cur-dev-draft-revise-res', 'cur-dev-draft-submit-res', 'cur-dev-draft-validate-res',
         'consult-start-pac-res', 'consult-benchmark-res', 'cur-dev-appoint-cdc-res', 'consult-final-draft-res',
         'consult-endorse-res', 'review-unit-start-res', 'review-unit-recommend-res']
 

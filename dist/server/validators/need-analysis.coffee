@@ -51,10 +51,10 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
             callback statusError, validStatus
 
     checkAndSanitizeDecision: (decision, callback) ->
-        @helper.checkAndSanitizePossibleValues decision, ['approve', 'decline', 'defer'], 'PDU Decision', @validator, (decisionError, validDecision) =>
+        @helper.checkAndSanitizePossibleValues decision, ['approve', 'decline', 'defer', 'recomment'], 'PDU Decision', @validator, (decisionError, validDecision) =>
             callback decisionError, validDecision
 
-    checkAndSanitizeBosAmendmentStatus: (bosStatus, callback) ->
+    checkAndSanitizeBosAmendmentStatus2: (bosStatus, callback) ->
         @helper.checkAndSanitizeBoolean bosStatus, 'BOS Amendment Status', @validator, (statusError, validStatus) =>
             if statusError?
                 callback statusError, null
@@ -62,21 +62,20 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 callback null, true
             else
                 callback null, false
+    checkAndSanitizeBosAmendmentStatus: (bosStatus, callback) ->
+        @helper.checkAndSanitizePossibleValues bosStatus, ['senate', 'bos', 'decline'], 'BOS decision status', @validator, (bosDecisionError, validBosDecision) =>
+            callback bosDecisionError, validBosDecision
 
     checkAndSanitizeDecisionMaker: (decisionMakerValue, callback) ->
         @helper.checkAndSanitizePossibleValues decisionMakerValue, ['senate', 'apc'], 'Senate Decision Maker', @validator, (decisionMakerError, validDEcisionMaker) =>
             callback decisionMakerError, validDEcisionMaker
 
-    checkAndSanitizeSenateAmendmentStatus: (statusValue, decisionContext, callback) ->
-        possibleValues = undefined
-        token = undefined
-        if decisionContext is 'senate'
-            possibleValues = ['approve', 'decline', 'defer']
-            token = 'Senate Amendment Status'
-        else
-            possibleValues = ['approve', 'decline']
-            token = 'SENEX Amendment Status'
-        @checkAndSanitizeStatus statusValue, possibleValues, token, (statusError, validStatus) =>
+    checkAndSanitizeSenateAmendmentStatus: (statusValue, callback) ->
+        @checkAndSanitizeStatus statusValue, ['approve', 'decline', 'defer'], 'Senate Amendment Status', (statusError, validStatus) =>
+            callback statusError, validStatus
+
+    checkAndSanitizeAPCAmendmentStatus: (statusValue, callback) ->
+        @checkAndSanitizeStatus statusValue, ['recommend', 'decline', 'defer'], 'APC Amendment Status', (statusError, validStatus) =>
             callback statusError, validStatus
 
     checkAndSanitizeForInitialization: (initData, callback) ->
@@ -113,7 +112,7 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 @checkAndSanitizeConsultationDate consultationData.eDate, (consultationEDateError, validConsultationEDate) =>
                     date2PartialCallback consultationEDateError, validConsultationEDate
             organization: (organizationPartialCallback) =>
-                @checkAndSanitizeOrganizationNameCol consultationData.organization, (organizationNameError, validOrganizationName) =>
+                @checkAndSanitizeOrganizationNameCol consultationData.organization-list, (organizationNameError, validOrganizationName) =>
                     organizationPartialCallback organizationNameError, validOrganizationName
             devCode: (devCodePartialCallback) =>
                 @checkAndSanitizeDevCode consultationData.devCode, (devCodeError, validDevCode) =>
@@ -127,7 +126,7 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 @checkAndSanitizeDevCode conclusionData.devCode, (devCodeError, validDevCode) =>
                     devCodePartialCallback devCodeError, validDevCode
             decision: (decisionPartialCallback) =>
-                @checkAndSanitizeDecision conclusionData.decission, (decisionError, validDecision) =>
+                @checkAndSanitizeDecision conclusionData.decission.toLowerCase(), (decisionError, validDecision) =>
                     decisionPartialCallback decisionError, validDecision
         @flowController.parallel conclusionOptons, (conclusionError, validConclusionData) =>
             callback conclusionError, validConclusionData
@@ -185,11 +184,22 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 @checkAndSanitizeConsultationDate senateAmendmentData.date, (amendmentDateError, validAmendmentDate) =>
                     datePartialCallback amendmentDateError, validAmendmentDate
             status: (statusPartialCallback) =>
-                @checkAndSanitizeSenateAmendmentStatus senateAmendmentData.status, senateAmendmentData.madeBy, (statusError, validStatus) =>
+                @checkAndSanitizeSenateAmendmentStatus senateAmendmentData.status, (statusError, validStatus) =>
                     statusPartialCallback statusError, validStatus
-            madeBy: (madeByPartialCallback) =>
-                @checkAndSanitizeDecisionMaker senateAmendmentData.madeBy, (madeByError, validMadeBy) =>
-                    madeByPartialCallback madeByError, validMadeBy
+        @flowController.parallel amendmentOptions, (amendmentValidationError, validAmendment) =>
+            callback amendmentValidationError, validAmendment
+
+    checkAndSanitizeForAPCAmendments: (apcAmendmentData, callback) ->
+        amendmentOptions =
+            devCode: (devCodePartialCallback) =>
+                @checkAndSanitizeDevCode apcAmendmentData.devCode, (devCodeError, validDevCode) =>
+                    devCodePartialCallback devCodeError, validDevCode
+            date: (datePartialCallback) =>
+                @checkAndSanitizeConsultationDate apcAmendmentData.date, (amendmentDateError, validAmendmentDate) =>
+                    datePartialCallback amendmentDateError, validAmendmentDate
+            status: (statusPartialCallback) =>
+                @checkAndSanitizeAPCAmendmentStatus apcAmendmentData.status, (statusError, validStatus) =>
+                    statusPartialCallback statusError, validStatus
         @flowController.parallel amendmentOptions, (amendmentValidationError, validAmendment) =>
             callback amendmentValidationError, validAmendment
 
