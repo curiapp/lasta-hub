@@ -750,12 +750,30 @@
 
               <div class="card col-md-4 border-dark text-center">
                 <div class="text-center">
+                  <button class="btn btn-warning btn-circle btn-xl" (click)="titleID(23)">
+                    <i class="fas fa-file-signature fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>6.3 NQF Feedback</h3>
+                  <p>NQF Feedback information
+
+                  </p>
+                  <p>
+                    <a routerLink='/pdu-recommend' class="btn btn-primary" role="button">Recommendation</a>
+                    <a routerLink="/nqa-submit" class="btn btn-warning" role="button">NQA Submit</a>
+                  </p>
+                </div>
+              </div>
+
+              <div class="card col-md-4 border-dark text-center">
+                <div class="text-center">
                   <button class="btn btn-success btn-circle btn-xl" (click)="titleID(22)">
                     <i class="far fa-paper-plane fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>6.3 NQA Submission</h3>
+                  <h3>6.4 NQA Submission</h3>
                   <p>PDU review the NQF submission from the
                      department and prepare NQF application documentation for submission </p>
                   <p>
@@ -784,6 +802,11 @@
               the necessary corrections and resubmit the final documents (Registration). The NQA will write a Progress report
               and Notice of Registration with will be loaded under (NQA Courses Registration). The process is repeated every
               5 years.
+            </div>
+            <div class="alert alert-success" [hidden]="showID != 23">
+              <a class="close" (click)="showID = 0" aria-label="close">x</a>
+              <h4>NQF Feedback</h4>
+              <hr class="colorgraph"> NQF Feedback expanded
             </div>
           </div>
         </div>

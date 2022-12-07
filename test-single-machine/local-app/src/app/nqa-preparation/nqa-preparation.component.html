@@ -12,7 +12,7 @@
             <!-- <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <div class="row px-3"><label for="doc"> Qualification Document: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -31,9 +31,19 @@
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>
+          </div> -->
+          <div class="form-group">
+            <label for="doc"> Document type : </label>
+            <select class="form-control" name="documentName" id="documentName" required [(ngModel)]="model.documentType" #docType="ngModel">
+              <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
+              <option *ngFor="let filetag of fileList" value="{{ filetag }}">{{filetag}}</option>
+            </select>
+            <div [hidden]="docType.valid" class="alert alert-danger">Document type is required</div>
           </div>
           <div class="form-group">
-            <div class="row px-3"><label for="doc">Support Document: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
+            <label for="doc" [hidden]="!docType.valid"> Select and Upload : {{this.model.documentType}} </label>
+            <label for="doc" class="text-danger h6" [hidden]="docType.valid"> Please select Document type first </label>
+            <!-- <div class="row px-3"><label for="doc">Support Document: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div> -->
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -44,10 +54,10 @@
                   </span>
                 </label>
               </div>
-              <input style="height:40px" type="text" id="support-file" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
+              <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
                 readonly>
               <div class="input-group-append">
-                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('support-file');"
+                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile();uploader.clearQueue();"
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>
@@ -66,6 +76,21 @@
               </span>
             </div> -->
           </div>
+          <br>
+               <table class="table table-bordered border-primary">
+                <tr >
+                  <th class="h6">Document Type</th>
+                  <th class="h6">Selected File name</th>
+                </tr>
+                <tr *ngFor = "let item of selectedFiles">
+                  <td class="text-primary">
+                    {{item[0]}}
+                  </td>
+                  <td class="text-default">
+                    <i class="fas fa-file-pdf text-danger"></i>  {{item[1]}}
+                  </td>
+                </tr>
+              </table>
           <div class="form-group">
             <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div>
             <button type="submit" class="btn btn-muted" (click)="clear();uploader.clearQueue();">Clear </button>
