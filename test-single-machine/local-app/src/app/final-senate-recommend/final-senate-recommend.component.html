@@ -21,7 +21,7 @@
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
                   </div>
-                  <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
+                  <div [hidden]="cdate.valid" class="alert alert-danger">Consultation Date is required</div>
               </div>
              <br>
              <div class="form-group">
@@ -65,8 +65,8 @@
                    <label class="control-label">Senate Recommendation: </label>
                    <fieldset style="border:solid 0.4px;border-radius:4px;width:100%;height:30px;border-color:lightgray;">
                    <div style="text-align:center;">
-                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="endorse" required #status="ngModel"> Approve &nbsp;</label>
-                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_faculty" required #status="ngModel"> Defer (Faculty) &nbsp;</label>
+                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="endorse" required #status="ngModel"> Approve &nbsp;&nbsp;</label>
+                       <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_faculty" required #status="ngModel"> Defer (Faculty) &nbsp;&nbsp;</label>
                        <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer_senex" required #status="ngModel"> Defer (SENEX) </label>
                    </div></fieldset>
                      <div [hidden]="status.valid" class="alert alert-danger">Recommendations status is required</div>

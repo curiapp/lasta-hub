@@ -45,6 +45,7 @@
               </div>
               <div class="form-group">
                 <label for="date">APC Decision</label>
+                <br/>
                 <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
               Recommend (senate) &nbsp; <i class="fa fa-check"></i></button>
               <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
