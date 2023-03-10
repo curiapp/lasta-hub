@@ -23,8 +23,19 @@
                   </div>
                   <div [hidden]="cdate.valid" class="alert alert-danger">Date is required</div>
               </div>
+              <br>
+             <div class="form-group">
+                <label for="doc"> Document type : </label>
+                <select class="form-control" name="documentName" id="documentName" required [(ngModel)]="model.documentType" #docType="ngModel">
+                  <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
+                  <option *ngFor="let filetag of fileList" value="{{ filetag }}">{{filetag}}</option>
+                </select>
+                <div [hidden]="docType.valid" class="alert alert-danger">Document type is required</div>
+              </div>
               <div class="form-group">
-                  <label for="doc" > Draft Programme: </label>
+                  <!-- <label for="doc" > Draft Programme: </label> -->
+                  <label for="doc" [hidden]="!docType.valid"> Select and Upload : {{this.model.documentType}} </label>
+                  <label for="doc" class="text-danger h6" [hidden]="docType.valid"> Please select Document type first </label>
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
                     <label>

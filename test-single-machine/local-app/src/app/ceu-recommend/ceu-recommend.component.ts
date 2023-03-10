@@ -31,7 +31,7 @@ export class CEURecommendComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('decision', this.decision);
-      form.append('reviewUnit',"CEU");
+      form.append('reviewUnit',"CE");
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.

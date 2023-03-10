@@ -6,9 +6,9 @@ body {
    
    */
    
-   h3 {
-     color: rgba(193, 199, 199, 0.9);
-   }
+  //  h3 {
+  //    color: rgba(193, 199, 199, 0.9);
+  //  }
    .text{
        color: rgba(193, 199, 199, 0.9);
        text-align: center;
@@ -72,10 +72,8 @@ body {
    }
    .service_tab_1:hover .fa-icon-image{
        color: #1C2331;
-       transform: rotate(360deg) scale(1.5);
+      //  transform: rotate(360deg) scale(1.5);
    }
-   
-   
    .fa-icon-image{
        //color: rgba(31,181,172,.9);
        color: rgba(193, 199, 199, 0.9);

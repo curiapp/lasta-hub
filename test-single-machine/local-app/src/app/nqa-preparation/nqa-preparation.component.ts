@@ -21,6 +21,8 @@ export class NqaPreparationComponent implements OnInit {
   devCode: String;
   private fileMap = new Map();
   showWarning:boolean = false;
+  selectedFiles:String[][] = [];
+  fileList:Array<String>;
   //  form: FormGroup;
 
   // declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -41,17 +43,23 @@ export class NqaPreparationComponent implements OnInit {
     this.uploader.onCompleteAll = () => {
 
     }
-
+    this.fileList = ['Final Senate Approved Document','NQF Qualification Document','Review Report','Rationale Statement','Letters of Supports','Benchmarking'];
 
   }
   // declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
   constructor(private http: Http, private el: ElementRef, private router: Router) {
 
   }
-  clear() {
+  @ViewChild('selectedFile') selectedFile: any;
+  clear(){
     this.model.programmeCode = "";
-    (<HTMLInputElement>document.getElementById("qualification-doc")).value = "";
-    (<HTMLInputElement>document.getElementById("support-file")).value = "";
+    this.model.status = "";
+    this.model.documentType = "";
+    this.selectedFile.nativeElement.value = '';
+    this.selectedFiles = [];
+    this.fileList = ['Final Senate Approved Document','NQF Qualification Document','Review Report','Rationale Statement','Letters of Supports','Benchmarking'];
+    // (<HTMLInputElement>document.getElementById("qualification-doc")).value = "";
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
   uploadFiles() {
     const request = new XMLHttpRequest();
@@ -66,35 +74,45 @@ export class NqaPreparationComponent implements OnInit {
     console.log(newform);
     request.send(newform);
   }
-  updateFile(id: string) {
+  // updateFile(id: string) {
 
-    for (var i = 0; i < this.uploader.queue.length - 1; i++) {
-      console.log(this.uploader.queue[i]);
+  //   for (var i = 0; i < this.uploader.queue.length - 1; i++) {
+  //     console.log(this.uploader.queue[i]);
 
+  //   }
+  //   (<HTMLInputElement>document.getElementById(id)).value = "";
+  //   if (this.uploader.queue.length > 2) {
+  //     for (var i = 0; i < this.uploader.queue.length - 1; i++) {
+  //       this.uploader.queue[i] = this.uploader.queue[i + 1];
+
+  //       console.log(this.uploader.queue[i]);
+  //     }
+  //     this.uploader.queue[2].remove();
+  //   }
+    
+  //   this.fileMap.set(this.uploader.queue[this.uploader.queue.length - 1].file.name, id);
+  //   (<HTMLInputElement>document.getElementById(id)).value = this.uploader.queue[this.uploader.queue.length - 1].file.name;
+  // }
+  updateFile(){
+    let end = this.uploader.queue.length;
+    this.selectedFiles.push([this.model.documentType,this.uploader.queue[end-1].file.name]);
+    let removeType = this.fileList.indexOf(this.model.documentType.toString());
+    this.fileList.splice(removeType,1);
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
+    for(var i = 0;i<this.uploader.queue.length;i++){
+      if(i != 0)
+        (<HTMLInputElement>document.getElementById("file-name")).value += " ; "+this.uploader.queue[i].file.name;
+      else
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+      console.log(this.uploader.queue[i].file.name);
     }
-    (<HTMLInputElement>document.getElementById(id)).value = "";
-    if (this.uploader.queue.length > 2) {
-      for (var i = 0; i < this.uploader.queue.length - 1; i++) {
-        this.uploader.queue[i] = this.uploader.queue[i + 1];
-
-        console.log(this.uploader.queue[i]);
-      }
-      this.uploader.queue[2].remove();
-    }
-    this.fileMap.set(this.uploader.queue[this.uploader.queue.length - 1].file.name, id);
-    (<HTMLInputElement>document.getElementById(id)).value = this.uploader.queue[this.uploader.queue.length - 1].file.name;
   }
-  removefile(id: string) {
-    var label = (<HTMLInputElement>document.getElementById(id)).value;
-    for (var i = 0; i < this.uploader.queue.length; i++) {
-      if (this.uploader.queue[i].file.name === label) {
-        this.fileMap.delete(this.uploader.queue[i].file.name);
-        this.uploader.queue[i].remove();
-        break;
-      }
-    }
-    (<HTMLInputElement>document.getElementById(id)).value = "";
-
+  
+  removefile(){
+    this.selectedFiles = [];
+    this.fileList = ['Final Senate Approved Document','NQF Qualification Document','Review Report','Rationale Statement','Letters of Supports','Benchmarking'];
+    this.selectedFile.nativeElement.value = '';
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
   close() {
     console.log("closing the window...");

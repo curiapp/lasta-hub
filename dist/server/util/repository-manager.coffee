@@ -32,6 +32,11 @@ exports.RepositoryManager = class RepositoryManager
             @addFileToRepo devCode, oldFileName, 'need-analysis/senate/', expandedContext, "Added amendment from Senate for #{devCode} need analysis", false, (addCDSenateAmendmentFileError, addCDSenateAmendmentFileRes) =>
                 callback addCDSenateAmendmentFileError, addCDSenateAmendmentFileRes
 
+        addAPCAmendment: (devCode, oldFileName, decSuffix, callback) ->
+            expandedContext = "amend-#{decSuffix}"
+            @addFileToRepo devCode, oldFileName, 'need-analysis/apc/', expandedContext, "Added amendment from APC for #{devCode} need analysis", false, (addCDAPCAmendmentFileError, addCDAPCAmendmentFileRes) =>
+                callback addCDAPCAmendmentFileError, addCDAPCAmendmentFileRes
+
         addCurriculumDraft: (devCode, oldFileName, callback) ->
             @addFileToRepo devCode, oldFileName, 'curriculum-development/draft/', 'submit', "Added first draft of curriculum for #{devCode}", false, (addCDDraftFileError, addCDDraftFileRes) =>
                 callback addCDDraftFileError, addCDDraftFileRes

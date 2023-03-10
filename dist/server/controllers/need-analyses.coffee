@@ -166,6 +166,31 @@ exports.NeedAnalysesController = class NeedAnalysesController extends AbstractCo
         else
             @continueWithHandler null, handlerObject, null, bosAmendmentResult
 
+    handleAPCRecommendations: (apcAmendmentData, handlerObject) ->
+        @messageGenerator.generate apcAmendmentData, (apcAmendmentMessageError, apcAmendmentMessage) =>
+            if apcAmendmentMessageError?
+                @continueWithHandler null, handlerObject, apcAmendmentMessageError, null
+            else
+                @mqm.sendMessage 'need-analysis-apc-recommend-req', apcAmendmentMessage, (apcAmendmentMessageSendError, apcAmendmentMessageSendRes) =>
+                    if apcAmendmentMessageSendError?
+                        @continueWithHandler null, handlerObject, apcAmendmentMessageSendError, null
+                    else
+                        workerObject =
+                            controllerRef: @
+                            methodName: 'completeAPCAmendment'
+                            handler: handlerObject
+                        @workerManager.enqueue apcAmendmentMessage.messageId, workerObject, (enqueueAPCAmendmentError, enqueueAPCAmendmentRes) =>
+                            if enqueueAPCAmendmentError?
+                                @continueWithHandler null, handlerObject, enqueueAPCAmendmentError, null
+                            else
+                                console.log "Enqueued the APC amendment work. Waiting for the message from micro service to proceed..."
+
+    completeAPCAmendment: (apcAmendmentError, apcAmendmentResult, additionalArg, handlerObject) ->
+        if apcAmendmentError?
+            @continueWithHandler null, handlerObject, apcAmendmentError, null
+        else
+            @continueWithHandler null, handlerObject, null, apcAmendmentResult
+
     handleSenateRecommendations: (senateAmendmentData, handlerObject) ->
         @messageGenerator.generate senateAmendmentData, (senateAmendmentMessageError, senateAmendmentMessage) =>
             if senateAmendmentMessageError?
