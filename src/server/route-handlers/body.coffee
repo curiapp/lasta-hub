@@ -95,8 +95,11 @@ exports.BodyRequestHandler = class BodyRequestHandler
                 if recDataError?
                     response.status(400).json({message: "Bad Request adding Final Senate recommendation!"})
                 else
-                    decSuffix = "#{validRecData.madeBy}-#{validRecData.status}"
-                    @repoManager.addSenateFinalRecommendation validRecData.devCode, request.file, decSuffix, (repositoryError, commitHash) =>
+                    repoFiles = [
+                        {name: request.files['fileList'][0], ind: 0},
+                        {name: request.files['fileList'][1], ind: 1}
+                    ] 
+                    @repoManager.addSenateFinalRecommendation validRecData.devCode, repoFiles, (repositoryError, commitHash) =>
                         if repositoryError?
                             response.status(500).json({message: "Error adding the APC recommendation document to the repository"})
                         else

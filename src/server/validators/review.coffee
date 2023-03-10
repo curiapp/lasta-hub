@@ -22,7 +22,7 @@ exports.ReviewValidator = class ReviewValidator extends SchemaValidator
                 @helper.checkAndSanitizeCode reviewData.devCode, 'Programme Development Code', @validator, (devCodeError, validDevCode) =>
                     devCodePartialCallback devCodeError, validDevCode
             reviewUnit: (unitPartialCallback) =>
-                @helper.checkAndSanitizePossibleValues reviewData.reviewUnit, ['TLA', 'CE', 'QA', 'COLL'], 'Review Unit', @validator, (unitError, validUnit) =>
+                @helper.checkAndSanitizePossibleValues reviewData.reviewUnit, ['TLA', 'CE', 'QA', 'COLL', 'PDU'], 'Review Unit', @validator, (unitError, validUnit) =>
                     unitPartialCallback unitError, validUnit
             decision: (decisionPartialCallback) =>
                 @helper.checkAndSanitizePossibleValues reviewData.decision, ['approve', 'decline'], 'Review Decision', @validator, (decisionError, validDecision) =>
