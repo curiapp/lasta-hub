@@ -31,7 +31,7 @@ export class TLURecommendComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('decision', this.decision);
-      form.append('reviewUnit',"TL&A");
+      form.append('reviewUnit',"TLA");
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
