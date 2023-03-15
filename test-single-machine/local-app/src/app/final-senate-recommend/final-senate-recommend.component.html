@@ -35,11 +35,11 @@
               <div class="form-group">
                   <label for="doc" [hidden]="!docType.valid"> Select and Upload : {{this.model.documentType}} </label>
                   <label for="doc" class="text-danger h6" [hidden]="docType.valid"> Please select Document type first </label>
-                  <div class="input-group mb-3">
+                  <div class="input-group">
                     <div class="input-group-prepend">
                     <label>
                       <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
-                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="recommendation" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"/>
+                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="recommendation" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;" [disabled]="!docType.valid"/>
                       </span>
                   </label>
                   </div>
@@ -49,6 +49,7 @@
                     mdbWavesEffect (click)="removefile();uploader.clearQueue();" [disabled]="!uploader.getNotUploadedItems().length">X</button>
                   </div>
                   </div>
+                  <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px;">Programme draft documents are required</div>
               </div>
               <!-- <div class="form-group">
                   <label class="control-label">Decission Body: </label>
@@ -87,9 +88,9 @@
                 </tr>
               </table>
               <div class="form-group">
-                <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()" ><i class="fa fa-refresh"></i> Clear</button>
+                <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()" > Clear</button>
                 <button routerLink="/final-senate-recommend" type="button" class="btn btn-success" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !senateForm.form.valid">
-                   Submit &nbsp;<i class="fa fa-check"></i></button>
+                   Submit &nbsp;</button>
               </div>
           </form>
       </div>

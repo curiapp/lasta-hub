@@ -54,8 +54,8 @@
                   <!-- <div [hidden]="org.valid" class="alert alert-danger">Organisation Name  is required</div> -->
               </div>
              <br>
-             <!-- <div class="form-group">
-              <div class="row px-3"><label for="doc" > Submissions: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
+             <div class="form-group">
+              <div class="row px-3"><label for="doc" > Submissions: </label><!--div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div --></div>
                   <button (click)="addOrganisation()">Add Stakeholder name</button> 
                   <div [hidden]="org.valid" class="alert alert-danger">Stakeholder Name  is required</div>
               </div> -->
@@ -79,9 +79,9 @@
                <br>
                </div>
               <div class="form-group">
-                <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div>
+                <!-- <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div> -->
                 <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();" >Clear</button>
-                <button type="button"  class="btn btn-success btn-s" (click)="submitInfo(consultForm)" > <!--[disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid" -->
+                <button type="button"  class="btn btn-success btn-s" (click)="submitInfo(consultForm)" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid" >
              submit </button>
               </div>
           </form>

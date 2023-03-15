@@ -46,7 +46,7 @@
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>
-            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger">Recommendation documents is required</div>
+            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px;">Programme draft documents are required</div>
           </div>
           <div class="form-group">
             <label class="control-label">Recommended to: </label>
@@ -80,10 +80,10 @@
 <!-- end -->
 
           <div class="form-group">
-            <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue()">Clear</button>
+            <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()">Clear</button>
             <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
               [disabled]="!uploader.getNotUploadedItems().length || !bosForm.form.valid">
-              Submit &nbsp; <i class="fa fa-check"></i></button>
+              Submit &nbsp; </button>
             <!-- <button type="submit" class="btn btn-danger" (click)="backClicked()">Close &nbsp; <i class="fa fa-times"></i></button> -->
           </div>
         </form>

@@ -79,6 +79,7 @@ export class  FinalSenateRecommendComponent implements OnInit {
       this.selectedFiles.push([this.model.documentType,this.uploader.queue[end-1].file.name]);
       let removeType = this.fileList.indexOf(this.model.documentType.toString());
       this.fileList.splice(removeType,1);
+      this.model.documentType = "";
       (<HTMLInputElement>document.getElementById("file-name")).value = "";
       for(var i = 0;i<this.uploader.queue.length;i++){
         if(i != 0)

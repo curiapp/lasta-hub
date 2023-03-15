@@ -40,8 +40,8 @@
                       <div class="input-group-prepend">
                     <label>
                       <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
-                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="bos-draft" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"/>
-                           <!-- [disabled]="!docType.valid"/> -->
+                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="bos-draft" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"
+                           [disabled]="!docType.valid"/>
                       </span>
                   </label>
                   </div>
@@ -67,7 +67,7 @@
               </tr>
             </table>
               <div class="form-group">
-                <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();" >Clear</button>
+                <button type="submit" class="btn btn-danger" (click)="clear();uploader.clearQueue();" >Clear</button>
                 <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
               Submit</button>
               </div>

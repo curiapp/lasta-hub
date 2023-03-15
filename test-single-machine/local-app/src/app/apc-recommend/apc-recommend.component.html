@@ -41,19 +41,19 @@
                     mdbWavesEffect (click)="removefile();uploader.clearQueue();" [disabled]="!uploader.getNotUploadedItems().length">X</button>
                   </div>
               </div>
-              <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger">Recommendation documents is required</div>
+              <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px;">Recommendation documents are required</div>
               </div>
               <div class="form-group">
                 <label for="date">APC Decision</label>
                 <br/>
                 <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Recommend (senate) &nbsp; <i class="fa fa-check"></i></button>
-              <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Defer (Faculty) &nbsp; <i class="fa fa-history"></i></button>
+              Recommend (senate) &nbsp; </button>
+              <button type="button" class="btn btn-primary btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+              Defer (Faculty) &nbsp; </button>
               </div>
 
               <div class="form-group">
-                <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue();" >Clear Form</button>
+                <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue();" >Clear </button>
               </div>
           </form>
       </div>

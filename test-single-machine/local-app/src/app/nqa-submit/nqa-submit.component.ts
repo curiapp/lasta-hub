@@ -21,6 +21,8 @@ export class NqaSubmitComponent implements OnInit {
   devCode: String;
   private fileMap = new Map();
   showWarning:boolean = false;
+  responseAttached:boolean = false;
+  qualificationAttached:boolean = false;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -65,6 +67,8 @@ export class NqaSubmitComponent implements OnInit {
     this.uploader.clearQueue();
     (<HTMLInputElement>document.getElementById("qualification-doc")).value = "";
     (<HTMLInputElement>document.getElementById("response")).value = "";
+    this.qualificationAttached = false;
+    this.responseAttached = false;
   }
   uploadFiles(){
     const request = new XMLHttpRequest();
@@ -82,6 +86,7 @@ export class NqaSubmitComponent implements OnInit {
   }
   updateFile(id:string) {
     (<HTMLInputElement>document.getElementById(id)).value = "";
+    if (id==='response' )this.responseAttached = true; else this.qualificationAttached = true;
     if(this.uploader.queue.length > 2){
       for (var i = 0; i < this.uploader.queue.length-1; i++) {
         this.uploader.queue[i] = this.uploader.queue[i+1];
@@ -93,6 +98,7 @@ export class NqaSubmitComponent implements OnInit {
     (<HTMLInputElement>document.getElementById(id)).value = this.uploader.queue[this.uploader.queue.length-1].file.name;
   }
   removefile(id:string){
+    if(id==='response')this.responseAttached = false;else this.qualificationAttached = false;
     var label = (<HTMLInputElement>document.getElementById(id)).value;
     for(var i=0; i<this.uploader.queue.length; i++){
       if(this.uploader.queue[i].file.name === label){
