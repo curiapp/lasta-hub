@@ -35,7 +35,7 @@ exports.BodyValidator = class BodyValidator extends SchemaValidator
                 @helper.checkAndSanitizeDate recommendationData.date, 'Faculty Recommendation Date', @validator, (dateError, validDate) =>
                     datePartialCallback dateError, validDate
             status: (statusPartialCallback) =>
-                @helper.checkAndSanitizePossibleValues recommendationData.status, ['recommend', 'resubmit', 'defer'], 'Faculty Recommendation Status', @validator, (statusError, validStatus) =>
+                @helper.checkAndSanitizePossibleValues recommendationData.status, ['recommend-bosec', 'resubmit', 'defer'], 'Faculty Recommendation Status', @validator, (statusError, validStatus) =>
                     statusPartialCallback statusError, validStatus
         @flowController.parallel recommendationOptions, (recommendationDataError, validRecommendationData) =>
             callback recommendationDataError, validRecommendationData
@@ -56,6 +56,9 @@ exports.BodyValidator = class BodyValidator extends SchemaValidator
             devCode: (devCodePartialCallback) =>
                 @helper.checkAndSanitizeCode recommendationData.devCode, 'Programme Development Code', @validator, (devCodeError, validDevCode) =>
                     devCodePartialCallback devCodeError, validDevCode
+            recommendationDate: (datePartialCallback) =>
+                @helper.checkAndSanitizeDate recommendationData.date, 'APC Recommendation Date', @validator, (dateError, validDate) =>
+                    datePartialCallback dateError, validDate
             decision: (decisionPartialCallback) =>
                 @helper.checkAndSanitizePossibleValues recommendationData.decision, ['approve', 'decline'], 'APC Recommendation Status', @validator, (decisionError, validDecision) =>
                     decisionPartialCallback decisionError, validDecision
@@ -73,7 +76,22 @@ exports.BodyValidator = class BodyValidator extends SchemaValidator
         @flowController.parallel recommendationOptions, (recommendationDataError, validRecommendationData) =>
             callback recommendationDataError, validRecommendationData
 
+    
     checkAndSanitizeForFinalSenateRecommendation: (recommendationData, callback) ->
+        recommendationOptions =
+            devCode: (devCodePartialCallback) =>
+                @helper.checkAndSanitizeCode recommendationData.devCode, 'Programme Development Code', @validator, (devCodeError, validDevCode) =>
+                    devCodePartialCallback devCodeError, validDevCode
+            finalSubmissionDate: (datePartialCallback) =>
+                @helper.checkAndSanitizeDate recommendationData.date, 'Faculty Recommendation Date', @validator, (dateError, validDate) =>
+                    datePartialCallback dateError, validDate 
+            status: (statusPartialCallback) =>
+                @helper.checkAndSanitizePossibleValues recommendationData.status, ['endorse', 'defer_faculty', 'defer_senex'], 'Faculty Recommendation Status', @validator, (statusError, validStatus) =>
+                    statusPartialCallback statusError, validStatus
+        @flowController.parallel recommendationOptions, (recommendationDataError, validRecommendationData) =>
+            callback recommendationDataError, validRecommendationData
+
+    checkAndSanitizeForFinalSenateRecommendationOld: (recommendationData, callback) ->
         recommendationOptions =
             devCode: (devCodePartialCallback) =>
                 @helper.checkAndSanitizeCode recommendationData.devCode, 'Programme Development Code', @validator, (devCodeError, validDevCode) =>

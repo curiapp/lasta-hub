@@ -19,8 +19,11 @@ exports.QualificationValidator = class QualificationValidator extends SchemaVali
                 @helper.checkAndSanitizeCode recommendationData.devCode, 'Programme Development Code', @validator, (devCodeError, validDevCode) =>
                     devCodePartialCallback devCodeError, validDevCode
             decision: (decisionPartialCallback) =>
-                @helper.checkAndSanitizePossibleValues recommendationData.decision, ['approve', 'decline'], 'Recommendation Decision', @validator, (decisionError, validDecision) =>
+                @helper.checkAndSanitizePossibleValues recommendationData.decision, ['approve', 'defer'], 'Recommendation Decision', @validator, (decisionError, validDecision) =>
                     decisionPartialCallback decisionError, validDecision
+            submissionType: (subPartialCallback) =>
+                @helper.checkAndSanitizeBoolean recommendationData.submissionType, 'Initial submission or not', @validator, (isInitError, validIsInit) =>
+                    subPartialCallback isInitError, validIsInit
         @flowController.parallel recommendationOptions, (recommendationDataError, validRecommendationData) =>
             callback recommendationDataError, validRecommendationData
 
