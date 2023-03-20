@@ -20,14 +20,14 @@
                   <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
                     Browse
                     <input class="form-control" #selectedFile type="file" name="qualification-doc" ng2FileSelect [uploader]="uploader" (change)="updateFile('qualification-doc')"
-                      style="display: none;" />
+                      style="display:none" />
                   </span>
                 </label>
               </div>
               <input style="height:40px" type="text" id="qualification-doc" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
                 readonly>
               <div class="input-group-append">
-                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('qualification-doc');"
+                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('qualification-doc')"
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>

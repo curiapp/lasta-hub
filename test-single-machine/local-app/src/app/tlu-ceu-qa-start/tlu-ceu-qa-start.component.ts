@@ -21,12 +21,9 @@ const URL = '/api/reviews/start';
 })
 export class TLUCEUQAStartComponent implements OnInit {
     model:Model= new Model();
-    programmeCode:String;
-    consultationDate: Date;
-    devCode:String;
-    recommendto:String;
-    wil:boolean = false;
-    distance:boolean = false;
+    tlp:any = null;
+    ceu:any = null;
+    coll:any = null;
 
      //declare a property called fileuploader and assign it to an instance of a new fileUploader.
     //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
@@ -68,7 +65,7 @@ export class TLUCEUQAStartComponent implements OnInit {
     @ViewChild('selectedFile') selectedFile: any;
     clear(){
       this.model.programmeCode="";
-      this.model.recommendto="";
+      this.model.recommendto = [];
       this.model.wil=false;
       this.model.distance = false;
       this.model.consultationDate=null;
@@ -93,5 +90,12 @@ export class TLUCEUQAStartComponent implements OnInit {
     removefile(){
         (<HTMLInputElement>document.getElementById("file-name")).value = "";
     }
-
+    //Make changes to recommedTo when an option is selected
+    onChecked(data:any){
+        if(this.model.recommendto.includes(data)){
+          var index = this.model.recommendto.indexOf(data);
+          this.model.recommendto.splice(index,1)
+        }else
+          this.model.recommendto.push(data)
+    }
 }

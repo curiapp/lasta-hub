@@ -19,6 +19,7 @@ export class PduRecommendComponent implements OnInit {
   devCode: String;
   decision: String;
   showWarning:boolean = false;
+  submissionType:boolean;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -33,6 +34,7 @@ export class PduRecommendComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('decision', this.decision);
+      form.append('submissionType',this.model.type);
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.

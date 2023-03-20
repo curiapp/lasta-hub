@@ -22,12 +22,12 @@
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>
-            <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
+            <div [hidden]="cdate.valid" class="alert alert-danger">Consultation Date is required</div>
           </div>
           <br>
           <div class="form-group">
             <label for="doc"> Drafted Programme: </label>
-            <div class="input-group mb-3">
+            <div class="input-group">
               <div class="input-group-prepend">
                 <label>
                   <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
@@ -44,13 +44,15 @@
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>
+            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px">Draft Programme file is required</div>
           </div>
           <br>
           <div class="form-group">
+            <label for="doc"> WIL Component: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
-                <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:10px">
+                <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:20px;margin-top:6px">
                     <input type="checkbox" class="custom-control-input" id="defaultInline1" [required]="false" name="isWil" [(ngModel)]="model.wil" #wil="ngModel">
-                    <label class="custom-control-label" for="defaultInline1">WIL Component</label>
+                    <label class="custom-control-label" for="defaultInline1"> {{model.wil?'Includes':'Excludes'}} WIL Component</label>
                   </div>
                   <!-- <div class="custom-control custom-checkbox custom-control-inline">
                     <input type="checkbox" class="custom-control-input" id="defaultInline2" required name="isDistance" [(ngModel)]="model.distance" #distance="ngModel">
@@ -65,50 +67,54 @@
         <br>
           <!-- <div class="form-group">
             <label for="doc"> Recommend to: </label>
-            <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
-                <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:10px">
-                    <input type="checkbox" class="custom-control-input" id="defaultInline5" required name="tla" [(ngModel)]="model.recommendto" #tla="ngModel">
-                    <label class="custom-control-label" for="defaultInline5">TL & A </label>
+            <div style="border:solid 0.6px lightgray;height:38px;" class="rounded text-center">
+                <div class="custom-control custom-checkbox custom-control-inline" style="margin-top:8px">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline5" required name="ceu" [(ngModel)]="model.recommendto" #ceu="ngModel" (change)="onChecked($event.target.name)">
+                    <label class="custom-control-label" for="defaultInline5">CEU </label>
                   </div>
-                  <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="defaultInline6" required name="ce" 
-                    [(ngModel)]="model.recommendto" value="ce" checked
-                  required #recommendto="ngModel" mdbInput>>
-                    <label class="custom-control-label" for="defaultInline6">CE</label>
+                  <div class="custom-control custom-checkbox custom-control-inline" style="margin-top:8px">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline6" required name="coll" 
+                    [(ngModel)]="model.recommendto" #coll="ngModel" (change)="onChecked($event.target.name)">
+                    <label class="custom-control-label" for="defaultInline6">COLL</label>
                   </div>
-                  <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="defaultInline7" required name="qa" [(ngModel)]="model.recommendto" #qa="ngModel">
-                    <label class="custom-control-label" for="defaultInline7">QA</label>
+                  <div class="custom-control custom-checkbox custom-control-inline" style="margin-top:8px">
+                    <input type="checkbox" class="custom-control-input" id="defaultInline7" required name="tlp" [(ngModel)]="model.recommendto" #tlp="ngModel" (change)="onChecked($event.target.name)">
+                    <label class="custom-control-label" for="defaultInline7">TLP</label>
                   </div>
             </div>
-            <div [hidden]="model.tla ===true || model.CE ===true || model.QA ===true" class="alert alert-danger">Recommend to atleast one body is required</div>
+            <div [hidden]="model.ceu ===true || model.coll ===true || model.tlp ===true" class="alert alert-danger">Recommend to atleast one body is required</div>
           </div> -->
           <br>
 
         <!-- end -->
-
+        <!--CEU/COLL/TLP (CHECK BOXES)-->
           <div class="form-group">
             <label class="control-label">Recommend to: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
-              <div class="custom-control custom-radio custom-control-inline" style="margin-left:30%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="defaultInline3" name="status" [(ngModel)]="model.recommendto" value="ceu"
-                  required #recommendto="ngModel" mdbInput>
+              <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:20%;margin-top:8px">
+                <input type="checkbox" class="custom-control-input" id="defaultInline3" name="status" [(ngModel)]="ceu" value="ceu"
+                  required #recommendto="ngModel" mdbInput (change)="onChecked($event.target.value)">
                 <label class="custom-control-label" for="defaultInline3">CEU</label>
               </div>
-              <div class="custom-control custom-radio custom-control-inline" style="margin-right:20%;margin-top:8px">
-                <input type="radio" class="custom-control-input" id="defaultInline4" name="status" [(ngModel)]="model.recommendto" value="coll"
-                  required #recommendto="ngModel" mdbInput>
+              <div class="custom-control custom-checkbox custom-control-inline" style="margin-right:5px;margin-top:8px">
+                <input type="checkbox" class="custom-control-input" id="defaultInline4" name="status" [(ngModel)]="coll" value="coll"
+                  required #recommendto="ngModel" mdbInput (change)="onChecked($event.target.value)">
                 <label class="custom-control-label" for="defaultInline4">COLL</label>
               </div>
+              <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:5px;margin-top:8px">
+                <input type="checkbox" class="custom-control-input" id="defaultInline5" name="status" [(ngModel)]="tlp" value="tlp"
+                  required #recommendto="ngModel" mdbInput (change)="onChecked($event.target.value)">
+                <label class="custom-control-label" for="defaultInline5">TLP</label>
+              </div>
             </div>
-            <div [hidden]="recommendto.valid" class="alert alert-danger">Recommend to body is needed</div>
+            <div [hidden]="this.model.recommendto.length>0" class="alert alert-danger">Recommend to atleast one body is required </div>
           </div>
           <br>
           <div class="form-group">
-            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Cancel</button>
+            <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue();">Clear</button>
             <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
               submit </button>
-            <button type="submit" class="btn btn-default" (click)="close()">Close</button>
+            <button type="submit" class="btn btn-primary" (click)="close()">Close</button>
           </div>
         </form>
       </div>

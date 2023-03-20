@@ -28,8 +28,8 @@
           </div>
 
           <div class="form-group">
-            <div class="row px-3"><label for="doc"> Qualification Document: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-            <div class="input-group mb-3">
+            <div class="row px-3"><label for="doc"> Qualification Document: </label><!--div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div --></div>
+            <div class="input-group">
               <div class="input-group-prepend">
                 <label>
                   <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
@@ -41,16 +41,17 @@
               </div>
               <input style="height:40px" type="text" id="qualification-doc" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
                 readonly>
-              <!-- <div class="input-group-append">
+              <div class="input-group-append">
                 <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('qualification-doc');"
-                  [disabled]="!uploader.getNotUploadedItems().length">X</button>
-              </div> -->
+                  [disabled]="!this.qualificationAttached">X</button>
+              </div>
             </div>
+            <div [hidden]="this.qualificationAttached" class="alert alert-danger" style="margin-top:-8px;">Qualification documents are required</div>
           </div>
           <span [hidden]="type.value">
             <div class="form-group">
-              <div class="row px-3"><label for="doc"> Response: </label><div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-              <div class="input-group mb-3">
+              <div class="row px-3"><label for="doc"> Response: </label><!--div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div --></div>
+              <div class="input-group">
                 <div class="input-group-prepend">
                   <label>
                     <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
@@ -62,17 +63,18 @@
                 </div>
                 <input style="height:40px" type="text" id="response" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
                   readonly>
-                <!-- <div class="input-group-append">
+                <div class="input-group-append">
                   <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile('response');"
-                    [disabled]="!uploader.getNotUploadedItems().length">X</button>
-                </div> -->
+                    [disabled]="!this.responseAttached">X</button>
+                </div>
               </div>
+              <div [hidden]="this.responseAttached" class="alert alert-danger" style="margin-top:-8px;">Response documents are required</div>
             </div>
           </span>
 
           <div class="form-group">
             <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div>
-            <button type="submit" class="btn btn-muted" (click)="clear();uploader.clearQueue();">Clear</button>
+            <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue();">Clear</button>
             <button type="button" class="btn btn-success btn-s" (click)="submitInfo(concludeForm)" ><!--/button>[disabled]="allowSubmission() || !concludeForm.form.valid"-->
               Save </button>
               <!-- <button type="button" class="btn btn-danger" (click)="close()">Close</button> -->

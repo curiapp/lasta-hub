@@ -33,10 +33,10 @@
               </div>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();">Cancel</button>
+            <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue();">Clear</button>
             <button type="button" class="btn btn-success btn-s" (click)="setDecission('recommend');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
             Recommend</button>
-            <button type="button" class="btn btn-success btn-s" (click)="setDecission('defer');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+            <button type="button" class="btn btn-primary btn-s" (click)="setDecission('defer');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
               Defer</button>
           </div>
         </form>

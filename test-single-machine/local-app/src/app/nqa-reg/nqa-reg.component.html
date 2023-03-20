@@ -9,17 +9,17 @@
           <div class="form-group">
             <div class="row px-3"><label for="ProgrammeCode">Programme Code </label><div [hidden]="!showWarning||procode.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
-            <!-- <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
+            <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
           </div>
           <div class="form-group">
             <div class="row px-3"><label for="qualificationTitle">Qualification Title </label><div [hidden]="!showWarning||qtitle.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <input id="qualificationTitle" type="text" class="form-control" required [(ngModel)]="model.qualificationTitle" name="qtitle" #qtitle="ngModel">
-            <!-- <div [hidden]="qtitle.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
+            <div [hidden]="qtitle.valid" class="alert alert-danger">Proposed Programme Code is required</div>
           </div>
           <div class="form-group">
             <div class="row px-3"><label for="nqfId">NQF ID</label><div [hidden]="!showWarning||nqfId.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
             <input id="nqfId" type="text" class="form-control" required [(ngModel)]="model.nqfId" name="nqfId" #nqfId="ngModel">
-            <!-- <div [hidden]="nqfId.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
+            <div [hidden]="nqfId.valid" class="alert alert-danger">Proposed Programme Code is required</div>
           </div>
           <br>
           <div class="form-group">
@@ -31,7 +31,7 @@
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>
-            <!-- <div [hidden]="cdate.valid" class="alert alert-danger">Registration Date is required</div> -->
+            <div [hidden]="cdate.valid" class="alert alert-danger">Registration Date is required</div>
           </div>
           <br>
           <!-- <div class="form-group">
@@ -47,8 +47,8 @@
           </div> -->
           <br>
           <div class="form-group">
-            <div class="row px-3"><label for="doc"> Registered Qualification Document: </label> <div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-            <div class="input-group mb-3">
+            <div class="row px-3"><label for="doc"> Registered Qualification Document: </label> <!--div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div --></div>
+            <div class="input-group">
               <div class="input-group-prepend">
                 <label>
                   <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
@@ -65,12 +65,13 @@
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>
+            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px;">Registered Qualification documents are required</div>
           </div>
           <br>
           <div class="form-group">
-            <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div>
-            <button type="button" class="btn btn-muted" (click)="clear();uploader.clearQueue();">Clear</button>
-            <button type="submit" class="btn btn-success btn-s" (click)="submitInfo(consultForm)" > <!--[disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid"-->
+            <!-- <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div> -->
+            <button type="button" class="btn btn-warning" (click)="clear();uploader.clearQueue();">Clear</button>
+            <button type="submit" class="btn btn-success btn-s" (click)="submitInfo(consultForm)" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
               Save </button>
             <!-- <button type="button" class="btn btn-danger" (click)="close()">Close</button> -->
           </div>

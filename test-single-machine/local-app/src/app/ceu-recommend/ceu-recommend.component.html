@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #concludeForm="ngForm">
-          <h3 class="form-title-label"> 4.3 CE Review</h3>
+          <h3 class="form-title-label"> 4.3 CUE Review</h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -33,11 +33,11 @@
               </div>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-info" (click)="clear();uploader.clearQueue();">Clear Form</button>
+            <button type="submit" class="btn btn-danger" (click)="clear();uploader.clearQueue();"> Clear </button>
             <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Endorse &nbsp; <i class="fa fa-check"></i></button>
-            <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
-              Defer &nbsp; <i class="fa fa-history"></i></button>
+              Endorse &nbsp; </button>
+            <button type="button" class="btn btn-primary btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid">
+              Defer &nbsp; </button>
           </div>
         </form>
       </div>
