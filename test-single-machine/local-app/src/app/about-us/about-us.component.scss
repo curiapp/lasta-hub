@@ -1,5 +1,5 @@
 body {
-    background:#000000 !important;
+    background:#021549 !important;
    }
    
    /*
@@ -10,14 +10,17 @@ body {
   //    color: rgba(193, 199, 199, 0.9);
   //  }
    .text{
-       color: rgba(193, 199, 199, 0.9);
+       color: rgba(233, 241, 235, 0.9);
        text-align: center;
+       text-size-adjust: 5;
+       
    }
    
    
    .folded-corner:hover .text{
        visibility: visible;
-       color: #1C2331;
+       color: #fafaff;
+       text-size-adjust: 8;
    }
    .Services-tab{
        margin-top:20px;
@@ -33,13 +36,13 @@ body {
      position: relative;
      font-size: 110%;
      text-decoration: none;
-     color: #999; 
+     color: #5a4646; 
      background: transparent;
      transition: all ease .5s;
      border: 1px solid rgba(193, 199, 199, 0.9);
    }
    .folded-corner:hover{
-       background-color: rgba(193, 199, 199, 0.9);
+       background-color: rgba(0, 0, 99, 0.9);
    }
    
    /*
@@ -76,7 +79,7 @@ body {
    }
    .fa-icon-image{
        //color: rgba(31,181,172,.9);
-       color: rgba(193, 199, 199, 0.9);
+       color: rgba(5, 61, 61, 0.9);
        display: inline-block;
        font-style: normal;
        font-variant: normal;
@@ -91,5 +94,7 @@ body {
        text-align: center;
        transition: all 1s cubic-bezier(.99,.82,.11,1.41);
    }
-   
+   paragraph{
+    text-size-adjust: 5;
+   }
    
