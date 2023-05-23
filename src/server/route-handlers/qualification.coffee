@@ -85,6 +85,7 @@ exports.QualificationRequestHandler = class QualificationRequestHandler
                 if preparationDataError?
                     response.status(400).json({message: "Bad Request submitting NQA response!"})
                 else
+                    console.dir validSubmissionData
                     if validSubmissionData.isInit
                         console.log "This is an initial submission. We should expect only one file..."
                         #repoFiles1 = [
