@@ -86,10 +86,10 @@ exports.QualificationRequestHandler = class QualificationRequestHandler
                     response.status(400).json({message: "Bad Request submitting NQA response!"})
                 else
                     if validSubmissionData.isInit
-                        repoFiles1 = [
-                            {name: request.files['qualification-doc'][0], ind: 0}
-                        ]
-                        @repoManager.addNQAInitialResponse validSubmissionData.devCode, repoFiles1, (repositorySingleError, commitHashSingle) =>
+                        #repoFiles1 = [
+                        #    {name: request.files['qualification-doc'][0], ind: 0}
+                        #]
+                        @repoManager.addNQAInitialResponse validSubmissionData.devCode, request.file, (repositorySingleError, commitHashSingle) =>
                             if repositorySingleError?
                                 response.status(500).json({message: "Error adding the NQA initial response to the repository"})
                             else
