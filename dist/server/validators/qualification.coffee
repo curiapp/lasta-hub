@@ -48,7 +48,7 @@ exports.QualificationValidator = class QualificationValidator extends SchemaVali
                     datePartialCallback dateError, validDate
             qtitle: (titlePartialCallback) =>
                 @helper.checkAndSanitizeWords registrationData.qtitle, 'Programme Title', @validator, (titleError, validTitle) =>
-                    namePartialCallback titleError, validTitle
+                    titlePartialCallback titleError, validTitle
             nqfId: (codePartialCallback) =>
                 @helper.checkAndSanitizeCode registrationData.nqfId, 'Qualification Identifier', @validator, (progCodeError, validID) =>
                     codePartialCallback progCodeError, validID
