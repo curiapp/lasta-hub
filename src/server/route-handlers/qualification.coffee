@@ -86,6 +86,7 @@ exports.QualificationRequestHandler = class QualificationRequestHandler
                     response.status(400).json({message: "Bad Request submitting NQA response!"})
                 else
                     if validSubmissionData.isInit
+                        console.log "This is an initial submission. We should expect only one file..."
                         #repoFiles1 = [
                         #    {name: request.files['qualification-doc'][0], ind: 0}
                         #]
