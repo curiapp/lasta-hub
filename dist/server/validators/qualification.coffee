@@ -46,12 +46,12 @@ exports.QualificationValidator = class QualificationValidator extends SchemaVali
             registrationDate: (datePartialCallback) =>
                 @helper.checkAndSanitizeDate registrationData.date, 'Registration Date', @validator, (dateError, validDate) =>
                     datePartialCallback dateError, validDate
-            progName: (namePartialCallback) =>
-                @helper.checkAndSanitizeWords registrationData.courseName, 'Programme Name', @validator, (progNameError, validProgName) =>
-                    namePartialCallback progNameError, validProgName
-            progCode: (codePartialCallback) =>
-                @helper.checkAndSanitizeCode registrationData.courseCode, 'Programme Development Code', @validator, (progCodeError, validProgCode) =>
-                    codePartialCallback progCodeError, validProgCode
+            qtitle: (titlePartialCallback) =>
+                @helper.checkAndSanitizeWords registrationData.qtitle, 'Programme Title', @validator, (titleError, validTitle) =>
+                    namePartialCallback titleError, validTitle
+            nqfId: (codePartialCallback) =>
+                @helper.checkAndSanitizeCode registrationData.nqfId, 'Qualification Identifier', @validator, (progCodeError, validID) =>
+                    codePartialCallback progCodeError, validID
         @flowController.parallel registrationOptions, (registrationDataError, validRegistrationData) =>
             callback registrationDataError, validRegistrationData
 
