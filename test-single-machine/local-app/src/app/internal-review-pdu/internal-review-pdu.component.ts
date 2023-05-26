@@ -21,7 +21,7 @@ export class InternalReviewPduComponent implements OnInit {
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
   //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-  public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'coll-recommend' });
+  public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'review-recommend' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
 

@@ -25,6 +25,7 @@ module.exports = (app, uploader) ->
     # apc
     app.route('/api/bos-senate/apc-recommend').post uploader.single('apc-recommendation'), (request, response) ->
         console.log "new POST request /api/bos-senate/apc-recommend ..."
+        console.log request.body
         BodyRequestHandler.getInstance().addAPCRecommendation request, response
 
     # other faculty recommend
