@@ -64,6 +64,8 @@ exports.BodyRequestHandler = class BodyRequestHandler
         addAPCRecommendation: (request, response) ->
             @validator.checkAndSanitizeForAPCRecommendation request.body, (recDataError, validRecData) =>
                 if recDataError?
+                  console.log "there was an error..."
+                  console.log recDataError
                     response.status(400).json({message: "Bad Request adding APC recommendation!"})
                 else
                     @repoManager.addAPCRecommendation validRecData.devCode, request.file, validRecData.decision, (repositoryError, commitHash) =>
@@ -98,7 +100,7 @@ exports.BodyRequestHandler = class BodyRequestHandler
                     repoFiles = [
                         {name: request.files['fileList'][0], ind: 0},
                         {name: request.files['fileList'][1], ind: 1}
-                    ] 
+                    ]
                     @repoManager.addSenateFinalRecommendation validRecData.devCode, repoFiles, (repositoryError, commitHash) =>
                         if repositoryError?
                             response.status(500).json({message: "Error adding the APC recommendation document to the repository"})
