@@ -15,12 +15,19 @@
               <div class="form-group">
                   <label for="date">APC Date</label>
                   <div class="input-group">
+                    <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate"
+                      ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                  <!-- <div class="input-group">
                       <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="date"
                       placeholder="YYYY-MM-DD" #cdate="ngModel" />
                       <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                       </span>
-                  </div>
+                  </div> -->
                   <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div>
               </div>
              <br>
