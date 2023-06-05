@@ -1,9 +1,9 @@
-<div class="card card-body bg-light">
+<div class="card card-body bg-white">
     
-    <h2 class="text-success text-center"><i class="fa fa-child pull-left text-success"></i><span class="label label-success pull-right">{{extract()?.length || defaultCount}}</span>&nbsp; Recently Approved </h2>
+    <h3 class="text-dark text-center"><i class="fa fa-child pull-left text-dark"></i><span class="label label-success pull-right">{{extract()?.length || defaultCount}}</span>&nbsp; Recently Approved </h3>
 </div>
-<div class="card card-body bg-light">
-    <div class="text-success">
+<div class="card card-body bg-white">
+    <div class="text-dark">
         <ul class="list-unstyled">
             <li *ngFor="let inP of extract()">
                 <em>{{inP.title}}</em>: <small>{{inP.faculty}} -- {{inP.department}}</small>
