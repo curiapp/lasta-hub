@@ -24,6 +24,7 @@ var ShortSummaryService = /** @class */ (function () {
             this.loadedSummaries = true;
             var authHeaders = new http_1.Headers({ 'Content-Type': 'application/json' });
             var authOptions = new http_1.RequestOptions({ headers: authHeaders });
+
             this.http.get(this.shortSummaryUrl, authOptions)
                 .map(function (resp) { return resp.json(); })
                 .subscribe(function (data) {

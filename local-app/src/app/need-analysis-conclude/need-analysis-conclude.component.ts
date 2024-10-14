@@ -1,16 +1,16 @@
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader,FileSelectDirective } from 'ng2-file-upload';
+import { FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 //import the do function to be used with the http library.
 const URL = '/api/need-analysis/conclude';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
   selector: 'NeedAnalysisConclude',
+  standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'need-analysis-conclude.component.html',
 
@@ -52,7 +52,7 @@ export class NeedAnalysisConcludeComponent implements OnInit {
     };
   }
   //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef) {
+  constructor(private http: HttpClient, private el: ElementRef) {
 
   }
   @ViewChild('selectedFile') selectedFile: any;

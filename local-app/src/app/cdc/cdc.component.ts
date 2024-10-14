@@ -10,8 +10,8 @@ import { Cdc } from '../models/cdc.interface';
 
 @Component({
     selector: 'cdc',
+    standalone: true,
     templateUrl: 'cdc.component.html'
-
 })
 
 export class CdcComponent implements OnInit {
@@ -54,7 +54,7 @@ export class CdcComponent implements OnInit {
         }else {
             phoneNumberControl.setValidators([]);
         }
-    
+
         phoneNumberControl.updateValueAndValidity(); //Need to call this to trigger a update
         return null;
     }

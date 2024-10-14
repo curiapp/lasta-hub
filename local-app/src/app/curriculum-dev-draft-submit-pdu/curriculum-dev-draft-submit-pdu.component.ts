@@ -1,15 +1,14 @@
 //import files from the angular framework
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 //import the file-upload plugin
-import {  FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
-import {CurriculumDevDraftSubmitPduService} from '../services/curriculum-dev-draft-submit-pdu.service';
+import { CurriculumDevDraftSubmitPduService } from '../services/curriculum-dev-draft-submit-pdu.service';
 
 @Component({
     selector: 'curriculum-dev-draft-submit-pdu',
+    standalone: true,
     templateUrl: 'curriculum-dev-draft-submit-pdu.component.html'
 })
 
@@ -33,7 +32,7 @@ export class CurriculumDevDraftSubmitPDUComponent {
             );
     }
 
-   
+
     clear(){
         this.model.programmeCode="";
         this.model.bossubmissionDate=null;

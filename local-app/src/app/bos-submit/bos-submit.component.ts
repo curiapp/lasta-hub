@@ -10,6 +10,7 @@ import {BoSSubmitService} from '../services/bos-submit.service';
 
 @Component({
     selector: 'bossubmit',
+    standalone: true,
     templateUrl: 'bos-submit.component.html'
 })
 
@@ -33,7 +34,7 @@ export class BosSubmitComponent{
             );
     }
 
-   
+
     clear(){
         this.model.programmeCode="";
         this.model.bossubmissionDate=null;

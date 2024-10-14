@@ -1,14 +1,15 @@
 // import { Component, OnInit } from '@angular/core';
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
 import { FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 const URL = '/api/reviews/recommend';
 
 @Component({
   selector: 'app-internal-review-pdu',
+  standalone: true,
   templateUrl: './internal-review-pdu.component.html',
   styleUrls: ['./internal-review-pdu.component.scss']
 })
@@ -24,14 +25,19 @@ export class InternalReviewPduComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'review-recommend' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
+  @ViewChild('selectedFile') selectedFile: any;
 
+  //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
+  constructor(private http: HttpClient, private el: ElementRef) {
+
+  }
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('decision', this.decision);
-      form.append('reviewUnit',"PDU");
+      form.append('reviewUnit', "PDU");
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
@@ -44,16 +50,10 @@ export class InternalReviewPduComponent implements OnInit {
       }
       else {
         alert("FileUpload:" + response);
-
       }
 
     };
   }
-  //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef) {
-
-  }
-  @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";
     this.selectedFile.nativeElement.value = '';
@@ -65,7 +65,7 @@ export class InternalReviewPduComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -73,8 +73,8 @@ export class InternalReviewPduComponent implements OnInit {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 }

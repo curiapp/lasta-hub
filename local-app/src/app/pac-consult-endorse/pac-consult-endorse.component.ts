@@ -4,7 +4,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 //import the file-upload plugin
 import {  FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 
 declare var $: any;
@@ -15,6 +15,7 @@ const URL = '/api/consultations/pac/endorse';
 @Component({
     //define the element to be selected from the html structure.
     selector: 'pac-consult-endorse',
+    standalone: true,
     //location of our template rather than writing inline templates.
     templateUrl: 'pac-consult-endorse.component.html',
 
@@ -62,8 +63,8 @@ export class  PacConsultEndorseComponent implements OnInit {
         };
     }
     //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-    constructor(private http: Http, private el: ElementRef,private router:Router) {}
-    
+    constructor(private http: HttpClient, private el: ElementRef,private router:Router) {}
+
 
     @ViewChild('selectedFile') selectedFile: any;
     clear(){

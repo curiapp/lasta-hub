@@ -13,6 +13,7 @@ const URL = '/api/bos-senate/apc-recommend';
 @Component({
   //define the element to be selected from the html structure.
   selector: 'apc-recommend',
+  standalone: true,
   templateUrl: 'apc-recommend.component.html',
 
 })

@@ -2,14 +2,14 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin
 import { FileUploader } from 'ng2-file-upload';
-//import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+//import the native angular http and respone libraries;
 const URL = '/api/curriculum-development/draft/validate';
 
 //create the component properties
 @Component({
   //define the element to be selected from the html structure.
   selector: 'curriculum-dev-draft-pdu-approval',
+  standalone: true,
   templateUrl: 'curriculum-dev-draft-pdu-approval.component.html',
 
 })
@@ -24,6 +24,11 @@ export class CurriculumDevDraftPDUApprovComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'check-list' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
+
+    //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
+    constructor(private http: Http, private el: ElementRef) {
+
+    }
 
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
@@ -48,10 +53,7 @@ export class CurriculumDevDraftPDUApprovComponent implements OnInit {
 
     };
   }
-  //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef) {
 
-  }
   @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";

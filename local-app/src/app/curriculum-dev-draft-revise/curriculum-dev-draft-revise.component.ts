@@ -5,13 +5,14 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 //import the file-upload plugin
 import { FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 const URL = '/api/curriculum-development/draft/revise';
 
 //create the component properties
 @Component({
   //define the element to be selected from the html structure.
   selector: 'curriculum-Revise',
+  standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'curriculum-dev-draft-revise.component.html',
 
@@ -21,20 +22,22 @@ export class CurriculumDevDraftReviseComponent implements OnInit {
   endDate: Date;
   devCode: String;
 
-
-
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
   //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
   public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'survey' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
 
+    //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
+    constructor(private http: HttpClient, private el: ElementRef, private router: Router) {
+
+    }
+
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
-
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
@@ -53,10 +56,7 @@ export class CurriculumDevDraftReviseComponent implements OnInit {
 
     };
   }
-  //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef, private router: Router) {
 
-  }
   @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";
@@ -70,7 +70,7 @@ export class CurriculumDevDraftReviseComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -78,8 +78,8 @@ export class CurriculumDevDraftReviseComponent implements OnInit {
     console.log("closing the window...");
     this.router.navigate(['/resume']);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 }

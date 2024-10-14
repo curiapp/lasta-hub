@@ -9,6 +9,7 @@ import {ShortSummaryService} from '../services/short-summary.service';
 
 @Component({
     selector: 'course-due-for-review',
+    standalone: true,
     templateUrl: 'course-due-for-review.component.html',
     styleUrls: ['course-due-for-review.component.css']
 })

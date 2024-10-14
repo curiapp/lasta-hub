@@ -9,10 +9,11 @@ import { NgForm } from '@angular/forms';
 import {Router} from '@angular/router';
 // import {RouteConfig,  ROUTER_DIRECTIVES, ROUTER_PROVIDERS,
 //          LocationStrategy, HashLocationStrategy,} from '@angular/router';
-         
+
 @Component({
     //moduleId: module.id,
     selector: 'StartNeedAnalysis',
+    standalone: true,
     templateUrl: 'start-need-analysis.component.html',
     //styleUrls: ['about-us.component.css']
     providers: [StartNeedAnalysisService],
@@ -25,7 +26,7 @@ export class StartNeedAnalysisComponent implements OnInit{
   levels: number[] = [1,2,3,4,5,6,7,8,9,10];
 
 
-  
+
   dataService: StartNeedAnalysisService;
   initiator:string;
   //username:  string;
@@ -34,7 +35,7 @@ export class StartNeedAnalysisComponent implements OnInit{
   facultyName:string;
   departmentName:string;
   level:number;
-  
+
   postMyDataToServer:string;
 
   constructor(private _dataService: StartNeedAnalysisService,private router: Router) {
@@ -45,7 +46,7 @@ export class StartNeedAnalysisComponent implements OnInit{
         this.facultyName="Computing and Informatics";
         this.departmentName="Computer Science";
         console.log("user not loggen in, we are using default values...");
-       
+
     }
   else
   {
@@ -53,7 +54,7 @@ export class StartNeedAnalysisComponent implements OnInit{
         this.initiator = currentUser.username
         this.facultyName=currentUser.usrUnit.faculty;
         this.departmentName=currentUser.usrUnit.department;
-        
+
   }
   }
 

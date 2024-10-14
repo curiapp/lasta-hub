@@ -1,18 +1,18 @@
 // import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 // import the file-upload plugin
 import { FileUploader } from 'ng2-file-upload';
 // import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
-import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 const URL = '/api/nqa/preparation';
 
 // create the component properties
 @Component({
   // define the element to be selected from the html structure.
   selector: 'nqa-preparation',
-  // location of our template rather than writing inline templates.
+  standalone: true,
   templateUrl: 'nqa-preparation.component.html',
 
 })
@@ -47,7 +47,7 @@ export class NqaPreparationComponent implements OnInit {
 
   }
   // declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef, private router: Router) {
+  constructor(private http: HttpClient, private el: ElementRef, private router: Router) {
 
   }
   @ViewChild('selectedFile') selectedFile: any;
@@ -89,7 +89,7 @@ export class NqaPreparationComponent implements OnInit {
   //     }
   //     this.uploader.queue[2].remove();
   //   }
-    
+
   //   this.fileMap.set(this.uploader.queue[this.uploader.queue.length - 1].file.name, id);
   //   (<HTMLInputElement>document.getElementById(id)).value = this.uploader.queue[this.uploader.queue.length - 1].file.name;
   // }
@@ -109,7 +109,7 @@ export class NqaPreparationComponent implements OnInit {
       console.log(this.uploader.queue[i].file.name);
     }
   }
-  
+
   removefile(){
     this.selectedFiles = [];
     this.fileList = ['Final Senate Approved Document','NQF Qualification Document','Review Report','Rationale Statement','Letters of Supports','Benchmarking'];

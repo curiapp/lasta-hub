@@ -1,15 +1,14 @@
 //import files from the angular framework
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
 import { SenateSubmitService } from '../services/senate-submit.service';
 
 @Component({
   selector: 'senate-submit-final',
+  standalone: true,
   templateUrl: 'senate-submit-final.component.html'
 })
 

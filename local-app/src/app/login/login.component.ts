@@ -6,11 +6,11 @@ import {UserAuthenticationService} from '../services/authentication.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
 
   ngOnInit() {
   }
@@ -48,14 +48,14 @@ export class LoginComponent implements OnInit {
 
                     alert("Make sure your login details are correct and you are connected to the network");
                   }
-                 
-                 
-          
-                        //alert('Error ' + error);
-                      
 
-                
-                      
+
+
+                        //alert('Error ' + error);
+
+
+
+
                 });
     }
     close() {

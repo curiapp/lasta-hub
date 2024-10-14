@@ -1,18 +1,17 @@
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 //import the file-upload plugin
 import { FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
-import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 const URL = '/api/nqa/submit';
 
 //create the component properties
 @Component({
   //define the element to be selected from the html structure.
   selector: 'nqa-submit',
-  //location of our template rather than writing inline templates.
+  standalone: true,
   templateUrl: 'nqa-submit.component.html',
 
 })

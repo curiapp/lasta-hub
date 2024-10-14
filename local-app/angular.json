@@ -40,7 +40,9 @@
               "node_modules/chart.js/dist/Chart.js",
               "node_modules/hammerjs/hammer.min.js"
             ],
-            "es5BrowserSupport": true
+            "es5BrowserSupport": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -146,5 +148,8 @@
       }
     }
   },
-  "defaultProject": "local-app"
+  "defaultProject": "local-app",
+  "cli": {
+    "analytics": false
+  }
 }

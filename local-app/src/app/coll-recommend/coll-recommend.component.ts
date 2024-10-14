@@ -10,6 +10,7 @@ const URL = '/api/reviews/recommend';
 @Component({
   //define the element to be selected from the html structure.
   selector: 'coll-recommend',
+  standalone: true,
   templateUrl: 'coll-recommend.component.html',
 
 })

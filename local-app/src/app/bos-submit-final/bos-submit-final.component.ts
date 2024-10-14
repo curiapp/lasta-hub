@@ -9,6 +9,7 @@ import {BoSSubmitService} from '../services/bos-submit.service';
 
 @Component({
     selector: 'bos-submit-final',
+    standalone: true,
     templateUrl: 'bos-submit-final.component.html'
 })
 

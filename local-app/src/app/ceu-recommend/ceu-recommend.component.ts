@@ -10,6 +10,7 @@ const URL = '/api/reviews/recommend';
 @Component({
   //define the element to be selected from the html structure.
   selector: 'ceu-recommend',
+  standalone: true,
   templateUrl: 'ceu-recommend.component.html',
 
 })

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'resume',
+  standalone: true,
   templateUrl: './resume-programme.component.html',
   styleUrls: ['./resume-programme.component.scss']
 })

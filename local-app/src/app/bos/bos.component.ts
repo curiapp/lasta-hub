@@ -11,6 +11,7 @@ const URL = '/api/need-analysis/bos/recommend';
 @Component({
     //define the element to be selected from the html structure.
     selector: 'bos',
+    standalone: true,
     //location of our template rather than writing inline templates.
     templateUrl: 'bos.component.html',
 

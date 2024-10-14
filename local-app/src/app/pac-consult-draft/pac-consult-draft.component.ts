@@ -3,13 +3,14 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 //import the file-upload plugin
 import { FileUploader } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 const URL = '/api/consultations/pac/final-draft';
 
 //create the component properties
 @Component({
   //define the element to be selected from the html structure.
   selector: 'pac-consult-draft',
+  standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'pac-consult-draft.component.html',
 
@@ -50,7 +51,7 @@ export class PacConsultDraftComponent implements OnInit {
     };
   }
   //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef) {
+  constructor(private http: HttpClient, private el: ElementRef) {
 
   }
   @ViewChild('selectedFile') selectedFile: any;
@@ -65,7 +66,7 @@ export class PacConsultDraftComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -73,8 +74,8 @@ export class PacConsultDraftComponent implements OnInit {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 

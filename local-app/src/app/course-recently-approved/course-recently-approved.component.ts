@@ -5,6 +5,7 @@ import {ShortSummaryService} from '../services/short-summary.service';
 
 @Component({
     selector: 'course-recently-approved',
+    standalone: true,
     templateUrl: 'course-recently-approved.component.html',
     styleUrls: ['course-recently-approved.component.css']
 })

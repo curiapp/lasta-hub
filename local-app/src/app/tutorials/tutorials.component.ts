@@ -3,6 +3,7 @@ import {Component} from '@angular/core';
 
 @Component({
     selector: 'Tutorial',
+    standalone: true,
     templateUrl: 'tutorials.component.html'
 })
 
