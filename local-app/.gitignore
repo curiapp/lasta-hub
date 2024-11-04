@@ -6,8 +6,6 @@
 # Only exists if Bazel was run
 /bazel-out
 
-/dist
-
 # dependencies
 /node_modules
 
@@ -33,6 +31,8 @@ speed-measure-plugin.json
 .history/*
 
 # misc
+/.angular
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage
@@ -41,6 +41,8 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+
+# Miscellaneous
 
 # System Files
 .DS_Store

@@ -1,16 +1,16 @@
 <!--Navbar-->
-<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark lighten-1 intro-fixed-nav" class="navCss" [containerInside]="false">
+<div SideClass="navbar fixed-top navbar-expand-lg navbar-dark lighten-1 intro-fixed-nav" class="navCss">
 
   <!-- Navbar brand -->
-  <mdb-navbar-brand>
+  <div>
     <a class="navbar-brand font-weight-bold" routerLink='/home'>
         <img src="../assets/NUST_logo.png" height="30" alt="mdb logo"> <span style="padding:20px">PDU </span>|
       </a>
-  </mdb-navbar-brand>
+  </div>
 
 
   <!-- Collapsible content -->
-  <links>
+  <div>
 
     <!-- Links -->
     <ul class="navbar-nav mr-auto">
@@ -62,10 +62,10 @@
           <a routerLink='/login' class="btn btn-success btn-sm log-but">Log In</a>
       </li>
     </ul>
-  </links>
+  </div>
   <!-- Collapsible content -->
 
-</mdb-navbar>
+</div>
 <!--/.Navbar-->
 
 
@@ -87,7 +87,7 @@
                       <a href="#">Terms of Service</a> | <a href="#">Privacy</a> | <a href="#">Help</a>
                   </p>
                   <p>
-                    Copyright &copy; {{ currentYear }} Programme Development Unit. All rights reserved 
+                    Copyright &copy; {{ currentYear }} Programme Development Unit. All rights reserved
                   </p>
               </div>
           </div>
@@ -95,7 +95,7 @@
   </div>
   <!--/.Call to action-->
 
-  
+
 
   <!-- Social icons -->
   <!-- <div class="pb-4">
