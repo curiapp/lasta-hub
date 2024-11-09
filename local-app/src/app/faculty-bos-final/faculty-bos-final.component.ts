@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 // import { ApcRecommendComponent } from '../../../../../dist/client/public/vendor/application/apc-recommend/apc-recommend.component';
 
 const URL = '/api/bos-senate/faculty-bos-recommend';
@@ -17,6 +18,8 @@ const URL = '/api/bos-senate/faculty-bos-recommend';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'faculty-bos-final.component.html',
+  imports: [FormsModule, FileUploadModule]
+
 
 })
 export class FacultyBosFinalComponent implements OnInit {

@@ -1,9 +1,10 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/nqa/recommend';
 
 //create the component properties
@@ -11,6 +12,7 @@ const URL = '/api/nqa/recommend';
   selector: 'nqa-recommend',
   standalone: true,
   templateUrl: 'nqa-recommend.component.html',
+  imports: [FormsModule, FileUploadModule]
 
 })
 export class NQARecommendComponent implements OnInit {

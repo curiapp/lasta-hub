@@ -2,9 +2,10 @@ import { Router } from '@angular/router';
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/consultations/pac/consult';
 
 //create the component properties
@@ -14,7 +15,7 @@ const URL = '/api/consultations/pac/consult';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'curriculum-dev-pac-consult.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class CurriculumDevPACConsultComponent implements OnInit {
   model: any = {};

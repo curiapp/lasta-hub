@@ -1,9 +1,10 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/consultations/pac/final-draft';
 
 //create the component properties
@@ -13,7 +14,7 @@ const URL = '/api/consultations/pac/final-draft';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'pac-consult-draft.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class PacConsultDraftComponent implements OnInit {
   model: any = {};

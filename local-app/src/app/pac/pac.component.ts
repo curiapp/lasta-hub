@@ -1,15 +1,16 @@
 //import files from the angular framework
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 import { Pac } from '../models/pac.interface';
+import { FileUploadModule } from 'ng2-file-upload';
 
 
 @Component({
   selector: 'pac',
   standalone: true,
-  templateUrl: 'pac.component.html'
-
+  templateUrl: 'pac.component.html',
+  imports: [FormsModule, FileUploadModule]
 })
 
 export class PacComponent implements OnInit {

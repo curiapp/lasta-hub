@@ -1,9 +1,9 @@
 // import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 // import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 // import the native angular http and respone libraries
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 const URL = '/api/nqa/preparation';
@@ -14,7 +14,7 @@ const URL = '/api/nqa/preparation';
   selector: 'nqa-preparation',
   standalone: true,
   templateUrl: 'nqa-preparation.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class NqaPreparationComponent implements OnInit {
   model: any = {};

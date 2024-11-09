@@ -1,10 +1,10 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 const URL = '/api/nqa/pdu-recommend';
 
 //create the component properties
@@ -13,14 +13,14 @@ const URL = '/api/nqa/pdu-recommend';
   selector: 'pdu-recommend',
   standalone: true,
   templateUrl: 'pdu-recommend.component.html',
-
+  imports: [FormsModule, FileUploadModule ]
 })
 export class PduRecommendComponent implements OnInit {
   model: any = {};
   devCode: String;
   decision: String;
-  showWarning:boolean = false;
-  submissionType:boolean;
+  showWarning: boolean = false;
+  submissionType: boolean;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
@@ -35,7 +35,7 @@ export class PduRecommendComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('devCode', this.model.programmeCode);
       form.append('decision', this.decision);
-      form.append('submissionType',this.model.type);
+      form.append('submissionType', this.model.type);
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
@@ -69,7 +69,7 @@ export class PduRecommendComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -77,15 +77,15 @@ export class PduRecommendComponent implements OnInit {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
-  submitInfo(formData:NgForm,dec:string){
+  submitInfo(formData: NgForm, dec: string) {
     this.decision = dec;
-    if(this.uploader.getNotUploadedItems().length || formData.valid){
+    if (this.uploader.getNotUploadedItems().length || formData.valid) {
       this.showWarning = false
       this.uploader.uploadAll()
-    }else
+    } else
       this.showWarning = true
   }
 

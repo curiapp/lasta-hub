@@ -6,9 +6,10 @@ import { Router } from '@angular/router';
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 //import the do function to be used with the http library.
 const URL = '/api/need-analysis/survey';
 
@@ -19,7 +20,7 @@ const URL = '/api/need-analysis/survey';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'end-consult.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class EndConsultComponent implements OnInit {
   model: any = {};

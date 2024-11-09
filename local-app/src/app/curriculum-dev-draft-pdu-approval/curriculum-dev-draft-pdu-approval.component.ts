@@ -1,7 +1,9 @@
 //import component, ElementRef, input and the oninit method from angular core
+import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries;
 const URL = '/api/curriculum-development/draft/validate';
 
@@ -11,7 +13,7 @@ const URL = '/api/curriculum-development/draft/validate';
   selector: 'curriculum-dev-draft-pdu-approval',
   standalone: true,
   templateUrl: 'curriculum-dev-draft-pdu-approval.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class CurriculumDevDraftPDUApprovComponent implements OnInit {
   model: any = {};
@@ -25,10 +27,10 @@ export class CurriculumDevDraftPDUApprovComponent implements OnInit {
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
 
-    //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-    constructor(private http: Http, private el: ElementRef) {
+  //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
+  constructor(private http: HttpClient, private el: ElementRef) {
 
-    }
+  }
 
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
@@ -66,7 +68,7 @@ export class CurriculumDevDraftPDUApprovComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -74,8 +76,8 @@ export class CurriculumDevDraftPDUApprovComponent implements OnInit {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 

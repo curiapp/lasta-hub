@@ -5,11 +5,14 @@ import { Router } from '@angular/router';
 //import the file-upload plugin
 //import the native angular http and respone libraries
 import { SenateSubmitService } from '../services/senate-submit.service';
+import { FormsModule } from '@angular/forms';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @Component({
   selector: 'senatesubmit',
   standalone: true,
-  templateUrl: 'senate-submit.component.html'
+  templateUrl: 'senate-submit.component.html',
+  imports: [FormsModule, FileUploadModule]
 })
 
 export class SenateSubmitComponent implements OnInit {

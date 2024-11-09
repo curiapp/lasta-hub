@@ -1,4 +1,3 @@
-
 <div class="container" style="padding-top:70px">
   <div class="row justify-content-md-center">
     <div class="col-md-6 col-md-offset-3">
@@ -9,15 +8,17 @@
           <br>
           <div class="form-group">
             <label for="ProgrammeCode">Programme Code</label>
-            <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode" name="devCode" #procode="ngModel">
+            <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"
+              name="devCode" #procode="ngModel">
             <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
           </div>
           <br>
           <div class="form-group">
             <label for="date">Date</label>
             <div class="input-group">
-              <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true"
-                name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+              <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate"
+                ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD"
+                #cdate="ngModel" />
               <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
@@ -32,29 +33,33 @@
                 <label>
                   <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
                     Browse
-                    <input class="form-control" #selectedFile type="file" name="check-list" ng2FileSelect [uploader]="uploader" (change)="updateFile()"
-                      style="display: none;" />
+                    <input class="form-control" #selectedFile type="file" name="check-list" ng2FileSelect
+                      [uploader]="uploader" (change)="updateFile()" style="display: none;" />
                   </span>
                 </label>
               </div>
-              <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" aria-describedby="button-addon1"
-                readonly>
+              <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED"
+                aria-describedby="button-addon1" readonly>
               <div class="input-group-append">
-                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect (click)="removefile();uploader.clearQueue();"
+                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect
+                  (click)="removefile();uploader.clearQueue();"
                   [disabled]="!uploader.getNotUploadedItems().length">X</button>
               </div>
             </div>
-            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px">Draft Programme file is required</div>
+            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px">
+              Draft Programme file is required</div>
           </div>
           <br>
           <div class="form-group">
             <label for="doc"> WIL Component: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
-                <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:20px;margin-top:6px">
-                    <input type="checkbox" class="custom-control-input" id="defaultInline1" [required]="false" name="isWil" [(ngModel)]="model.wil" #wil="ngModel">
-                    <label class="custom-control-label" for="defaultInline1"> {{model.wil?'Includes':'Excludes'}} WIL Component</label>
-                  </div>
-                  <!-- <div class="custom-control custom-checkbox custom-control-inline">
+              <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:20px;margin-top:6px">
+                <input type="checkbox" class="custom-control-input" id="defaultInline1" [required]="false" name="isWil"
+                  [(ngModel)]="model.wil" #wil="ngModel">
+                <label class="custom-control-label" for="defaultInline1"> {{model.wil?'Includes':'Excludes'}} WIL
+                  Component</label>
+              </div>
+              <!-- <div class="custom-control custom-checkbox custom-control-inline">
                     <input type="checkbox" class="custom-control-input" id="defaultInline2" required name="isDistance" [(ngModel)]="model.distance" #distance="ngModel">
                     <label class="custom-control-label" for="defaultInline2">Distance Mode</label>
                   </div> -->
@@ -63,8 +68,8 @@
           </div>
           <br>
 
-        <!-- here -->
-        <br>
+          <!-- here -->
+          <br>
           <!-- <div class="form-group">
             <label for="doc"> Recommend to: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded text-center">
@@ -73,7 +78,7 @@
                     <label class="custom-control-label" for="defaultInline5">CEU </label>
                   </div>
                   <div class="custom-control custom-checkbox custom-control-inline" style="margin-top:8px">
-                    <input type="checkbox" class="custom-control-input" id="defaultInline6" required name="coll" 
+                    <input type="checkbox" class="custom-control-input" id="defaultInline6" required name="coll"
                     [(ngModel)]="model.recommendto" #coll="ngModel" (change)="onChecked($event.target.name)">
                     <label class="custom-control-label" for="defaultInline6">COLL</label>
                   </div>
@@ -86,33 +91,35 @@
           </div> -->
           <br>
 
-        <!-- end -->
-        <!--CEU/COLL/TLP (CHECK BOXES)-->
+          <!-- end -->
+          <!--CEU/COLL/TLP (CHECK BOXES)-->
           <div class="form-group">
             <label class="control-label">Recommend to: </label>
             <div style="border:solid 0.6px lightgray;height:38px;" class="rounded">
               <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:20%;margin-top:8px">
-                <input type="checkbox" class="custom-control-input" id="defaultInline3" name="status" [(ngModel)]="ceu" value="ceu"
-                  required #recommendto="ngModel" mdbInput (change)="onChecked($event.target.value)">
+                <input type="checkbox" class="custom-control-input" id="defaultInline3" name="status" [(ngModel)]="ceu"
+                  value="ceu" required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
                 <label class="custom-control-label" for="defaultInline3">CEU</label>
               </div>
               <div class="custom-control custom-checkbox custom-control-inline" style="margin-right:5px;margin-top:8px">
-                <input type="checkbox" class="custom-control-input" id="defaultInline4" name="status" [(ngModel)]="coll" value="coll"
-                  required #recommendto="ngModel" mdbInput (change)="onChecked($event.target.value)">
+                <input type="checkbox" class="custom-control-input" id="defaultInline4" name="status" [(ngModel)]="coll"
+                  value="coll" required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
                 <label class="custom-control-label" for="defaultInline4">COLL</label>
               </div>
               <div class="custom-control custom-checkbox custom-control-inline" style="margin-left:5px;margin-top:8px">
-                <input type="checkbox" class="custom-control-input" id="defaultInline5" name="status" [(ngModel)]="tlp" value="tlp"
-                  required #recommendto="ngModel" mdbInput (change)="onChecked($event.target.value)">
+                <input type="checkbox" class="custom-control-input" id="defaultInline5" name="status" [(ngModel)]="tlp"
+                  value="tlp" required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
                 <label class="custom-control-label" for="defaultInline5">TLP</label>
               </div>
             </div>
-            <div [hidden]="this.model.recommendto.length>0" class="alert alert-danger">Recommend to atleast one body is required </div>
+            <div [hidden]="this.model.recommendto.length>0" class="alert alert-danger">Recommend to atleast one body is
+              required </div>
           </div>
           <br>
           <div class="form-group">
             <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue();">Clear</button>
-            <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
+            <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
+              [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid">
               submit </button>
             <button type="submit" class="btn btn-primary" (click)="close()">Close</button>
           </div>

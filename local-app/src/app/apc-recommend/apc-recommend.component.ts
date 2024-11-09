@@ -1,12 +1,11 @@
-import {Router, ActivatedRoute} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
-import { ConsultationService } from '../../../../../dist/client/public/vendor/application/_services/consultation.service';
-
+import { HttpClient as Http } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/bos-senate/apc-recommend';
 
 //create the component properties
@@ -15,13 +14,13 @@ const URL = '/api/bos-senate/apc-recommend';
   selector: 'apc-recommend',
   standalone: true,
   templateUrl: 'apc-recommend.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class ApcRecommendComponent implements OnInit {
   model: any = {};
   devCode: String;
   decision: String;
-  consultationDate:Date;
+  consultationDate: Date;
 
 
   //  form: FormGroup;
@@ -63,7 +62,7 @@ export class ApcRecommendComponent implements OnInit {
   @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";
-    this.model.ConsultationDate=null;
+    this.model.ConsultationDate = null;
     this.selectedFile.nativeElement.value = '';
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
@@ -73,7 +72,7 @@ export class ApcRecommendComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -81,8 +80,8 @@ export class ApcRecommendComponent implements OnInit {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 }

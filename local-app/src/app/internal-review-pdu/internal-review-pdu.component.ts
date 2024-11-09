@@ -2,16 +2,18 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/reviews/recommend';
 
 @Component({
   selector: 'app-internal-review-pdu',
   standalone: true,
   templateUrl: './internal-review-pdu.component.html',
-  styleUrls: ['./internal-review-pdu.component.scss']
+  styleUrls: ['./internal-review-pdu.component.scss'],
+  imports: [FormsModule, FileUploadModule]
 })
 export class InternalReviewPduComponent implements OnInit {
 

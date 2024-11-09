@@ -1,6 +1,6 @@
-module.directive('courseapproved', function() {
-   {
-   scope: true,
-  templateUrl: 'course-recently.approved.component.html'
- };
+module.directive('courseapproved', function () {
+  return {
+    scope: true,
+    templateUrl: 'course-recently.approved.component.html'
+  };
 });

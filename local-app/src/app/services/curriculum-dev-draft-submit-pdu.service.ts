@@ -14,7 +14,7 @@ export class CurriculumDevDraftSubmitPduService {
       // let startOptions = new RequestOptions({headers: startHeaders,method:"post"});
 
       return this._http.post(this._pduSubmitUrl, body, {})
-          .subscribe((response: HttpResponse<any>) => {response= response.body();});
+          ;
 
           }
 

@@ -1,9 +1,9 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
-//import the native angular http and respone libraries
-import { Http, Response } from '@angular/http';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
+import { HttpClient as Http } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/reviews/recommend';
 
 //create the component properties
@@ -12,7 +12,7 @@ const URL = '/api/reviews/recommend';
   selector: 'ceu-recommend',
   standalone: true,
   templateUrl: 'ceu-recommend.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class CEURecommendComponent implements OnInit {
   model: any = {};

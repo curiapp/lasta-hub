@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 
 const URL = '/api/bos-senate/final-senate';
 
@@ -12,7 +13,7 @@ const URL = '/api/bos-senate/final-senate';
   selector: 'final-senate-recommend',
   standalone: true,
   templateUrl: 'final-senate-recommend.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class FinalSenateRecommendComponent implements OnInit {
   model: any = {};

@@ -1,9 +1,8 @@
 //import files from the angular framework
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder, AbstractControl } from '@angular/forms';
-import { Http, Response, Request, RequestMethod } from '@angular/http';
+import { HttpClient as Http } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { Cdc } from '../models/cdc.interface';
 
@@ -83,11 +82,11 @@ export class CdcComponent implements OnInit {
     startNeedAnalysis(model: Cdc) {
 
         let body = JSON.stringify(this.myForm.value);
-        let startHeaders = new Headers({ 'Content-Type': 'application/json' });
-        let startOptions = new RequestOptions({ headers: startHeaders, method: "post" });
+        // let startHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+        // let startOptions = new RequestOptions({ headers: startHeaders, method: "post" });
 
-        return this.http.post(this.pacAppointUrl, body, startOptions)
-            .map((response: Response) => { response = response.json(); });
+        return this.http.post(this.pacAppointUrl, body)
+            // .map((response: any) => { response = response.json(); });
 
     }
 

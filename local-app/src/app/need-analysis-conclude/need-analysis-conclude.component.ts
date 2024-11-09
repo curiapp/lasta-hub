@@ -1,9 +1,10 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 //import the do function to be used with the http library.
 const URL = '/api/need-analysis/conclude';
 
@@ -13,7 +14,7 @@ const URL = '/api/need-analysis/conclude';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'need-analysis-conclude.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class NeedAnalysisConcludeComponent implements OnInit {
   model: any = {};
@@ -65,21 +66,21 @@ export class NeedAnalysisConcludeComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
     this.filename = "";
     for (var i = 0; i < this.uploader.queue.length; i++) {
-      if (i != 0){
+      if (i != 0) {
         this.filename += " ; " + this.uploader.queue[i].file.name;
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
-      }else{
-          this.filename = this.uploader.queue[i].file.name;
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
-      }console.log(this.uploader.queue[i].file.name);
+      } else {
+        this.filename = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+      } console.log(this.uploader.queue[i].file.name);
     }
   }
   setDecission(dec: string) {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 

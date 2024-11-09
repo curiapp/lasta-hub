@@ -1,9 +1,10 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 const URL = '/api/bos-senate/draft';
 
 //create the component properties
@@ -13,7 +14,7 @@ const URL = '/api/bos-senate/draft';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'final-draft.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class FinalDraftComponent implements OnInit {
   model: any = {};

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 //import the file-upload plugin
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 //import the do function to be used with the http library.
 const URL = '/api/nqa/register';
 
@@ -16,7 +16,7 @@ const URL = '/api/nqa/register';
   selector: 'nqa-req',
   standalone: true,
   templateUrl: 'nqa-reg.component.html',
-
+  imports: [FormsModule, FileUploadModule]
 })
 export class NQARegComponent implements OnInit {
   model: any = {};
