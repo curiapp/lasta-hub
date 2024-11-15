@@ -4,11 +4,11 @@
 <div class="carousel w-full h-screen">
   <div id="slide1" class="carousel-item relative w-full">
 
-    <video class="video-fluid w-full relative z-50 h-full border" autoplay loop>
+    <video class="video-fluid w-full h-full border" autoplay loop>
       <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
     </video>
     <!--Caption-->
-    <!-- <div class="carousel-caption flex-center">
+    <div class="carousel-caption flex-center absolute  z-20">
       <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
         <h3 class="text-2xl font-bold"> Welcome to Programme Development Application</h3>
         <p class="text-center">
@@ -27,7 +27,7 @@
           <a routerLink='/login' [hidden]="loggedIn()" class="btn btn-secondary"> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide4" class="btn btn-circle">❮</a>
@@ -36,6 +36,8 @@
   </div>
   <div id="slide2" class="carousel-item relative w-full">
     <img src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp" class="w-full" />
+
+
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide1" class="btn btn-circle">❮</a>
       <a href="#slide3" class="btn btn-circle">❯</a>
