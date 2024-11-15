@@ -45,18 +45,18 @@
                <div class="form-group">
                 <div class="row px-3"><label for="organisation">Stakeholders List</label><div [hidden]="!showWarning||org.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
                   <ul>
-                    <li *ngFor="let organisation of organisationList">
+                    <li *for="let organisation of organisationList">
                       {{organisation}}
                     </li>
                   </ul>
                   <input type="text" id="organisation" name="organisation"  class="form-control" [(ngModel)]="model.organisation" #org="ngModel">
-                  <button (click)="addOrganisation()">Add Stakeholder name</button> 
+                  <button (click)="addOrganisation()">Add Stakeholder name</button>
                   <!-- <div [hidden]="org.valid" class="alert alert-danger">Organisation Name  is required</div> -->
               </div>
              <br>
              <div class="form-group">
               <div class="row px-3"><label for="doc" > Submissions: </label><!--div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div --></div>
-                  <button (click)="addOrganisation()">Add Stakeholder name</button> 
+                  <button (click)="addOrganisation()">Add Stakeholder name</button>
                   <div [hidden]="org.valid" class="alert alert-danger">Stakeholder Name  is required</div>
               </div> -->
              <br>

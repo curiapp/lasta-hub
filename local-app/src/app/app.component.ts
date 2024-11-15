@@ -1,15 +1,15 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
-import {Location} from '@angular/common';
 import { Title } from '@angular/platform-browser';
-import { Router, NavigationEnd, ActivatedRoute, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive]
 })
 export class AppComponent {
   title = 'PDU - Home'
@@ -18,7 +18,7 @@ export class AppComponent {
   department: string;
 
   currentYear: number = new Date().getFullYear();
-  constructor(private _location: Location,private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
+  constructor(private _location: Location, private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
   }
   ngOnInit() {
     const appTitle = this.titleService.getTitle();
@@ -56,7 +56,7 @@ export class AppComponent {
     console.log(localStorage.getItem("currentUser"));
   }
   logout() {
-    console.log("User ..",JSON.parse(localStorage.getItem('currentUser')));
+    console.log("User ..", JSON.parse(localStorage.getItem('currentUser')));
     localStorage.removeItem('currentUser');
   }
   isActive(path) {

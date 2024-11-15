@@ -7,6 +7,7 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from '../shared.module';
 const URL = '/api/need-analysis/apc/recommend';
 
 //create the component properties
@@ -16,7 +17,7 @@ const URL = '/api/need-analysis/apc/recommend';
   standalone: true,
   //location of our template rather than writing inline templates.
   templateUrl: 'apc.component.html',
-  imports: [FormsModule, FileUploadModule]
+  imports: [SharedModule]
 })
 export class ApcComponent implements OnInit {
   model: any = {};

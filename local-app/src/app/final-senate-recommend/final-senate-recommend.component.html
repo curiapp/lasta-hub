@@ -28,7 +28,7 @@
                 <label for="doc"> Document type : </label>
                 <select class="form-control" name="documentName" id="documentName" required [(ngModel)]="model.documentType" #docType="ngModel">
                   <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
-                  <option *ngFor="let filetag of fileList" value="{{ filetag }}">{{filetag}}</option>
+                  <option *for="let filetag of fileList" value="{{ filetag }}">{{filetag}}</option>
                 </select>
                 <div [hidden]="docType.valid" class="alert alert-danger">Document type is required</div>
               </div>
@@ -78,7 +78,7 @@
                   <th class="h6">Document Type</th>
                   <th class="h6">Selected File name</th>
                 </tr>
-                <tr *ngFor = "let item of selectedFiles">
+                <tr *for = "let item of selectedFiles">
                   <td class="text-primary">
                     {{item[0]}}
                   </td>

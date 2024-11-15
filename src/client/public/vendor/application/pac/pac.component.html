@@ -10,16 +10,16 @@
         <div class="form-group">
           <label>Programme Code</label>
           <input type="text" class="form-control" formControlName="devCode">
-          <small *ngIf="!myForm.controls.devCode.valid" class="text-danger">
+          <small *if="!myForm.controls.devCode.valid" class="text-danger">
               Programme Code is required (minimum 3 characters).
             </small>
         </div>
         <!--addresses-->
         <div formArrayName="pac">
-          <div *ngFor="let p of myForm.controls.pac.controls; let i=index" class="panel panel-default">
+          <div *for="let p of myForm.controls.pac.controls; let i=index" class="panel panel-default">
             <div class="panel-heading">
               <span>Pac Member:  {{i + 1}}</span>
-              <span class="glyphicon glyphicon-remove pull-right" *ngIf="myForm.controls.pac.controls.length > 1" (click)="removeAddress(i)"></span>
+              <span class="glyphicon glyphicon-remove pull-right" *if="myForm.controls.pac.controls.length > 1" (click)="removeAddress(i)"></span>
             </div>
             <div class="panel-body" [formGroupName]="i">
               <div class="form-group col-xs-6">

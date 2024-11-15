@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'resume',
   templateUrl: './resume-programme.component.html',
-  styleUrls: ['./resume-programme.component.scss']
+  styleUrls: ['./resume-programme.component.scss'],
+  imports:[CommonModule]
 })
 export class ResumeProgrammeComponent implements OnInit {
 

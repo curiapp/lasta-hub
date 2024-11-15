@@ -15,7 +15,7 @@
       </div>
     </div>
     <!-- hidden div, only shows if logged on -->
-    <div class="container-fluid mx-auto" *ngIf="loggedIn()">
+    <div class="container-fluid mx-auto" *if="loggedIn()">
       <hr>
       <div class="row">
           <div class="col-sm-12">
@@ -34,7 +34,7 @@
                                   <!--select class="selectpicker show-tick form-control input-lg" title="Select Programme"-->
                                     <select class="selectpicker show-tick form-control input-lg" title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
                                         <option value="Select programme"></option>
-                                        <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                                        <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
                                     </select>
                                   <span class="input-group-btn">
                                   <a routerLink='/resume' class="btn btn-success btn-lg" type="button">
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <div class="container-fluid" *ngIf="loggedIn()">
+    <div class="container-fluid" *if="loggedIn()">
         <hr>
         <div class="row">
             <div class="col-sm-12">
