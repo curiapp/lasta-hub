@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="login-wrapper">
         <form #pacForm="ngForm">
-          <h3 class="form-title-label">3.3 Final Draft -PDU Recommendation </h3>
+          <h3 class="form-title-label">3.3 Final Draft - PDQA Recommendation </h3>
           <hr class="colorgraph">
           <br>
           <div class="form-group">
@@ -25,7 +25,7 @@
           </div>
           <br>
           <div class="form-group">
-            <label for="doc"> Final Draft and PDU Inputs: </label>
+            <label for="doc"> Final Draft and PDQA Inputs: </label>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <label>
@@ -47,7 +47,7 @@
           <br>
           <div class="form-group">
       
-              <label for="doc"> PDU's Decision: </label>
+              <label for="doc"> PDQA's Decision: </label>
             <button type="button" class="btn btn-success btn-s" (click)="setDecission('approve');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !pacForm.form.valid">
                Recommended to Bos &nbsp; <i class="fa fa-check"></i></button>
             <button type="button" class="btn btn-danger btn-s" (click)="setDecission('decline');uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || !pacForm.form.valid">

@@ -5,7 +5,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 //import the native angular http and respone libraries
 import { Http, Response } from '@angular/http';
-import { ConsultationService } from '../../../../../dist/client/public/vendor/application/_services/consultation.service';
+// import { ConsultationService } from '../../../../../dist/client/public/vendor/application/_services/consultation.service';
 
 const URL = '/api/bos-senate/apc-recommend';
 
