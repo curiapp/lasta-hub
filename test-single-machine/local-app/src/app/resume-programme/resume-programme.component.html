@@ -1,26 +1,40 @@
-<div style="padding: 10px;">
-  <div style="padding-top:55px">
-  </div>
+<div style="padding: 10px">
+  <div style="padding-top: 55px"></div>
   <!-- New collapse pannel -->
   <div id="accordion">
     <div class="card border-muted">
       <div class="card-header bg-muted" id="headingOne">
         <h5 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
-            (click)="openPannel(1)">
-            Stage 1 : Need Analysis 
+          <button
+            class="btn btn-link"
+            data-toggle="collapse"
+            data-target="#collapseOne"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+            (click)="openPannel(1)"
+          >
+            Stage 1 : Need Analysis
           </button>
         </h5>
       </div>
 
-      <div id="collapseOne" class="collapse" [ngClass]="{'show': pannelID==1 , '': pannelID!=1}" aria-labelledby="headingOne" data-parent="#accordion">
+      <div
+        id="collapseOne"
+        class="collapse"
+        [ngClass]="{ show: pannelID == 1, '': pannelID != 1 }"
+        aria-labelledby="headingOne"
+        data-parent="#accordion"
+      >
         <div class="card-body">
           <div class="col-sm-12">
-            <div class="row " style="overflow: hidden;">
-
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button type="button" class="btn btn-default btn-circle btn-xl" (click)="titleID(1)">
+                  <button
+                    type="button"
+                    class="btn btn-default btn-circle btn-xl"
+                    (click)="titleID(1)"
+                  >
                     <i class="fa fa-power-off fa-2x"></i>
                   </button>
                   <p></p>
@@ -29,29 +43,64 @@
                 <div class="caption">
                   <p></p>
                   <h3>1.1 Create a New Programme</h3>
-                  <p>Requires the Curriculum Development Coordinator (CDC) to allocate the proposed programme identification details/specifications.</p>
-                  <a routerLink="/StartNeedAnalysis" class="btn btn-default" role="button">Create</a>
+                  <p>
+                    Requires the Curriculum Development Coordinator (CDC) to
+                    allocate the proposed programme identification
+                    details/specifications.
+                  </p>
+                  <a
+                    routerLink="/StartNeedAnalysis"
+                    class="btn btn-default"
+                    role="button"
+                    >Create</a
+                  >
                   <!--<a routerLink='/StartNeedAnalysis' type="button" class="btn btn-default btn-block">Create New Programme</a>-->
                 </div>
               </div>
 
-              <div class="card col-md-4 border-dark py-4" style="text-align:center;">
+              <div
+                class="card col-md-4 border-dark py-4"
+                style="text-align: center"
+              >
                 <div class="text-center">
-                  <button type="button" class="btn btn-info btn-circle btn-xl" (click)="titleID(2)">
+                  <button
+                    type="button"
+                    class="btn btn-info btn-circle btn-xl"
+                    (click)="titleID(2)"
+                  >
                     <i class="fa fa-edit fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>Resume </h3>
-                  <p>Select the appropriate programme code to resume the need analysis process.</p>
+                  <h3>Resume</h3>
+                  <p>
+                    Select the appropriate programme code to resume the need
+                    analysis process.
+                  </p>
                   <div class="input-group mb-3">
-                    <select class="selectpicker show-tick form-control " title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
+                    <select
+                      class="selectpicker show-tick form-control"
+                      title="Select Programme"
+                      [ngModel]="programme"
+                      (ngModelChange)="changed($event)"
+                    >
                       <option value="Select programme"></option>
-                      <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                      <option
+                        *ngFor="let programme of programmes"
+                        [value]="programme"
+                      >
+                        {{ programme }}
+                      </option>
                     </select>
                     <div class="input-group-append">
-                      <button routerLink='/resume' class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="button-addon2">
-                        <i class="fas fa-edit fa-2x"></i>Resume</button>
+                      <button
+                        routerLink="/resume"
+                        class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect"
+                        type="button"
+                        id="button-addon2"
+                      >
+                        <i class="fas fa-edit fa-2x"></i>Resume
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -59,101 +108,175 @@
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-warning btn-circle btn-xl" (click)="titleID(3)">
+                  <button
+                    class="btn btn-warning btn-circle btn-xl"
+                    (click)="titleID(3)"
+                  >
                     <i class="fas fa-sync fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>1.2 Stakeholders' Consultation</h3>
-                  <p>CDC provides relevant information related to stakeholders consultation on the need of the proposed programme
+                  <p>
+                    CDC provides relevant information related to stakeholders
+                    consultation on the need of the proposed programme
                   </p>
                   <p>
-                    <a routerLink="/NeedAnalysisConsult" class="btn btn-warning" role="button">Consultations </a>
+                    <a
+                      routerLink="/NeedAnalysisConsult"
+                      class="btn btn-warning"
+                      role="button"
+                      >Consultations
+                    </a>
                     <!--<a href="/NeedAnalysisConsult" class="btn btn-primary" role="button">New Consultation</a>-->
-                    <a routerLink="/endconsult" class="btn btn-default" role="button">Submit Survey/Questionaire</a>
-
+                    <a
+                      routerLink="/endconsult"
+                      class="btn btn-default"
+                      role="button"
+                      >Submit Survey/Questionaire</a
+                    >
                   </p>
                 </div>
               </div>
-
             </div>
-            <div class="alert alert-default alert-dismissable" [hidden]="showID != 1" style="border-color: darkgray;background: silver;">
+            <div
+              class="alert alert-default alert-dismissable"
+              [hidden]="showID != 1"
+              style="border-color: darkgray; background: silver"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <strong> Start </strong>
-              <hr class="colorgraph"> This initial step involves identification of the need for a new programme. The need can be identified by variety
-              of role players including the faculty, government or industry. The department concerned should conduct an extensive
-              market survey to determine the extent and the nature of the need. Under this section the department will submit
-              the envisage title of the qualification, NQF Level and specialisation area. The programme proposed code will
-              be developed by PDU.
+              <hr class="colorgraph" />
+              This initial step involves identification of the need for a new
+              programme. The need can be identified by variety of role players
+              including the faculty, government or industry. The department
+              concerned should conduct an extensive market survey to determine
+              the extent and the nature of the need. Under this section the
+              department will submit the envisage title of the qualification,
+              NQF Level and specialisation area. The programme proposed code
+              will be developed by PDQA.
             </div>
-            <div class="alert alert-info" [hidden]="showID != 2" style="background: skyblue;">
+            <div
+              class="alert alert-info"
+              [hidden]="showID != 2"
+              style="background: skyblue"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <strong> Resume </strong>
-              <hr class="colorgraph"> After PDU has allocated a code to the proposed programme, it will communicate the code to the department.
-              The department has to use this code every time they are working on programme. Select the appropriate programme
-              code to resume the need analysis process.
+              <hr class="colorgraph" />
+              After PDQA has allocated a code to the proposed programme, it will
+              communicate the code to the department. The department has to use
+              this code every time they are working on programme. Select the
+              appropriate programme code to resume the need analysis process.
             </div>
             <div class="alert alert-warning" [hidden]="showID != 3">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <strong> Consult </strong>
-              <hr class="colorgraph"> The Department will draft a survey instrument in consultation with PDU. The survey instrument must be approved
-              by PDU before it is send to industry and stakeholders. The Department should load all the necessary information
-              e.g. organisation name, date they were consulted and their response. The Department then start consultation
-              and submit surveys/questionnaires etc. to the various industries. After receiving input from industry the department
-              will compile a need analysis report and load it under (Submit Survey). When the survey is uploaded it will
-              be verified by PDU.
+              <hr class="colorgraph" />
+              The Department will draft a survey instrument in consultation with
+              PDQA. The survey instrument must be approved by PDQA before it is
+              send to industry and stakeholders. The Department should load all
+              the necessary information e.g. organisation name, date they were
+              consulted and their response. The Department then start
+              consultation and submit surveys/questionnaires etc. to the various
+              industries. After receiving input from industry the department
+              will compile a need analysis report and load it under (Submit
+              Survey). When the survey is uploaded it will be verified by PDQA.
             </div>
-            <div class="row" style="overflow: hidden;">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-danger btn-circle btn-xl" (click)="titleID(4)">
+                  <button
+                    class="btn btn-danger btn-circle btn-xl"
+                    (click)="titleID(4)"
+                  >
                     <i class="far fa-list-alt fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>1.3 PDU Recommendation</h3>
-                  <p>PDU reviews and make recommendation on the Need Analysis (NA) report. </p>
-                  <p> </p>
+                  <h3>1.3 PDQA Recommendation</h3>
                   <p>
-                    <a routerLink="/NeedAnalysisConclude" class="btn btn-danger" role="button">PDU Decision</a>
-                    <a routerLink="/endconsult" class="btn btn-primary" role="button"> Resubmit</a>
-                    <a routerLink="/bossubmit" class="btn btn-info" role="button"> Submit to BOS</a>
+                    PDQA reviews and make recommendation on the Need Analysis
+                    (NA) report.
+                  </p>
+                  <p></p>
+                  <p>
+                    <a
+                      routerLink="/NeedAnalysisConclude"
+                      class="btn btn-danger"
+                      role="button"
+                      >PDQA Decision</a
+                    >
+                    <a
+                      routerLink="/endconsult"
+                      class="btn btn-primary"
+                      role="button"
+                    >
+                      Resubmit</a
+                    >
+                    <a
+                      routerLink="/bossubmit"
+                      class="btn btn-info"
+                      role="button"
+                    >
+                      Submit to BOS</a
+                    >
                   </p>
                 </div>
               </div>
 
-
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-primary btn-circle btn-xl" (click)="titleID(5)">
+                  <button
+                    class="btn btn-primary btn-circle btn-xl"
+                    (click)="titleID(5)"
+                  >
                     <i class="fas fa-users fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>1.4 BOS Consultation</h3>
-                  <p>Boards of Studies (BOS) review the NA report and provides recommendation 
+                  <p>
+                    Boards of Studies (BOS) review the NA report and provides
+                    recommendation
                   </p>
-                  <p> </p>
+                  <p></p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
-                    <a routerLink="/bos" class="btn btn-primary" role="button">Ammendments</a>
-                    <a routerLink="/senatesubmit" class="btn btn-default" role="button"> Start APC</a>
+                    <a routerLink="/bos" class="btn btn-primary" role="button"
+                      >Ammendments</a
+                    >
+                    <a
+                      routerLink="/senatesubmit"
+                      class="btn btn-default"
+                      role="button"
+                    >
+                      Start APC</a
+                    >
                   </p>
                 </div>
               </div>
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-success btn-circle btn-xl" (click)="titleID(6)">
+                  <button
+                    class="btn btn-success btn-circle btn-xl"
+                    (click)="titleID(6)"
+                  >
                     <i class="fas fa-university fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>1.5 APC Recommendation</h3>
-                  <p>Department submit programme document to APC for review and APC make recommendations.</p>
+                  <p>
+                    Department submit programme document to APC for review and
+                    APC make recommendations.
+                  </p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
-                    <a routerLink="/apc" class="btn btn-success" role="button">Recommendations</a>
+                    <a routerLink="/apc" class="btn btn-success" role="button"
+                      >Recommendations</a
+                    >
                   </p>
                 </div>
               </div>
@@ -161,45 +284,66 @@
             <div class="alert alert-danger" [hidden]="showID != 4">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>Conclude</h4>
-              <hr class="colorgraph"> After a comprehensive verification by PDU the need analysis can either be approved to go to BOS or defer back
-              to the Department for more input and amendments. If the report is deferred back to the Department then the
-              Department can make the necessary changes and (Resubmit). If the need analyses are approved by PDU they will
+              <hr class="colorgraph" />
+              After a comprehensive verification by PDQA the need analysis can
+              either be approved to go to BOS or defer back to the Department
+              for more input and amendments. If the report is deferred back to
+              the Department then the Department can make the necessary changes
+              and (Resubmit). If the need analyses are approved by PDQA they will
               be ready for submission to BOS (Start BOS).
             </div>
-            <div class="alert alert-primary" [hidden]="showID != 5" style="border-color: royalblue;background: steelblue;">
+            <div
+              class="alert alert-primary"
+              [hidden]="showID != 5"
+              style="border-color: royalblue; background: steelblue"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h3>BOS Session</h3>
-              <hr class="colorgraph"> After the BOS discussions the need analysis report can be submitted for Senate (Start Senate) through the
-              APC. Should there be amendments from the BOS on the need analysis the document will be defer back to the department
-              (Amendments). At this stage the document can be resubmitted to the next BOS or if the changes are minors it
-              can be rectify and be submitted (Start Senate) for APC consideration.
+              <hr class="colorgraph" />
+              After the BOS discussions the need analysis report can be
+              submitted for Senate (Start Senate) through the APC. Should there
+              be amendments from the BOS on the need analysis the document will
+              be defer back to the department (Amendments). At this stage the
+              document can be resubmitted to the next BOS or if the changes are
+              minors it can be rectify and be submitted (Start Senate) for APC
+              consideration.
             </div>
             <div class="alert alert-success" [hidden]="showID != 6">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>APC/Senate Session</h4>
-              <hr class="colorgraph"> The need analysis will be table at the APC meeting. APC can either approve (Approve) or defer the document
-              for amendments (Decline). After APC approval the need analysis can now be table at Senate. Senate can (Approve)
-              or (Decline) the Need Analysis Report. Should Senate decline (on condition) then the department should make
-              the necessary amendments and forward to EXCO for verification and approval.
+              <hr class="colorgraph" />
+              The need analysis will be table at the APC meeting. APC can either
+              approve (Approve) or defer the document for amendments (Decline).
+              After APC approval the need analysis can now be table at Senate.
+              Senate can (Approve) or (Decline) the Need Analysis Report. Should
+              Senate decline (on condition) then the department should make the
+              necessary amendments and forward to EXCO for verification and
+              approval.
             </div>
             <!-- me -->
-            <div class="row" style="overflow: hidden;">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-muted btn-circle btn-xl" (click)="titleID(6)">
-                    <i class="far fa-check-circle  fa-2x"></i>
+                  <button
+                    class="btn btn-muted btn-circle btn-xl"
+                    (click)="titleID(6)"
+                  >
+                    <i class="far fa-check-circle fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>1.6 Senate Approval</h3>
                   <p>
-                    Department submit programme document to Senate and Senate makes a decision.
+                    Department submit programme document to Senate and Senate
+                    makes a decision.
                   </p>
-                  <p> <a routerLink="/senate" class="btn btn-muted" role="button">Recommendations</a></p>
-                  
+                  <p>
+                    <a routerLink="/senate" class="btn btn-muted" role="button"
+                      >Recommendations</a
+                    >
+                  </p>
                 </div>
               </div>
-
 
               <!-- <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
@@ -214,11 +358,11 @@
                   <p> </p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
-                    <!-- <a routerLink="/bos" class="btn btn-primary" role="button">Ammendments</a>
+              <!-- <a routerLink="/bos" class="btn btn-primary" role="button">Ammendments</a>
                     <a routerLink="/senatesubmit" class="btn btn-default" role="button"> Start Senate</a>
                   </p>
                 </div>
-              </div> --> 
+              </div> -->
 
               <!-- <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
@@ -231,129 +375,217 @@
                   <p>Department submit programme document to APC for review and APC make recommendations.</p>
                   <p>
                     <!--<a href="#" class="btn btn-primary" role="button">Ammendments</a>-->
-                    <!-- <a routerLink="/senate" class="btn btn-success" role="button">Recommendations</a>
+              <!-- <a routerLink="/senate" class="btn btn-success" role="button">Recommendations</a>
                   </p>
                 </div>
-              </div> --> 
+              </div> -->
             </div>
             <!-- me  -->
           </div>
         </div>
       </div>
     </div>
-    <div class="card border-muted" style="margin-top:10px">
+    <div class="card border-muted" style="margin-top: 10px">
       <div class="card-header bg-muted" id="headingTwo">
         <h5 class="text-light">
-          <button class="btn btn-link collapsed " data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
-            (click)="openPannel(2)">
-            Stage 2: Programme/Curriculum Development
+          <button
+            class="btn btn-link collapsed"
+            data-toggle="collapse"
+            data-target="#collapseTwo"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+            (click)="openPannel(2)"
+          >
+            Stage 2: Programme Development
           </button>
         </h5>
       </div>
-      <div id="collapseTwo" class="collapse" [ngClass]="{'show': pannelID==2 , '': pannelID!=2}" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div
+        id="collapseTwo"
+        class="collapse"
+        [ngClass]="{ show: pannelID == 2, '': pannelID != 2 }"
+        aria-labelledby="headingTwo"
+        data-parent="#accordion"
+      >
         <div class="card-body">
           <div class="col-sm-12">
-            <div class="row" style="overflow:hidden;">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-primary btn-circle btn-xl" (click)="titleID(7)">
+                  <button
+                    class="btn btn-primary btn-circle btn-xl"
+                    (click)="titleID(7)"
+                  >
                     <i class="fa fa-paper-plane fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>2.1 CDC and PAC Appointment </h3>
-                  <p>The department identifies and appoint the Curriculum Development Coordinator (CDC) who will facilitates 
-                    the appointment of Programme Advisory Committee (PAC) members in consultation with PDU.</p>
+                  <h3>2.1 CDC and PAC Appointment</h3>
                   <p>
-                    <a routerLink="/cdc" class="btn btn-primary" role="button">Appoint CDC</a>
-                    <a routerLink="/pac" class="btn btn-default" role="button">Appoint PAC</a>
+                    The department identifies and appoint the Curriculum
+                    Development Coordinator (CDC) who will facilitates the
+                    appointment of Programme Advisory Committee (PAC) members in
+                    consultation with PDQA.
+                  </p>
+                  <p>
+                    <a routerLink="/cdc" class="btn btn-primary" role="button"
+                      >Appoint CDC</a
+                    >
+                    <a routerLink="/pac" class="btn btn-default" role="button"
+                      >Appoint PAC</a
+                    >
                   </p>
                 </div>
               </div>
-              <div class="card col-md-4 border-dark text-center py-4" >
+              <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-danger btn-circle btn-xl" (click)="titleID(8)">
+                  <button
+                    class="btn btn-danger btn-circle btn-xl"
+                    (click)="titleID(8)"
+                  >
                     <i class="fab fa-wpforms fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>2.2 Curriculum Drafting</h3>
-                  <p>CDC develop the draft programme and submits to PDU for review.</p>
                   <p>
-                    <a routerLink="/curriculum-Revise" class="btn btn-danger" role="button">Submit Draft to PDU</a>
-                    <!-- <a routerLink="/curriculum-dev-draft-submit-pdu" class="btn btn-default" role="button">Submit Draft to PDU</a> -->
+                    CDC develop the draft programme and submits to PDQA for
+                    review.
+                  </p>
+                  <p>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+
+                    <a
+                      routerLink="/curriculum-Revise"
+                      class="btn btn-danger"
+                      role="button"
+                      >Submit Draft to PDQA</a
+                    >
+                    <!-- <a routerLink="/curriculum-dev-draft-submit-PDQA" class="btn btn-default" role="button">Submit Draft to PDQA</a> -->
                   </p>
                 </div>
               </div>
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-warning btn-circle btn-xl" (click)="titleID(9)">
+                  <button
+                    class="btn btn-warning btn-circle btn-xl"
+                    (click)="titleID(9)"
+                  >
                     <i class="fa fa-check-circle fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>2.3 Draft Curriculum-PDU Recomendation</h3>
-                  <p>PDU review and provide recommendation on the draft programme. </p>
+                  <h3>2.3 Draft Curriculum and PDQA Recomendation</h3>
                   <p>
-                    <a routerLink="/curriculum-dev-draft-pdu-approval" class="btn btn-warning" role="button">Recommendations</a>
+                    PDQA review and provide recommendation on the draft
+                    programme.
+                  </p>
+                  <p>
+                    <br />
+                    <br />
+                    <br />
+                    <a
+                      routerLink="/curriculum-dev-draft-pdu-approval"
+                      class="btn btn-warning"
+                      role="button"
+                      >Recommendations</a
+                    >
                   </p>
                 </div>
               </div>
             </div>
-            <div class="alert alert-info" [hidden]="showID != 7" style="background: skyblue;">
+            <div
+              class="alert alert-info"
+              [hidden]="showID != 7"
+              style="background: skyblue"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>Before Drafting</h4>
-              <hr class="colorgraph"> PAC should mainly consist of representatives from local industries, academic advisory board and peers from
-              higher education institutions, locally and abroad. Maximum PAC members should not exceed twenty persons (20).
-              For professional qualifications, the concerned professional regulatory bodies should be represented on the
-              PAC. The names, contact details and appointment letters of all the appointed CDC will be loaded on (Appoint
-              CDC). The names, contact details and appointment letters of all PAC members will be loaded on (Appoint PAC).
+              <hr class="colorgraph" />
+              PAC should mainly consist of representatives from local
+              industries, academic advisory board and peers from higher
+              education institutions, locally and abroad. Maximum PAC members
+              should not exceed twenty persons (20). For professional
+              qualifications, the concerned professional regulatory bodies
+              should be represented on the PAC. The names, contact details and
+              appointment letters of all the appointed CDC will be loaded on
+              (Appoint CDC). The names, contact details and appointment letters
+              of all PAC members will be loaded on (Appoint PAC).
             </div>
             <div class="alert alert-warning" [hidden]="showID != 8">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h3>Draft Preparation</h3>
-              <hr class="colorgraph"> CDC develops a draft curriculum and syllabi and loads it on (Revised Version). When CDC is ready to submit
-              to PDU they will load the document on (Submit to PDU) for PDU initial review. PDU will make comments were necessary
-              and send the document back to CDC.
+              <hr class="colorgraph" />
+              CDC develops a draft curriculum and syllabi and loads it on
+              (Revised Version). When CDC is ready to submit to PDQA they will
+              load the document on (Submit to PDQA) for PDQA initial review. PDQA
+              will make comments were necessary and send the document back to
+              CDC.
             </div>
             <div class="alert alert-danger" [hidden]="showID != 9">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>Draft Version/Approval</h4>
-              <hr class="colorgraph"> This is the last stage for curriculum development between CDC and PDU. Ones PDU approve the curriculum of
-              the programme, the document will be loaded on (Recommendations). This signifies that the draft curriculum is
-              now ready to be distributed to PAC members.
+              <hr class="colorgraph" />
+              This is the last stage for curriculum development between CDC and
+              PDQA. Ones PDQA approve the curriculum of the programme, the
+              document will be loaded on (Recommendations). This signifies that
+              the draft curriculum is now ready to be distributed to PAC
+              members.
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card border-muted" style="margin-top:10px">
+    <div class="card border-muted" style="margin-top: 10px">
       <div class="card-header bg-muted" id="headingThree">
         <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"
-            (click)="openPannel(3)">
+          <button
+            class="btn btn-link collapsed"
+            data-toggle="collapse"
+            data-target="#collapseThree"
+            aria-expanded="false"
+            aria-controls="collapseThree"
+            (click)="openPannel(3)"
+          >
             Stage 3: External Stakeholder Consultations
           </button>
         </h5>
       </div>
-      <div id="collapseThree" class="collapse" [ngClass]="{'show': pannelID==3 , '': pannelID!=3}" aria-labelledby="headingThree"
-        data-parent="#accordion">
+      <div
+        id="collapseThree"
+        class="collapse"
+        [ngClass]="{ show: pannelID == 3, '': pannelID != 3 }"
+        aria-labelledby="headingThree"
+        data-parent="#accordion"
+      >
         <div class="card-body">
           <div class="col-sm-12">
-            <div class="row" style="overflow:hidden">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-default btn-circle btn-xl" (click)="titleID(10)">
+                  <button
+                    class="btn btn-default btn-circle btn-xl"
+                    (click)="titleID(10)"
+                  >
                     <i class="fa fa-spinner fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>3.1 Circulation of Draft Programme</h3>
-                  <p>CDC is required to upload 
-                    the draft programme document for circulation to PAC members as identified in Stage 2.
+                  <p>
+                    CDC is required to upload the draft programme document for
+                    circulation to PAC members as identified in Stage 2.
                   </p>
                   <p>
-                    <a routerLink="/curriculum-dev-pac-start" class="btn btn-default" role="button">Upload draft Programme to start PAC Consultation </a>
+                    <a
+                      routerLink="/curriculum-dev-pac-start"
+                      class="btn btn-default"
+                      role="button"
+                      >Upload draft Programme to start PAC Consultation
+                    </a>
                     <!--a routerLink="/pac" class="btn btn-default" role="button">Members</a -->
                   </p>
                 </div>
@@ -361,16 +593,27 @@
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-info btn-circle btn-xl" (click)="titleID(11)">
+                  <button
+                    class="btn btn-info btn-circle btn-xl"
+                    (click)="titleID(11)"
+                  >
                     <i class="fas fa-envelope-open-text fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>3.2 PAC Consultation and Benchmarking</h3>
-                  <p>CDC convene a meeting with PAC members and benchmark with peer universities, 
-                    others stakeholders to solicit inputs on the draft programme.</p>
                   <p>
-                    <a routerLink="/curriculum-dev-pac-consult" class="btn btn-info" role="button">ConsultationS</a>
+                    CDC convene a meeting with PAC members and benchmark with
+                    peer universities, others stakeholders to solicit inputs on
+                    the draft programme.
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/curriculum-dev-pac-consult"
+                      class="btn btn-info"
+                      role="button"
+                      >ConsultationS</a
+                    >
                     <!-- <a routerLink="/consult-benchmark" class="btn btn-default" role="button">Add Benchmark Report</a> -->
                   </p>
                 </div>
@@ -378,118 +621,192 @@
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-success btn-circle btn-xl" (click)="titleID(12)">
+                  <button
+                    class="btn btn-success btn-circle btn-xl"
+                    (click)="titleID(12)"
+                  >
                     <i class="far fa-check-circle fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>3.3 Final Draft Programme -PDU Recommendations</h3>
-                  <p>CDC circulate the final draft programme document to PDU for recommendation to BOS.</p>
+                  <h3>3.3 Final Draft Programme -PDQA Recommendations</h3>
                   <p>
+                    CDC circulate the final draft programme document to PDQA for
+                    recommendation to BOS.
+                  </p>
+                  <p>
+                    <br />
+                    <br />
+                    <br />
                     <!-- <a routerLink="/pac-consult-draft" class="btn btn-primary" role="button"> Add Final Draft</a> -->
-                    <a routerLink="/pac-consult-endorse" class="btn btn-success" role="button"> Recommendations </a>
+                    <a
+                      routerLink="/pac-consult-endorse"
+                      class="btn btn-success"
+                      role="button"
+                    >
+                      Recommendations
+                    </a>
                   </p>
                 </div>
               </div>
             </div>
-            <div class="alert alert-default" [hidden]="showID != 10" style="border-color: darkgray;background: silver;">
+            <div
+              class="alert alert-default"
+              [hidden]="showID != 10"
+              style="border-color: darkgray; background: silver"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>Before PAC Consultation</h4>
-              <hr class="colorgraph"> PAC members should be given the document at least one week proceeding to the PAC meeting for input and comments.
-              All records of documents send to PAC members should be loaded under (Start PAC Consultations). At this stage
-              it is important to send the curriculum to at least three universities in the region and 3 international universities
-              for benchmarking purposes.
+              <hr class="colorgraph" />
+              PAC members should be given the document at least one week
+              proceeding to the PAC meeting for input and comments. All records
+              of documents send to PAC members should be loaded under (Start PAC
+              Consultations). At this stage it is important to send the
+              curriculum to at least three universities in the region and 3
+              international universities for benchmarking purposes.
             </div>
-            <div class="alert alert-info" [hidden]="showID != 11" style="background: skyblue;">
+            <div
+              class="alert alert-info"
+              [hidden]="showID != 11"
+              style="background: skyblue"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h3>PAC Consultation</h3>
-              <hr class="colorgraph"> All comments, inputs, discussions from PAC as well as the minutes of PAC meeting should be loaded under (New
-              Consultations). During PAC meeting it is important to discuss the input from other universities, industry stakeholders
-              and professional bodies if applicable. PAC meeting input and comments will be regarded as the final contributions
-              to the curriculum. All the reports and comments from other universities should be loaded under (Add Benchmark
-              Report).
+              <hr class="colorgraph" />
+              All comments, inputs, discussions from PAC as well as the minutes
+              of PAC meeting should be loaded under (New Consultations). During
+              PAC meeting it is important to discuss the input from other
+              universities, industry stakeholders and professional bodies if
+              applicable. PAC meeting input and comments will be regarded as the
+              final contributions to the curriculum. All the reports and
+              comments from other universities should be loaded under (Add
+              Benchmark Report).
             </div>
             <div class="alert alert-success" [hidden]="showID != 12">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>Endorse Final Draft</h4>
-              <hr class="colorgraph"> PDU will verify the final content of the curriculum after PAC discussions to ensure that it meets all NUST
-              Curriculum Framework and National Qualification Framework Requirements before issuing a Programme Approval
-              Checklist and load the document under (Endorse).The minutes of PAC meetings and endorsement letters should
-              be submitted to BOS as evidence of endorsement.
+              <hr class="colorgraph" />
+              PDQA will verify the final content of the curriculum after PAC
+              discussions to ensure that it meets all NUST Curriculum Framework
+              and National Qualification Framework Requirements before issuing a
+              Programme Approval Checklist and load the document under
+              (Endorse).The minutes of PAC meetings and endorsement letters
+              should be submitted to BOS as evidence of endorsement.
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card border-muted" style="margin-top:10px">
+    <div class="card border-muted" style="margin-top: 10px">
       <div class="card-header bg-muted" id="headingFour">
         <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"
-            (click)="openPannel(4)">
+          <button
+            class="btn btn-link collapsed"
+            data-toggle="collapse"
+            data-target="#collapseFour"
+            aria-expanded="false"
+            aria-controls="collapseFour"
+            (click)="openPannel(4)"
+          >
             Stage 4: Internal Stakeholders Consultation
           </button>
         </h5>
       </div>
-      <div id="collapseFour" class="collapse" [ngClass]="{'show': pannelID==4 , '': pannelID!=4}" aria-labelledby="headingFour"
-        data-parent="#accordion">
+      <div
+        id="collapseFour"
+        class="collapse"
+        [ngClass]="{ show: pannelID == 4, '': pannelID != 4 }"
+        aria-labelledby="headingFour"
+        data-parent="#accordion"
+      >
         <div class="card-body">
           <div class="col-sm-12">
-            <div class="row" style="overflow:hidden;">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-6 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-danger btn-circle btn-xl" (click)="titleID(13)">
+                  <button
+                    class="btn btn-danger btn-circle btn-xl"
+                    (click)="titleID(13)"
+                  >
                     <i class="fa fa-braille fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>4.1 Start Internal Consultation</h3>
-                  <p>This sub stage requires CDC to identify relevant internal stakeholders for consultation to seek inputs on teaching, learning and assessment (TL &A), delivery,
-                     cooperative education, quality assurance, and circulate the programme document.</p>
                   <p>
-                    <a routerLink="/tlu-ceu-qa-start" class="btn btn-danger" role="button">Start Internal Consultation </a>
-                    
+                    This sub stage requires CDC to identify relevant internal
+                    stakeholders for consultation to seek inputs on teaching,
+                    learning and assessment (TL &A), delivery, cooperative
+                    education, quality assurance, and circulate the programme
+                    document.
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/tlu-ceu-qa-start"
+                      class="btn btn-danger"
+                      role="button"
+                      >Start Internal Consultation
+                    </a>
                   </p>
                 </div>
               </div>
 
               <div class="card col-md-6 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-warning btn-circle btn-xl" (click)="titleID(14)">
+                  <button
+                    class="btn btn-warning btn-circle btn-xl"
+                    (click)="titleID(14)"
+                  >
                     <i class="fas fa-file-pdf fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>4.2 TLP Review</h3>
-                  <p>The Unit responsible advice the department on the appropriate teaching, learning and assessment 
-                    strategies on the various courses, makes a recommendation and provide endorsement letter.
-
+                  <h3>4.2 ADSTLT Review</h3>
+                  <p>
+                    The Department responsible advice the department on the
+                    appropriate teaching, learning and assessment strategies on
+                    the various courses and makes a recommendation.
                   </p>
                   <p>
-                    <a routerLink="/tlu-recommend" class="btn btn-warning" role="button">TLP Review</a> 
-                    
+                    <a
+                      routerLink="/tlu-recommend"
+                      class="btn btn-warning"
+                      role="button"
+                      >ADSTLT Review</a
+                    >
                   </p>
                 </div>
               </div>
             </div>
-            <div class="row" style="overflow:hidden;">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-6 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-info btn-circle btn-xl" (click)="titleID(15)">
+                  <button
+                    class="btn btn-info btn-circle btn-xl"
+                    (click)="titleID(15)"
+                  >
                     <i class="far fa-folder-open fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>4.3 CUE Review</h3>
-                  <p>The Unit responsible ensure the integration of the Work Integrated Learning (WIL) component in the undergraduate
-                     programme, makes a recommendation and provide endorsement letter.</p>
+                  <h3>4.3 CE Review</h3>
                   <p>
-                    <a routerLink="/ceu-recommend" class="btn btn-info" role="button">CEU Review</a>
-                    
+                    The Department responsible ensure the integration of the
+                    Work Integrated Learning (WIL) component in the
+                    undergraduate programme and makes a recommendation.
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/ceu-recommend"
+                      class="btn btn-info"
+                      role="button"
+                      >CEU Review</a
+                    >
                   </p>
                 </div>
               </div>
 
-              <div class="card col-md-6 border-dark text-center py-4">
+              <!-- <div class="card col-md-6 border-dark text-center py-4">
                 <div class="text-center">
                   <button class="btn btn-success btn-circle btn-xl" (click)="titleID(100)">
                     <i class="fa fa-graduation-cap fa-2x"></i>
@@ -502,24 +819,60 @@
                   <p>
                     <a routerLink="/qa-recommend" class="btn btn-success" role="button">QA Review</a>
                     <!-- <a routerLink="/coll-recommend" class="btn btn-default" role="button">COLL Recommendations</a> -->
-                  </p>
-                </div>
-              </div>
-            </div>
-            <!-- here -->
-            <div class="row" style="overflow:hidden;">
+              <!-- </p> -->
+              <!-- </div> -->
+              <!-- </div> -->
               <div class="card col-md-6 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-primary btn-circle btn-xl" (click)="titleID(15)">
+                  <button
+                    class="btn btn-primary btn-circle btn-xl"
+                    (click)="titleID(15)"
+                  >
                     <i class="far fa-folder-open fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>4.5 PDU Recommendation</h3>
-                  <p>The Unit review and verify the readiness of the programme
-                     for submission to BOS, makes a recommendation and provide a checklist.</p>
+                  <h3>4.4 PDQA Recommendation</h3>
                   <p>
-                    <a routerLink="/app-internal-review-pdu" class="btn btn-primary" role="button">PDU Recommendations</a>
+                    The department review and verify the readiness of the
+                    programme for submission to BOS, makes a recommendation and
+                    provide a checklist.
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/app-internal-review-pdu"
+                      class="btn btn-primary"
+                      role="button"
+                      >PDQA Recommendations</a
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="row" style="overflow: hidden">
+              <div class="card col-md-6 border-dark text-center py-4">
+                <div class="text-center">
+                  <button
+                    class="btn btn-primary btn-circle btn-xl"
+                    (click)="titleID(15)"
+                  >
+                    <i class="far fa-folder-open fa-2x"></i>
+                  </button>
+                </div>
+                <div class="caption">
+                  <h3>4.4 PDQA Recommendation</h3>
+                  <p>
+                    The department review and verify the readiness of the
+                    programme for submission to BOS, makes a recommendation and
+                    provide a checklist.
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/app-internal-review-PDQA"
+                      class="btn btn-primary"
+                      role="button"
+                      >PDQA Recommendations</a
+                    >
                   </p>
                 </div>
               </div>
@@ -538,71 +891,116 @@
                   </p>
                 </div>
               </div> -->
-            </div>
+            <!-- </div> -->
+            <!-- here -->
 
             <!-- end -->
             <div class="alert alert-danger" [hidden]="showID != 13">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>TLU Review</h4>
-              <hr class="colorgraph"> The documents will be loaded under (Start Review (TLU/CEU/QAU). Once the document is loaded it will be available
-              for the three Units to make their input comments and recommendations.
+              <hr class="colorgraph" />
+              The documents will be loaded under (Start Review (TLU/CEU/QAU).
+              Once the document is loaded it will be available for the three
+              Units to make their input comments and recommendations.
             </div>
             <div class="alert alert-warning" [hidden]="showID != 14">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h3>CEU Review</h3>
-              <hr class="colorgraph"> CEU ascertain whether there would be appropriate employers to absorb students for WIL for the intended programme
-              before loading their comments under (CEU Recommendations).
+              <hr class="colorgraph" />
+              CEU ascertain whether there would be appropriate employers to
+              absorb students for WIL for the intended programme before loading
+              their comments under (CEU Recommendations).
             </div>
-            <div class="alert alert-info" [hidden]="showID != 15" style="background: skyblue;">
+            <div
+              class="alert alert-info"
+              [hidden]="showID != 15"
+              style="background: skyblue"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>QA Review</h4>
-              <hr class="colorgraph"> Further, the QAU may comment on any aspect of the programmes as appropriate. QAU will load their comments
-              and recommendations under (QA Recommendations).
+              <hr class="colorgraph" />
+              Further, the QAU may comment on any aspect of the programmes as
+              appropriate. QAU will load their comments and recommendations
+              under (QA Recommendations).
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card border-muted" style="margin-top:10px">
+    <div class="card border-muted" style="margin-top: 10px">
       <div class="card-header bg-muted" id="headingFive">
         <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive"
-            (click)="openPannel(5)">
+          <button
+            class="btn btn-link collapsed"
+            data-toggle="collapse"
+            data-target="#collapseFive"
+            aria-expanded="false"
+            aria-controls="collapseFive"
+            (click)="openPannel(5)"
+          >
             Stage 5: BOS, APC and Senate Consultations
           </button>
         </h5>
       </div>
-      <div id="collapseFive" class="collapse" [ngClass]="{'show': pannelID==5 , '': pannelID!=5}" aria-labelledby="headingFive"
-        data-parent="#accordion">
+      <div
+        id="collapseFive"
+        class="collapse"
+        [ngClass]="{ show: pannelID == 5, '': pannelID != 5 }"
+        aria-labelledby="headingFive"
+        data-parent="#accordion"
+      >
         <div class="card-body">
           <div class="col-md-12">
-            <div class="row" style="overflow:hidden;">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-default btn-circle btn-xl" (click)="titleID(17)">
+                  <button
+                    class="btn btn-default btn-circle btn-xl"
+                    (click)="titleID(17)"
+                  >
                     <i class="fa fa-envelope fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.1 Final Draft  to BOS Submission </h3>
-                  <p>On recommendation made by PDU in Stage 4, the department circulate the final draft programme for submission to BOS.</p>
+                  <h3>5.1 Final Draft to BOS Submission</h3>
                   <p>
-                    <a routerLink="/final-draft" class="btn btn-default" role="button">BOS Submit</a>
+                    On recommendation made by ADS in Stage 4, the department
+                    circulate the final draft programme for submission to BOS.
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/final-draft"
+                      class="btn btn-default"
+                      role="button"
+                      >BOS Submit</a
+                    >
                     <!-- <a routerLink="/bos-submit-final" class="btn btn-default" role="button">BOS Submit</a> -->
                   </p>
                 </div>
               </div>
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-primary btn-circle btn-xl" (click)="titleID(18)">
+                  <button
+                    class="btn btn-primary btn-circle btn-xl"
+                    (click)="titleID(18)"
+                  >
                     <i class="fa fa-university fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.2 Faculty BOS-Consultation </h3>
-                  <p>BOS review the draft programme and make recommendations .</p>
+                  <h3>5.2 Faculty BOS-Consultation</h3>
                   <p>
-                    <a routerLink="/faculty-bos-final" class="btn btn-primary" role="button">Recommendations</a>
+                    BOS review the draft programme and make recommendations .
+                  </p>
+                  <p>
+                    <br />
+                    <br />
+                    <a
+                      routerLink="/faculty-bos-final"
+                      class="btn btn-primary"
+                      role="button"
+                      >Recommendations</a
+                    >
                     <!-- <a routerLink="/senate-submit-final" class="btn btn-default" role="button">Start Senate </a> -->
                   </p>
                 </div>
@@ -610,121 +1008,202 @@
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-danger btn-circle btn-xl" (click)="titleID(23)">
+                  <button
+                    class="btn btn-danger btn-circle btn-xl"
+                    (click)="titleID(23)"
+                  >
                     <i class="far fa-handshake fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.3 Other Faculty BOS Consultation (Optional) </h3>
-                  <p>This sub stage is only applicable to multi-disciplinary or inter-disciplinary programmes. CDC circulate the draft programme to relevant the faculties programmes for recommendations
+                  <h3>5.3 Other Faculty BOS Consultation (Optional)</h3>
+                  <p>
+                    This sub stage is only applicable to multi-disciplinary or
+                    inter-disciplinary programmes. CDC circulate the draft
+                    programme to relevant the faculties programmes for
+                    recommendations
                   </p>
                   <p>
-                    <a routerLink="/other-faculty-bos" class="btn btn-danger" role="button">Recommendations</a>
+                    <a
+                      routerLink="/other-faculty-bos"
+                      class="btn btn-danger"
+                      role="button"
+                      >Recommendations</a
+                    >
                   </p>
                 </div>
               </div>
             </div>
-            <div class="alert alert-default" [hidden]="showID != 17" style="border-color: darkgray;background: silver;">
+            <div
+              class="alert alert-default"
+              [hidden]="showID != 17"
+              style="border-color: darkgray; background: silver"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>Draft Preparation</h4>
-              <hr class="colorgraph"> The department will ensure that the comments from CEU, TLU and QAU are incorporated before the department
-              submit the final version under (Add Draft).PDU will verify all comments from CEU, TLU and QAU before the department
-              submit to BOS under (BOS Submit).
+              <hr class="colorgraph" />
+              The department will ensure that the comments from CEU, TLU and QAU
+              are incorporated before the department submit the final version
+              under (Add Draft).PDQA will verify all comments from CEU, TLU and
+              QAU before the department submit to BOS under (BOS Submit).
             </div>
-            <div class="alert alert-primary" [hidden]="showID != 18" style="border-color: royalblue;background: steelblue;">
+            <div
+              class="alert alert-primary"
+              [hidden]="showID != 18"
+              style="border-color: royalblue; background: steelblue"
+            >
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h3>Faculty BOS</h3>
-              <hr class="colorgraph"> At this stage, BOS of the faculty concerned consider and comment on the document. BOS, if satisfied, should
-              recommend the programme for the approval by Academic Planning Committee (APC)/Senate (Start Senate). All BOS
-              recommendations will be loaded under (Recommendations). The department should make the necessary changes as
-              per BOS recommendations and resubmit (Start Senate). If BOS approved the programme without any recommendation
-              the document will be loaded under (Start Senate) and not under (Recommendations).
+              <hr class="colorgraph" />
+              At this stage, BOS of the faculty concerned consider and comment
+              on the document. BOS, if satisfied, should recommend the programme
+              for the approval by Academic Planning Committee (APC)/Senate
+              (Start Senate). All BOS recommendations will be loaded under
+              (Recommendations). The department should make the necessary
+              changes as per BOS recommendations and resubmit (Start Senate). If
+              BOS approved the programme without any recommendation the document
+              will be loaded under (Start Senate) and not under
+              (Recommendations).
             </div>
             <div class="alert alert-danger" [hidden]="showID != 23">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h3>Other Faculty BOS</h3>
-              <hr class="colorgraph"> This is only if there is a need for the curriculum to be discussed at other faculties BOS. In case of interdisciplinary
-              programme(s) (with courses that cut-across), then other faculty BOS should also consider and comment on the
-              document. Should the other faculty BOS approve the curriculum they will load it under (Submit).
+              <hr class="colorgraph" />
+              This is only if there is a need for the curriculum to be discussed
+              at other faculties BOS. In case of interdisciplinary programme(s)
+              (with courses that cut-across), then other faculty BOS should also
+              consider and comment on the document. Should the other faculty BOS
+              approve the curriculum they will load it under (Submit).
             </div>
-            <div class="row" style="overflow:hidden;">
-
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-success btn-circle btn-xl" (click)="titleID(19)">
+                  <button
+                    class="btn btn-success btn-circle btn-xl"
+                    (click)="titleID(19)"
+                  >
                     <i class="fa fa-list-ol fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>5.4 Academic Planning Committee (APC) Recommedation </h3>
-                  <p>APC review the draft programme and provide recommendations</p>
+                  <h3>5.4 Academic Planning Committee (APC) Recommedation</h3>
                   <p>
-                    <a routerLink="/apc-recommend" class="btn btn-success" role="button">Recommendations</a>
+                    APC review the draft programme and provide recommendations
+                  </p>
+                  <p>
+                    <a
+                      routerLink="/apc-recommend"
+                      class="btn btn-success"
+                      role="button"
+                      >Recommendations</a
+                    >
                   </p>
                 </div>
               </div>
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-warning btn-circle btn-xl" (click)="titleID(24)">
+                  <button
+                    class="btn btn-warning btn-circle btn-xl"
+                    (click)="titleID(24)"
+                  >
                     <i class="fa fa-envelope-open fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>5.5 Senate Recommedation</h3>
-                  <p>Senate review the draft programme and provide recommendation on approval.</p>
                   <p>
-                    <a routerLink="/final-senate-recommend" class="btn btn-warning" role="button">Recommendations</a>
+                    Senate review the draft programme and provide recommendation
+                    on approval.
+                  </p>
+                  <br />
+                  <br />
+                  <p>
+                    <a
+                      routerLink="/final-senate-recommend"
+                      class="btn btn-warning"
+                      role="button"
+                      >Recommendations</a
+                    >
                   </p>
                 </div>
               </div>
             </div>
             <div class="alert alert-success" [hidden]="showID != 19">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
-              <h4>Academic Planning Committee (APC) </h4>
-              <hr class="colorgraph"> The curriculum document with support letters and benchmark evidence will be discussed at meeting of APC. The
-              APC can recommend (Approved) or decline (Decline) the curriculum to go to Senate. Should the document be decline
-              it will go back to the department to amend before it is submitted to Senate.
+              <h4>Academic Planning Committee (APC)</h4>
+              <hr class="colorgraph" />
+              The curriculum document with support letters and benchmark
+              evidence will be discussed at meeting of APC. The APC can
+              recommend (Approved) or decline (Decline) the curriculum to go to
+              Senate. Should the document be decline it will go back to the
+              department to amend before it is submitted to Senate.
             </div>
             <div class="alert alert-warning" [hidden]="showID != 24">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
-              <h4>Senate </h4>
-              <hr class="colorgraph"> All the comments and discussions at Senate should be loaded under (Recommendations-Submit). Should Senate
-              not approve the curriculum it should be loaded under (Clear). If the curriculum is defer to Senex it should
-              be loaded under (Submit) but the check-box Senex should be selected. The Senate is the final approval body
-              for the curriculum of which the implementation plan is forwarded to EXCO and Council approval/indorsement.
-              The council then endorses Senate’s decision
+              <h4>Senate</h4>
+              <hr class="colorgraph" />
+              All the comments and discussions at Senate should be loaded under
+              (Recommendations-Submit). Should Senate not approve the curriculum
+              it should be loaded under (Clear). If the curriculum is defer to
+              Senex it should be loaded under (Submit) but the check-box Senex
+              should be selected. The Senate is the final approval body for the
+              curriculum of which the implementation plan is forwarded to EXCO
+              and Council approval/indorsement. The council then endorses
+              Senate’s decision
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card border-muted" style="margin-top:10px">
+    <div class="card border-muted" style="margin-top: 10px">
       <div class="card-header bg-muted" id="headingSix">
         <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix"
-            (click)="openPannel(6)">
+          <button
+            class="btn btn-link collapsed"
+            data-toggle="collapse"
+            data-target="#collapseSix"
+            aria-expanded="false"
+            aria-controls="collapseSix"
+            (click)="openPannel(6)"
+          >
             Stage 6: NQF Registration
           </button>
         </h5>
       </div>
-      <div id="collapseSix" class="collapse" [ngClass]="{'show': pannelID==6 , '': pannelID!=6}" aria-labelledby="headingSix" data-parent="#accordion">
+      <div
+        id="collapseSix"
+        class="collapse"
+        [ngClass]="{ show: pannelID == 6, '': pannelID != 6 }"
+        aria-labelledby="headingSix"
+        data-parent="#accordion"
+      >
         <div class="card-body">
           <div class="col-sm-12">
-            <div class="row" style="overflow:hidden">
+            <div class="row" style="overflow: hidden">
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-danger btn-circle btn-xl" (click)="titleID(20)">
+                  <button
+                    class="btn btn-danger btn-circle btn-xl"
+                    (click)="titleID(20)"
+                  >
                     <i class="fas fa-newspaper fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>6.1 NQF Documentation</h3>
-                  <p>The CDC prepares the NQF qualification
-                     documentation for submission to PDU within 14 working days upon Senate approval
+                  <p>
+                    The CDC prepares the NQF qualification documentation for
+                    submission to ADS within 14 working days upon Senate
+                    approval
                   </p>
                   <p>
-                    <a routerLink="/nqa-preparation" class="btn btn-danger" role="button">Preparation for NQA Submission </a>
+                    <a
+                      routerLink="/nqa-preparation"
+                      class="btn btn-danger"
+                      role="button"
+                      >Preparation for NQA Submission
+                    </a>
                     <!--a routerLink="/pac" class="btn btn-default" role="button">Members</a -->
                   </p>
                 </div>
@@ -732,17 +1211,26 @@
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-warning btn-circle btn-xl" (click)="titleID(21)">
+                  <button
+                    class="btn btn-warning btn-circle btn-xl"
+                    (click)="titleID(21)"
+                  >
                     <i class="fas fa-file-signature fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>6.2 NQF Submission</h3>
-                  <p>PDU review the NQF submission from the department and prepare NQF application documentation for submission
-
+                  <p>
+                    ADS review the NQF submission from the department and
+                    prepare NQF application documentation for submission
                   </p>
                   <p>
-                    <a routerLink='/pdu-recommend' class="btn btn-warning" role="button">NQF Submission</a>
+                    <a
+                      routerLink="/pdu-recommend"
+                      class="btn btn-warning"
+                      role="button"
+                      >NQF Submission</a
+                    >
                     <!-- <a routerLink="/nqa-submit" class="btn btn-warning" role="button">NQA Submit</a> -->
                   </p>
                 </div>
@@ -750,35 +1238,53 @@
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-default btn-circle btn-xl" (click)="titleID(23)">
+                  <button
+                    class="btn btn-default btn-circle btn-xl"
+                    (click)="titleID(23)"
+                  >
                     <i class="fas fa-spinner fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
                   <h3>6.3 NQF Feedback</h3>
-                  <p>NQF Feedback information
-
-                  </p>
+                  <p>NQF Feedback information</p>
                   <p>
-                    <!-- <a routerLink='/pdu-recommend' class="btn btn-primary" role="button">Recommendation</a> -->
-                    <a routerLink="/nqa-submit" class="btn btn-default" role="button">NQF Feedback</a>
+                    <!-- <a routerLink='/PDQA-recommend' class="btn btn-primary" role="button">Recommendation</a> -->
+                    <a
+                      routerLink="/nqa-submit"
+                      class="btn btn-default"
+                      role="button"
+                      >NQF Feedback</a
+                    >
                   </p>
                 </div>
               </div>
 
               <div class="card col-md-4 border-dark text-center py-4">
                 <div class="text-center">
-                  <button class="btn btn-success btn-circle btn-xl" (click)="titleID(22)">
+                  <button
+                    class="btn btn-success btn-circle btn-xl"
+                    (click)="titleID(22)"
+                  >
                     <i class="far fa-paper-plane fa-2x"></i>
                   </button>
                 </div>
                 <div class="caption">
-                  <h3>6.4 NQA Registration</h3>
-                  <p>Programme Development Unit(PDU) submits a complete application to the Namibia 
-                    Qualification Authority(NQA) for registration on the National Qualification Framework(NQF) </p>
+                  <h3>6.4 NQF Registration</h3>
+                  <p>
+                    ADS submits a complete application to the Namibia
+                    Qualification Authority(NQA) for registration on the
+                    National Qualification Framework(NQF)
+                  </p>
                   <p>
                     <!-- <a routerLink="/nqa-recommend" class="btn btn-primary" role="button"> Recommendation</a> -->
-                    <a routerLink="/nqa-reg" class="btn btn-success" role="button"> Registration </a>
+                    <a
+                      routerLink="/nqa-reg"
+                      class="btn btn-success"
+                      role="button"
+                    >
+                      Registration
+                    </a>
                   </p>
                 </div>
               </div>
@@ -786,27 +1292,36 @@
             <div class="alert alert-danger" [hidden]="showID != 20">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>NQA Preparation</h4>
-              <hr class="colorgraph"> The curriculum document is loaded under (Preparation for NQA Submission). All support letters, minutes of
-              PAC, review report, rational and all relevant documents are loaded under this section.
+              <hr class="colorgraph" />
+              The curriculum document is loaded under (Preparation for NQA
+              Submission). All support letters, minutes of PAC, review report,
+              rational and all relevant documents are loaded under this section.
             </div>
             <div class="alert alert-warning" [hidden]="showID != 21">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
-              <h3>PDU Endorse</h3>
-              <hr class="colorgraph"> PDU may request further documentation of correction from the department, this will be loaded under (Recommendation).
-              PDU will now launch a registration application with NQA and all documents will be loaded under (NQA Submit).
+              <h3>PDQA Endorse</h3>
+              <hr class="colorgraph" />
+              PDQA may request further documentation of correction from the
+              department, this will be loaded under (Recommendation). PDQA will
+              now launch a registration application with NQA and all documents
+              will be loaded under (NQA Submit).
             </div>
             <div class="alert alert-success" [hidden]="showID != 22">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>NQA</h4>
-              <hr class="colorgraph"> The NQA will write a Registration Report on issues of concern (Recommendations). PDU will respond and make
-              the necessary corrections and resubmit the final documents (Registration). The NQA will write a Progress report
-              and Notice of Registration with will be loaded under (NQA Courses Registration). The process is repeated every
-              5 years.
+              <hr class="colorgraph" />
+              The NQA will write a Registration Report on issues of concern
+              (Recommendations). PDQA will respond and make the necessary
+              corrections and resubmit the final documents (Registration). The
+              NQA will write a Progress report and Notice of Registration with
+              will be loaded under (NQA Courses Registration). The process is
+              repeated every 5 years.
             </div>
             <div class="alert alert-success" [hidden]="showID != 23">
               <a class="close" (click)="showID = 0" aria-label="close">x</a>
               <h4>NQF Feedback</h4>
-              <hr class="colorgraph"> NQF Feedback expanded
+              <hr class="colorgraph" />
+              NQF Feedback expanded
             </div>
           </div>
         </div>

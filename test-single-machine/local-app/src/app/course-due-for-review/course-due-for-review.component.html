@@ -1,8 +1,8 @@
-<div class="card card-body bg-light">
-    <h2 class="text-secondary text-center"><i class="fa fa-tasks pull-left text-secondary"></i><span class="label label-danger pull-right">{{extract()?.length || defaultCount}}</span>&nbsp; Due For Review </h2>
+<div class="card card-body bg-danger">
+    <h3 class="text-white text-center"><i class="fa fa-tasks pull-left text-white"></i><span class="label label-dark pull-right">{{extract()?.length || defaultCount}}</span>&nbsp;<strong> Due For Review </strong></h3>
 </div>
-<div class="card card-body bg-light">
-    <div class="text-warning">
+<div class="card card-body bg-danger">
+    <div class="text-white">
         <ul class="list-unstyled">
             <li *ngFor="let inP of extract() || []">
                 <em>{{inP.title}}</em>: <small>{{inP.faculty}} -- {{inP.department}}</small>
