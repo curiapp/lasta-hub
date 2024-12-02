@@ -9,15 +9,18 @@
     "compression": "^1.7.4",
     "ejs": "^2.6.1",
     "express": "4.14.0",
+    "grunt-contrib-copy": "^1.0.0",
     "http": "0.0.0",
     "method-override": "2.3.6"
   },
   "scripts": {
-    "start": "coffee server.coffee"
+    "start": "coffee server.coffee",
+    "release": "grunt release"
   },
   "author": "PDU Dev Team",
   "devDependencies": {
     "grunt": "^1.0.4",
-    "grunt-contrib-jshint": "^2.1.0"
+    "grunt-contrib-jshint": "^2.1.0",
+    "grunt-ssh": "^0.12.9"
   }
 }

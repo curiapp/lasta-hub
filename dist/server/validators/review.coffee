@@ -25,7 +25,7 @@ exports.ReviewValidator = class ReviewValidator extends SchemaValidator
                 @helper.checkAndSanitizePossibleValues reviewData.reviewUnit, ['TLA', 'CE', 'QA', 'COLL', 'PDU'], 'Review Unit', @validator, (unitError, validUnit) =>
                     unitPartialCallback unitError, validUnit
             decision: (decisionPartialCallback) =>
-                @helper.checkAndSanitizePossibleValues reviewData.decision, ['approve', 'decline'], 'Review Decision', @validator, (decisionError, validDecision) =>
+                @helper.checkAndSanitizePossibleValues reviewData.decision, ['recommend', 'defer'], 'Review Decision', @validator, (decisionError, validDecision) =>
                     decisionPartialCallback decisionError, validDecision
         @flowController.parallel reviewOptions, (reviewDataError, validReviewData) =>
             callback reviewDataError, validReviewData
