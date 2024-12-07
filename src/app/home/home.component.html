@@ -103,10 +103,10 @@
                          <div class="row">
                             <div class="col-lg-offset-3 col-lg-6">
                               <div class="input-group">
-                              <!--select class="selectpicker show-tick form-control input-lg" title="Select Programme"->
+                              <select class="selectpicker show-tick form-control input-lg" title="Select Programme"->
                                 <select class="selectpicker show-tick form-control input-lg" title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
                                     <option value="Select programme"></option>
-                                    <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                                    <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
                                 </select>
                               <span class="input-group-btn">
                               <a routerLink='/resume' class="btn btn-success btn-lg" type="button">
@@ -122,7 +122,7 @@
                             <div class="input-group-prepend">
                               <select class="custom-select-lg browser-default" title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
                                 <option selected >Select programme</option>
-                                <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                                <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
                             </select>
                             </div>
                             <div class="input-group-append">

@@ -19,7 +19,7 @@
                         <label for="facultyName" class="col-sm-2 control-label">Faculty</label>
                         <div class="col-sm-10">
                             <select [(ngModel)]="selectedFaculty">
-                                <option *ngFor="#singleFaculty of faculties; i = index" value={{i}}>
+                                <option *for="#singleFaculty of faculties; i = index" value={{i}}>
                                     {{singleFaculty.name}}
                                 </option>
                             </select>
@@ -31,7 +31,7 @@
                         <label for="facultyName" class="col-sm-2 control-label">Department</label>
                         <div class="col-sm-10">
                             <select>
-                                <option *ngFor="#singleDepartment of faculties[selectedFaculty].departments" value={{singleDepartment}}>
+                                <option *for="#singleDepartment of faculties[selectedFaculty].departments" value={{singleDepartment}}>
                                     {{singleDepartment}}
                                 </option>
                             </select>

@@ -26,11 +26,11 @@
                                     <li>
                                         <a routerLink='/home' routerLinkActive="active" class="focus">Home</a>
                                     </li>
-                                    <li *ngIf="loggedIn()">
+                                    <li *if="loggedIn()">
                                         <a routerLink='/resume' routerLinkActive="active" >Resume</a>
                                     </li>
 
-                                    <!-- <li>
+                                    <! <li>
                                         <a routerLink='/StartNeedAnalysis' routerLinkActive="active">Need analysis form</a>
                                     </li> ->
                                     <li>
@@ -42,13 +42,13 @@
                                     <li>
                                         <a routerLink='/about-us' routerLinkActive="active">About Us</a>
                                     </li>
-                                    <!-- <li>
+                                    <!- <li>
                                         <a [router-link]="['contact']">Contact Us</a>
                                     </li> -
                                     ->
                                 </ul>
                             </div>
-                            <!--div class="col-md-1" [hidden]="isActive(['/home'])">
+                            <!-div class="col-md-1" [hidden]="isActive(['/home'])">
                                 <button class="btn btn-default btn-lg" (click) = "goBack()">
                                   <i class="glyphicon glyphicon-chevron-left"></i>BACK</button>
                             </div ->
@@ -107,7 +107,7 @@
                         <li>
                             <a routerLink='/home' routerLinkActive="active" class="active">Home</a>
                         </li>
-                        <li *ngIf="loggedIn()">
+                        <li *if="loggedIn()">
                             <a routerLink='/resume' routerLinkActive="active" >Resume</a>
                         </li>
 

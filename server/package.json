@@ -1,0 +1,55 @@
+{
+  "name": "pdu-server",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "coffee dist/server/pdu.coffee",
+    "deploy": "grunt release"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.15.1",
+    "compression": "^1.6.2",
+    "cors": "^2.7.1",
+    "crypto-js": "^3.1.6",
+    "ejs": "^2.4.2",
+    "express": "^4.14.0",
+    "fs-extra": "^2.0.0",
+    "http": "0.0.0",
+    "jwt-simple": "^0.5.0",
+    "kafka-node": "^5.0.0",
+    "liftup": "^3.0.1",
+    "method-override": "^2.3.6",
+    "moment": "^2.13.0",
+    "morgan": "^1.7.0",
+    "multer": "^1.4.1",
+    "package-config": "^0.1.0",
+    "rxjs": "^5.0.0-beta.12",
+    "simple-git": "^1.67.0",
+    "uuid": "^2.0.2",
+    "validator": "^13.5.2",
+    "zone.js": "^0.6.26"
+  },
+  "devDependencies": {
+    "coffeescript": "^2.6.1",
+    "dp-grunt-contrib-copy": "^0.4.4",
+    "grunt": "^0.4.5",
+    "grunt-bower-update": "^0.1.2",
+    "grunt-cli": "^1.4.3",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-deploy": "^0.1.7",
+    "grunt-npm-install": "^0.3.1",
+    "grunt-ssh": "^0.12.9"
+  },
+  "config": {
+    "development": {},
+    "production": {
+      "serverPort": 4931,
+      "tokenSecret": "abdsgfdeweqsdsfasdfgdfs"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

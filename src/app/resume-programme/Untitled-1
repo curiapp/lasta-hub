@@ -21,7 +21,7 @@
                       <li>
                           <a routerLink='/home' routerLinkActive="active" class="active">Home bbb</a>
                       </li>
-                      <!-- <li <*ngIf="loggedIn()">> -->
+                      <!-- <li <*if="loggedIn()">> -->
                         <li>
                           <a routerLink='/resume' routerLinkActive="active" >Resume </a>
                       </li>

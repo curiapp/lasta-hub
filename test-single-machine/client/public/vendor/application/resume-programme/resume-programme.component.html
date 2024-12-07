@@ -9,7 +9,7 @@
                   <div class="col-sm-12">
                   <div class="row" style="overflow: hidden;">
 
-                      <div class="col-md-4 thumbnail" style="text-align:center;margin-bottom: -99999px;padding-bottom: 99999px;" *ngIf="false">
+                      <div class="col-md-4 thumbnail" style="text-align:center;margin-bottom: -99999px;padding-bottom: 99999px;" *if="false">
                         <!--tooltip-content #myTooltip placement="left">
                           <b>Very</b> <span style="color: #C21F39">Dynamic</span> <span style="color: #00b3ee">Reusable</span>
                           <b><i><span style="color: #ffc520">Tooltip With</span></i></b> <small>Html support</small>.
@@ -36,7 +36,7 @@
                               <!--select class="selectpicker show-tick form-control input-lg" title="Select Programme"-->
                                 <select class="selectpicker show-tick form-control " title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
                                     <option value="Select programme"></option>
-                                    <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                                    <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
                                 </select>
                                 <span class="input-group-btn">
                                 <a routerLink='/resume' class="btn btn-info" type="button">
