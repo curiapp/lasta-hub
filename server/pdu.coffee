@@ -43,10 +43,10 @@ app = express()
 # app.set 'views', __dirname + '/../client/views'
 # app.engine('html', require('ejs').renderFile)
 
-app.set 'views', __dirname + '/../../test-single-machine/local-app/dist/local-app/'
+app.set 'views', __dirname + '/../local-app/dist/local-app/'
 app.engine('html', require('ejs').renderFile)
 
-app.use express.static(__dirname + '/../../test-single-machine/local-app/dist/local-app/', {maxAge: 8640000})
+app.use express.static(__dirname + '/../local-app/dist/local-app/', {maxAge: 8640000})
 
 
 # static files
