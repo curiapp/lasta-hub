@@ -16,10 +16,10 @@
           </div>
           <!--addresses-->
           <div formArrayName="cdc">
-            <div *ngFor="let p of myForm.controls.cdc.controls; let i=index" class="panel panel-default">
+            <div *for="let p of myForm.controls.cdc.controls; let i=index" class="panel panel-default">
               <div class="panel-heading">
                 <span>CDC Member: {{i + 1}}</span>
-                <span class="glyphicon glyphicon-remove pull-right" *ngIf="myForm.controls.cdc.controls.length > 1" (click)="removeAddress(i)"></span>
+                <span class="glyphicon glyphicon-remove pull-right" *if="myForm.controls.cdc.controls.length > 1" (click)="removeAddress(i)"></span>
               </div>
               <div class="panel-body" [formGroupName]="i">
                 <div class="form-group col-xs-6">

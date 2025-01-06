@@ -39,7 +39,7 @@
                     <label for="level">Level</label>
                     <select class="selectpicker show-tick form-control input-lg" title="Select level" required [ngModel]="level" (ngModelChange)="changed($event)" name="level">
                         <option value="Select level"></option>
-                        <option *ngFor="let singleLevel of levels" [value]="singleLevel">{{singleLevel}}</option>
+                        <option *for="let singleLevel of levels" [value]="singleLevel">{{singleLevel}}</option>
                     </select>
                 </div>
                 <div class="form-group span12">
@@ -51,11 +51,6 @@
     </div>
 </div>
 
-
-
-
-
-
 <!--
  <div class="container">Notifications
   <h1>Content coming soon!!</h1>
@@ -64,14 +59,14 @@
 
 <select [(ngModel)]="selectedFaculty.id" (change)="onSelect($event.target.value)">
   <option value="0">--Select--</option>
-  <option *ngFor="let faculty of Faculties" value= {{faculty.id}}>{{faculty.facultyName}}</option>
+  <option *for="let faculty of Faculties" value= {{faculty.id}}>{{faculty.facultyName}}</option>
 </select>
 <br/><br/>
 <div>
 <label>Department:</label>
 <select>
-  <option *ngIf='selectedFaculty.id == 0' value="0">--Select--</option>
-  <option *ngFor="let department of departments " value= {{department.id}}>{{department.departmentName}}</option>
+  <option *if='selectedFaculty.id == 0' value="0">--Select--</option>
+  <option *for="let department of departments " value= {{department.id}}>{{department.departmentName}}</option>
 </select>
 </div>
 </div> -->

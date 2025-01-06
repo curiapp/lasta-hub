@@ -44,7 +44,7 @@
                   <div class="input-group mb-3">
                     <select class="selectpicker show-tick form-control " title="Select Programme" [ngModel]="programme" (ngModelChange)="changed($event)">
                       <option value="Select programme"></option>
-                      <option *ngFor="let programme of programmes" [value]="programme">{{programme}}</option>
+                      <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
                     </select>
                     <div class="input-group-append">
                       <button routerLink='/resume' class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="button-addon2">

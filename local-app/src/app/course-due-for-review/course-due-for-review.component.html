@@ -1,0 +1,12 @@
+<div class="card card-body bg-danger">
+    <h3 class="text-white text-center"><i class="fa fa-tasks pull-left text-white"></i><span class="label label-dark pull-right">{{extract()?.length || defaultCount}}</span>&nbsp;<strong> Due For Review </strong></h3>
+</div>
+<div class="card card-body bg-danger">
+    <div class="text-white">
+        <ul class="list-unstyled">
+            <li *for="let inP of extract() || []">
+                <em>{{inP.title}}</em>: <small>{{inP.faculty}} -- {{inP.department}}</small>
+            </li>
+        </ul>
+    </div>
+</div>
