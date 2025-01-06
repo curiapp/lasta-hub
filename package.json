@@ -7,7 +7,8 @@
     "url": "ssh://venema@196.216.167.206:4576/pds"
   },
   "scripts": {
-    "start": "coffee dist/server/pdu.coffee"
+    "start": "coffee dist/server/pdu.coffee",
+    "deploy": "grunt release"
   },
   "author": "FCI - NodeJS Community",
   "contributors": [
@@ -47,6 +48,7 @@
     "http": "0.0.0",
     "jwt-simple": "^0.5.0",
     "kafka-node": "^5.0.0",
+    "liftup": "^3.0.1",
     "method-override": "^2.3.6",
     "moment": "^2.13.0",
     "morgan": "^1.7.0",
