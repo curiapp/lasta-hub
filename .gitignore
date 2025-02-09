@@ -54,6 +54,7 @@ dist/client/public/vendor/bower_components
 dist/client/public/angular2/node_modules
 dist/client/public/uploads-tmp
 
+crypt_data
 
 # tmp local files
 uploads
