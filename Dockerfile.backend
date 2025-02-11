@@ -1,0 +1,15 @@
+FROM node:22-alpine3.20
+
+WORKDIR /app
+
+COPY ./server/package*.json ./
+
+RUN npm install
+
+COPY ./server ./
+
+RUN npm install -g coffeescript
+
+EXPOSE 4931
+
+CMD ["npx", "coffee", "pdu.coffee"]
