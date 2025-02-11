@@ -63,3 +63,5 @@ uploads
 test-single-machine/local-app/package-lock.json
 package-lock.json
 node_modules
+.angular
+dist
