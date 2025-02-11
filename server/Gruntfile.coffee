@@ -17,7 +17,7 @@ module.exports = (grunt) ->
                 port: 6547
                 agent: process.env.SSH_AUTH_SOCK
             niort:
-                host: '172.28.253.76'
+                host: '127.0.0.1'
                 username: 'curi'
                 agent: process.env.SSH_AUTH_SOCK
         sshexec:

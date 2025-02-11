@@ -1,6 +1,6 @@
 'use strict'
 
-pkgConfig = require('package-config').load(__dirname + '/../../../package.json')
+pkgConfig = require('package-config').load(__dirname + '/../package.json')
 
 exports.ConfigurationManager = class ConfigurationManager
     _cfManagerInstance = undefined
