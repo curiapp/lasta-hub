@@ -1,0 +1,18 @@
+<div class="submission">
+  <div class="header">
+    <h2>NQF Submission</h2>
+    @if (!submission){
+      <app-button [props]="ButtonProps"/>
+    }
+  </div>
+  <div class="current-status">
+    @if (submission.initialSubmission){
+      <p>ADC has completed the initial submission to NQA</p>
+    } @else if (submission.resubmitted){
+      <p>ADC has resubmitted  to NQA</p>
+    } @else {
+      <p>No response from CDC</p>
+    }
+  </div>
+
+</div>

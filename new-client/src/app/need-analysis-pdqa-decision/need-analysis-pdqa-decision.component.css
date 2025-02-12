@@ -1,0 +1,38 @@
+.need-analysis-pdqa-decision {
+  height: 100vh;
+}
+.need-analysis-pdqa-decision p, .need-analysis-pdqa-decision h1, .need-analysis-pdqa-decision h2, .need-analysis-pdqa-decision h3, .need-analysis-pdqa-decision h4, .need-analysis-pdqa-decision h5, .need-analysis-pdqa-decision h6 {
+  color: #0F2139;
+}
+.need-analysis-pdqa-decision .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.need-analysis-pdqa-decision .header h2, .need-analysis-pdqa-decision .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.need-analysis-pdqa-decision .header h2 {
+  font-size: x-large;
+}
+.need-analysis-pdqa-decision .header h3 {
+  font-size: large;
+}
+.need-analysis-pdqa-decision .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.need-analysis-pdqa-decision .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.need-analysis-pdqa-decision .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=need-analysis-pdqa-decision.component.css.map */

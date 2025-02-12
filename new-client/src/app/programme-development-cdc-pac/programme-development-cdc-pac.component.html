@@ -1,0 +1,27 @@
+<div class="cdc-pac">
+  <div class="header">
+    <h2>Curriculum Development Coordinator</h2>
+    <app-button [props]="AddButton"/>
+  </div>
+  @if (cdc){
+    <div class="cdc">
+
+    </div>
+  } @else {
+    <p>No Curriculum Development Coordinator added</p>
+  }
+
+  <div class="header">
+    <h2>Programme Advisory Committee</h2>
+    <app-button [props]="AddButton"/>
+  </div>
+
+  @if (pac){
+    <div class="pac">
+
+    </div>
+  } @else {
+    <p>No Programme Advisory Committee members added</p>
+  }
+
+</div>

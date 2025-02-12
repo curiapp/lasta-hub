@@ -1,0 +1,18 @@
+.greeting{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  .current-time{
+    font-size: 18px;
+    font-family: Alata, sans-serif;
+    margin: 0;
+  }
+  .full-name{
+    font-family: Alata, sans-serif;
+    font-size: 36px;
+    margin: 0;
+  }
+  span{
+    color: #F8F8F8;
+  }
+}

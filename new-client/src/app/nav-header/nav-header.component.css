@@ -1,0 +1,40 @@
+.nav-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: #0F2139;
+  padding: 0 3rem;
+  border-bottom: rgba(248, 248, 248, 0.1019607843) 0.5px solid;
+}
+.nav-header .nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-header .nav-logo h1 {
+  font-family: Alata, sans-serif;
+  color: #F8F8F8;
+}
+.nav-header .nav-items {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.nav-header .nav-items a {
+  padding: 5px;
+  text-decoration: none;
+  color: #F8F8F8;
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+}
+.nav-header .nav-items .selected {
+  padding: 5px;
+  border-bottom: 1.5px solid #F8F8F8;
+}
+.nav-header .nav-user {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/*# sourceMappingURL=nav-header.component.css.map */

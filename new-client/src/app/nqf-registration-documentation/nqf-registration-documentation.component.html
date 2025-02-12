@@ -1,0 +1,16 @@
+<div class="documentation">
+  <div class="header">
+    <h2>NQF Documentation</h2>
+    @if (!documentation){
+      <app-button [props]="ButtonProps"/>
+    }
+  </div>
+  <div class="current-status">
+    @if (!documentation){
+      <p>No submission</p>
+    } @else {
+      <p>CDC has submitted all documentation to NQA</p>
+    }
+  </div>
+
+</div>

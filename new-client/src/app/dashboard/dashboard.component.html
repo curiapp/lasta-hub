@@ -1,0 +1,46 @@
+<div>
+  <app-nav-header/>
+  <app-dashboard-layout>
+    <ng-template appTopSection>
+      <app-greeting [firstName]="firstName" [lastName]="lastName" [title]="title"/>
+      <app-overview/>
+    </ng-template>
+
+
+    <ng-template appLeftSection>
+      @if (userSession()?.role === 'lecturer') {
+        <div class="lecturer-programmes">
+          <div class="header">
+            <h1>Your Programmes</h1>
+            <div class="actions">
+              <app-button [props]="ViewButtonProps"/>
+              <app-button [props]="AddButtonProps" routerLink="/create-new-programme"/>
+            </div>
+          </div>
+          <div class="programmes">
+            <div
+              class="programme"
+              *ngFor="let programme of programmes"
+              (click)="onSelectProgramme(programme)"
+            >
+              <p class="programme-title"> {{ programme.title }} </p>
+              <p class="status">Status: </p>
+            </div>
+          </div>
+          <div class="programmes-due-for-review">
+            <div class="header">
+              <h1>Programmes Due For Review</h1>
+              <app-button [props]="ViewButtonProps"/>
+            </div>
+            <app-table [columns]="programmesTableColumns" [data]="programmesDueToReview"/>
+          </div>
+        </div>
+      }
+    </ng-template>
+
+    <ng-template appRightSection>
+      <app-mini-calendar/>
+    </ng-template>
+  </app-dashboard-layout>
+
+</div>

@@ -1,0 +1,101 @@
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: "Alata";
+  src: url("assets/fonts/Alata-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("assets/fonts/Manrope.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Ropa Sans";
+  src: url("assets/fonts/RopaSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  padding: 0;
+  background-color: #F8F8F8;
+}
+
+.shadow {
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.068);
+}
+
+.programme-forms h1 {
+  font-family: Alata, serif;
+  font-size: x-large;
+  font-weight: lighter;
+}
+.programme-forms h2 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.programme-forms .actions {
+  display: flex;
+  gap: 1rem;
+}
+.programme-forms .form-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem;
+}
+.programme-forms .form-content h2 {
+  font-size: x-large;
+}
+.programme-forms .form-content .form-inputs .form-input {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  width: 100%;
+  margin: 2rem 0;
+}
+.programme-forms .form-content .form-inputs .form-input .label-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.programme-forms .form-content .form-inputs .form-input .label-info p {
+  margin: 0;
+  font-size: 2rem;
+  font-family: Manrope, sans-serif;
+}
+.programme-forms .form-content .form-inputs .form-input .label-info span {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 12px;
+}
+.programme-forms .form-content .form-inputs .form-input input {
+  height: 100%;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1.5px solid #0F2139;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0;
+  font-size: 1.2rem;
+  color: #0F2139;
+  font-family: "Ropa Sans", sans-serif;
+}
+.programme-forms .form-content .form-inputs .form-input input:focus {
+  outline: 0;
+}
+
+/*# sourceMappingURL=styles.css.map */

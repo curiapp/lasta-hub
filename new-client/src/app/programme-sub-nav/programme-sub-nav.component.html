@@ -1,0 +1,13 @@
+<div class="circle-navs">
+  <ng-container *ngFor="let route of routes; let i  = index">
+    <a [routerLink]="route" class="nav-item">
+      <div class="nav-circle" routerLinkActive="selected">
+        {{ i + 1 }}
+      </div>
+      <div
+        *ngIf="i < routes.length - 1"
+        class="nav-line"
+      ></div>
+    </a>
+  </ng-container>
+</div>

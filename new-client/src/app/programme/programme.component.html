@@ -1,0 +1,22 @@
+<div>
+  <app-nav-header/>
+  <app-dashboard-layout>
+    <ng-template appTopSection>
+      <div class="programme-header">
+        <app-button [props]="ButtonProps" (click)="router.navigate(['/dashboard'])"/>
+        <h1 class="programme-title">{{ programme.title }}</h1>
+      </div>
+      <app-programme-overview [data]="programme"/>
+    </ng-template>
+
+    <ng-template appMainTopSection>
+      <div class="main-body">
+        <app-programmes-nav/>
+        <div class="content">
+          <router-outlet/>
+        </div>
+      </div>
+    </ng-template>
+
+  </app-dashboard-layout>
+</div>

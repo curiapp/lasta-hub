@@ -1,0 +1,17 @@
+.regular-input{
+  outline: none;
+  width: 100%;
+  display: block;
+  border: none;
+  background-color: #657283;
+  font-family: Manrope, sans-serif;
+  font-size: 20px;
+  border-radius: 3px;
+  padding: 10px 20px;
+  color: #F8F8F8;
+
+  &::placeholder {
+    color: #F8F8F8CC;
+    margin: 0;
+  }
+}

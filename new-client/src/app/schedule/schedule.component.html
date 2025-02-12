@@ -1,0 +1,48 @@
+<div class="schedule">
+  <div class="month-calendar-header">
+    <div class="header-display">
+      <p id="display">
+        {{ formatDate(date, "MMMM") }} {{ getCurrentYear(date) }}
+      </p>
+    </div>
+    <div class="arrows">
+      @if (notToday(date)) {
+        <app-button [props]="ButtonProps" (click)="moveToToday()"/>
+      }
+
+      <svg class="arrow" (click)="onPrevMonthClick()" width="15" height="15" viewBox="0 0 15 15" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M5.18328 7.94197C5.06611 7.82476 5.00029 7.66582 5.00029 7.50009C5.00029 7.33436 5.06611 7.17542 5.18328 7.05822L8.7189 3.52259C8.77656 3.4629 8.84552 3.41528 8.92177 3.38253C8.99803 3.34977 9.08004 3.33253 9.16303 3.33181C9.24601 3.33109 9.32831 3.3469 9.40512 3.37833C9.48193 3.40975 9.55172 3.45616 9.6104 3.51485C9.66908 3.57353 9.71549 3.64331 9.74692 3.72012C9.77834 3.79693 9.79415 3.87923 9.79343 3.96222C9.79271 4.04521 9.77547 4.12722 9.74272 4.20347C9.70996 4.27972 9.66235 4.34869 9.60265 4.40634L6.5089 7.50009L9.60265 10.5938C9.7165 10.7117 9.7795 10.8696 9.77807 11.0335C9.77665 11.1973 9.71092 11.3541 9.59504 11.47C9.47916 11.5859 9.3224 11.6516 9.15853 11.653C8.99465 11.6544 8.83678 11.5914 8.7189 11.4776L5.18328 7.94197Z"
+              fill="#000000"/>
+      </svg>
+
+      <svg class="arrow" (click)="onNextMonthClick()" width="15" height="15" viewBox="0 0 15 15" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_51_50)">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M9.81672 7.05803C9.93389 7.17524 9.99971 7.33418 9.99971 7.49991C9.99971 7.66564 9.93389 7.82458 9.81672 7.94178L6.2811 11.4774C6.22344 11.5371 6.15448 11.5847 6.07823 11.6175C6.00197 11.6502 5.91996 11.6675 5.83697 11.6682C5.75399 11.6689 5.67169 11.6531 5.59488 11.6217C5.51807 11.5902 5.44828 11.5438 5.3896 11.4852C5.33092 11.4265 5.28451 11.3567 5.25308 11.2799C5.22166 11.2031 5.20585 11.1208 5.20657 11.0378C5.20729 10.9548 5.22453 10.8728 5.25728 10.7965C5.29004 10.7203 5.33765 10.6513 5.39735 10.5937L8.4911 7.49991L5.39735 4.40616C5.2835 4.28828 5.2205 4.13041 5.22193 3.96653C5.22335 3.80266 5.28908 3.6459 5.40496 3.53002C5.52084 3.41414 5.6776 3.34841 5.84147 3.34699C6.00535 3.34556 6.16322 3.40856 6.2811 3.52241L9.81672 7.05803Z"
+                fill="#000000"/>
+        </g>
+        <defs>
+          <clipPath id="clip0_51_50">
+            <rect width="15" height="15" fill="white" transform="matrix(0 -1 1 0 0 15)"/>
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div class="days-of-week">
+    <div
+      class="days"
+      *ngFor="let day of daysOfWeek"
+      [ngClass]="{
+        'current-day shadow': isToday(day),
+        'is-day shadow': selectedDate?.getTime() === day.getTime()
+      }"
+    >
+      <span>{{ formatDate(day, "EEE") }}</span>
+      <span class="day">{{ formatDate(day, 'd') }}</span>
+    </div>
+  </div>
+</div>

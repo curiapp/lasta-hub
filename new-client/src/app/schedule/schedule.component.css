@@ -1,0 +1,90 @@
+.schedule {
+  padding: 1rem;
+  user-select: none;
+}
+.schedule span, .schedule p {
+  font-family: "Ropa Sans", sans-serif;
+}
+.schedule .month-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.schedule .month-calendar-header #display {
+  font-size: 20px;
+}
+.schedule .month-calendar-header .arrows {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+.schedule .month-calendar-header .arrows .arrow {
+  border-radius: 50%;
+  text-align: center;
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+  transition: all 0.4s linear;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.schedule .month-calendar-header .arrows .arrow path {
+  fill: black;
+}
+.schedule .month-calendar-header .arrows .arrow :hover {
+  background: black;
+  transition: all 0.4s linear;
+}
+.schedule .days-of-week {
+  display: flex;
+  justify-content: space-between;
+}
+.schedule .days-of-week .days {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border: #101527 solid 1px;
+  flex: 1 1 0;
+  aspect-ratio: 1/1;
+  margin: 0 10px;
+}
+.schedule .days-of-week .day {
+  font-size: 18px;
+}
+.schedule .days-of-week .current-day {
+  background-color: #101527;
+  color: #f8f8ff;
+}
+.schedule .days-of-week .is-day {
+  background-color: #B7C0E1;
+  color: #000000;
+  border: none;
+}
+
+.month {
+  display: flex;
+  background-color: #101527;
+  padding: 10px;
+  justify-content: space-between;
+  border-radius: 5px;
+}
+.month .current-month {
+  font-size: 24px;
+  color: #f8f8ff;
+}
+.month .previous,
+.month .next {
+  display: flex;
+  background-color: #f8f8ff;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  color: #101527;
+}
+
+/*# sourceMappingURL=schedule.component.css.map */

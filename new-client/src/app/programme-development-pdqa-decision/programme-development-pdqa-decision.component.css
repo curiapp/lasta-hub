@@ -1,0 +1,38 @@
+.programme-development-pdqa-decision {
+  height: 100vh;
+}
+.programme-development-pdqa-decision p, .programme-development-pdqa-decision h1, .programme-development-pdqa-decision h2, .programme-development-pdqa-decision h3, .programme-development-pdqa-decision h4, .programme-development-pdqa-decision h5, .programme-development-pdqa-decision h6 {
+  color: #0F2139;
+}
+.programme-development-pdqa-decision .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.programme-development-pdqa-decision .header h2, .programme-development-pdqa-decision .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.programme-development-pdqa-decision .header h2 {
+  font-size: x-large;
+}
+.programme-development-pdqa-decision .header h3 {
+  font-size: large;
+}
+.programme-development-pdqa-decision .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.programme-development-pdqa-decision .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.programme-development-pdqa-decision .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=programme-development-pdqa-decision.component.css.map */

@@ -1,0 +1,29 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+
+  thead{
+    th{
+      font-family: Manrope, sans-serif;
+      font-weight: lighter;
+      color: #535050;
+      font-size: medium;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 0.1px solid #93939354;
+      td{
+        font-family: "Ropa Sans", Arial, Helvetica, sans-serif;
+        font-size: small;
+      }
+    }
+  }
+
+  th, td {
+    text-align: start;
+    padding: 10px;
+
+  }
+}

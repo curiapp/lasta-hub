@@ -1,0 +1,38 @@
+.overview {
+  position: relative;
+}
+.overview h4 {
+  color: #F8F8F8;
+  font-family: Manrope, sans-serif;
+}
+.overview .overview-items {
+  display: flex;
+  gap: 2rem;
+  width: 40%;
+}
+.overview .overview-items .overview-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.overview .overview-items .overview-item svg {
+  width: 35px;
+  height: 35px;
+  padding: 0.8rem;
+  border-radius: 1rem;
+  color: #F8F8F8;
+  background-color: rgba(16, 21, 39, 0.5019607843);
+}
+.overview .overview-items .overview-item div p {
+  margin: 0;
+  color: white;
+  font-size: 0.8rem;
+  font-family: Manrope, sans-serif;
+}
+.overview .overview-items .overview-item div span {
+  color: white;
+  font-size: 1.8rem;
+  font-family: "Ropa Sans", sans-serif;
+}
+
+/*# sourceMappingURL=overview.component.css.map */

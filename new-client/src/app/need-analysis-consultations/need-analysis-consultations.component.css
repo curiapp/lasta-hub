@@ -1,0 +1,77 @@
+.need-analysis-consultations {
+  height: 100vh;
+}
+.need-analysis-consultations p, .need-analysis-consultations h1, .need-analysis-consultations h2, .need-analysis-consultations h3, .need-analysis-consultations h4, .need-analysis-consultations h5, .need-analysis-consultations h6 {
+  color: #0F2139;
+}
+.need-analysis-consultations .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.need-analysis-consultations .header h2, .need-analysis-consultations .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.need-analysis-consultations .header h2 {
+  font-size: x-large;
+}
+.need-analysis-consultations .header h3 {
+  font-size: large;
+}
+.need-analysis-consultations .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.need-analysis-consultations .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.need-analysis-consultations .current-status .not-started {
+  font-family: "Ropa Sans", sans-serif;
+}
+.need-analysis-consultations .current-status .date-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.need-analysis-consultations .current-status .date-item svg {
+  width: 1.5rem;
+}
+.need-analysis-consultations .current-status .date-item p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+.need-analysis-consultations .stakeholders {
+  display: flex;
+  flex-direction: column;
+}
+.need-analysis-consultations .all-stakeholders {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+.need-analysis-consultations .all-stakeholders .stakeholder {
+  background-color: #B7C0E1;
+  display: grid;
+  flex-direction: column;
+  align-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.need-analysis-consultations .all-stakeholders .stakeholder p {
+  margin: 0;
+  font-family: "Ropa Sans", sans-serif;
+}
+.need-analysis-consultations .all-stakeholders .stakeholder .name {
+  font-size: medium;
+}
+.need-analysis-consultations .all-stakeholders .stakeholder svg {
+  width: 1.5rem;
+}
+
+/*# sourceMappingURL=need-analysis-consultations.component.css.map */

@@ -1,0 +1,38 @@
+.feedback {
+  height: 100vh;
+}
+.feedback p, .feedback h1, .feedback h2, .feedback h3, .feedback h4, .feedback h5, .feedback h6 {
+  color: #0F2139;
+}
+.feedback .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.feedback .header h2, .feedback .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.feedback .header h2 {
+  font-size: x-large;
+}
+.feedback .header h3 {
+  font-size: large;
+}
+.feedback .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.feedback .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.feedback .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=nqf-registration-feedback.component.css.map */

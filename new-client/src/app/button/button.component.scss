@@ -1,0 +1,46 @@
+button{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  padding: 10px 10px;
+  border-radius: 5px;
+  span{
+    font-family: "Ropa Sans", sans-serif;
+    font-weight: normal;
+    margin: 0;
+  }
+}
+
+.light{
+  background-color: #F8F8F81A;
+  color: #f8f8f8;
+}
+
+.blue{
+  background-color: #0F2139;
+  color: #F8F8F8;
+}
+
+.outlined{
+  border: #F8F8F833 1px solid;
+  color: #F8F8F8;
+  padding: 5px 10px;
+}
+
+.secondary{
+  color: #0F2139;
+  border: #FEC061 solid 1px;
+}
+
+.primary{
+  background-color: #FEC061;
+  color: #0F2139;
+}
+
+.danger{
+  background-color: #DA2128;
+  color: #F8F8F8;
+}

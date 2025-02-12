@@ -1,0 +1,38 @@
+.need-analysis-senate-recommendation {
+  height: 100vh;
+}
+.need-analysis-senate-recommendation p, .need-analysis-senate-recommendation h1, .need-analysis-senate-recommendation h2, .need-analysis-senate-recommendation h3, .need-analysis-senate-recommendation h4, .need-analysis-senate-recommendation h5, .need-analysis-senate-recommendation h6 {
+  color: #0F2139;
+}
+.need-analysis-senate-recommendation .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.need-analysis-senate-recommendation .header h2, .need-analysis-senate-recommendation .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.need-analysis-senate-recommendation .header h2 {
+  font-size: x-large;
+}
+.need-analysis-senate-recommendation .header h3 {
+  font-size: large;
+}
+.need-analysis-senate-recommendation .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.need-analysis-senate-recommendation .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.need-analysis-senate-recommendation .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=need-analysis-senate-recommendation.component.css.map */

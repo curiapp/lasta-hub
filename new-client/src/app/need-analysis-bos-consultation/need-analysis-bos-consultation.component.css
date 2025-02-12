@@ -1,0 +1,38 @@
+.need-analysis-bos-consultation {
+  height: 100vh;
+}
+.need-analysis-bos-consultation p, .need-analysis-bos-consultation h1, .need-analysis-bos-consultation h2, .need-analysis-bos-consultation h3, .need-analysis-bos-consultation h4, .need-analysis-bos-consultation h5, .need-analysis-bos-consultation h6 {
+  color: #0F2139;
+}
+.need-analysis-bos-consultation .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.need-analysis-bos-consultation .header h2, .need-analysis-bos-consultation .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.need-analysis-bos-consultation .header h2 {
+  font-size: x-large;
+}
+.need-analysis-bos-consultation .header h3 {
+  font-size: large;
+}
+.need-analysis-bos-consultation .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.need-analysis-bos-consultation .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.need-analysis-bos-consultation .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=need-analysis-bos-consultation.component.css.map */

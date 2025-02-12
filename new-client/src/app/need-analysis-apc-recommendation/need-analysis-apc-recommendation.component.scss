@@ -1,0 +1,48 @@
+.need-analysis-apc-recommendation {
+  height: 100vh;
+
+  p, h1, h2, h3, h4, h5, h6 {
+    color: #0F2139;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2, h3 {
+      font-family: Manrope, sans-serif;
+      font-weight: lighter;
+    }
+
+    h2 {
+      font-size: x-large;
+    }
+
+    h3 {
+      font-size: large;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+  }
+
+  .current-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+
+    p {
+      font-family: "Ropa Sans", sans-serif;
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+
+  }
+
+}

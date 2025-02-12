@@ -1,0 +1,38 @@
+.bos-final-draft {
+  height: 100vh;
+}
+.bos-final-draft p, .bos-final-draft h1, .bos-final-draft h2, .bos-final-draft h3, .bos-final-draft h4, .bos-final-draft h5, .bos-final-draft h6 {
+  color: #0F2139;
+}
+.bos-final-draft .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bos-final-draft .header h2, .bos-final-draft .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.bos-final-draft .header h2 {
+  font-size: x-large;
+}
+.bos-final-draft .header h3 {
+  font-size: large;
+}
+.bos-final-draft .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.bos-final-draft .benchmark-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.bos-final-draft .benchmark-item p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=bos-apc-senate-consultation-draft-submission.component.css.map */

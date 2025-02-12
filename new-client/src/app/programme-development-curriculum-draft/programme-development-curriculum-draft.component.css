@@ -1,0 +1,38 @@
+.programme-development-curriculum-draft {
+  height: 100vh;
+}
+.programme-development-curriculum-draft p, .programme-development-curriculum-draft h1, .programme-development-curriculum-draft h2, .programme-development-curriculum-draft h3, .programme-development-curriculum-draft h4, .programme-development-curriculum-draft h5, .programme-development-curriculum-draft h6 {
+  color: #0F2139;
+}
+.programme-development-curriculum-draft .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.programme-development-curriculum-draft .header h2, .programme-development-curriculum-draft .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.programme-development-curriculum-draft .header h2 {
+  font-size: x-large;
+}
+.programme-development-curriculum-draft .header h3 {
+  font-size: large;
+}
+.programme-development-curriculum-draft .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.programme-development-curriculum-draft .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.programme-development-curriculum-draft .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=programme-development-curriculum-draft.component.css.map */

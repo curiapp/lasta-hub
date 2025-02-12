@@ -1,0 +1,15 @@
+<button type="{{props?.type}}"
+        [ngClass]="{'primary': props?.variant == Variants.primary,
+        'secondary': props?.variant == Variants.secondary,
+        'outlined': props?.variant == Variants.outlined,
+        'light': props?.variant == Variants.light,
+        'blue': props?.variant == Variants.blue,
+        'danger': props?.variant == Variants.danger
+        }"
+
+>
+  <span>{{ props?.text }}</span>
+  @if (props?.icon) {
+    <img [src]="props?.icon" alt="arrow back"/>
+  }
+</button>

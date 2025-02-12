@@ -1,0 +1,28 @@
+<div class="programme-details">
+    <div class="header">
+      <h2>Programme Details</h2>
+      <app-button [props]="ButtonProps"/>
+    </div>
+
+    <div class="programme-content">
+      <div class="item">
+        <div class="left">
+          <p>Programme Code</p>
+          <span>The proposed programme code</span>
+        </div>
+        <div class="right">
+          <span>{{ programme.code }}</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="left">
+          <p>NQF Level</p>
+          <span>The NQF Level</span>
+        </div>
+        <div class="right">
+          <span>{{ programme.level }}</span>
+        </div>
+      </div>
+    </div>
+</div>

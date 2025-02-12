@@ -1,0 +1,33 @@
+<form class="programme-forms" [formGroup]="addSubmissionForm" (ngSubmit)="onSubmit()">
+  <app-nav-header/>
+  <app-dashboard-layout>
+    <ng-template appTopSection>
+      <h1>Stakeholder's Consultation</h1>
+      <h2>Submissions</h2>
+      <div class="actions">
+        <app-button [props]="SubmitButton"/>
+        <app-button [props]="CancelButton"/>
+      </div>
+    </ng-template>
+    <ng-template appMainTopSection>
+      <div class="form-content">
+        <h2>Submission Details</h2>
+        <div class="form-inputs">
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>Title</p>
+              <span>What is the submission's title</span>
+            </div>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter Submission's Title"
+              formControlName="name"
+            />
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </app-dashboard-layout>
+</form>

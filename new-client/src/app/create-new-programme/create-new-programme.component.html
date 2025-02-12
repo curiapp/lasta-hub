@@ -1,0 +1,58 @@
+<form class="create-programme" [formGroup]="createProgrammeForm" (ngSubmit)="onSubmit()">
+  <app-nav-header/>
+  <app-dashboard-layout>
+    <ng-template appTopSection>
+      <h1>Create a new programme</h1>
+      <div class="actions">
+        <app-button [props]="SubmitButton"/>
+        <app-button [props]="CancelButton"/>
+      </div>
+    </ng-template>
+    <ng-template appMainTopSection>
+      <div class="form-content">
+        <h2>Programme Details</h2>
+        <div class="form-inputs">
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>Programme Code</p>
+              <span>What is the proposed programme code</span>
+            </div>
+            <input
+              type="text"
+              name="programmeCode"
+              id="programmeCode"
+              placeholder="Enter Programme Code"
+              formControlName="programmeCode"
+            />
+          </div>
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>Programme Title</p>
+              <span>What is the proposed programme title</span>
+            </div>
+            <input
+              type="text"
+              name="programmeTitle"
+              id="programmeTitle"
+              placeholder="Enter Programme Title"
+              formControlName="programmeTitle"
+            />
+          </div>
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>NQF Level</p>
+              <span>What is the NQF Level</span>
+            </div>
+            <input
+              type="number"
+              name="nqfLevel"
+              id="nqfLevel"
+              placeholder="Enter NQF Level"
+              formControlName="nqfLevel"
+            />
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </app-dashboard-layout>
+</form>

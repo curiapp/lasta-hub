@@ -1,0 +1,23 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+table thead th {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+  color: #535050;
+  font-size: medium;
+}
+table tbody tr {
+  border-bottom: 0.1px solid rgba(147, 147, 147, 0.3294117647);
+}
+table tbody tr td {
+  font-family: "Ropa Sans", Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+table th, table td {
+  text-align: start;
+  padding: 10px;
+}
+
+/*# sourceMappingURL=table.component.css.map */

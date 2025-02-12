@@ -1,0 +1,77 @@
+.cdc-pac {
+  height: 100vh;
+}
+.cdc-pac p, .cdc-pac h1, .cdc-pac h2, .cdc-pac h3, .cdc-pac h4, .cdc-pac h5, .cdc-pac h6 {
+  color: #0F2139;
+}
+.cdc-pac .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cdc-pac .header h2, .cdc-pac .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.cdc-pac .header h2 {
+  font-size: x-large;
+}
+.cdc-pac .header h3 {
+  font-size: large;
+}
+.cdc-pac .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.cdc-pac .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.cdc-pac .current-status .not-started {
+  font-family: "Ropa Sans", sans-serif;
+}
+.cdc-pac .current-status .date-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.cdc-pac .current-status .date-item svg {
+  width: 1.5rem;
+}
+.cdc-pac .current-status .date-item p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+.cdc-pac .stakeholders {
+  display: flex;
+  flex-direction: column;
+}
+.cdc-pac .all-stakeholders {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+.cdc-pac .all-stakeholders .stakeholder {
+  background-color: #B7C0E1;
+  display: grid;
+  flex-direction: column;
+  align-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.cdc-pac .all-stakeholders .stakeholder p {
+  margin: 0;
+  font-family: "Ropa Sans", sans-serif;
+}
+.cdc-pac .all-stakeholders .stakeholder .name {
+  font-size: medium;
+}
+.cdc-pac .all-stakeholders .stakeholder svg {
+  width: 1.5rem;
+}
+
+/*# sourceMappingURL=programme-development-cdc-pac.component.css.map */

@@ -1,0 +1,27 @@
+<div class="dashboard-layout">
+  @if (topSection) {
+    <div class="top">
+      <ng-container [ngTemplateOutlet]="topSection.templateRef"/>
+    </div>
+  }
+
+  <div class="main">
+    @if (mainTopSection) {
+      <div class="main-top">
+        <ng-container [ngTemplateOutlet]="mainTopSection.templateRef"/>
+      </div>
+    }
+
+    @if (leftSection) {
+      <div class="left">
+        <ng-container [ngTemplateOutlet]="leftSection.templateRef"/>
+      </div>
+    }
+
+    @if (rightSection) {
+      <div class="right">
+        <ng-container [ngTemplateOutlet]="rightSection.templateRef"/>
+      </div>
+    }
+  </div>
+</div>

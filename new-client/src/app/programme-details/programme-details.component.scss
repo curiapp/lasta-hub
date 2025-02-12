@@ -1,0 +1,44 @@
+.programme-details {
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      font-family: Manrope, sans-serif;
+      font-weight: lighter;
+    }
+  }
+
+  .programme-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .item{
+      display: grid;
+      grid-template-columns: 20% 80%;
+      border-radius: 0.625rem;
+      background: #F8F8F8;
+      box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.10);
+      align-items: center;
+      padding: 5px 20px;
+      p, span{
+        font-family: Manrope, sans-serif;
+      }
+
+      p{
+        font-size: medium;
+        margin: 0;
+      }
+
+      .right{
+        border-bottom: #101527 1px solid;
+        padding-bottom: 5px;
+      }
+    }
+  }
+
+}

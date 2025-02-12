@@ -1,0 +1,68 @@
+<div class="esc-benchmarking">
+  <div class="header">
+    <h2>PAC Consultation and Benchmarking</h2>
+    @if (!consultationAndBenchmarking){
+      <app-button [props]="ButtonProps"/>
+    }
+  </div>
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Final Draft</h3>
+      <app-button [props]="DraftButtonProps"/>
+    </div>
+    @if (!consultationAndBenchmarking){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Minutes</h3>
+      <app-button [props]="MinutesButtonProps"/>
+    </div>
+    @if (!consultationAndBenchmarking){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Endorsement Letters</h3>
+      <app-button [props]="EndorsementButtonProps"/>
+    </div>
+    @if (!consultationAndBenchmarking){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Comments</h3>
+      <app-button [props]="CommentsButtonProps"/>
+    </div>
+    @if (!consultationAndBenchmarking){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Benchmarking Reports</h3>
+      <app-button [props]="ReportsButtonProps"/>
+    </div>
+    @if (!consultationAndBenchmarking){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+</div>

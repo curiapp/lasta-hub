@@ -1,0 +1,38 @@
+.registration {
+  height: 100vh;
+}
+.registration p, .registration h1, .registration h2, .registration h3, .registration h4, .registration h5, .registration h6 {
+  color: #0F2139;
+}
+.registration .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.registration .header h2, .registration .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.registration .header h2 {
+  font-size: x-large;
+}
+.registration .header h3 {
+  font-size: large;
+}
+.registration .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.registration .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.registration .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=nqf-registration-registration.component.css.map */

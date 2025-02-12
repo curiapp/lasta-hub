@@ -1,0 +1,42 @@
+.overview {
+  position: relative;
+  h4{
+    color: #F8F8F8;
+    font-family: Manrope, sans-serif;
+  }
+  .overview-items{
+    display: flex;
+    gap: 3rem;
+    width: 100%;
+
+    .overview-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      svg {
+        width:35px;
+        height: 35px;
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+        color: #F8F8F8;
+        background-color: #101527;
+      }
+
+      div {
+        p {
+          margin: 0;
+          color: #F8F8F8;
+          font-size: 0.8rem;
+          font-family: Manrope, sans-serif;
+        }
+        span{
+          color: #F8F8F8;
+          font-size: 1.8rem;
+          font-family: "Ropa Sans", sans-serif;
+        }
+      }
+    }
+
+  }
+}

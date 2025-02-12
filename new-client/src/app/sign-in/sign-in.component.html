@@ -1,0 +1,52 @@
+<div class="sign-in">
+  <div class="sign-in-content">
+    <div class="sign-in-image">
+      <div class="header">
+        <img [src]="LogoPath" alt="Namibia University of Science and Technology" width="250">
+        <app-button [props]="ButtonProps"/>
+      </div>
+      <div class="footer">
+        <p>
+          Streamline Curriculum Development,
+        </p>
+        <p>
+          Maintenance, and Modernization.
+        </p>
+      </div>
+    </div>
+    <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+      <div class="form-header">
+        <h1>Sign into your account</h1>
+        <p>Welcome to PDQA - Let's get started</p>
+      </div>
+      <hr/>
+      <div class="form-body">
+        <div class="form-content">
+          <div class="inputs">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="regular-input"
+              placeholder="Email"
+              formControlName="email"
+            />
+
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="regular-input"
+              placeholder="Password"
+              formControlName="password"
+            />
+            <div class="forgot-password-text"><p>Forgot Password?</p></div>
+
+          </div>
+          <app-button [props]="SignInButtonProps"/>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

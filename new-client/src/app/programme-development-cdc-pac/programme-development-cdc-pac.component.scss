@@ -1,0 +1,92 @@
+.cdc-pac {
+  height: 100vh;
+  p, h1, h2, h3, h4, h5, h6{
+    color: #0F2139;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2, h3 {
+      font-family: Manrope, sans-serif;
+      font-weight: lighter;
+    }
+
+    h2 {
+      font-size: x-large;
+    }
+
+    h3 {
+      font-size: large;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+  }
+
+  .current-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .not-started {
+      font-family: "Ropa Sans", sans-serif;
+    }
+
+    .date-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      svg {
+        width: 1.5rem;
+      }
+
+      p {
+        font-family: "Ropa Sans", sans-serif;
+        font-size: 1.2rem;
+        margin: 0;
+      }
+    }
+  }
+
+  .stakeholders {
+    display: flex;
+    flex-direction: column;
+
+
+  }
+
+  .all-stakeholders {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+
+    .stakeholder {
+      background-color: #B7C0E1;
+      display: grid;
+      flex-direction: column;
+      align-content: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 5px;
+
+      p{
+        margin: 0;
+        font-family: "Ropa Sans", sans-serif;
+      }
+
+      .name{
+        font-size: medium;
+      }
+
+      svg{
+        width: 1.5rem;
+      }
+    }
+  }
+}

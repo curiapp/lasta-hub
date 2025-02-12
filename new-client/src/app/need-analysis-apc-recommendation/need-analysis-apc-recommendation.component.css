@@ -1,0 +1,38 @@
+.need-analysis-apc-recommendation {
+  height: 100vh;
+}
+.need-analysis-apc-recommendation p, .need-analysis-apc-recommendation h1, .need-analysis-apc-recommendation h2, .need-analysis-apc-recommendation h3, .need-analysis-apc-recommendation h4, .need-analysis-apc-recommendation h5, .need-analysis-apc-recommendation h6 {
+  color: #0F2139;
+}
+.need-analysis-apc-recommendation .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.need-analysis-apc-recommendation .header h2, .need-analysis-apc-recommendation .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.need-analysis-apc-recommendation .header h2 {
+  font-size: x-large;
+}
+.need-analysis-apc-recommendation .header h3 {
+  font-size: large;
+}
+.need-analysis-apc-recommendation .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.need-analysis-apc-recommendation .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.need-analysis-apc-recommendation .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=need-analysis-apc-recommendation.component.css.map */

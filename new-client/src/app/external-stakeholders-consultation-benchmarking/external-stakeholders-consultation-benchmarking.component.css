@@ -1,0 +1,38 @@
+.esc-benchmarking {
+  height: 100vh;
+}
+.esc-benchmarking p, .esc-benchmarking h1, .esc-benchmarking h2, .esc-benchmarking h3, .esc-benchmarking h4, .esc-benchmarking h5, .esc-benchmarking h6 {
+  color: #0F2139;
+}
+.esc-benchmarking .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.esc-benchmarking .header h2, .esc-benchmarking .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.esc-benchmarking .header h2 {
+  font-size: x-large;
+}
+.esc-benchmarking .header h3 {
+  font-size: large;
+}
+.esc-benchmarking .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.esc-benchmarking .benchmark-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.esc-benchmarking .benchmark-item p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=external-stakeholders-consultation-benchmarking.component.css.map */

@@ -1,0 +1,38 @@
+.esc-recommendation {
+  height: 100vh;
+}
+.esc-recommendation p, .esc-recommendation h1, .esc-recommendation h2, .esc-recommendation h3, .esc-recommendation h4, .esc-recommendation h5, .esc-recommendation h6 {
+  color: #0F2139;
+}
+.esc-recommendation .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.esc-recommendation .header h2, .esc-recommendation .header h3 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.esc-recommendation .header h2 {
+  font-size: x-large;
+}
+.esc-recommendation .header h3 {
+  font-size: large;
+}
+.esc-recommendation .header .actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.esc-recommendation .current-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.esc-recommendation .current-status p {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/*# sourceMappingURL=external-stakeholders-consultation-recommendations.component.css.map */

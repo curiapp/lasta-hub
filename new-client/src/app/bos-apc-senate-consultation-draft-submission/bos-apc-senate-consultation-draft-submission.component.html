@@ -1,0 +1,68 @@
+<div class="bos-final-draft">
+  <div class="header">
+    <h2>PAC Consultation and Benchmarking</h2>
+    @if (!finalDraftBOS){
+      <app-button [props]="ButtonProps"/>
+    }
+  </div>
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Support Letters</h3>
+      <app-button [props]="DraftButtonProps"/>
+    </div>
+    @if (!finalDraftBOS.letters){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>PAC Minutes</h3>
+      <app-button [props]="PACButtonProps"/>
+    </div>
+    @if (!finalDraftBOS.pacMinutes){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Benchmarking</h3>
+      <app-button [props]="BenchmarkingButtonProps"/>
+    </div>
+    @if (!finalDraftBOS.benchmarking){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Draft Document</h3>
+      <app-button [props]="DraftButtonProps"/>
+    </div>
+    @if (!finalDraftBOS.draftDocument){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+  <div class="benchmark-item">
+    <div class="header">
+      <h3>Checklist</h3>
+      <app-button [props]="ChecklistButtonProps"/>
+    </div>
+    @if (!finalDraftBOS.checklist){
+      <p>No submission</p>
+    } @else {
+
+    }
+  </div>
+
+</div>

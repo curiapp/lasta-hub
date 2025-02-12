@@ -1,0 +1,46 @@
+<form class="start-consultations" [formGroup]="startConsultationsForm" (ngSubmit)="onSubmit()">
+  <app-nav-header/>
+  <app-dashboard-layout>
+    <ng-template appTopSection>
+      <h1>Stakeholder's Consultation</h1>
+      <div class="actions">
+        <app-button [props]="SubmitButton"/>
+        <app-button [props]="CancelButton"/>
+      </div>
+    </ng-template>
+    <ng-template appMainTopSection>
+      <div class="form-content">
+        <h2>Programme Details</h2>
+        <div class="form-inputs">
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>Start Date</p>
+              <span>When did consultations start</span>
+            </div>
+            <input
+              type="date"
+              name="startDate"
+              id="startDate"
+              placeholder="Enter Start Date"
+              formControlName="startDate"
+            />
+          </div>
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>End Date</p>
+              <span>When did/will the consultations end</span>
+            </div>
+            <input
+              type="date"
+              name="endDate"
+              id="endDate"
+              placeholder="Enter End Date"
+              formControlName="endDate"
+            />
+          </div>
+
+        </div>
+      </div>
+    </ng-template>
+  </app-dashboard-layout>
+</form>

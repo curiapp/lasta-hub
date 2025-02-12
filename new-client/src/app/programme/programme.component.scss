@@ -1,0 +1,20 @@
+.programme-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  .programme-title {
+    font-size: 20px;
+    font-family: Alata, sans-serif;
+  }
+}
+
+.main-body {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  height: 100%;
+
+  .content {
+    padding: 1.875rem;
+  }
+}

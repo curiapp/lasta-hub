@@ -1,0 +1,37 @@
+.programme-details .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.programme-details .header h2 {
+  font-family: Manrope, sans-serif;
+  font-weight: lighter;
+}
+.programme-details .programme-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.programme-details .programme-content .item {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  border-radius: 0.625rem;
+  background: #F8F8F8;
+  box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.1);
+  align-items: center;
+  padding: 5px 20px;
+}
+.programme-details .programme-content .item p, .programme-details .programme-content .item span {
+  font-family: Manrope, sans-serif;
+}
+.programme-details .programme-content .item p {
+  font-size: medium;
+  margin: 0;
+}
+.programme-details .programme-content .item .right {
+  border-bottom: #101527 1px solid;
+  padding-bottom: 5px;
+}
+
+/*# sourceMappingURL=programme-details.component.css.map */

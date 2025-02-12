@@ -1,0 +1,40 @@
+h1 {
+  font-family: Alata, sans-serif;
+}
+
+.lecturer-programmes .header {
+  display: flex;
+  justify-content: space-between;
+}
+.lecturer-programmes .header h1 {
+  font-family: Manrope, sans-serif;
+  font-size: x-large;
+  font-weight: lighter;
+}
+.lecturer-programmes .header .actions {
+  display: flex;
+  gap: 10px;
+}
+.lecturer-programmes .programmes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.lecturer-programmes .programmes .programme {
+  background-color: #B7C0E1;
+  display: grid;
+  flex-direction: column;
+  align-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.lecturer-programmes .programmes .programme .programme-title, .lecturer-programmes .programmes .programme .status {
+  font-family: "Ropa Sans", sans-serif;
+  margin: 0;
+}
+.lecturer-programmes .programmes .programme .programme-title {
+  font-size: 18px;
+}
+
+/*# sourceMappingURL=dashboard.component.css.map */

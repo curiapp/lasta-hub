@@ -1,0 +1,47 @@
+<form class="programme-forms" [formGroup]="addStakeholderForm" (ngSubmit)="onSubmit()">
+  <app-nav-header/>
+  <app-dashboard-layout>
+    <ng-template appTopSection>
+      <h1>Stakeholder's Consultation</h1>
+      <h2>Stakeholders List</h2>
+      <div class="actions">
+        <app-button [props]="SubmitButton"/>
+        <app-button [props]="CancelButton"/>
+      </div>
+    </ng-template>
+    <ng-template appMainTopSection>
+      <div class="form-content">
+        <h2>Stakeholder Details</h2>
+        <div class="form-inputs">
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>Name</p>
+              <span>What is the stakeholder’s name</span>
+            </div>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter Stakeholder's Name"
+              formControlName="name"
+            />
+          </div>
+          <div class="form-input shadow">
+            <div class="label-info">
+              <p>Email Address</p>
+              <span>What is the stakeholder’s email address</span>
+            </div>
+            <input
+              type="email"
+              name="contact"
+              id="contact"
+              placeholder="Enter Email Address"
+              formControlName="contact"
+            />
+          </div>
+
+        </div>
+      </div>
+    </ng-template>
+  </app-dashboard-layout>
+</form>

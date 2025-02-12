@@ -1,0 +1,21 @@
+.circle {
+  display: flex; /* Changed to flex for better centering */
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F8F8;
+  margin: 10px;
+  border-radius: 50%;
+  width: 30px;
+  aspect-ratio: 1/1;
+}
+.circle .circle-inner {
+  color: #0F2139;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: Manrope, sans-serif;
+  font-weight: bold;
+  margin: 0; /* Remove default paragraph margin */
+}
+
+/*# sourceMappingURL=user-circle.component.css.map */
