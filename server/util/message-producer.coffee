@@ -21,6 +21,6 @@ exports.MessageProducer = class MessageProducer
             messageOptions =
                 topic: topicName
                 messages: messageStr
-                attributes: 2
+                attributes: 0
             @producer.send [messageOptions], (sendError, sendResult) ->
                 callback sendError, sendResult

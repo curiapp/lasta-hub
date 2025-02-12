@@ -6,6 +6,7 @@
 
 # define the execution environment
 execEnv = process.env.NODE_ENV || 'development'
+require('dotenv').config()
 
 # loading external libraries
 bodyParser           = require 'body-parser'
