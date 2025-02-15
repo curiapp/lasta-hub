@@ -16,7 +16,7 @@ exports.MessageQueueManager = class MessageQueueManager
 
     class _LocalMessageQueueManager
         constructor: ->
-            client = new kafka.KafkaClient()
+            client = new kafka.KafkaClient({kafkaHost: process.env.KAFKA_BROKER_HOST || "localhost:9092"})
             @msgProducer = new MessageProducer client
             @consummer = new MessageConsumer client, WorkerManager.getInstance()
 
