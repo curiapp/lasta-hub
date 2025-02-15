@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "local-app": {
+    "client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -12,14 +12,14 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "local-app",
+      "prefix": "client",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/client",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -32,27 +32,24 @@
               }
             ],
             "styles": [
+              "src/styles.scss",
               "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss",
               "node_modules/@fortawesome/fontawesome-free/scss/solid.scss",
               "node_modules/@fortawesome/fontawesome-free/scss/regular.scss",
-              "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
-              "src/styles.scss"
+              "node_modules/@fortawesome/fontawesome-free/scss/brands.scss"
             ],
             "scripts": [
               "node_modules/chart.js/dist/Chart.js",
               "node_modules/hammerjs/hammer.min.js"
             ],
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "server": "src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "server.ts"
+            }
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -65,6 +62,12 @@
                   "maximumError": "4kB"
                 }
               ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all"
             },
@@ -73,16 +76,17 @@
               "extractLicenses": false,
               "sourceMap": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "local-app:build:production"
+              "buildTarget": "client:build:production"
             },
             "development": {
-              "buildTarget": "local-app:build:development"
+              "buildTarget": "client:build:development"
             }
           },
           "defaultConfiguration": "development"
