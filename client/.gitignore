@@ -10,6 +10,7 @@
 
 # dependencies
 /node_modules
+/test-single-machine/local-app/node_modules/
 
 # profiling files
 chrome-profiler-events.json
