@@ -15,6 +15,21 @@ Below are some of the functionality the application must fulfil:
 ## Contributors
 coming soon...
 
+## Build and Run Images
+**Frontend**
+```powershell
+docker build -f Dockerfile.frontend -t pdqa-frontend .
+
+docker run -d pdqa-frontend
+```
+
+**Backend**
+```powershell
+docker build -f Dockerfile.backend -t pdqa-backend .
+
+docker run -e KAFKA_BROKER_HOST=host.docker.internal:9092 -p 4931:4931 pdqa-backend
+```
+
 ## License
 to be determined...
 
