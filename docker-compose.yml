@@ -1,0 +1,16 @@
+version: "3.9" 
+
+services:
+  client:
+    build: 
+      context: ./client  # Specify the context for building app1's image
+    ports:
+      - "8080:80"  # Map host port 8080 to container port 3000
+    depends_on:
+      - server  # Ensure app2 starts before app1 (if needed)
+
+  server:
+    build: 
+      context: ./server  # Specify the context for building app2's image
+    ports:
+      - "8081:4931"  # Map host port 8081 to container port 5000

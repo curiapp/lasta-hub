@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "dev": "ng serve",
+    "dev": "vite",
     "start": "ng serve",
     "build:ssr": "ng build && ng run local-app:server",
     "watch": "ng build --watch --configuration development",
@@ -48,6 +48,7 @@
     "zone.js": "~0.14.10"
   },
   "devDependencies": {
+    "@analogjs/platform": "^1.13.0",
     "@angular-devkit/build-angular": "^18.2.6",
     "@angular/cli": "^18.2.6",
     "@angular/compiler-cli": "^18.2.0",

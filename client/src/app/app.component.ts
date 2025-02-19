@@ -37,7 +37,7 @@ export class AppComponent {
       });
   }
   loggedIn() {
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    let currentUser = JSON.parse(localStorage?.getItem('currentUser'));
     if (currentUser == null) {
       return false;
     } else {
