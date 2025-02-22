@@ -15,12 +15,11 @@ const URL = '/api/need-analysis/survey';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'endconsult',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'end-consult.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'endconsult',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'end-consult.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class EndConsultComponent implements OnInit {
   model: any = {};

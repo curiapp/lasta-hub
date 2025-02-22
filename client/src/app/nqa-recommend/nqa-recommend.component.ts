@@ -9,11 +9,9 @@ const URL = '/api/nqa/recommend';
 
 //create the component properties
 @Component({
-  selector: 'nqa-recommend',
-  standalone: true,
-  templateUrl: 'nqa-recommend.component.html',
-  imports: [FormsModule, FileUploadModule]
-
+    selector: 'nqa-recommend',
+    templateUrl: 'nqa-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class NQARecommendComponent implements OnInit {
   model: any = {};

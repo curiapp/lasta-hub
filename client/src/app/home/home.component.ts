@@ -6,11 +6,10 @@ import { CourseInProgressComponent } from "../course-in-progress/course-in-progr
 import { CourseRecentlyApprovedComponent } from "../course-recently-approved/course-recently-approved.component";
 
 @Component({
-  selector: 'home',
-  standalone: true,
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  imports: [RouterModule, FormsModule, CourseDueForReviewComponent, CourseInProgressComponent, CourseRecentlyApprovedComponent]
+    selector: 'home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    imports: [RouterModule, FormsModule, CourseDueForReviewComponent, CourseInProgressComponent, CourseRecentlyApprovedComponent]
 })
 export class HomeComponent implements OnInit {
   username: string;

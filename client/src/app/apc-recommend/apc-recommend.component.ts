@@ -10,11 +10,10 @@ const URL = '/api/bos-senate/apc-recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'apc-recommend',
-  standalone: true,
-  templateUrl: 'apc-recommend.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'apc-recommend',
+    templateUrl: 'apc-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class ApcRecommendComponent implements OnInit {
   model: any = {};

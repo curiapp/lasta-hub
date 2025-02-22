@@ -11,11 +11,10 @@ const URL = '/api/bos-senate/other-faculty-recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'other-faculty-bos',
-  standalone: true,
-  templateUrl: 'other-faculty-bos.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'other-faculty-bos',
+    templateUrl: 'other-faculty-bos.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class OtherFacultyBosComponent implements OnInit {
   model: any = {};

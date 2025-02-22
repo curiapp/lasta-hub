@@ -10,12 +10,11 @@ const URL = '/api/consultations/pac/consult';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'curriculum-dev-pac-consult',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'curriculum-dev-pac-consult.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'curriculum-dev-pac-consult',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'curriculum-dev-pac-consult.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class CurriculumDevPACConsultComponent implements OnInit {
   model: any = {};

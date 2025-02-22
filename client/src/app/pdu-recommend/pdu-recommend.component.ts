@@ -9,11 +9,10 @@ const URL = '/api/nqa/pdu-recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'pdu-recommend',
-  standalone: true,
-  templateUrl: 'pdu-recommend.component.html',
-  imports: [FormsModule, FileUploadModule ]
+    //define the element to be selected from the html structure.
+    selector: 'pdu-recommend',
+    templateUrl: 'pdu-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class PduRecommendComponent implements OnInit {
   model: any = {};

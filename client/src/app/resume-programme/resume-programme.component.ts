@@ -4,11 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
 @Component({
-  selector: 'resume',
-  standalone: true,
-  templateUrl: './resume-programme.component.html',
-  styleUrls: ['./resume-programme.component.scss'],
-  imports: [FormsModule, FileUploadModule, NgClass]
+    selector: 'resume',
+    templateUrl: './resume-programme.component.html',
+    styleUrls: ['./resume-programme.component.scss'],
+    imports: [FormsModule, FileUploadModule, NgClass]
 })
 export class ResumeProgrammeComponent implements OnInit {
 

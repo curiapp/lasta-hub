@@ -11,14 +11,13 @@ import { Router } from '@angular/router';
 //          LocationStrategy, HashLocationStrategy,} from '@angular/router';
 
 @Component({
-  //moduleId: module.id,
-  selector: 'StartNeedAnalysis',
-  standalone: true,
-  templateUrl: 'start-need-analysis.component.html',
-  //styleUrls: ['about-us.component.css']
-  providers: [StartNeedAnalysisService],
-  imports: [FormsModule]
-  //directives: [ ]
+    //moduleId: module.id,
+    selector: 'StartNeedAnalysis',
+    templateUrl: 'start-need-analysis.component.html',
+    //styleUrls: ['about-us.component.css']
+    providers: [StartNeedAnalysisService],
+    imports: [FormsModule]
+    //directives: [ ]
 })
 
 export class StartNeedAnalysisComponent implements OnInit {

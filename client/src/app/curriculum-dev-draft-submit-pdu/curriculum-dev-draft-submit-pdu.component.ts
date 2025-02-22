@@ -9,11 +9,9 @@ import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
 @Component({
-  selector: 'curriculum-dev-draft-submit-pdu',
-  standalone: true,
-  templateUrl: 'curriculum-dev-draft-submit-pdu.component.html',
-  imports: [FormsModule, FileUploadModule]
-
+    selector: 'curriculum-dev-draft-submit-pdu',
+    templateUrl: 'curriculum-dev-draft-submit-pdu.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 
 export class CurriculumDevDraftSubmitPDUComponent {

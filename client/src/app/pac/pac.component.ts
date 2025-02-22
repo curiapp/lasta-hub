@@ -7,10 +7,9 @@ import { FileUploadModule } from 'ng2-file-upload';
 
 
 @Component({
-  selector: 'pac',
-  standalone: true,
-  templateUrl: 'pac.component.html',
-  imports: [FormsModule, FileUploadModule]
+    selector: 'pac',
+    templateUrl: 'pac.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 
 export class PacComponent implements OnInit {

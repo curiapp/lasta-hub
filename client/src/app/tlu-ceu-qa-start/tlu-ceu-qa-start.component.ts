@@ -14,11 +14,10 @@ const URL = '/api/reviews/start';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'tlu-ceu-qa-start',
-  standalone: true,
-  templateUrl: 'tlu-ceu-qa-start.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'tlu-ceu-qa-start',
+    templateUrl: 'tlu-ceu-qa-start.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class TLUCEUQAStartComponent implements OnInit {
   model: Model = new Model();

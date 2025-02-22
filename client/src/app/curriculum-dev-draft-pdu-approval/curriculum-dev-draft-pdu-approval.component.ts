@@ -9,11 +9,10 @@ const URL = '/api/curriculum-development/draft/validate';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'curriculum-dev-draft-pdu-approval',
-  standalone: true,
-  templateUrl: 'curriculum-dev-draft-pdu-approval.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'curriculum-dev-draft-pdu-approval',
+    templateUrl: 'curriculum-dev-draft-pdu-approval.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class CurriculumDevDraftPDUApprovComponent implements OnInit {
   model: any = {};

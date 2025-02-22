@@ -9,11 +9,10 @@ const URL = '/api/bos-senate/final-senate';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'final-senate-recommend',
-  standalone: true,
-  templateUrl: 'final-senate-recommend.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'final-senate-recommend',
+    templateUrl: 'final-senate-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class FinalSenateRecommendComponent implements OnInit {
   model: any = {};

@@ -10,11 +10,10 @@ const URL = '/api/nqa/preparation';
 
 // create the component properties
 @Component({
-  // define the element to be selected from the html structure.
-  selector: 'nqa-preparation',
-  standalone: true,
-  templateUrl: 'nqa-preparation.component.html',
-  imports: [FormsModule, FileUploadModule]
+    // define the element to be selected from the html structure.
+    selector: 'nqa-preparation',
+    templateUrl: 'nqa-preparation.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class NqaPreparationComponent implements OnInit {
   model: any = {};

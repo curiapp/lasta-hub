@@ -8,10 +8,9 @@ import { SenateSubmitService } from '../services/senate-submit.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'senate-submit-final',
-  standalone: true,
-  templateUrl: 'senate-submit-final.component.html',
-  imports: [FormsModule]
+    selector: 'senate-submit-final',
+    templateUrl: 'senate-submit-final.component.html',
+    imports: [FormsModule]
 })
 
 export class SenateSubmitFinalComponent implements OnInit {

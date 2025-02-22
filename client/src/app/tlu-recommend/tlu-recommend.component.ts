@@ -9,11 +9,10 @@ const URL = '/api/reviews/recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'tlu-recommend',
-  standalone: true,
-  templateUrl: 'tlu-recommend.component.html',
-  imports: [FormsModule, FileUploadModule ],
+    //define the element to be selected from the html structure.
+    selector: 'tlu-recommend',
+    templateUrl: 'tlu-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class TLURecommendComponent implements OnInit {
   model: any = {};

@@ -9,11 +9,10 @@ const URL = '/api/reviews/recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'coll-recommend',
-  standalone: true,
-  templateUrl: 'coll-recommend.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'coll-recommend',
+    templateUrl: 'coll-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class COLLRecommendComponent implements OnInit {
   model: any = {};

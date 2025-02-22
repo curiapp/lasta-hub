@@ -9,10 +9,9 @@ import { BoSSubmitService } from '../services/bos-submit.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'bos-submit-final',
-  standalone: true,
-  templateUrl: 'bos-submit-final.component.html',
-  imports:[FormsModule,FileUploadModule]
+    selector: 'bos-submit-final',
+    templateUrl: 'bos-submit-final.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 
 export class BosSubmitFinalComponent implements OnInit {

@@ -9,10 +9,9 @@ import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
 @Component({
-  selector: 'senatesubmit',
-  standalone: true,
-  templateUrl: 'senate-submit.component.html',
-  imports: [FormsModule, FileUploadModule]
+    selector: 'senatesubmit',
+    templateUrl: 'senate-submit.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 
 export class SenateSubmitComponent implements OnInit {

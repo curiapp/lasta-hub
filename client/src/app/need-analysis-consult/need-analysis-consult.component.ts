@@ -12,11 +12,10 @@ const URL = '/api/need-analysis/consult';
 
 //create the component properties
 @Component({
-  selector: 'NeedAnalysisConsult',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'need-analysis-consult.component.html',
-  imports: [FormsModule, FileUploadModule]
+    selector: 'NeedAnalysisConsult',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'need-analysis-consult.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class NeedAnalysisConsultationComponent implements OnInit {
   model: any = {};

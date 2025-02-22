@@ -12,12 +12,11 @@ const URL = '/api/need-analysis/apc/recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'apc',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'apc.component.html',
-  imports: [SharedModule]
+    //define the element to be selected from the html structure.
+    selector: 'apc',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'apc.component.html',
+    imports: [SharedModule]
 })
 export class ApcComponent implements OnInit {
   model: any = {};

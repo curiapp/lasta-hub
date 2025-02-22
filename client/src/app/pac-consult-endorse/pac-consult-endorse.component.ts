@@ -14,12 +14,11 @@ const URL = '/api/consultations/pac/endorse';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'pac-consult-endorse',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'pac-consult-endorse.component.html',
-  imports: [FileUploadModule, FormsModule]
+    //define the element to be selected from the html structure.
+    selector: 'pac-consult-endorse',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'pac-consult-endorse.component.html',
+    imports: [FileUploadModule, FormsModule]
 })
 export class PacConsultEndorseComponent implements OnInit {
   model: any = {};

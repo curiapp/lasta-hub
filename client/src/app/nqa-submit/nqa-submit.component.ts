@@ -9,11 +9,10 @@ const URL = '/api/nqa/submit';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'nqa-submit',
-  standalone: true,
-  templateUrl: 'nqa-submit.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'nqa-submit',
+    templateUrl: 'nqa-submit.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class NqaSubmitComponent implements OnInit {
   model: any = {};

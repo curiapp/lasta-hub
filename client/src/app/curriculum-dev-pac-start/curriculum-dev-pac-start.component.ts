@@ -12,11 +12,9 @@ const URL = '/api/consultations/pac/start';
 @Component({
     //define the element to be selected from the html structure.
     selector: 'curriculum-dev-pac-start',
-    standalone: true,
     //location of our template rather than writing inline templates.
     templateUrl: 'curriculum-dev-pac-start.component.html',
     imports: [FormsModule, FileUploadModule]
-
 })
 export class CurriculumDevPACStartComponent implements OnInit {
     model:any={};

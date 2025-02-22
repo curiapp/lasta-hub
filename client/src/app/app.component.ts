@@ -5,11 +5,10 @@ import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, Ro
 import { filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, RouterLink, RouterLinkActive]
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive]
 })
 export class AppComponent {
   title = 'PDU - Home'

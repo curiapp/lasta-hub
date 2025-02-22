@@ -13,14 +13,11 @@ const URL = '/api/bos-senate/faculty-bos-recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'faculty-bos-final',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'faculty-bos-final.component.html',
-  imports: [FormsModule, FileUploadModule]
-
-
+    //define the element to be selected from the html structure.
+    selector: 'faculty-bos-final',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'faculty-bos-final.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class FacultyBosFinalComponent implements OnInit {
   model: any = {};

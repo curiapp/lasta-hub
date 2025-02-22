@@ -8,11 +8,10 @@ const URL = '/api/reviews/recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'ceu-recommend',
-  standalone: true,
-  templateUrl: 'ceu-recommend.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'ceu-recommend',
+    templateUrl: 'ceu-recommend.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class CEURecommendComponent implements OnInit {
   model: any = {};

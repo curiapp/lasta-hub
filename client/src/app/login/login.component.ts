@@ -7,11 +7,10 @@ import { FileUploadModule } from 'ng2-file-upload';
 //import { triggerAsyncId } from 'async_hooks';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, FileUploadModule]
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    imports: [FormsModule, FileUploadModule]
 })
 export class LoginComponent implements OnInit {
 

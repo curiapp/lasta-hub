@@ -11,12 +11,11 @@ const URL = '/api/curriculum-development/draft/revise';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'curriculum-Revise',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'curriculum-dev-draft-revise.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'curriculum-Revise',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'curriculum-dev-draft-revise.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class CurriculumDevDraftReviseComponent implements OnInit {
   model: any = {};

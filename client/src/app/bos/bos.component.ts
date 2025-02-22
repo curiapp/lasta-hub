@@ -10,12 +10,11 @@ const URL = '/api/need-analysis/bos/recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'bos',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'bos.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'bos',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'bos.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class BosComponent implements OnInit {
   model: any = {};

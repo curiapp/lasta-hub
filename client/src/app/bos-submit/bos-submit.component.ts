@@ -8,10 +8,9 @@ import { BoSSubmitService } from '../services/bos-submit.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'bossubmit',
-  standalone: true,
-  templateUrl: 'bos-submit.component.html',
-  imports: [FormsModule, FileUploadModule]
+    selector: 'bossubmit',
+    templateUrl: 'bos-submit.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 
 export class BosSubmitComponent {

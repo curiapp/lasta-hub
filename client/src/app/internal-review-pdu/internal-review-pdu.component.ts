@@ -9,11 +9,10 @@ import { FormsModule } from '@angular/forms';
 const URL = '/api/reviews/recommend';
 
 @Component({
-  selector: 'app-internal-review-pdu',
-  standalone: true,
-  templateUrl: './internal-review-pdu.component.html',
-  styleUrls: ['./internal-review-pdu.component.scss'],
-  imports: [FormsModule, FileUploadModule]
+    selector: 'app-internal-review-pdu',
+    templateUrl: './internal-review-pdu.component.html',
+    styleUrls: ['./internal-review-pdu.component.scss'],
+    imports: [FormsModule, FileUploadModule]
 })
 export class InternalReviewPduComponent implements OnInit {
 

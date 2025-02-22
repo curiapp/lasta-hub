@@ -12,11 +12,10 @@ const URL = '/api/nqa/register';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'nqa-req',
-  standalone: true,
-  templateUrl: 'nqa-reg.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'nqa-req',
+    templateUrl: 'nqa-reg.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class NQARegComponent implements OnInit {
   model: any = {};

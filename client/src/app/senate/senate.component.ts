@@ -11,11 +11,10 @@ const URL = '/api/need-analysis/senate/recommend';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'senate',
-  standalone: true,
-  templateUrl: 'senate.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'senate',
+    templateUrl: 'senate.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class SenateComponent implements OnInit {
   model: any = {};

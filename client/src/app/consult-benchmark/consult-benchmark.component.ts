@@ -9,12 +9,11 @@ const URL = '/api/consultations/benchmark';
 
 //create the component properties
 @Component({
-  //define the element to be selected from the html structure.
-  selector: 'consult-benchmark',
-  standalone: true,
-  //location of our template rather than writing inline templates.
-  templateUrl: 'consult-benchmark.component.html',
-  imports: [FormsModule, FileUploadModule]
+    //define the element to be selected from the html structure.
+    selector: 'consult-benchmark',
+    //location of our template rather than writing inline templates.
+    templateUrl: 'consult-benchmark.component.html',
+    imports: [FormsModule, FileUploadModule]
 })
 export class ConsultBenchmarkComponent implements OnInit {
   model: any = {};
