@@ -7,7 +7,7 @@ import {ShortSummaryService} from '../services/short-summary.service';
     selector: 'course-in-progress',
     standalone: true,
     templateUrl: 'course-in-progress.component.html',
-    styleUrls: ['course-in-progress.component.css']
+    styleUrls: ['course-in-progress.component.scss']
 })
 
 export class CourseInProgressComponent implements OnInit{

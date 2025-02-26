@@ -7,7 +7,7 @@ import {ShortSummaryService} from '../services/short-summary.service';
     selector: 'course-recently-approved',
     standalone: true,
     templateUrl: 'course-recently-approved.component.html',
-    styleUrls: ['course-recently-approved.component.css']
+    styleUrls: ['course-recently-approved.component.scss']
 })
 
 export class CourseRecentlyApprovedComponent implements OnInit{

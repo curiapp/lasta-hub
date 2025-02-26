@@ -1,11 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 
 $Blue: #1b2c5d;
 $Yellow: #fcaf17;
 $Red: #da2128;
+
+
+body{
+  font-family: "Manrope", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
 
 /* You can add global styles to this file, and also import other style files */
 html,
@@ -13,6 +20,7 @@ body,
 .view {
   height: 100%;
 }
+
 
 /* Full Page Carousel itself*/
 .carousel {
@@ -22,12 +30,6 @@ body,
     .carousel .carousel-inner .carousel-item,
     .carousel .carousel-inner .active {
       height: 100%; }
-
-/* Navbar animation */
-.navbar{
-  margin-bottom: 60px;}
-.navbar {
-  background-color: rgba(0, 0, 0, 0.2); }
 
 .top-nav-collapse {
   background-color: #1C2331; }

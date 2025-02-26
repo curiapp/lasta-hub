@@ -39,13 +39,12 @@
               "node_modules/@fortawesome/fontawesome-free/scss/brands.scss"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/chart.js",
               "node_modules/hammerjs/hammer.min.js"
             ],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "outputMode": "server",
             "ssr": {
-              "entry": "server.ts"
+              "entry": "src/server.ts"
             }
           },
           "configurations": {
@@ -112,18 +111,6 @@
               "src/styles.scss"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }

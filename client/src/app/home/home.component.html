@@ -1,17 +1,15 @@
-<!--Carousel Wrapper-->
-<!-- mdb-carousel -->
-<!-- <div [isControls]="true" class="carousel slide m-0" [animation]="'slide'"> -->
-<div class="carousel w-full h-screen">
+<div class="carousel w-full">
   <div id="slide1" class="carousel-item relative w-full">
-
-    <video class="video-fluid w-full h-full border" autoplay loop>
+    <video class="video-fluid w-full h-full" autoplay loop>
       <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
     </video>
+
     <!--Caption-->
-    <div class="carousel-caption flex-center absolute  z-20">
+    <div
+      class="carousel-caption text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
       <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
-        <h3 class="text-2xl font-bold"> Welcome to Programme Development Application</h3>
-        <p class="text-center">
+        <h3 class="text-3xl font-bold"> Welcome to Programme Development Application</h3>
+        <p class="text-center font-thin">
           The Programme Development (PD) App is a centralised digitalised solution,
           encompassing curriculum management, development, maintenance, and modernisation
           of the curriculum through processes of ideation, reviews and approvals leading
@@ -23,183 +21,57 @@
           stakeholders such industry, professional bodies and other universities.
         </p>
         <div class="flex gap-2">
-          <a routerLink='/about-us' class="btn btn-outline">Learn about PDU</a>
+          <a routerLink='/about-us' class="btn btn-outline text-white">Learn about PDU</a>
           <a routerLink='/login' [hidden]="loggedIn()" class="btn btn-secondary"> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
         </div>
       </div>
     </div>
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-      <a href="#slide4" class="btn btn-circle">❮</a>
+      <a href="#slide2" class="btn btn-circle">❮</a>
       <a href="#slide2" class="btn btn-circle">❯</a>
     </div>
   </div>
-  <div id="slide2" class="carousel-item relative w-full">
-    <img src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp" class="w-full" />
 
+  <div id="slide2" class="carousel-item relative w-full">
+    <video class="video-fluid w-full h-full border" autoplay loop>
+      <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
+    </video>
+
+    <!--Caption-->
+    <div
+      class="carousel-caption text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
+      <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
+        <h3 class="text-3xl font-bold">Welcome to the PDQA</h3>
+        <p class="text-center font-thin">
+          The Department of Programme Development and Quality Assurance is responsible for leading, coordinating and
+          managing all programme development activities (both new and revised programmes) up to the point of
+          registration of the resultant qualifications on the National Qualifications Framework (NQF)
+        </p>
+        <div class="flex gap-2">
+          <a routerLink='/about-us' class="btn btn-outline text-white">Learn about PDU</a>
+          <a routerLink='/login' [hidden]="loggedIn()" class="btn btn-secondary"> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
+        </div>
+      </div>
+    </div>
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide1" class="btn btn-circle">❮</a>
-      <a href="#slide3" class="btn btn-circle">❯</a>
-    </div>
-  </div>
-  <div id="slide3" class="carousel-item relative w-full">
-    <img src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp" class="w-full" />
-    <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-      <a href="#slide2" class="btn btn-circle">❮</a>
-      <a href="#slide4" class="btn btn-circle">❯</a>
-    </div>
-  </div>
-  <div id="slide4" class="carousel-item relative w-full">
-    <img src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp" class="w-full" />
-    <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-      <a href="#slide3" class="btn btn-circle">❮</a>
       <a href="#slide1" class="btn btn-circle">❯</a>
     </div>
   </div>
+
 </div>
 
-<div>
-  <!--First slide-->
-  <!-- mdb-carousel-item -->
-  <div>
-    <!--Mask color-->
-    <div class="view">
-      <!--Video source-->
-      <video class="video-fluid" autoplay loop>
-        <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
-      </video>
-      <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
-    </div>
+<!-- <video class="video-fluid" autoplay loop>
+  <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
+</video>
 
-    <!--Caption-->
-    <div class="carousel-caption flex-center">
-      <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
-        <h3 class="text-2xl font-bold"> Welcome to Programme Development Application</h3>
-        <p class="text-center">
-          The Programme Development (PD) App is a centralised digitalised solution,
-          encompassing curriculum management, development, maintenance, and modernisation
-           of the curriculum through processes of ideation, reviews and approvals leading
-            to registration of qualifications on the NQF. More so, the app is designed to 
-            keep records of the stages through which a programme is subjected to. 
-             The app is designed such that it send out reminders on the status quo e.g on
-              the scheduled review date for existing programmes while keeping all the 
-              communication between the department and PDQA as well as with other 
-              stakeholders such industry, professional bodies and other universities. 
-        </p>
-        <a routerLink='/about-us' mdbBtn color="white" outline="true" class="wow fadeInLeft waves-light"
-          data-wow-delay="0.3s" mdbWavesEffect>Learn about PDQA</a>
-        <a routerLink='/login' [hidden]="loggedIn()" mdbBtn color="success" class="wow fadeInLeft waves-light"
-          data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
+<video class="video-fluid" autoplay loop>
+  <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
+</video> -->
 
-      </div>
-    </div>
-    <!--Caption-->
-  </div>
-  <!--/First slide-->
-  <!--Second slide-->
-  <div>
-    <!--Mask color-->
-    <div class="view">
-      <!--Video source-->
-      <video class="video-fluid" autoplay loop>
-        <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
-      </video>
-      <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
-    </div>
-
-    <!--Caption-->
-    <div class="carousel-caption flex-center">
-      <div class="animated fadeInDown">
-        <h3 class="h3-responsive">Welcome to the PDQA</h3>
-        <p>
-          The Department of Programme Development and Quality Assurance is responsible for leading, coordinating and managing all programme development
-          activities (both new and revised programmes) up to the point of registration of the resultant qualifications
-          on the National Qualifications Framework (NQF)
-        </p>
-        <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light"
-          data-wow-delay="0.3s" mdbWavesEffect>Learn about PDQA</a>
-        <a mdbBtn routerLink='/login' [hidden]="loggedIn()" color="success" class="wow fadeInLeft waves-light"
-          data-wow-delay="0.3s" mdbWavesEffect> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
-      </div>
-    </div>
-    <!--Caption-->
-  </div>
-  <!--/Second slide-->
-  <!--Third slide-->
-  <div>
-    <!--Mask color-->
-    <div class="view">
-      <!--Video source-->
-      <video class="video-fluid" autoplay loop>
-        <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
-      </video>
-      <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
-    </div>
-
-    <!--Caption-->
-    <div class="carousel-caption flex-center">
-      <div class="animated fadeInDown">
-        <h3 class="h3-responsive">Welcome to the PDQA</h3>
-        <p>
-          The Department of Programme Development and Quality Assurance is responsible for leading, coordinating and managing all programme development
-          activities (both new and revised programmes) up to the point of registration of the resultant qualifications
-          on the National Qualifications Framework (NQF)
-        </p>
-        <a mdbBtn routerLink='/about-us' color="white" outline="true" class="wow fadeInLeft waves-light"
-          data-wow-delay="0.3s" mdbWavesEffect>Learn about PDQA</a>
-        <a mdbBtn routerLink='/login' [hidden]="loggedIn()" color="success" class="wow fadeInLeft waves-light"
-          data-wow-delay="0.3s" mdbWavesEffect [hidden]="loggedIn()"> &nbsp;&nbsp;Login&nbsp;&nbsp;</a>
-      </div>
-    </div>
-    <!--Caption-->
-  </div>
-  <!--/Third slide-->
-</div>
-
-
-
-<!--Carousel Wrapper-->
-<!-- <section class="page-section pt-5" id="services">
-  <div class="container">
-    <div class="text-center">
-      <h2 class="section-heading text-uppercase">PDQA Services</h2>
-      <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
-    </div>
-    <div class="row text-center">
-      <div class="col-md-4">
-        <span class="fa-stack fa-4x">
-          <i class="fas fa-circle fa-stack-2x text-muted"></i>
-          <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
-        </span>
-        <h4 class="my-3">Programme Development</h4>
-        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto
-          quo inventore harum ex magni, dicta impedit.</p>
-      </div>
-      <div class="col-md-4">
-        <span class="fa-stack fa-4x">
-          <i class="fas fa-circle fa-stack-2x text-muted"></i>
-          <i class="fas fa-history fa-stack-1x fa-inverse"></i>
-        </span>
-        <h4 class="my-3">Programme Review</h4>
-        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto
-          quo inventore harum ex magni, dicta impedit.</p>
-      </div>
-      <div class="col-md-4">
-        <span class="fa-stack fa-4x">
-          <i class="fas fa-circle fa-stack-2x text-muted"></i>
-          <i class="fas fa-clipboard-check fa-stack-1x fa-inverse"></i>
-        </span>
-        <h4 class="my-3">Programme registration</h4>
-        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto
-          quo inventore harum ex magni, dicta impedit.</p>
-      </div>
-    </div>
-  </div>
-</section> -->
-<!-- hidden div, only shows if logged on -->
-<div class="container-fluid mx-auto bg-warning" [hidden]="true">
-  <hr>
+<div class="container-fluid mx-auto bg-warning" [hidden]="false">
   <div class="row">
     <div class="col-sm-12">
       <div class="row">
@@ -252,23 +124,47 @@
     </div>
   </div>
 </div>
-<div class="container-fluid bg-light pt-5 pb-5">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="row">
-        <div class="col-md-4 bg-muted">
+
+
+<div class="my-4 py-10 container mx-auto grid justify-center">
+
+  <!-- <div class="col-md-4 bg-muted">
           <course-due-for-review></course-due-for-review>
-        </div>
+        </div> -->
 
-        <div class="col-md-4">
-          <course-in-progress></course-in-progress>
-        </div>
-
-        <div class="col-md-4">
-          <course-recently-approved></course-recently-approved>
-        </div>
+  <div class="stats shadow">
+    <div class="stat">
+      <div class="stat-figure text-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          class="inline-block h-8 w-8 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
       </div>
+      <div class="stat-title">In Progress</div>
+      <div class="stat-value">2</div>
     </div>
+
+    <div class="stat">
+      <div class="stat-figure text-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          class="inline-block h-8 w-8 stroke-current">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+          </path>
+        </svg>
+      </div>
+      <div class="stat-title">Recently Approved</div>
+      <div class="stat-value">4,200</div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <course-in-progress></course-in-progress>
+  </div>
+
+  <div class="col-md-4">
+    <course-recently-approved></course-recently-approved>
   </div>
 
 </div>

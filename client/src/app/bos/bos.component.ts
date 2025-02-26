@@ -6,6 +6,7 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient as Http } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+
 const URL = '/api/need-analysis/bos/recommend';
 
 //create the component properties

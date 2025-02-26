@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { UserAuthenticationService } from '../services/authentication.service';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 //import { triggerAsyncId } from 'async_hooks';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    imports: [FormsModule, FileUploadModule]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  imports: [FormsModule, RouterLink]
 })
 export class LoginComponent implements OnInit {
 
@@ -25,6 +25,8 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     console.log("started auth services")
+    console.log("Username ", this.model.username)
+    console.log("Password ", this.model.password)
     this.authService.login(this.model.username, this.model.password)
       .subscribe(
         data => {

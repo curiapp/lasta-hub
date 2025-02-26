@@ -1,30 +1,59 @@
-<div class="container" style="padding-top:70px">
-  <div class="row justify-content-md-center">
-    <div class="col-md-6 col-md-offset-3">
-      <div class="login-wrapper">
-        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-          <h3 class="form-title-label">Please Sign In</h3>
-          <hr class="colorgraph">
-          <br>
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input id="username" type="text" class="form-control" required [(ngModel)]="model.username" name="username"
-              #usern="ngModel">
-            <div [hidden]="usern.valid" class="alert alert-danger">Username is required</div>
+<div class="sm:px-6 lg:px-8 min-h-screen bg-gradient-to-b from-[#657283] to-[#38485D]">
+
+  <div class="max-w-screen-xl px-4 !pb-16 mx-auto grid place-items-center h-screen">
+    <div class="h-[60%] flex justify-center items-center gap-10 w-full">
+
+      <div class="max-w-sm login-bg rounded-md w-full h-full relative">
+
+        <div
+          class="top-0 left-0 w-full h-full flex-grow bg-gradient-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
+
+          <div class="flex justify-between items-start flex-grow">
+            <img class="h-8" src="assets/logo-white.png" alt="NUST Logo">
+            <a routerLink="/home" class="btn btn-sm border-none text-white bg-slate-500/20">Back to Website &rarr;</a>
           </div>
-          <div class="form-group">
-            <label for="username">Password</label>
-            <input id="password" type="password" class="form-control" required [(ngModel)]="model.password"
-              name="password" #pwd="ngModel">
-            <div [hidden]="pwd.valid" class="alert alert-danger">Password is required</div>
+
+          <div class="my-3">
+            <p class="text-white text-center w-64 font-thin mx-auto">Streamline Curriculum Development, Maintenance, and
+              Modernization</p>
           </div>
-          <br>
-          <div class="form-group">
-            <button (click)="close()" type="button" class="btn btn-md btn-default">Close</button>
-            <button type="submit" class="btn btn-md btn-success" [disabled]="!loginForm.form.valid">Sign In</button>
-          </div>
-        </form>
+        </div>
       </div>
+
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-2 max-w-sm w-full">
+        <div class="space-y-1 flex flex-col mb-4">
+          <span class="text-4xl font-bold text-white">Sign In</span>
+          <span class="text-xs text-gray-100">Welcome to PDQA - Let's get started</span>
+        </div>
+        <hr>
+        <br>
+        <div class="">
+          <!-- <div class="label">
+            <span class="label-text">Username</span>
+          </div> -->
+          <input id="username" type="text" class="input w-full bg-slate-400 text-white placeholder:text-white"
+            placeholder="Enter Password" required [(ngModel)]="model.username" name="username" #username="ngModel">
+          <div [hidden]="username.valid" class="label">
+            <span class="label-text-alt text-gray-200">Username is required</span>
+          </div>
+        </div>
+        <div class="form-control w-full">
+          <!-- <div class="label">
+            <span class="label-text">Password</span>
+          </div> -->
+          <input class="input w-full bg-slate-400 text-white placeholder:text-white" id="password" type="password"
+            placeholder="Enter Password" [(ngModel)]="model.password" name="password" #password="ngModel">
+          <div class="label" [hidden]="password.valid">
+            <span class="label-text-alt text-gray-200">Password is required</span>
+            <a class="label-text-alt text-gray-200">Forgot Password</a>
+          </div>
+          <!-- <div  class="alert alert-danger">Password is required</div> -->
+        </div>
+        <div class="w-full">
+          <!-- <button (click)="close()" type="button" class="btn btn-ghost">Close</button> -->
+          <button type="submit" class="btn btn-primary w-full" [disabled]="!loginForm.form.valid">Sign In</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

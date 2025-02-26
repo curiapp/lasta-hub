@@ -60,3 +60,7 @@
         }
 
             "ngswConfigPath": "ngsw-config.json"
+
+
+              // "node_modules/chart.js/dist/chart.js",
+//removed charts.js
