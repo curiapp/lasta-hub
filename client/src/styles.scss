@@ -8,6 +8,14 @@ $Yellow: #fcaf17;
 $Red: #da2128;
 
 
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 100,
+  'GRAD' -25,
+  'opsz' 24
+}
+
 body{
   font-family: "Manrope", serif;
   font-optical-sizing: auto;
@@ -39,10 +47,6 @@ body,
   .navbar {
     background-color: #1C2331; } }
 
-/* Footer color for sake of consistency with Navbar */
-.page-footer {
-  background-color: #1C2331;
-}
 .btn-circle.btn-xl {
   width: 100px;
   height: 100px;
