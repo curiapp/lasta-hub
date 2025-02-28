@@ -51,12 +51,12 @@ jobs:
 
                 run: |
                     docker build -f ./Dockerfile.backend --build-arg KAFKA_BROKER_HOST=$KAFKA_BROKER_HOST \
-                    -t ghcr.io/joques/pdqa-backend:$(echo $GITHUB_SHA | head -c7) .
+                    -t ghcr.io/curiapp/pdqa-backend:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push Server Image to GitHub Container Registry
                 # if: steps.filter.outputs.server == 'true'
                 run: |
-                      docker push ghcr.io/joques/pdqa-backend:$(echo $GITHUB_SHA | head -c7)
+                      docker push ghcr.io/curiapp/pdqa-backend:$(echo $GITHUB_SHA | head -c7)
 
             -   name: Build Frontend Container Image
                 # if: steps.filter.outputs.client == 'true'
@@ -65,12 +65,12 @@ jobs:
 
                 run: |
                     docker build -f ./Dockerfile.frontend --build-arg   PORT=$FRONTEND_PORT \
-                    -t ghcr.io/joques/pdqa-frontend:$(echo $GITHUB_SHA | head -c7) .
+                    -t ghcr.io/curiapp/pdqa-frontend:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push Server Image to GitHub Container Registry
                 # if: steps.filter.outputs.client == 'true'
                 run: |
-                      docker push ghcr.io/joques/pdqa-frontend:$(echo $GITHUB_SHA | head -c7)
+                      docker push ghcr.io/curiapp/pdqa-frontend:$(echo $GITHUB_SHA | head -c7)
               
     gitops_develop:
         name: Update GitOps Image Tag
@@ -81,16 +81,16 @@ jobs:
         -   name: Clone GitOps repository
             uses: actions/checkout@v3
             with:
-                repository: joques/dev-ops
+                repository: curiapp/dev-ops
                 token: ${{ secrets.PAT }}
                 ref: master
         
         -   name: Kustomize CBI-develop Server
-            if: github.repository == 'joques/lasta-hub'
+            if: github.repository == 'curiapp/lasta-hub'
             run: |
                 cd overlays/develop
                 SHA=$(echo ${{needs.build_develop.outputs.output1}} | head -c7)
-                kustomize edit set image ghcr.io/joques/pdqa-backend:$SHA
+                kustomize edit set image ghcr.io/curiapp/pdqa-backend:$SHA
                 git config user.name github-actions[bot]
                 git config user.email 41898282+github-actions[bot]@users.noreply.github.com
                 git add .
@@ -98,11 +98,11 @@ jobs:
                 git push 
 
         -   name: Kustomize CBI-develop Frontend
-            if: github.repository == 'joques/lasta-hub'
+            if: github.repository == 'curiapp/lasta-hub'
             run: |
                 cd overlays/develop
                 SHA=$(echo ${{needs.build_develop.outputs.output1}} | head -c7)
-                kustomize edit set image ghcr.io/joques/pdqa-frontend:$SHA
+                kustomize edit set image ghcr.io/curiapp/pdqa-frontend:$SHA
                 git config user.name github-actions[bot]
                 git config user.email 41898282+github-actions[bot]@users.noreply.github.com
                 git add .
