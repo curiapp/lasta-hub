@@ -1,0 +1,22 @@
+<div class="overflow-x-auto w-5/6">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Faculty</th>
+        <th>Programme</th>
+        <th>Date Created</th>
+        <th>Last Review</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (programme of programmes; track programme.id){
+      <tr>
+        <td>{{programme.faculty}}</td>
+        <td>{{programme.programme}}</td>
+        <td>{{programme.createdDate}}</td>
+        <td>{{programme.lastReviewDate}}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,74 @@
+<div class="p-4 bg-primary space-y-3 text-base-100">
+
+  <h2 class="text-3xl font-bold capitalize">{{programme.programme}}</h2>
+
+  <div class="space-y-1">
+    <span class="text-xs">Overview</span>
+    <div class="flex gap-4 md:gap-8">
+
+      <div class="flex items-center gap-2 min-w-48">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded">
+            account_balance
+          </span>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <span class="text-xs">Faculty</span>
+          <span class="text-base capitalize">{{programme.faculty}}</span>
+        </div>
+      </div>
+
+
+      <div class="flex items-center gap-2 min-w-44">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded ">
+            account_circle
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs">Lecturer</span>
+          <span class="text-base capitalize">{{programme.members[0]}}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded ">
+            clock_loader_10
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs">Current Stage</span>
+          <span class="text-base capitalize">{{programme.stage}}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<div class="flex items-start">
+
+  <div class="flex h-dvh flex-col justify-between bg-primary w-0 md:w-64  text-white">
+    <div class="px-4 py-2">
+
+      <ul class="mt-6 space-y-6">
+        @for (stage of stages; track stage.id){
+        <li>
+          <a [routerLink]=[stage.id]
+            class="block cursor-pointer capitalize font-light active:font-medium rounded-lg active:bg-gray-100 active:text-gray-700 px-4 py-2 text-sm">
+            {{stage.title}}
+          </a>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="flex-grow h-screen p-8">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

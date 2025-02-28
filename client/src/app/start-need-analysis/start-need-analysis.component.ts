@@ -46,14 +46,12 @@ export class StartNeedAnalysisComponent implements OnInit {
       this.facultyName = "Computing and Informatics";
       this.departmentName = "Computer Science";
       console.log("user not loggen in, we are using default values...");
-
     }
     else {
       let currentUser = JSON.parse(localStorage.getItem('currentUser'));
       this.initiator = currentUser.username
       this.facultyName = currentUser.usrUnit.faculty;
       this.departmentName = currentUser.usrUnit.department;
-
     }
   }
 

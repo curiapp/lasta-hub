@@ -1,9 +1,5 @@
-//import files from the angular framework
-//import component, ElementRef, input and the oninit method from angular core
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-//import the file-upload plugin
-//import the native angular http and respone libraries
 import { SenateSubmitService } from '../services/senate-submit.service';
 import { FormsModule } from '@angular/forms';
 

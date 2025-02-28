@@ -16,7 +16,6 @@ export class SenateSubmitService {
     // let startOptions = new RequestOptions({headers: startHeaders, method: "post"});
 
     return this._http.post(this._senateSubmitUrl, body, {}).pipe(map((response) => { response = response }));
-
   }
 
 

@@ -81,10 +81,6 @@
         <div class="col-md-8">
           <div class="row">
             <div class="col-md-6">
-              <button [routerLink]="['/StartNeedAnalysis']" type="button"
-                class="btn btn-primary btn-lg btn-block">Create New Programme</button>
-            </div>
-            <div class="col-md-6">
               <!--button type="button" class="btn btn-success btn-lg btn-block">Resume Programme</button -->
               <div class="row">
                 <div class="col-lg-offset-3 col-lg-6">
@@ -129,46 +125,69 @@
 }
 
 @if (false){
-<div class="my-4 py-10 container mx-auto grid justify-center">
+<div class="my-4 py-10 container mx-auto flex justify-center">
 
   <!-- <div class="col-md-4 bg-muted">
           <course-due-for-review></course-due-for-review>
         </div> -->
 
-  <div class="stats shadow">
-    <div class="stat">
-      <div class="stat-figure text-secondary">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          class="inline-block h-8 w-8 stroke-current">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-      </div>
-      <div class="stat-title">In Progress</div>
-      <div class="stat-value">2</div>
-    </div>
+  <div class="space-y-4 w-full md:w-96">
+    <article class="rounded-lg border border-gray-100 bg-white p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">Recently Approved</p>
 
-    <div class="stat">
-      <div class="stat-figure text-secondary">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          class="inline-block h-8 w-8 stroke-current">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
-          </path>
-        </svg>
+          <p class="text-2xl font-medium text-gray-900">400</p>
+        </div>
+
+        <span class="rounded-full bg-primary/10 p-3 text-primary">
+          <svg class="size-8" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            stroke="currentColor">
+            <path d="M1.5 12.5L5.57574 16.5757C5.81005 16.8101 6.18995 16.8101 6.42426 16.5757L9 14" stroke="#000000"
+              stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M16 7L12 11" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M7 12L11.5757 16.5757C11.8101 16.8101 12.1899 16.8101 12.4243 16.5757L22 7" stroke="#000000"
+              stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </span>
       </div>
-      <div class="stat-title">Recently Approved</div>
-      <div class="stat-value">4,200</div>
-    </div>
+
+    </article>
+
+    <article class="rounded-lg border border-gray-100 bg-white p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500">In Progress</p>
+
+          <p class="text-2xl font-medium text-gray-900">0</p>
+        </div>
+
+        <span class="rounded-full bg-primary/10 p-3 text-blue-600">
+
+          <svg class="size-8" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.1679 8C19.6247 4.46819 16.1006 2 11.9999 2C6.81459 2 2.55104 5.94668 2.04932 11"
+              stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M17 8H21.4C21.7314 8 22 7.73137 22 7.4V3" stroke="#000000" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M2.88146 16C4.42458 19.5318 7.94874 22 12.0494 22C17.2347 22 21.4983 18.0533 22 13"
+              stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M7.04932 16H2.64932C2.31795 16 2.04932 16.2686 2.04932 16.6V21" stroke="#000000" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+      </div>
+
+    </article>
   </div>
 
-  <div class="col-md-4">
+  <!-- <div class="col-md-4">
     <course-in-progress></course-in-progress>
   </div>
 
   <div class="col-md-4">
     <course-recently-approved></course-recently-approved>
-  </div>
+  </div> -->
 
 </div>
 }
@@ -178,7 +197,7 @@
 
   <h3 class="capitalize">{{greetingMessage}}</h3>
 
-  <h2 class="text-3xl font-bold">Mr Isaac Makosa</h2>
+  <h2 class="text-3xl font-bold capitalize">Mr Isaac Makosa</h2>
 
   <div class="space-y-1">
     <span class="text-xs">Overview</span>
@@ -192,7 +211,7 @@
         </div>
         <div class="flex flex-col gap-0.5">
           <span class="text-xs">Faculty</span>
-          <span class="text-lg">Engineering</span>
+          <span class="text-lg capitalize">Engineering</span>
         </div>
       </div>
 
@@ -205,7 +224,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-xs">Department</span>
-          <span class="text-lg">Computer Science</span>
+          <span class="text-lg capitalize">Computer Science</span>
         </div>
       </div>
 
@@ -216,8 +235,8 @@
           </span>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs">Programs</span>
-          <span class="text-lg">10</span>
+          <span class="text-xs">{{user==='PDU'? "Approved Programs": "Programs"}}</span>
+          <span class="text-lg capitalize">10</span>
         </div>
       </div>
 
@@ -228,10 +247,22 @@
 
 <div class="p-4 flex items-start gap-8">
 
-  <div class="space-y-4 flex-grow">
+  <div class="space-y-8 flex-grow">
+    @if(user==='PDU'){
+    <div class="space-y-4">
+      <h2 class="text-lg lg:text-3xl font-light">Programme Management Tools</h2>
+      <div class="flex items-center gap-2">
+        @for (program of programmeTools;track programme; let i= $index;){
+        <div class="bg-secondary text-gray-800 py-1 px-2 text-sm rounded-md">
+          {{ program}}
+        </div>
+        }
+      </div>
+    </div>
+    }
 
     <div class="flex justify-between items-start">
-      <h2 class="text-lg lg:text-3xl font-bold">Your Programmes</h2>
+      <h2 class="text-lg lg:text-3xl font-light">{{user==='PDU'?'':'Your'}} Programmes</h2>
       <div class="flex items-center gap-2">
         <button class="btn btn-sm btn-outline">
           View All
@@ -239,25 +270,21 @@
           open_in_full
         </span>-->
         </button>
-        <button class="btn btn-sm btn-primary">Add</button>
+        @if(user==='LEC'){
+        <button class="btn btn-sm btn-primary" routerLink="/StartNeedAnalysis">Add</button>
+        }
       </div>
     </div>
 
     <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-      @for (item of programmes; track item.name) {
-      <a class="group relative block h-fit rounded-lg">
-        <span class="absolute inset-0 border-2 border-dashed border-black rounded-lg"></span>
-
+      @for (item of programmes; track item.programme) {
+      <a class="group relative block h-fit rounded-lg" [routerLink]="['/programme/', item.id]">
+        <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
         <div
-          class="relative flex h-full transform items-end border-2 border-black bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
-          <div class="p-4 !pt-0 transition-opacity group-hover:absolute group-hover:opacity-0 sm:p-6">
-            <!-- <svg xmlns="http://www.w3.org/2000/svg" class="size-10 sm:size-12" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg> -->
+          class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
+          <div class="p-4 !pt-0 transition-opacity sm:p-6">
 
-            <h2 class=" mt-4 font-medium sm:text-xl">{{item.name}}</h2>
+            <h2 class=" mt-4 font-medium sm:text-xl line-clamp-1">{{item.programme}}</h2>
 
             <div class="flex flex-col">
               <span class="text-xs">Stage: {{item.stage}}</span>
@@ -271,28 +298,27 @@
             </div>
           </div>
 
-          <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
-            <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">Bachelor of Computer Science</h3>
+          <!-- <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
+            <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
 
             <p class="mt-4 text-xs sm:text-sm line-clamp-2">
-              The Bachelor of Computer Science is a 4-year programme that aims to equip students with the necessary
-              skills to become competent computer scientists.
+              {{item.description}}
             </p>
 
             <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
 
               <div class="avatar placeholder">
-                <div class="bg-neutral text-neutral-content w-8">
+                <div class="bg-primary text-neutral-content w-8">
                   <span>UP</span>
                 </div>
               </div>
               <div class="avatar placeholder">
-                <div class="bg-neutral text-neutral-content w-8">
+                <div class="bg-primary text-neutral-content w-8">
                   <span>MS</span>
                 </div>
               </div>
               <div class="avatar placeholder">
-                <div class="bg-neutral text-neutral-content w-8">
+                <div class="bg-primary text-neutral-content w-8">
                   <span>+2</span>
                 </div>
               </div>
@@ -300,7 +326,7 @@
             </div>
 
             <p class="mt-8 font-bold">Read more</p>
-          </div>
+          </div> -->
         </div>
       </a>
       } @empty {
@@ -308,9 +334,15 @@
       }
 
     </div>
+
+    <div class="space-y-6">
+      <h2 class="text-lg lg:text-3xl font-light">{{user==="PDU"?"Recent Updates":"Programmes Due for Review"}}</h2>
+      <client-programme-table [programmes]="programmes" />
+    </div>
+
   </div>
 
-
+  <!-- Upcoming Events -->
   <div class="w-96 hidden lg:block space-y-4">
 
     <div class="space-y-4">
