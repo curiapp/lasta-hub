@@ -7,8 +7,21 @@ import { Component } from '@angular/core';
   styleUrl: './programme-development.component.scss'
 })
 export class ProgrammeDevelopmentComponent {
-  steps = ["CDC and PAC Appointment", "Curriculum Drafting", "Draft Curriculum and PDQA Recomendation"]
-  selectedStep = "CDC and PAC Appointment";
+  steps = [
+    {
+      id: 1,
+      title: "CDC and PAC Appointment",
+    },
+    {
+      id: 2,
+      title: "Curriculum Drafting",
+    },
+    {
+      id: 3,
+      title: "Draft Curriculum and PDQA Recomendation",
+    }
+  ]
+  selectedStep = 1;
   coordinators = [
     {
       "name": "Dr. Alice Johnson",
@@ -64,7 +77,7 @@ export class ProgrammeDevelopmentComponent {
   ]
     ;
 
-  onSelectStep = (step: string) => {
+  onSelectStep = (step: number) => {
     this.selectedStep = step;
   }
 }

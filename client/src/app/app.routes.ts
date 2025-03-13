@@ -3,13 +3,18 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ResumeProgrammeComponent } from './resume-programme/resume-programme.component';
 import { StartNeedAnalysisComponent } from './start-need-analysis/start-need-analysis.component';
-import { NeedAnalysisComponent } from './need-analysis/need-analysis.component';
+import { NeedAnalysisComponent } from './programme/need-analysis/need-analysis.component';
 import { ProgrammeComponent } from './programme/programme.component';
 import { TutorialComponent } from './tutorials/tutorials.component';
 import { MainComponent } from './main/main.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { OurTeamComponent } from './our-team/our-team.component';
-import { ProgrammeDevelopmentComponent } from './programme-development/programme-development.component';
+import { ProgrammeDevelopmentComponent } from './programme/programme-development/programme-development.component';
+import { ExternalStakeholdersComponent } from './programme/external-stakeholders/external-stakeholders.component';
+import { InternalStakeholdersComponent } from './programme/internal-stakeholders/internal-stakeholders.component';
+import { SenateComponent } from './programme/senate/senate.component';
+import { NqfRegistrationComponent } from './programme/nqf-registration/nqf-registration.component';
+import { SenateConsultationsComponent } from './senate-consultations/senate-consultations.component';
 // import { NeedAnalysisConcludeComponent } from './need-analysis-conclude/need-analysis-conclude.component';
 // import { EndConsultComponent } from './end-consult/end-consult.component';
 // import { BosSubmitComponent } from './bos-submit/bos-submit.component';
@@ -49,32 +54,33 @@ import { ProgrammeDevelopmentComponent } from './programme-development/programme
 
 export const routes: Routes = [
   // { path: '', component: HomeComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDU - Home' } },
+  { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
   { path: 'login', component: LoginComponent },
   {
-    path: '', component: MainComponent, data: { title: 'PDU - Main' },
+    path: '', component: MainComponent, data: { title: 'PDQA - Main' },
     children: [
-      { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDU - Home' } },
-      { path: 'home', component: HomeComponent, data: { title: 'PDU - Home' } },
-      { path: 'tutorials', component: TutorialComponent, data: { title: 'PDU - Tutorials' } },
-      { path: 'about-us', component: AboutUsComponent, data: { title: 'PDU - About Us' } },
-      { path: 'our-team', component: OurTeamComponent, data: { title: 'PDU - Our Team' } },
+      { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
+      { path: 'home', component: HomeComponent, data: { title: 'PDQA - Home' } },
+      { path: 'tutorials', component: TutorialComponent, data: { title: 'PDQA - Tutorials' } },
+      { path: 'about-us', component: AboutUsComponent, data: { title: 'PDQA - About Us' } },
+      { path: 'our-team', component: OurTeamComponent, data: { title: 'PDQA - Our Team' } },
       {
-        path: 'programme/:id', component: ProgrammeComponent, data: { title: 'PDU - Programme' },
+        path: 'programme/:id', component: ProgrammeComponent, data: { title: 'PDQA - Programme' },
         children: [
-          { path: 'n-a', component: NeedAnalysisComponent, data: { title: 'PDU - Need Analysis' } },
-          { path: 'p-d', component: ProgrammeDevelopmentComponent, data: { title: 'PDU - Programme development' } },
-          { path: 'e-s', component: NeedAnalysisComponent, data: { title: 'PDU - External stakeholders consultations' } },
-          { path: 'b-a-s-c', component: NeedAnalysisComponent, data: { title: 'PDU - BOS, APC and Senate Consultations' } },
-          { path: 'n-r', component: NeedAnalysisComponent, data: { title: 'PDU - NQF Registration' } },
+          { path: 'n-a', component: NeedAnalysisComponent, data: { title: 'PDQA - Need Analysis' } },
+          { path: 'p-d', component: ProgrammeDevelopmentComponent, data: { title: 'PDQA - Programme development' } },
+          { path: 'e-s', component: ExternalStakeholdersComponent, data: { title: 'PDQA - External stakeholders consultations' } },
+          { path: 'i-s', component: InternalStakeholdersComponent, data: { title: 'PDQA - External stakeholders consultations' } },
+          { path: 'b-a-s-c', component: SenateConsultationsComponent, data: { title: 'PDQA - BOS, APC and Senate Consultations' } },
+          { path: 'n-r', component: NqfRegistrationComponent, data: { title: 'PDQA - NQF Registration' } },
           { path: '', redirectTo: 'n-a', pathMatch: 'full' },
         ]
       },
-      { path: 'resume', component: ResumeProgrammeComponent, data: { title: 'PDU - Resume' } },
-      { path: 'StartNeedAnalysis', component: StartNeedAnalysisComponent, data: { title: 'PDU - Need Analysis' } },
-      // { path: 'NeedAnalysisConclude', component: NeedAnalysisConcludeComponent, data: { title: 'PDU - Need Analysis Conclude' } },
-      // { path: 'endconsult', component: EndConsultComponent, data: { title: 'PDU - End consultation' } },
-      // { path: 'bossubmit', component: BosSubmitComponent, data: { title: 'PDU - BOS Submission' } },
+      { path: 'resume', component: ResumeProgrammeComponent, data: { title: 'PDQA - Resume' } },
+      { path: 'StartNeedAnalysis', component: StartNeedAnalysisComponent, data: { title: 'PDQA - Need Analysis' } },
+      // { path: 'NeedAnalysisConclude', component: NeedAnalysisConcludeComponent, data: { title: 'PDQA - Need Analysis Conclude' } },
+      // { path: 'endconsult', component: EndConsultComponent, data: { title: 'PDQA - End consultation' } },
+      // { path: 'bossubmit', component: BosSubmitComponent, data: { title: 'PDQA - BOS Submission' } },
       // { path: 'senate', component: SenateComponent },
       // { path: 'cdc', component: CdcComponent },
       // { path: 'pac', component: PacComponent },

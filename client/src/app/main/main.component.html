@@ -11,21 +11,21 @@
         <ul tabindex="0" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-[1] mt-3 w-52 p-2 shadow">
           <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
           <li [hidden]="!loggedIn()"><a routerLink='/resume'>Getting Started</a></li>
-          <li><a routerLink='/tutorials'>Tutorials</a></li>
-          <li><a routerLink='/our-team'>FAQ</a></li>
-          <li><a routerLink='/about-us'>About Us</a></li>
+          <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
+          <li><a routerLink='/our-team' routerLinkActive="active">FAQ</a></li>
+          <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
       </div>
-      <img alt="NUST logo" src="/logo.png" class="h-6" />
-      <a routerLink="/home" class="btn btn-ghost text-xl">PDU</a>
+      <img alt="NUST logo" src="/logo.png" class="h-6 ml-3" />
+      <a routerLink="/home" class="btn btn-ghost text-xl">PDQA</a>
       |
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
-          <li [hidden]="!loggedIn()"><a routerLink='/resume'>Getting Started</a></li>
-          <li><a routerLink='/tutorials'>Tutorials</a></li>
-          <li><a routerLink='/our-team'>FAQ</a></li>
-          <li><a routerLink='/about-us'>About Us</a></li>
+          <li [hidden]="!loggedIn()" routerLinkActive="active"><a routerLink='/resume'>Getting Started</a></li>
+          <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
+          <li><a routerLink='/our-team' routerLinkActive="active">FAQ</a></li>
+          <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
       </div>
     </div>

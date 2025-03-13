@@ -1,11 +1,11 @@
 <div
   class="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
   <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
-    @for(step of steps;track step;let i= $index; ){
-    <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step)">
+    @for(step of steps;track step.id;let i= $index; ){
+    <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
       <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
-        [class]="selectedStep==step?'bg-primary text-white':'bg-gray-100'"> {{i+1}} </span>
-      <span class="hidden sm:block"> {{step}} </span>
+        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'"> {{i+1}} </span>
+      <span class="hidden sm:block"> {{step.title}} </span>
     </li>
     }
 
@@ -14,8 +14,7 @@
 
 
 
-@if(selectedStep ==="CDC and PAC Appointment"){
-
+@if(selectedStep ===1){
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
     <h2 class="text-2xl">{{selectedStep}} </h2>
@@ -73,7 +72,7 @@
       </span>
     </div>
     }@empty {
-      <p class="text-sm text-primary">No Coordinator</p>
+    <p class="text-sm text-primary">No Coordinator</p>
     }
 
   </div>
@@ -124,7 +123,7 @@
       </span>
     </div>
     }@empty {
-      <p class="text-sm text-primary">Programme Advisory Committee (PAC) members</p>
+    <p class="text-sm text-primary">Programme Advisory Committee (PAC) members</p>
     }
 
   </div>
@@ -181,10 +180,10 @@
 }
 
 
-@if(selectedStep ==="Curriculum Drafting"){
+@if(selectedStep ===2){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">{{selectedStep}} </h2>
+    <h2 class="text-2xl capitalize">Curriculum Drafting</h2>
   </div>
 
 
@@ -228,13 +227,11 @@
 </div>
 }
 
-
-@if(selectedStep ==="Draft Curriculum and PDQA Recomendation"){
+@if(selectedStep ===3){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">{{selectedStep}} </h2>
+    <h2 class="text-2xl capitalize">Draft Curriculum and PDQA Recomendation</h2>
   </div>
-
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
@@ -276,4 +273,3 @@
 
 </div>
 }
-

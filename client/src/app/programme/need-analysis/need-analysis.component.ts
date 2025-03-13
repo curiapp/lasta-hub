@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NQFLevel } from '../static';
+import { NQFLevel } from '../../static';
 
 @Component({
   selector: 'client-need-analysis',
@@ -10,8 +10,33 @@ import { NQFLevel } from '../static';
 })
 export class NeedAnalysisComponent {
 
-  steps = ["Programme Resume", "Stakeholders' Consultation", "PDQA Recommendation", "BOS Consultation", "APC Recommendation", "Senate Approval"]
-  selectedStep = "Programme Resume";
+  steps = [
+    {
+      id: 1,
+      title: "Programme Resume",
+    },
+    {
+      id: 2,
+      title: "Stakeholders' Consultation",
+    },
+    {
+      id: 3,
+      title: "PDQA Recommendation",
+    },
+    {
+      id: 4,
+      title: "BOS Consultation",
+    },
+    {
+      id: 5,
+      title: "APC Recommendation",
+    },
+    {
+      id: 6,
+      title: "Senate Approval",
+    }
+  ]
+  selectedStep = 1;
   programmeName: string;
   programmeCode: string;
   levels = NQFLevel;
@@ -57,7 +82,7 @@ export class NeedAnalysisComponent {
     }
   ];
 
-  onSelectStep = (step: string) => {
+  onSelectStep = (step: number) => {
     this.selectedStep = step;
   }
 
