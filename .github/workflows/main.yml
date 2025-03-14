@@ -79,7 +79,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         -   name: Clone GitOps repository
-            uses: actions/checkout@v3
+            uses: actions/checkout@v4
             with:
                 repository: curiapp/dev-ops
                 token: ${{ secrets.PAT }}
