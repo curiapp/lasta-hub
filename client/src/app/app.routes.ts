@@ -12,7 +12,7 @@ import { OurTeamComponent } from './our-team/our-team.component';
 import { ProgrammeDevelopmentComponent } from './programme/programme-development/programme-development.component';
 import { ExternalStakeholdersComponent } from './programme/external-stakeholders/external-stakeholders.component';
 import { InternalStakeholdersComponent } from './programme/internal-stakeholders/internal-stakeholders.component';
-import { SenateComponent } from './programme/senate/senate.component';
+// import { SenateComponent } from './programme/senate/senate.component';
 import { NqfRegistrationComponent } from './programme/nqf-registration/nqf-registration.component';
 import { SenateConsultationsComponent } from './senate-consultations/senate-consultations.component';
 // import { NeedAnalysisConcludeComponent } from './need-analysis-conclude/need-analysis-conclude.component';
