@@ -61,11 +61,11 @@ jobs:
 
             -   name: Build Frontend Container Image
                 # if: steps.filter.outputs.client == 'true'
-                env: 
-                    FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
+                # env: 
+                #     FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
 
                 run: |
-                    docker build -f ./Dockerfile.frontend --build-arg   PORT=$FRONTEND_PORT \
+                    docker build -f ./Dockerfile.frontend \
                     -t ghcr.io/curiapp/lasta-hub/pdqa-frontend:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push Server Image to GitHub Container Registry
