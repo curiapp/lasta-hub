@@ -26,12 +26,27 @@ export class HomeComponent implements OnInit {
   greetingMessage: string = '';
   programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
   user: 'PDU' | 'LEC' = 'LEC';
+  showAll = false;
 
   constructor() { }
+
+  toggleView() {
+    this.showAll = !this.showAll;
+    this.updateDisplayedPrograms();
+  }
+
+  updateDisplayedPrograms() {
+    if (this.showAll) {
+      this.programmes = [...programmes];
+    } else {
+      this.programmes = programmes.slice(0, 10);
+    }
+  }
 
   ngOnInit() {
     this.greetingMessage = this.getGreeting();
     this.dates = this.generateNext7Days()
+    this.updateDisplayedPrograms();
   }
 
   changed(event) {

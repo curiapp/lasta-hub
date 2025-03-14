@@ -164,8 +164,8 @@
 
         <span class="rounded-full bg-primary/10 p-3 text-blue-600">
 
-          <svg class="size-8" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-            fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="size-8" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <path d="M21.1679 8C19.6247 4.46819 16.1006 2 11.9999 2C6.81459 2 2.55104 5.94668 2.04932 11"
               stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
             <path d="M17 8H21.4C21.7314 8 22 7.73137 22 7.4V3" stroke="#000000" stroke-width="1.5"
@@ -264,11 +264,8 @@
     <div class="flex justify-between items-start">
       <h2 class="text-lg lg:text-3xl font-light">{{user==='PDU'?'':'Your'}} Programmes</h2>
       <div class="flex items-center gap-2">
-        <button class="btn btn-sm btn-outline">
-          View All
-          <!-- <span class="material-symbols-rounded">
-          open_in_full
-        </span>-->
+        <button class="btn btn-sm btn-outline" (click)="toggleView()">
+          {{showAll?"Minimize":"View All"}}
         </button>
         @if(user==='LEC'){
         <button class="btn btn-sm btn-primary" routerLink="/StartNeedAnalysis">Add</button>
@@ -277,17 +274,17 @@
     </div>
 
     <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-      @for (item of programmes; track item.programme) {
+      @for (item of programmes; track item.id) {
       <a class="group relative block h-fit rounded-lg" [routerLink]="['/programme/', item.id]">
         <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
         <div
           class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
           <div class="p-4 !pt-0 transition-opacity sm:p-6">
 
-            <h2 class=" mt-4 font-medium sm:text-xl line-clamp-1">{{item.programme}}</h2>
+            <h2 class=" mt-4 font-medium sm:text-xl line-clamp-2">{{item.title}}</h2>
 
             <div class="flex flex-col">
-              <span class="text-xs">Stage: {{item.stage}}</span>
+              <span class="text-xs">Stage: {{item.stage}}, Level: {{item.level}}</span>
               <span class="text-xs line-clamp-2">Required Actions:
                 @for (it of item.actions; track it; let i = $index){
                 <span class="text-xs">{{it}}

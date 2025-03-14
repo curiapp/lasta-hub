@@ -16,7 +16,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl">Programme Details</h2>
-    <button class="btn btn-sm btn-secondary text-primary" onclick="my_modal_2.showModal()" (click)="setProgramme()">
+    <button class="btn btn-sm btn-secondary text-primary" onclick="my_modal_2.showModal()">
       <!-- <span class="material-symbols-rounded">
         edit
       </span> -->
@@ -31,7 +31,7 @@
         <span class="text-[.6rem]">What is the proposed programme code</span>
       </div>
 
-      <span class="text-3xl">T5789</span>
+      <span class="text-3xl uppercase">{{programme.code}}</span>
     </div>
     <div class="rounded-lg shadow px-4 py-2 flex items-center justify-between">
       <div class="flex flex-col -gap-1">
@@ -39,7 +39,7 @@
         <span class="text-[.6rem]">What is the NQF Level</span>
       </div>
 
-      <span class="text-3xl">7</span>
+      <span class="text-3xl">{{programme.level}}</span>
     </div>
 
   </div>
@@ -50,7 +50,7 @@
     <!-- <p class="py-4">Press ESC key or click outside to close</p> -->
     <h3 class="text-2xl">Edit Programme </h3>
 
-    <form (ngSubmit)="updateProgramme()" #startForm="ngForm" class="space-y-3">
+    <form (ngSubmit)="updateProgramme()" #updateProgrammeForm="ngForm" class="space-y-3">
       <!-- <div [hidden]="true" class="form-group">
         <label for="departmentName">Department</label>
         <input id="departmentName" type="text" class="form-control" [(ngModel)]="departmentName"
@@ -58,11 +58,11 @@
       </div> -->
       <div class="form-control">
         <div class="label">
-          <span class="label-text">Proposed Programme title</span>
+          <span class="label-text">Proposed Programme Title</span>
         </div>
-        <input id="programmeName" type="text" class="input input-bordered" required [(ngModel)]="programmeName"
-          name="ProgrammeName" #pron="ngModel">
-        @if (pron.invalid) {
+        <input id="title" type="text" class="input input-bordered" required [(ngModel)]="programme.title" name="title"
+          #ptitle="ngModel">
+        @if (ptitle.invalid) {
         <div class="label">
           <span class="label-text">
             Programme title is required
@@ -75,9 +75,9 @@
         <div class="label">
           <span class="label-text">Proposed Programme Code</span>
         </div>
-        <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programmeCode"
-          name="devCode" #procode="ngModel">
-        @if (procode.invalid) {
+        <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programme.code"
+          name="code" #code="ngModel">
+        @if (code.invalid) {
         <div class="label">
           <span class="label-text">
             Proposed Programme Code is required
@@ -91,7 +91,7 @@
         <div class="label">
           <span class="label-text">NQF Level</span>
         </div>
-        <select class="select select-bordered w-full" title="Select level" required [ngModel]="level"
+        <select class="select select-bordered w-full" title="Select level" required [ngModel]="programme.level"
           (ngModelChange)="changed($event)" name="level" #level="ngModel">
           <option disabled>Select NQF Level</option>
           @for (singleLevel of levels;track singleLevel){
@@ -105,7 +105,7 @@
         }
       </div>
       <div class="form-control gap-2">
-        <button type="submit" class="btn btn-primary " [disabled]="!startForm.form.valid">Submit</button>
+        <button type="submit" class="btn btn-primary " [disabled]="!updateProgrammeForm.form.valid">Submit</button>
         <!-- <button type="button" class="btn btn-default " (click)="close()">Cancel</button> -->
       </div>
     </form>
@@ -118,20 +118,18 @@
 }
 
 @if(selectedStep ===2){
-
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
     <h2 class="text-2xl">Stakeholders' Consultation</h2>
     <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="my_modal_2.showModal()"
-      (click)="setProgramme()">
+      (click)="markComplete()">
       Mark Complete
     </button>
   </div>
 
   <div class="flex justify-between">
     <h2 class="text-xl">Stakeholders</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="stakeholder_modal.showModal()"
-      (click)="setProgramme()">
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="stakeholder_modal.showModal()">
       Add
     </button>
   </div>
@@ -144,35 +142,8 @@
         <span class="text-xs text-gray-500">{{stake.email}}</span>
       </div>
 
-      <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-        <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-          onclick="stakeholder_modal.showModal()">
-          <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-            color="#000000">
-            <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-              stroke-linejoin="round"></path>
-            <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-              stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-          </svg>
-        </button>
+      <action-buttons></action-buttons>
 
-        <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-          onclick="stakeholder_modal.showModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-3">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-          </svg>
-        </button>
-
-        <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-3">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-          </svg>
-        </button>
-      </span>
     </div>
     }@empty {
     <p class="text-sm text-primary">No Stakeholders</p>
@@ -195,35 +166,8 @@
         <span class="text-xs text-gray-500">{{stake.email}}</span>
       </div>
 
-      <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-        <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-          onclick="stakeholder_modal.showModal()">
-          <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-            color="#000000">
-            <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-              stroke-linejoin="round"></path>
-            <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-              stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-          </svg>
-        </button>
+      <action-buttons></action-buttons>
 
-        <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-          onclick="stakeholder_modal.showModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-3">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-          </svg>
-        </button>
-
-        <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-3">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-          </svg>
-        </button>
-      </span>
     </div>
     }@empty {
     <p class="text-sm text-primary">No Submission</p>
@@ -282,17 +226,23 @@
 
 }
 
-
-
 @if(selectedStep ===3){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl">PDQA Recommendation </h2>
-    <!-- <button class="btn btn-sm btn-secondary text-primary" onclick="my_modal_2.showModal()" (click)="setProgramme()">
-      Edit
-    </button> -->
+    <button class="btn btn-sm btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
+      Resubmit
+    </button>
   </div>
 
+  <dialog id="PDQA_recommend" class="modal">
+    <div class="modal-box">
+      <need-analysis-conclude [code]="programme.code"></need-analysis-conclude>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
@@ -301,35 +251,8 @@
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
-    <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-      <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-          color="#000000">
-          <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round"></path>
-          <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-            stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-        </svg>
-      </button>
+    <action-buttons></action-buttons>
 
-      <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-        </svg>
-      </button>
-    </span>
   </div>
 
 </div>
@@ -348,40 +271,12 @@
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
-    <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-      <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-          color="#000000">
-          <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round"></path>
-          <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-            stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-        </svg>
-      </button>
+    <action-buttons></action-buttons>
 
-      <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-        </svg>
-      </button>
-    </span>
   </div>
 
 </div>
 }
-
 
 @if(selectedStep ===5){
 <div class="space-y-4 my-6">
@@ -397,35 +292,8 @@
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
-    <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-      <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-          color="#000000">
-          <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round"></path>
-          <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-            stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-        </svg>
-      </button>
+    <action-buttons></action-buttons>
 
-      <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-        </svg>
-      </button>
-    </span>
   </div>
 
 </div>
@@ -445,35 +313,7 @@
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
-    <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-      <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-          color="#000000">
-          <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round"></path>
-          <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-            stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-        </svg>
-      </button>
-    </span>
+    <action-buttons></action-buttons>
   </div>
 
 </div>

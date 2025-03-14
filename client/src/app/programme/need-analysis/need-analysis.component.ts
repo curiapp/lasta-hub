@@ -1,15 +1,23 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NQFLevel } from '../../static';
+import { NQFLevel, programmes } from '../../static';
+import { ActivatedRoute } from '@angular/router';
+import { Programme } from '../../types';
+import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
+import { NeedAnalysisConcludeComponent } from "../../need-analysis-conclude/need-analysis-conclude.component";
+// import { NeedAnalysisConcludeComponent } from "../../need-analysis-conclude/need-analysis-conclude.component";
 
 @Component({
   selector: 'client-need-analysis',
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    ActionButtonsComponent,
+    NeedAnalysisConcludeComponent
+],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.scss'
 })
 export class NeedAnalysisComponent {
-
   steps = [
     {
       id: 1,
@@ -37,26 +45,8 @@ export class NeedAnalysisComponent {
     }
   ]
   selectedStep = 1;
-  programmeName: string;
-  programmeCode: string;
   levels = NQFLevel;
-  level: number;
-
-  changed(event) {
-    this.level = event;
-  }
-
-  updateProgramme() {
-
-  }
-
-  setProgramme() {
-    this.programmeName = "Computer Science";
-    this.programmeCode = "CS-101";
-    this.level = 7;
-  }
-
-
+  programme: Programme;
   stakeholder: { name: string, email: string }
 
   stakeholders = [
@@ -82,8 +72,29 @@ export class NeedAnalysisComponent {
     }
   ];
 
+  changed(event) {
+    this.programme.level = event;
+  }
+
+  updateProgramme() {
+
+  }
+
+  markComplete(){
+
+  }
+
   onSelectStep = (step: number) => {
     this.selectedStep = step;
+  }
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.parent?.paramMap.subscribe(params => {
+      const id = params.get('id');
+      this.programme = programmes.find(programme => programme.id === params.get('id'))
+    });
   }
 
 }

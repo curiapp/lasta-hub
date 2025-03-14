@@ -1,13 +1,15 @@
 export interface Programme {
   id: string;
+  code: string;
+  level: number;
+  title: string;
   faculty: string;
-  programme: string;
-  createdDate: string;
-  lastReviewDate: string;
-  stage: "Active" | "Pending Review" | "Inactive"| "Completed" | string;
   members: string[];
+  createdDate: string;
   description: string;
+  lastReviewDate: string;
   actions: string[];
+  stage: "Active" | "Pending Review" | "Inactive" | "Completed" | string;
 }
 
 export type ProgrammeList = Programme[];
