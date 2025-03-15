@@ -46,11 +46,12 @@ jobs:
 
             -   name: Build Server Container Image
                 # if: steps.filter.outputs.server == 'true'
-                env: 
-                    KAFKA_BROKER_HOST: ${{ vars.KAFKA_BROKER_HOST }}
-
+                # env: 
+                #     KAFKA_BROKER_HOST: ${{ vars.KAFKA_BROKER_HOST }}
+                
+                    # --build-arg KAFKA_BROKER_HOST=$KAFKA_BROKER_HOST 
                 run: |
-                    docker build -f ./Dockerfile.backend --build-arg KAFKA_BROKER_HOST=$KAFKA_BROKER_HOST \
+                    docker build -f ./Dockerfile.backend \
                     -t ghcr.io/curiapp/lasta-hub/pdqa-backend:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push Server Image to GitHub Container Registry
@@ -60,11 +61,11 @@ jobs:
 
             -   name: Build Frontend Container Image
                 # if: steps.filter.outputs.client == 'true'
-                env: 
-                    FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
+                # env: 
+                #     FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
 
                 run: |
-                    docker build -f ./Dockerfile.frontend --build-arg   PORT=$FRONTEND_PORT \
+                    docker build -f ./Dockerfile.frontend \
                     -t ghcr.io/curiapp/lasta-hub/pdqa-frontend:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push Server Image to GitHub Container Registry
@@ -79,7 +80,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         -   name: Clone GitOps repository
-            uses: actions/checkout@v3
+            uses: actions/checkout@v4
             with:
                 repository: curiapp/dev-ops
                 token: ${{ secrets.PAT }}
@@ -107,7 +108,7 @@ jobs:
                 git config user.email 41898282+github-actions[bot]@users.noreply.github.com
                 git add .
                 git commit -m "version-$SHA"
-                https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
+                git push https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
  
     # develop-deploy:
     #     needs: gitops_develop

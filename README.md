@@ -33,5 +33,5 @@ docker run -e KAFKA_BROKER_HOST=host.docker.internal:9092 -p 4931:4931 pdqa-back
 ## License
 to be determined...
 
-## Acknowledgment
+## Acknowledgment 
 coming soon...
