@@ -1,6 +1,6 @@
 <div class="sm:px-6 lg:px-8 min-h-screen bg-gradient-to-b from-[#657283] to-[#38485D]">
 
-  <div class="container !py-10 mx-auto grid place-items-center h-screen">
+  <div class="!py-10 mx-auto grid place-items-center h-screen">
     <div class="h-full flex flex-col md:flex-row justify-center items-center gap-10 w-full p-8 md:p-0">
 
       <div class="login-bg rounded-md md:w-1/2 !h-52 md:!h-full relative">
@@ -14,9 +14,11 @@
           </div>
 
           <div class="my-3">
-            <p class="text-white lg:text-2xl text-center w-full lg:w-96 font-thin mx-auto">Streamline Curriculum
+            <p class="text-white lg:text-2xl text-center w-full lg:w-96 font-thin mx-auto">
+              Streamline Curriculum
               Development, Maintenance, and
-              Modernization</p>
+              Modernization
+            </p>
           </div>
         </div>
       </div>
@@ -50,15 +52,24 @@
               @if(password.invalid && loginForm.submitted){
               <span class="label-text-alt text-red-300">Password is required</span>
               }@else{
-                <span class="label-text-alt text-red-300"></span>
+              <span class="label-text-alt text-red-300"></span>
               }
               <a class="label-text-alt float-end text-gray-200">Forgot Password</a>
             </div>
             <!-- <div  class="alert alert-danger">Password is required</div> -->
           </div>
           <div class="w-full">
+            @if (message) {
+            <span class="text-red-600">{{message}}</span>
+            }
             <!-- <button (click)="close()" type="button" class="btn btn-ghost">Close</button> -->
-            <button type="submit" class="btn btn-primary w-full" [disabled]="!loginForm.form.valid">Sign In</button>
+            <button type="submit" class="btn btn-primary w-full" [disabled]="!loginForm.form.valid">
+              @if(loading){
+              <span class="loading loading-spinner"></span>
+              }@else {
+              <span>Sign In</span>
+              }
+            </button>
           </div>
         </form>
       </div>

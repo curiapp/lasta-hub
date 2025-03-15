@@ -1,4 +1,4 @@
-@if(false){
+@if(!currentUser){
 <div class="carousel w-full">
   <div id="slide1" class="carousel-item relative w-full">
     <video class="video-fluid w-full h-full" autoplay loop>
@@ -72,59 +72,8 @@
 <video class="video-fluid" autoplay loop>
   <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
 </video> -->
-@if (false){
-<div class="container-fluid mx-auto bg-warning">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-8">
-          <div class="row">
-            <div class="col-md-6">
-              <!--button type="button" class="btn btn-success btn-lg btn-block">Resume Programme</button -->
-              <div class="row">
-                <div class="col-lg-offset-3 col-lg-6">
-                  <div class="input-group">
-                    <!-- select class="selectpicker show-tick form-control input-lg" title="Select Programme" -->
-                    <select class="selectpicker show-tick form-control input-lg" title="Select Programme"
-                      [ngModel]="programme" (ngModelChange)="changed($event)">
-                      <option value="Select programme"></option>
-                      <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
-                    </select>
-                    <span class="input-group-btn">
-                      <a routerLink='/resume' class="btn btn-success btn-lg" type="button">
-                        <span class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"> </span>
-                        RESUME</a>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <!-- Apppend input group -->
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <select class="custom-select-lg browser-default" title="Select Programme" [ngModel]="programme"
-                    (ngModelChange)="changed($event)">
-                    <option selected>Select programme</option>
-                    <option *for="let programme of programmes" [value]="programme">{{programme}}</option>
-                  </select>
-                </div>
-                <div class="input-group-append">
-                  <button routerLink='/resume' class="btn btn-md btn-info m-0 px-3 py-2 z-depth-0 waves-effect"
-                    type="button" id="button-addon2">
-                    <i class="fas fa-edit fa-2x btn"></i>Getting Started</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-1"></div>
-    </div>
-  </div>
-</div>
-}
 
-@if (false){
+@if (!currentUser){
 <div class="my-4 py-10 container mx-auto flex justify-center">
 
   <!-- <div class="col-md-4 bg-muted">
@@ -192,12 +141,12 @@
 </div>
 }
 
-
+@if(currentUser){
 <div class="p-4 bg-primary space-y-3 text-base-100">
 
   <h3 class="capitalize">{{greetingMessage}}</h3>
 
-  <h2 class="text-3xl font-bold capitalize">Mr Isaac Makosa</h2>
+  <h2 class="text-3xl font-bold capitalize">{{currentUser?.name}}</h2>
 
   <div class="space-y-1">
     <span class="text-xs">Overview</span>
@@ -211,7 +160,7 @@
         </div>
         <div class="flex flex-col gap-0.5">
           <span class="text-xs">Faculty</span>
-          <span class="text-lg capitalize">Engineering</span>
+          <span class="text-lg capitalize">{{currentUser?.faculty}}</span>
         </div>
       </div>
 
@@ -224,7 +173,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-xs">Department</span>
-          <span class="text-lg capitalize">Computer Science</span>
+          <span class="text-lg capitalize">{{currentUser?.department}}</span>
         </div>
       </div>
 
@@ -236,7 +185,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-xs">{{user==='PDU'? "Approved Programs": "Programs"}}</span>
-          <span class="text-lg capitalize">10</span>
+          <span class="text-lg capitalize">{{programme?.length}}</span>
         </div>
       </div>
 
@@ -262,14 +211,14 @@
     }
 
     <div class="flex justify-between items-start">
-      <h2 class="text-lg lg:text-3xl font-light">{{user==='PDU'?'':'Your'}} Programmes</h2>
+      <h2 class="text-lg lg:text-3xl font-light">{{user==='PDQA'?'':'Your'}} Programmes</h2>
       <div class="flex items-center gap-2">
         <button class="btn btn-sm btn-outline" (click)="toggleView()">
           {{showAll?"Minimize":"View All"}}
         </button>
-        @if(user==='LEC'){
+        <!-- @if(user==='LECTURER'){ -->
         <button class="btn btn-sm btn-primary" routerLink="/StartNeedAnalysis">Add</button>
-        }
+        <!-- } -->
       </div>
     </div>
 
@@ -296,34 +245,34 @@
           </div>
 
           <!-- <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
-            <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
+              <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
 
-            <p class="mt-4 text-xs sm:text-sm line-clamp-2">
-              {{item.description}}
-            </p>
+              <p class="mt-4 text-xs sm:text-sm line-clamp-2">
+                {{item.description}}
+              </p>
 
-            <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
+              <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
 
-              <div class="avatar placeholder">
-                <div class="bg-primary text-neutral-content w-8">
-                  <span>UP</span>
+                <div class="avatar placeholder">
+                  <div class="bg-primary text-neutral-content w-8">
+                    <span>UP</span>
+                  </div>
                 </div>
-              </div>
-              <div class="avatar placeholder">
-                <div class="bg-primary text-neutral-content w-8">
-                  <span>MS</span>
+                <div class="avatar placeholder">
+                  <div class="bg-primary text-neutral-content w-8">
+                    <span>MS</span>
+                  </div>
                 </div>
-              </div>
-              <div class="avatar placeholder">
-                <div class="bg-primary text-neutral-content w-8">
-                  <span>+2</span>
+                <div class="avatar placeholder">
+                  <div class="bg-primary text-neutral-content w-8">
+                    <span>+2</span>
+                  </div>
                 </div>
+
               </div>
 
-            </div>
-
-            <p class="mt-8 font-bold">Read more</p>
-          </div> -->
+              <p class="mt-8 font-bold">Read more</p>
+            </div> -->
         </div>
       </a>
       } @empty {
@@ -374,10 +323,10 @@
 
       <div class="bg-gray-50 rounded-lg h-full max-h-lvh p-2 space-y-2">
 
-        @for (item of [1,3,45,55,65,6]; track item){
+        @for (item of upComingEvents; track item.id){
         <div class="bg-gray-100 rounded-lg p-2 hover:bg-primary hover:text-white cursor-pointer transition-all">
-          <h5 class="text-sm">Draft Curriculum Submission</h5>
-          <span class="text-xs">23:45</span>
+          <h5 class="text-sm">{{item.title}}</h5>
+          <span class="text-xs">{{item.date}}</span>
         </div>
         }
 
@@ -385,6 +334,6 @@
     </div>
 
   </div>
-
-
 </div>
+
+}

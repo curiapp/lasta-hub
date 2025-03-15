@@ -129,7 +129,7 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Stakeholders</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="stakeholder_modal.showModal()">
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="add_stakeholder_modal.showModal()">
       Add
     </button>
   </div>
@@ -148,7 +148,6 @@
     }@empty {
     <p class="text-sm text-primary">No Stakeholders</p>
     }
-
   </div>
 
   <div class="flex justify-between">
@@ -159,11 +158,11 @@
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(stake of stakeholders; track stake.email){
+    @for(submission of submissions; track submission.id){
     <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
       <div class="flex flex-col -gap-2">
-        <span class="text-base">{{stake.name}}</span>
-        <span class="text-xs text-gray-500">{{stake.email}}</span>
+        <span class="text-base">{{submission.title}}</span>
+        <span class="text-xs text-gray-500">{{submission.submissionDate}}</span>
       </div>
 
       <action-buttons></action-buttons>
@@ -176,6 +175,37 @@
   </div>
 
 </div>
+
+<dialog id="add_stakeholder_modal" class="modal">
+  <div class="modal-box">
+    <div class="space-y-4">
+      <h2 class="text-2xl">Add Stakeholders</h2>
+      <form (ngSubmit)="addStakeholder()" #stakeholderForm="ngForm" class="space-y-3">
+        <div class="form-control">
+          <div class="label">
+            <span class="label-text">Name</span>
+          </div>
+          <input required class="input input-bordered" type="text" placeholder="name" [(ngModel)]="stakeholder.name"
+            name="name" #stakename="ngModel">
+        </div>
+        <div class="form-control">
+          <div class="label">
+            <span class="label-text">Email</span>
+          </div>
+          <input required class="input input-bordered" type="email" placeholder="email" [(ngModel)]="stakeholder.email"
+            name="email" #stakeEmail="ngModel" />
+        </div>
+        <div class="form-control gap-2">
+          <button type="submit" onclick="add_stakeholder_modal.close()" [disabled]="stakeholderForm.invalid"
+            class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 
 <!-- Edit Stakeholder Modal -->
 <!-- <dialog id="stakeholder_modal" class="modal">
@@ -231,18 +261,9 @@
   <div class="flex justify-between">
     <h2 class="text-2xl">PDQA Recommendation </h2>
     <button class="btn btn-sm btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
-      Resubmit
+      PDQA Decision
     </button>
   </div>
-
-  <dialog id="PDQA_recommend" class="modal">
-    <div class="modal-box">
-      <need-analysis-conclude [code]="programme.code"></need-analysis-conclude>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-      <button>close</button>
-    </form>
-  </dialog>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
@@ -256,7 +277,18 @@
   </div>
 
 </div>
+
+<dialog id="PDQA_recommend" class="modal">
+  <div class="modal-box">
+    <need-analysis-conclude [code]="programme.code"></need-analysis-conclude>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 }
+
+
 
 @if(selectedStep ===4){
 <div class="space-y-4 my-6">

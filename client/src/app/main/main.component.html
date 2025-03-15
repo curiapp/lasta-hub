@@ -10,7 +10,7 @@
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-[1] mt-3 w-52 p-2 shadow">
           <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
-          <li [hidden]="!loggedIn()"><a routerLink='/resume'>Getting Started</a></li>
+          <!-- <li><a routerLink='/resume'>Getting Started</a></li> -->
           <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
           <li><a routerLink='/our-team' routerLinkActive="active">FAQ</a></li>
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
@@ -22,7 +22,7 @@
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
-          <li [hidden]="!loggedIn()" routerLinkActive="active"><a routerLink='/resume'>Getting Started</a></li>
+          <!-- <li [hidden]="!loggedIn()" routerLinkActive="active"><a routerLink='/resume'>Getting Started</a></li> -->
           <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
           <li><a routerLink='/our-team' routerLinkActive="active">FAQ</a></li>
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
@@ -33,33 +33,33 @@
 
     <div class="navbar-end items-center">
 
-      <!-- <div class="dropdown dropdown-end" *if="!loggedIn(); else logged">
-      <span>{{this.username}}</span>
+      @if(currentUser){
+      <details class="dropdown">
+        <summary class="btn btn-ghost btn-circle avatar">
+          <div class="avata avatar-placeholder">
+            <div class="bg-white text-primary w-10 h-10 p-0 flex items-center justify-center rounded-full">
+              <span class="uppercase text-xl">{{currentUser?.email?.slice(0,2)}}</span>
+            </div>
+          </div>
+        </summary>
 
-      <div tabIndex={0} role="button" class="btn btn-ghost btn-circle avatar">
-
-        <div class="w-10 rounded-full">
-          <img alt="user profile" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-        </div>
-      </div>
-
-      <ul tabIndex={0} class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-        <li>
-          <a class="space-y-2">
-            <h6>Profile</h6>
-            <div class="badge">Faculty:{{this.faculty}}</div>
-            <div class="badge">Department: {{this.department}}</div>
-          </a>
-        </li>
-        <li><a>Settings</a></li>
-        <li><a (click)="logout()">Logout</a></li>
-      </ul>
-    </div> -->
-
-
-      <!-- <ng-template #logged> -->
+        <ul class="menu dropdown-content rounded-box z-1 w-52  mt-3 p-2 shadow">
+          <li>
+            <a class="space-y-2">
+              <h6>Profile</h6>
+              <div class="badge capitalize">Name:{{currentUser?.name}}</div>
+              <div class="badge">email:{{currentUser?.email}}</div>
+              <div class="badge">Faculty:{{currentUser?.faculty}}</div>
+              <div class="badge">Department: {{currentUser?.department}}</div>
+            </a>
+          </li>
+          <li><a>Settings</a></li>
+          <li><a (click)="logout()">Logout</a></li>
+        </ul>
+      </details>
+      }@else {
       <a routerLink='/login' class="btn btn-sm bg-secondary border-none">Login</a>
-      <!-- </ng-template> -->
+      }
     </div>
 
   </div>
@@ -67,8 +67,6 @@
 
   <!--Main layout-->
   <div class="flex-grow">
-
-
     <router-outlet></router-outlet>
   </div>
   <!--Main layout-->

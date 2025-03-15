@@ -4,9 +4,12 @@ import { Component, Input } from '@angular/core';
 // import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { FormsModule } from '@angular/forms';
+// import { FileUploader, FileUploadModule } from 'ng2-file-upload';
+import { environment } from '../../environments/environment';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the do function to be used with the http library.
 
-// const URL = '/api/need-analysis/conclude';
+const link = `${environment.apiUrl}/api/need-analysis/conclude`;
 
 //create the component properties
 @Component({
@@ -15,7 +18,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: 'need-analysis-conclude.component.html',
   imports: [
     FormsModule,
-    // FileUploadModule
+    FileUploadModule
   ]
 })
 export class NeedAnalysisConcludeComponent {
@@ -28,7 +31,8 @@ export class NeedAnalysisConcludeComponent {
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
   //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-  // public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'check-list' });
+
+  public uploader: FileUploader = new FileUploader({ url: link, itemAlias: 'check-list' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
   // @ViewChild('selectedFile') selectedFile: any;
@@ -64,23 +68,11 @@ export class NeedAnalysisConcludeComponent {
   //   this.selectedFile.nativeElement.value = '';
   //   (<HTMLInputElement>document.getElementById("file-name")).value = "";
   // }
-  // updateFile() {
-  //   (<HTMLInputElement>document.getElementById("file-name")).value = "";
-  //   this.filename = "";
-  //   for (var i = 0; i < this.uploader.queue.length; i++) {
-  //     if (i != 0) {
-  //       this.filename += " ; " + this.uploader.queue[i].file.name;
-  //       (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
-  //     } else {
-  //       this.filename = this.uploader.queue[i].file.name;
-  //       (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
-  //     } console.log(this.uploader.queue[i].file.name);
-  //   }
-  // }
-  // setDecission(dec: string) {
-  //   this.decision = dec;
-  //   console.log(this.decision);
-  // }
+
+  setDecission(dec: string) {
+    this.decision = dec;
+    console.log(this.decision);
+  }
   // removefile() {
   //   (<HTMLInputElement>document.getElementById("file-name")).value = "";
   // }

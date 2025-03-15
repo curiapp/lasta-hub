@@ -4,8 +4,8 @@ import { NQFLevel, programmes } from '../../static';
 import { ActivatedRoute } from '@angular/router';
 import { Programme } from '../../types';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { NeedAnalysisConcludeComponent } from "../../need-analysis-conclude/need-analysis-conclude.component";
-// import { NeedAnalysisConcludeComponent } from "../../need-analysis-conclude/need-analysis-conclude.component";
+import { NeedAnalysisConcludeComponent } from '../../need-analysis-conclude/need-analysis-conclude.component';
+
 
 @Component({
   selector: 'client-need-analysis',
@@ -13,7 +13,7 @@ import { NeedAnalysisConcludeComponent } from "../../need-analysis-conclude/need
     FormsModule,
     ActionButtonsComponent,
     NeedAnalysisConcludeComponent
-],
+  ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.scss'
 })
@@ -47,7 +47,7 @@ export class NeedAnalysisComponent {
   selectedStep = 1;
   levels = NQFLevel;
   programme: Programme;
-  stakeholder: { name: string, email: string }
+  stakeholder: { name: string, email: string } = { name: '', email: '' };
 
   stakeholders = [
     {
@@ -72,6 +72,40 @@ export class NeedAnalysisComponent {
     }
   ];
 
+  submissions = [
+    {
+      "id": "a1b2c3d4-e5f6-4789-8123-567890abcdef",
+      "title": "Research Paper on Renewable Energy",
+      "submissionDate": "2025-03-21"
+    },
+    {
+      "id": "b2c3d4e5-f6a7-4890-9234-67890abcdef1",
+      "title": "Final Project - E-commerce Website",
+      "submissionDate": "2025-04-05"
+    },
+    {
+      "id": "c3d4e5f6-a7b8-4901-0345-7890abcdef12",
+      "title": "Essay on the Impact of Social Media",
+      "submissionDate": "2025-03-18"
+    },
+    {
+      "id": "d4e5f6a7-b8c9-4012-1456-890abcdef123",
+      "title": "Presentation on Business Strategy",
+      "submissionDate": "2025-04-12"
+    },
+    {
+      "id": "e5f6a7b8-c9d0-4123-2567-90abcdef1234",
+      "title": "Lab Report - Chemical Analysis",
+      "submissionDate": "2025-03-25"
+    }
+  ];
+
+
+  addStakeholder() {
+    this.stakeholders.push(this.stakeholder);
+    this.stakeholder = { name: '', email: '' };
+  }
+
   changed(event) {
     this.programme.level = event;
   }
@@ -80,7 +114,7 @@ export class NeedAnalysisComponent {
 
   }
 
-  markComplete(){
+  markComplete() {
 
   }
 

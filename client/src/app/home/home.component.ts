@@ -25,8 +25,9 @@ export class HomeComponent implements OnInit {
   programme: string;
   greetingMessage: string = '';
   programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
-  user: 'PDU' | 'LEC' = 'LEC';
+  user: string;
   showAll = false;
+  currentUser: any
 
   constructor() { }
 
@@ -47,24 +48,23 @@ export class HomeComponent implements OnInit {
     this.greetingMessage = this.getGreeting();
     this.dates = this.generateNext7Days()
     this.updateDisplayedPrograms();
+    this.loggedIn();
   }
 
   changed(event) {
     this.programme = event;
   }
   loggedIn() {
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser == null) {
-      return false;
+    let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+
+    console.log(currentUser);
+
+    if (currentUser) {
+      this.currentUser = currentUser;
     } else {
-      this.username = currentUser.username;
-      this.faculty = currentUser.faculty;
-      this.department = currentUser.department;
-      return true;
+      this.currentUser = null;
     }
   }
-
-
 
   getGreeting(): string {
     const now = new Date();
@@ -100,4 +100,31 @@ export class HomeComponent implements OnInit {
 
     return dates;
   }
+
+  upComingEvents = [
+    {
+      "id": "event-1",
+      "title": "Programme Review Workshop: Computer Science Curriculum",
+      "date": "2025-03-15",
+      "location": "Faculty of Computing, Room 201",
+      "description": "Collaborative workshop to review and update the Computer Science undergraduate curriculum based on industry trends and student feedback.",
+      "category": "Programme Review"
+    },
+    {
+      "id": "event-2",
+      "title": "Progress Meeting: Engineering Programme Accreditation",
+      "date": "2025-03-28",
+      "location": "Faculty of Engineering, Dean's Office",
+      "description": "Progress meeting to discuss the status of documentation and preparations for the upcoming engineering programme accreditation visit.",
+      "category": "Programme Progress"
+    },
+    {
+      "id": "event-3",
+      "title": "Faculty-Wide Programme Review Training",
+      "date": "2025-03-05",
+      "location": "University Main Auditorium",
+      "description": "Training session for all faculty members on the new programme review guidelines and best practices for conducting effective reviews.",
+      "category": "Programme Review"
+    }
+  ]
 }

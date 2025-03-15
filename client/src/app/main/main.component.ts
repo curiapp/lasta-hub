@@ -14,11 +14,9 @@ import { ShortSummaryService } from '../services/short-summary.service';
 })
 export class MainComponent {
   title = 'PDU - Home'
-  username: string;
-  faculty: string;
-  department: string;
-
   currentYear: number = new Date().getFullYear();
+  currentUser: any;
+
   constructor(private _location: Location, private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
   }
   ngOnInit() {
@@ -36,30 +34,23 @@ export class MainComponent {
       ).subscribe((ttl: string) => {
         this.titleService.setTitle(ttl);
       });
+    this.loggedIn();
   }
   loggedIn() {
-    let currentUser = JSON.parse(localStorage?.getItem('currentUser'));
+    let currentUser = JSON.parse(sessionStorage?.getItem('loggedInUser'));
     if (currentUser == null) {
-      return false;
+      this.currentUser = null;
     } else {
-      console.log("INSIDE HERE");
-      this.username = currentUser.usrUnit.username;
-      this.faculty = currentUser.usrUnit.faculty;
-      this.department = currentUser.usrUnit.department;
-      return true;
+      this.currentUser = currentUser;
     }
   }
-  extractUserDetails() {
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.username = currentUser.usrUnit.username;
-    this.faculty = currentUser.usrUnit.faculty;
-    this.department = currentUser.usrUnit.department;
-    console.log(localStorage.getItem("currentUser"));
-  }
   logout() {
-    console.log("User ..", JSON.parse(localStorage.getItem('currentUser')));
-    localStorage.removeItem('currentUser');
+    console.log("User ..", JSON.parse(sessionStorage.getItem('loggedInUser')));
+    sessionStorage.removeItem('loggedInUser');
+    window.location.reload();
+    this.router.navigate(["/home"])
   }
+
   isActive(path) {
     console.log(this._location);
     return this._location.path().indexOf(path) > -1;
