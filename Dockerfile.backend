@@ -1,8 +1,12 @@
 ARG KAFKA_BROKER_HOST
+ARG MULTER_UPLOAD_DIR: "/app/uploads"
+ARG FILE_STORAGE_DIR: "/app/documents"
 
 FROM node:20-slim
 
 ENV KAFKA_BROKER_HOST=${KAFKA_BROKER_HOST}
+ENV MULTER_UPLOAD_DIR="/app/uploads"
+ENV FILE_STORAGE_DIR="/app/documents"
 
 WORKDIR /app
 
