@@ -55,6 +55,7 @@ exports.NeedAnalysisRequestHandler = class NeedAnalysisRequestHandler
                     console.dir request.file
                     @repoManager.addNeedAnalysisChecklist validConclusionData.devCode, request.file, validConclusionData.decision, (repositoryError, commitHash) =>
                         if repositoryError?
+                            console.log(repositoryError, ' repo error')
                             response.status(500).json({message: "Error add the survey to the repository"})
                         else
                             validConclusionData["commitHash"] = commitHash
