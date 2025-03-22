@@ -211,7 +211,7 @@ exports.RepositoryManager = class RepositoryManager
             console.log "fileName =  #{fileName}"
             newDest = "#{destFolder}#{fileName}"
             console.log "newDest is #{newDest} and oldFileName = #{oldFileName}"
-            fs.move "/home/curi/darfur/uploads/#{oldFileName}", "/home/curi/kano/#{newDest}", (moveError) =>
+            fs.move "#{process.env.MULTER_UPLOAD_DIR}/#{oldFileName}", "#{process.env.FILE_STORAGE_DIR}/#{newDest}", (moveError) =>
                 if moveError?
                     console.log "error moving the file ..."
                     callback moveError, null
@@ -231,4 +231,4 @@ exports.RepositoryManager = class RepositoryManager
                                     callback null, commitHash
 
         constructor: ->
-            @repositoryName = '/home/curi/kano'
+            @repositoryName = "#{process.env.FILE_STORAGE_DIR}"

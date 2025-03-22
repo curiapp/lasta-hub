@@ -46,12 +46,18 @@ jobs:
 
             -   name: Build Server Container Image
                 # if: steps.filter.outputs.server == 'true'
-                # env: 
+                env: 
+                  MULTER_UPLOAD_DIR: "/app/uploads"
+                  FILE_STORAGE_DIR: "/app/documents"
+
                 #     KAFKA_BROKER_HOST: ${{ vars.KAFKA_BROKER_HOST }}
                 
                     # --build-arg KAFKA_BROKER_HOST=$KAFKA_BROKER_HOST 
                 run: |
-                    docker build -f ./Dockerfile.backend \
+                    docker build \
+                    --build-arg MULTER_UPLOAD_DIR=$MULTER_UPLOAD_DIR \
+                    --build-arg FILE_STORAGE_DIR=$FILE_STORAGE_DIR \
+                    -f ./Dockerfile.backend \
                     -t ghcr.io/curiapp/lasta-hub/pdqa-backend:$(echo $GITHUB_SHA | head -c7) .
 
             -   name: Push Server Image to GitHub Container Registry
