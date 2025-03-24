@@ -21,12 +21,17 @@ morgan               = require 'morgan'
 multer               = require 'multer'
 path                 = require 'path'
 
+uploadDir = process.env.MULTER_UPLOAD_DIR;
+
+if (!fs.existsSync(uploadDir)) 
+    fs.mkdirSync(uploadDir, { recursive: true })
+
 # loading internal libraries
 ConfigurationManager = require('./util/config-manager').ConfigurationManager
 MessageQueueManager  = require('./util/message-queue-manager').MessageQueueManager
 storerOption         =
     destination: (req, file, cb) ->
-        cb null, './uploads'
+        cb null, uploadDir
     filename: (req, file, cb) ->
         cb null, (file.originalname.split(" ")).join('')
 limitOption =

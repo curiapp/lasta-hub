@@ -20,8 +20,6 @@ exports.MessageQueueManager = class MessageQueueManager
             @msgProducer = new MessageProducer client
             @consummer = new MessageConsumer client, WorkerManager.getInstance()
 
-            console.log(process.env.KAFKA_BROKER_HOST, " kafka host address")
-
         sendMessage: (topic, message, callback) ->
             @msgProducer.send topic, message, (sendError, sendResult) ->
                 callback sendError, sendResult
