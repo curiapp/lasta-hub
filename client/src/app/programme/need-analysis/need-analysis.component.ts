@@ -4,7 +4,9 @@ import { NQFLevel, programmes } from '../../static';
 import { ActivatedRoute } from '@angular/router';
 import { Programme } from '../../types';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { NeedAnalysisConcludeComponent } from '../../need-analysis-conclude/need-analysis-conclude.component';
+import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
+import { EndConsultComponent } from "../../components/forms/end-consult/end-consult.component";
+import { NeedAnalysisConsultationComponent } from "../../need-analysis-consult/need-analysis-consult.component";
 
 
 @Component({
@@ -12,8 +14,10 @@ import { NeedAnalysisConcludeComponent } from '../../need-analysis-conclude/need
   imports: [
     FormsModule,
     ActionButtonsComponent,
-    NeedAnalysisConcludeComponent
-  ],
+    NeedAnalysisConcludeComponent,
+    EndConsultComponent,
+    NeedAnalysisConsultationComponent
+],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.scss'
 })

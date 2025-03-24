@@ -1,0 +1,90 @@
+<div class="">
+  <div class="login-wrapper">
+    <form class="space-y-4" #concludeForm="ngForm">
+      <!-- <div class="form-control w-full">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Final NA Report:</legend>
+          <input type="file" class="file-input w-full" ng2FileSelect [uploader]="uploader" />
+          <label class="fieldset-label">Max size 5MB</label>
+        </fieldset>
+      </div> -->
+
+      @if(uploader.queue.length===0){
+      <div class="flex items-center justify-center w-full">
+        <label for="dropzone-file"
+          class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+          ng2FileDrop [uploader]="uploader">
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
+              or drag and drop</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 5MB)</p>
+          </div>
+          <input id="dropzone-file" type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
+        </label>
+      </div>
+      }
+
+      @if(uploader.queue.length){
+      <div class="h-36 flex flex-col justify-center border-2 border-dashed rounded-box bg-gray-50 p-2">
+        @for (item of uploader.queue; track item.file.size) {
+        <div class="rounded-box flex items-center gap-4 p-3 group transition-all">
+          <div class="icon size-12 rounded-box bg-gray-200 grid place-items-center">
+            <!-- {{(item.file.name | Extension)===''?}} -->
+            @switch (item.file.name | Extension) {
+            @case ('pdf') {
+            <span class="material-symbols-rounded text-[35px]">
+              picture_as_pdf
+            </span>
+            }
+            @case ('docs') {
+            <span class="material-symbols-rounded text-[35px]">
+              docs
+            </span>
+            }
+            @case ('docx') {
+            <span class="material-symbols-rounded text-[35px]">
+              docs
+            </span>
+            }
+            @case ('xlsx') {
+            <span class="material-symbols-rounded text-[35px]">
+              csv
+            </span>
+            }
+            @case ('csv') {
+            <span class="material-symbols-rounded text-[35px]">
+              csv
+            </span>
+            }
+            @default {
+            <span class="material-symbols-rounded text-[35px]">
+              draft
+            </span>
+            }
+            }
+          </div>
+          <div class="flex-grow w-[70%] tooltip text-left" data-tip="file name">
+            <p class="line-clamp-1 w-full">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
+          </div>
+          @if(uploader.isUploading){
+          <span class="loading loading-spinner loading-1xl"></span>
+          }
+          <button
+            class="w-12 transition-all hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle"
+            (click)="uploader.clearQueue()">
+            <span class="material-symbols-rounded">
+              close
+            </span>
+          </button>
+        </div>
+        }
+      </div>
+      }
+    </form>
+  </div>
+</div>

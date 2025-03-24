@@ -60,7 +60,7 @@
         <div class="label">
           <span class="label-text">Proposed Programme Title</span>
         </div>
-        <input id="title" type="text" class="input input-bordered" required [(ngModel)]="programme.title" name="title"
+        <input id="title" type="text" class="input input-bordered" required [(ngModel)]="programme.name" name="title"
           #ptitle="ngModel">
         @if (ptitle.invalid) {
         <div class="label">
@@ -129,7 +129,10 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Stakeholders</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="add_stakeholder_modal.showModal()">
+    <!-- <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="add_stakeholder_modal.showModal()">
+      Add
+    </button> -->
+    <button onclick="need_analysis_consult.showModal()" class="btn btn-sm font-normal btn-secondary text-primary">
       Add
     </button>
   </div>
@@ -151,8 +154,32 @@
   </div>
 
   <div class="flex justify-between">
-    <h2 class="text-xl">Submission</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="">
+    <h2 class="text-xl">Consultations</h2>
+    <!-- <button onclick="need_analysis_consult.showModal()" class="btn btn-sm font-normal btn-secondary text-primary">
+      Add
+    </button> -->
+  </div>
+
+  <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    @for(submission of submissions; track submission.id){
+    <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
+      <div class="flex flex-col -gap-2">
+        <span class="text-base">{{submission.title}}</span>
+        <span class="text-xs text-gray-500">{{submission.submissionDate}}</span>
+      </div>
+
+      <action-buttons></action-buttons>
+
+    </div>
+    }@empty {
+    <p class="text-sm text-primary">No Submission</p>
+    }
+
+  </div>
+
+  <div class="flex justify-between">
+    <h2 class="text-xl">Survey/Questionnaire</h2>
+    <button onclick="end_consult.showModal()" class="btn btn-sm font-normal btn-secondary text-primary">
       Add
     </button>
   </div>
@@ -175,7 +202,7 @@
   </div>
 
 </div>
-
+<!-- Add Stakeholder -->
 <dialog id="add_stakeholder_modal" class="modal">
   <div class="modal-box">
     <div class="space-y-4">
@@ -206,6 +233,28 @@
     <button>close</button>
   </form>
 </dialog>
+
+<!-- Need analysis Consult  -->
+<dialog id="need_analysis_consult" class="modal">
+  <div class="modal-box">
+    <need-analysis-consult [code]="programme.code"></need-analysis-consult>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<!--End  Consult  -->
+<dialog id="end_consult" class="modal">
+  <div class="modal-box">
+    <end-consult [code]="programme.code"></end-consult>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+
 
 <!-- Edit Stakeholder Modal -->
 <!-- <dialog id="stakeholder_modal" class="modal">
@@ -260,9 +309,20 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl">PDQA Recommendation </h2>
-    <button class="btn btn-sm btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
-      PDQA Decision
-    </button>
+    <div class="join">
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
+        PDQA Decision
+      </button>
+
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="end_consult.showModal()">
+        Resubmit
+      </button>
+
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
+        Submit to BOS
+      </button>
+
+    </div>
   </div>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
@@ -271,9 +331,7 @@
       <span class="text-xs text-gray-500">Decision: Deferred</span>
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
-
     <action-buttons></action-buttons>
-
   </div>
 
 </div>
@@ -286,8 +344,16 @@
     <button>close</button>
   </form>
 </dialog>
-}
 
+<dialog id="end_consult" class="modal">
+  <div class="modal-box">
+    <end-consult [code]="programme.code"></end-consult>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+}
 
 
 @if(selectedStep ===4){

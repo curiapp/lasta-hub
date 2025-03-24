@@ -1,7 +1,7 @@
 <div class="container mx-auto h-[85vh]">
   <div class="flex items-center justify-center h-full">
     <div class="max-w-lg w-full">
-      <form (ngSubmit)="postDataToServer()" #startForm="ngForm" class="space-y-3">
+      <form (ngSubmit)="postDataToServer()" #startForm="ngForm" class="space-y-4">
         <h3 class="text-2xl">Create A New Programme </h3>
         <!-- <div [hidden]="true" class="form-group">
           <label for="departmentName">Department</label>
@@ -10,9 +10,9 @@
         </div> -->
         <div class="form-control">
           <div class="label">
-            <span class="label-text">Proposed Programme title</span>
+            <span class="label-text">Proposed Programme Name</span>
           </div>
-          <input id="programmeName" type="text" class="input input-bordered" required [(ngModel)]="programmeName"
+          <input id="programmeName" type="text" class="input input-bordered" required [(ngModel)]="programme.name"
             name="ProgrammeName" #pron="ngModel">
           @if (pron.invalid) {
           <div class="label">
@@ -27,9 +27,9 @@
           <div class="label">
             <span class="label-text">Proposed Programme Code</span>
           </div>
-          <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programmeCode"
-            name="devCode" #procode="ngModel">
-          @if (procode.invalid) {
+          <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programme.code"
+            name="devCode" #code="ngModel">
+          @if (code.invalid) {
           <div class="label">
             <span class="label-text">
               Proposed Programme Code is required
@@ -43,8 +43,9 @@
           <div class="label">
             <span class="label-text">NQF Level</span>
           </div>
-          <select class="select select-bordered w-full" title="Select level" required [ngModel]="level"
-            (ngModelChange)="changed($event)" name="level" #level="ngModel">
+          <!-- (ngModelChange)="changed($event)" -->
+          <select class="select select-bordered w-full" title="Select level" required [(ngModel)]="programme.level"
+             name="level" #level="ngModel">
             <option disabled>Select NQF Level</option>
             @for (singleLevel of levels;track singleLevel){
             <option [value]="singleLevel">{{singleLevel}}</option>

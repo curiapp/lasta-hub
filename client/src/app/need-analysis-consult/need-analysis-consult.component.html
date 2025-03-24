@@ -1,90 +1,157 @@
-<div class="container" style="padding-top:75px">
-<div class="row justify-content-md-center">
-  <div class="col-md-6 col-md-offset-3">
-      <div class="login-wrapper">
-          <form  #consultForm="ngForm">
-              <h3 class="form-title-label">1.2  Stakeholders' Consultation</h3>
-              <!-- <button type="submit" class="btn btn-default" (click)="backClicked()" >Go back</button> -->
-              <hr class="colorgraph">
-              <br>
-              <div class="form-group">
-                <div class="row px-3"><label for="ProgrammeCode">Proposed Programme Code</label><div [hidden]="!showWarning||procode.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-                  <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"  name="devCode" #procode="ngModel">
-                  <!-- <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div> -->
-              </div>
-              <br>
-              <div class="form-group">
-                <div class="row px-3"><label for="date">Consultation Start Date</label><div [hidden]="!showWarning||sdate.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-                  <div class="input-group">
-                      <input id="sdate" type="Date" class="form-control" required [(ngModel)]="model.startDate" ng2-datetime-picker date-only="true" name="sDate"
-                      placeholder="YYYY-MM-DD" #sdate="ngModel" />
-                      <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
-                  </div>
-                  <!-- <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div> -->
-              </div>
-              <br>
-               <!-- <div class="form-group">
-                  <div class="row px-3"><label for="organisation">Organisation Name</label><div [hidden]="!showWarning||this.organisationList.length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-                  <div [hidden]="sdate.valid" class="alert alert-danger">StartDate is required</div>
-              </div> -->
-              <br>
-              <div class="form-group">
-                <div class="row px-3"><label for="date">Consultation End Date</label><div [hidden]="!showWarning||edate.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-                  <div class="input-group">
-                      <input id="edate" type="Date" class="form-control" required [(ngModel)]="model.endDate" ng2-datetime-picker date-only="true" name="eDate"
-                      placeholder="YYYY-MM-DD" #edate="ngModel" />
-                      <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
-                  </div>
-                  <div [hidden]="edate.valid" class="alert alert-danger">End date is required</div>
-              </div>
-              <br>
-               <div class="form-group">
-                <div class="row px-3"><label for="organisation">Stakeholders List</label><div [hidden]="!showWarning||org.valid" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div></div>
-                  <ul>
-                    <li *for="let organisation of organisationList">
-                      {{organisation}}
-                    </li>
-                  </ul>
-                  <input type="text" id="organisation" name="organisation"  class="form-control" [(ngModel)]="model.organisation" #org="ngModel">
-                  <button (click)="addOrganisation()">Add Stakeholder name</button>
-                  <!-- <div [hidden]="org.valid" class="alert alert-danger">Organisation Name  is required</div> -->
-              </div>
-             <br>
-             <div class="form-group">
-              <div class="row px-3"><label for="doc" > Submissions: </label><!--div [hidden]="!showWarning||uploader.getNotUploadedItems().length" class="text-danger" style="margin-left: auto;margin-right: 0;"> * - required</div --></div>
-                  <button (click)="addOrganisation()">Add Stakeholder name</button>
-                  <div [hidden]="org.valid" class="alert alert-danger">Stakeholder Name  is required</div>
-              </div> -->
-             <br>
-             <div class="form-group">
-                  <label for="doc" > Questionnaires from Respodents: </label>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                    <label>
-                      <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
-                          Browse&hellip; <input class="form-control" #selectedFile type="file" name="consultation" ng2FileSelect [uploader]="uploader" (change)= "updateFile()" style="display: none;"/>
-                      </span>
-                  </label>
-                  </div>
-                  <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED" readonly>
-                  <div class="input-group-append">
-                    <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px"
-                    mdbWavesEffect (click)="removefile();uploader.clearQueue();" [disabled]="!uploader.getNotUploadedItems().length">X</button>
-                  </div>
-              </div>
-               <br>
-               </div>
-              <div class="form-group">
-                <!-- <div [hidden]="!showWarning" class="alert alert-danger">Please complete all required fields (Marked as * - required)</div> -->
-                <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue();" >Clear</button>
-                <button type="button"  class="btn btn-success btn-s" (click)="submitInfo(consultForm)" [disabled]="!uploader.getNotUploadedItems().length || !consultForm.form.valid" >
-             submit </button>
-              </div>
-          </form>
+<div class="">
+  <h3 class="text-xl mb-4">Stakeholders' Consultation</h3>
+  <form #consultForm="ngForm" class="space-y-4">
+    <div class="form-control">
+      <div class="label">
+        <label class="label-text">Consultation Start Date</label>
       </div>
-  </div>
+      <input id="sdate" type="date" class="input input-bordered input-sm" required [(ngModel)]="needAnalysis.startDate"
+        date-only="true" name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
+      @if(sdate.invalid && sdate.touched){
+      <div class="label-text">
+        <span class="label-text-alt text-red-700">Start date is required*</span>
+      </div>
+      }
+      <!-- <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div> -->
+    </div>
+
+    <div class="form-control">
+      <div class="row px-3">
+        <label class="label-text" for="date">Consultation End Date</label>
+      </div>
+      <input id="edate" type="date" class="input input-bordered input-sm" required [(ngModel)]="needAnalysis.endDate"
+        date-only="true" name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
+      @if(edate.invalid && edate.touched){
+      <div class="label">
+        <span class="label-text-alt text-red-600">End date is required*</span>
+      </div>
+      }
+    </div>
+
+    <div class="form-control mb-3">
+      <div class="label">
+        <label class="text-xl font-medium">Stakeholders List</label>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        @for (item of needAnalysis?.organisationList; track item) {
+        <div class="group px-2 py-2 rounded-md bg-primary/20 flex gap-4 items-center justify-between">
+          <p class="line-clamp-2">{{item}}</p>
+          <button class="btn btn-ghost btn-circle btn-xs hidden group-hover:block" (click)="removeOrganisation(item)">
+            <span class="material-symbols-rounded">
+              close
+            </span>
+          </button>
+        </div>
+        }@empty {
+        <span class="text-sm pl-2">No Stakeholders</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-control">
+      <div class="join w-full border-inherit items-center">
+        <div class="w-full">
+          <label class="join-item input input-bordered input-sm flex gap-2 items-center ">
+            <span class="material-symbols-rounded">
+              group
+            </span>
+            <input type="text" placeholder="enter stakeholder" id="organisation" name="organisation"
+             required class="grow" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
+          </label>
+          <!-- <div class="validator-hint hidden">Enter Stakeholder Name</div> -->
+        </div>
+        <button [disabled]="org.invalid" [dir]="org.valid" (click)="addOrganisation()" class="btn btn-sm btn-primary join-item">Add</button>
+      </div>
+      <!-- @if(org.invalid && org.touched){
+      <div class="label">
+        <span class="label-text-alt text-red-700">Stakeholder Name is required*</span>
+      </div>
+      } -->
+    </div>
+
+    <div class="form-control space-y-4">
+      <label class="text-sm font-semibold" for="doc"> Questionnaires from Respodents: </label>
+
+      <div class="flex items-center justify-center w-full">
+        <label for="dropzone-file"
+          class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+          ng2FileDrop [uploader]="uploader">
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
+              or drag and drop</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 50MB)</p>
+          </div>
+          <input id="dropzone-file" type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
+        </label>
+      </div>
+
+      <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-lg p-2 space-y-2">
+        @for (item of uploader.queue; track item.file.size) {
+        <div class="flex items-center gap-4 p-1 border-b group transition-all">
+          <div class="icon size-8 rounded-md bg-gray-200 grid place-items-center">
+            @switch (item.file.name | Extension) {
+            @case ('pdf') {
+            <span class="material-symbols-rounded text-[24px]">
+              picture_as_pdf
+            </span>
+            }
+            @case ('docs') {
+            <span class="material-symbols-rounded text-[24px]">
+              docs
+            </span>
+            }
+            @case ('docx') {
+            <span class="material-symbols-rounded text-[24px]">
+              docs
+            </span>
+            }
+            @case ('xlsx') {
+            <span class="material-symbols-rounded text-[24px]">
+              csv
+            </span>
+            }
+            @case ('csv') {
+            <span class="material-symbols-rounded text-[24px]">
+              csv
+            </span>
+            }
+            @default {
+            <span class="material-symbols-rounded text-[24px]">
+              draft
+            </span>
+            }
+            }
+          </div>
+          <div class="flex-grow w-[70%] tooltip text-left" data-tip="file name">
+            <p class="line-clamp-1 w-full">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
+          </div>
+          @if(uploader.isUploading){
+          <span class="loading loading-spinner loading-1xl"></span>
+          }
+          <button
+            class="w-12 hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle btn-sm"
+            (click)="removeFile(item)">
+            <span class="material-symbols-rounded">
+              close
+            </span>
+          </button>
+        </div>
+        }@empty {
+        <span class="text-xs text-center my-2 w-full h-full">No file selected</span>
+        }
+      </div>
+    </div>
+
+    <div class="join join-horizontal lg:join-horizontal w-full justify-center">
+      <button type="button" class="btn btn-primary btn-sm join-item w-full" (click)="submitInfo(consultForm)"
+        [disabled]="!uploader.queue.length">
+        submit
+      </button>
+    </div>
+  </form>
 </div>

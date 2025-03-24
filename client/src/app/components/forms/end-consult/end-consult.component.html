@@ -1,0 +1,16 @@
+<div class="space-y-4">
+  <h3 class="text-xl mb-4">Need Identification -- End of Consultation</h3>
+  <label class="text-sm font-bold"> Survey/ Final Report: </label>
+
+  <file-upload [code]="code" [url]="url" itemAlias="survey"></file-upload>
+
+  <div class="join join-horizontal lg:join-horizontal w-full justify-center">
+    <button type="button" class="btn btn-sm btn-primary" (click)="fileUpload.uploader.uploadAll()"
+      [disabled]="!fileUpload?.uploader.queue.length">
+      Submit
+      <span class="material-symbols-rounded">
+        cloud_upload
+      </span>
+    </button>
+  </div>
+</div>

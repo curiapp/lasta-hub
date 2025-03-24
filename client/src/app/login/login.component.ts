@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { UserAuthenticationService } from '../services/authentication.service';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FileUploadModule } from 'ng2-file-upload';
-//import { triggerAsyncId } from 'async_hooks';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -14,75 +13,38 @@ import { FileUploadModule } from 'ng2-file-upload';
 })
 export class LoginComponent {
 
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthenticationService,
+    private _location: Location
+  ) { }
+
   model: { username: string, password: string } = {
     username: '',
     password: ''
   };
-  returnUrl: string;
+  isLoadig: boolean;
   message: string;
-  loading: boolean = false;
-
-  constructor(private router: Router, private route: ActivatedRoute, private authService: UserAuthenticationService,
-    private _location: Location) { }
-
-  getUsers() {
-    const users = localStorage.getItem('users');
-    return users ? JSON.parse(users) : [];
-  }
+  private _loading = inject(LoadingService);
+  isLoading = this?._loading.isLoading;
 
   onSubmit() {
-    console.log("started auth services")
-    console.log("Username ", this.model.username)
-    console.log("Password ", this.model.password)
-    this.loading = true;
+    this.authService.login(this.model)
+      .subscribe(
+        {
+          next: (data) => {
+            console.log('Hi I am here', data);
+            sessionStorage.setItem('loggedInUser', JSON.stringify(data));
+            this.router.navigate(['/home']);
+          },
+          error: (error: any) => {
+            this.message = "Invalid username or password";
+          }
+        }
+      );
 
-    const count = setTimeout(() => {
-      this.loading = false;
-
-      const users = this.getUsers();
-
-      const user = users.find(u => u.email === this.model.username && u.password === this.model.password);
-
-      if (user) {
-        sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-        this.router.navigate(['/home']);
-      } else {
-        this.message = 'Invalid email or password.';
-      }
-
-    }, 2000);
-
-
-
-    // this.authService.login(this.model.username, this.model.password)
-    //   .subscribe(
-    //     data => {
-    //       console.log('Hi I am here' + data);
-    //       alert("You have successfully logged in");
-    //       this.router.navigate(['/home']);
-    //       //this.router.navigate([this.returnUrl]);
-    //     },
-    //     error => {
-    //       if (Number.parseInt(status) > 500) {
-    //         alert("Please make sure your password and username are correct");
-    //       }
-    //       else if (Number.parseInt(status) === 400) {
-    //         alert("Invalid input format ");
-
-    //       }
-    //       else if (Number.parseInt(status) === 500) {
-    //         alert("Internal server error");
-
-    //       }
-    //       else {
-
-
-    //         alert("Make sure your login details are correct and you are connected to the network");
-    //       }
-
-    //       //alert('Error ' + error);
-    //     });
   }
+
   close() {
     console.log("closing the window...");
     this.model.username = "username";

@@ -34,25 +34,32 @@
     <div class="navbar-end items-center">
 
       @if(currentUser){
-      <details class="dropdown">
+      <details class="dropdown dropdown-bottom dropdown-left">
         <summary class="btn btn-ghost btn-circle avatar">
           <div class="avata avatar-placeholder">
             <div class="bg-white text-primary w-10 h-10 p-0 flex items-center justify-center rounded-full">
-              <span class="uppercase text-xl">{{currentUser?.email?.slice(0,2)}}</span>
+              <span class="uppercase text-xl">{{currentUser?.firstname?.slice(0,1)}}{{currentUser?.lastname?.slice(0,1)}}</span>
             </div>
           </div>
         </summary>
 
-        <ul class="menu dropdown-content rounded-box z-1 w-52  mt-3 p-2 shadow">
+        <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-56  mt-3 p-2 shadow">
           <li>
-            <a class="space-y-2">
-              <h6>Profile</h6>
-              <div class="badge capitalize">Name:{{currentUser?.name}}</div>
-              <div class="badge">email:{{currentUser?.email}}</div>
-              <div class="badge">Faculty:{{currentUser?.faculty}}</div>
-              <div class="badge">Department: {{currentUser?.department}}</div>
-            </a>
+            <h6 class="text-lg">Profile</h6>
           </li>
+          <li>
+            <span class="text-xs">Name: {{currentUser?.firstname}} {{currentUser?.lastname}}</span>
+          </li>
+          <li>
+            <span class="text-xs">Email: {{currentUser?.emailAddress}}</span>
+          </li>
+          <li>
+            <span class="text-xs">Faculty: {{currentUser?.usrUnit?.faculty}}</span>
+          </li>
+          <li>
+            <span class="text-xs">Department: {{currentUser?.usrUnit?.department}}</span>
+          </li>
+          <hr>
           <li><a>Settings</a></li>
           <li><a (click)="logout()">Logout</a></li>
         </ul>

@@ -2,7 +2,7 @@ export const programmes = [
   {
     "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Computer Science",
+    "name": "Bachelor of Science in Computer Science",
     "createdDate": "2023-01-15",
     "lastReviewDate": "2024-01-15",
     "stage": "Active",
@@ -15,7 +15,7 @@ export const programmes = [
   {
     "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Psychology",
+    "name": "Bachelor of Arts in Psychology",
     "createdDate": "2023-02-20",
     "lastReviewDate": "2024-02-20",
     "stage": "Active",
@@ -28,7 +28,7 @@ export const programmes = [
   {
     "id": "c3d4e5f6-a7b8-9012-3456-7890abcdef12",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Environmental Biology",
+    "name": "Bachelor of Science in Environmental Biology",
     "createdDate": "2023-03-25",
     "lastReviewDate": "2024-03-25",
     "stage": "Active",
@@ -41,7 +41,7 @@ export const programmes = [
   {
     "id": "d4e5f6a7-b8c9-0123-4567-890abcdef123",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Business Administration in Marketing",
+    "name": "Bachelor of Business Administration in Marketing",
     "createdDate": "2023-04-30",
     "lastReviewDate": "2024-04-30",
     "stage": "Active",
@@ -54,7 +54,7 @@ export const programmes = [
   {
     "id": "e5f6a7b8-c9d0-1234-5678-abcdef12345",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Public Health",
+    "name": "Bachelor of Science in Public Health",
     "createdDate": "2023-05-05",
     "lastReviewDate": "2024-05-05",
     "stage": "Active",
@@ -67,7 +67,7 @@ export const programmes = [
   {
     "id": "f6a7b8c9-d0e1-2345-6789-bcdef123456",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Architectural Studies",
+    "name": "Bachelor of Science in Architectural Studies",
     "createdDate": "2023-06-10",
     "lastReviewDate": "2024-06-10",
     "stage": "Active",
@@ -80,7 +80,7 @@ export const programmes = [
   {
     "id": "a7b8c9d0-e1f2-3456-7890-cdef1234567",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Education",
+    "name": "Bachelor of Arts in Education",
     "createdDate": "2023-07-15",
     "lastReviewDate": "2024-07-15",
     "stage": "Active",
@@ -93,7 +93,7 @@ export const programmes = [
   {
     "id": "b8c9d0e1-f2a3-4567-8901-def12345678",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Applied Chemistry",
+    "name": "Bachelor of Science in Applied Chemistry",
     "createdDate": "2023-08-20",
     "lastReviewDate": "2024-08-20",
     "stage": "Active",
@@ -106,7 +106,7 @@ export const programmes = [
   {
     "id": "c9d0e1f2-a3b4-5678-9012-ef123456789",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Master of Business Administration",
+    "name": "Master of Business Administration",
     "createdDate": "2023-09-25",
     "lastReviewDate": "2024-09-25",
     "stage": "Active",
@@ -119,7 +119,7 @@ export const programmes = [
   {
     "id": "d0e1f2a3-b4c5-6789-0123-f1234567890",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Medical Laboratory Sciences",
+    "name": "Bachelor of Science in Medical Laboratory Sciences",
     "createdDate": "2023-10-30",
     "lastReviewDate": "2024-10-30",
     "stage": "Active",
@@ -132,7 +132,7 @@ export const programmes = [
   {
     "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Computer Science",
+    "name": "Bachelor of Science in Computer Science",
     "createdDate": "2023-01-15",
     "lastReviewDate": "2024-01-15",
     "stage": "Active",
@@ -145,7 +145,7 @@ export const programmes = [
   {
     "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Psychology",
+    "name": "Bachelor of Arts in Psychology",
     "createdDate": "2023-02-20",
     "lastReviewDate": "2024-02-20",
     "stage": "Active",
@@ -158,7 +158,7 @@ export const programmes = [
   {
     "id": "c3d4e5f6-a7b8-9012-3456-7890abcdef12",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Environmental Biology",
+    "name": "Bachelor of Science in Environmental Biology",
     "createdDate": "2023-03-25",
     "lastReviewDate": "2024-03-25",
     "stage": "Active",
@@ -171,7 +171,7 @@ export const programmes = [
   {
     "id": "d4e5f6a7-b8c9-0123-4567-890abcdef123",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Business Administration in Marketing",
+    "name": "Bachelor of Business Administration in Marketing",
     "createdDate": "2023-04-30",
     "lastReviewDate": "2024-04-30",
     "stage": "Active",
@@ -184,7 +184,7 @@ export const programmes = [
   {
     "id": "e5f6a7b8-c9d0-1234-5678-abcdef12345",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Public Health",
+    "name": "Bachelor of Science in Public Health",
     "createdDate": "2023-05-05",
     "lastReviewDate": "2024-05-05",
     "stage": "Active",
@@ -197,7 +197,7 @@ export const programmes = [
   {
     "id": "f6a7b8c9-d0e1-2345-6789-bcdef123456",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Architectural Studies",
+    "name": "Bachelor of Science in Architectural Studies",
     "createdDate": "2023-06-10",
     "lastReviewDate": "2024-06-10",
     "stage": "Active",
@@ -210,7 +210,7 @@ export const programmes = [
   {
     "id": "a7b8c9d0-e1f2-3456-7890-cdef1234567",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Education",
+    "name": "Bachelor of Arts in Education",
     "createdDate": "2023-07-15",
     "lastReviewDate": "2024-07-15",
     "stage": "Active",
@@ -223,7 +223,7 @@ export const programmes = [
   {
     "id": "b8c9d0e1-f2a3-4567-8901-def12345678",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Applied Chemistry",
+    "name": "Bachelor of Science in Applied Chemistry",
     "createdDate": "2023-08-20",
     "lastReviewDate": "2024-08-20",
     "stage": "Active",
@@ -236,7 +236,7 @@ export const programmes = [
   {
     "id": "c9d0e1f2-a3b4-5678-9012-ef123456789",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Master of Business Administration",
+    "name": "Master of Business Administration",
     "createdDate": "2023-09-25",
     "lastReviewDate": "2024-09-25",
     "stage": "Active",
@@ -249,7 +249,7 @@ export const programmes = [
   {
     "id": "d0e1f2a3-b4c5-6789-0123-f1234567890",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Medical Laboratory Sciences",
+    "name": "Bachelor of Science in Medical Laboratory Sciences",
     "createdDate": "2023-10-30",
     "lastReviewDate": "2024-10-30",
     "stage": "Active",
@@ -262,7 +262,7 @@ export const programmes = [
   {
     "id": "e1f2a3b4-c5d6-7890-1234-1234567890ab",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Mechatronics Engineering",
+    "name": "Bachelor of Science in Mechatronics Engineering",
     "createdDate": "2023-11-05",
     "lastReviewDate": "2024-11-05",
     "stage": "Active",
@@ -275,7 +275,7 @@ export const programmes = [
   {
     "id": "f2a3b4c5-d6e7-8901-2345-234567890abc",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Information Technology",
+    "name": "Bachelor of Information Technology",
     "createdDate": "2023-12-10",
     "lastReviewDate": "2024-12-10",
     "stage": "Active",
@@ -288,7 +288,7 @@ export const programmes = [
   {
     "id": "a3b4c5d6-e7f8-9012-3456-34567890abcd",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Food Science and Technology",
+    "name": "Bachelor of Science in Food Science and Technology",
     "createdDate": "2024-01-15",
     "lastReviewDate": "2025-01-15",
     "stage": "Active",
@@ -301,7 +301,7 @@ export const programmes = [
   {
     "id": "b4c5d6e7-f8a9-0123-4567-4567890abcde",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Social Work",
+    "name": "Bachelor of Arts in Social Work",
     "createdDate": "2024-02-20",
     "lastReviewDate": "2025-02-20",
     "stage": "Active",
@@ -314,7 +314,7 @@ export const programmes = [
   {
     "id": "c5d6e7f8-a9b0-1234-5678-567890abcdef",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Construction Management",
+    "name": "Bachelor of Science in Construction Management",
     "createdDate": "2024-03-25",
     "lastReviewDate": "2025-03-25",
     "stage": "Active",
@@ -327,7 +327,7 @@ export const programmes = [
   {
     "id": "d6e7f8a9-b0c1-2345-6789-67890abcdef1",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Information Systems",
+    "name": "Bachelor of Science in Information Systems",
     "createdDate": "2024-04-30",
     "lastReviewDate": "2025-04-30",
     "stage": "Active",
@@ -340,7 +340,7 @@ export const programmes = [
   {
     "id": "e7f8a9b0-c1d2-3456-7890-7890abcdef12",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Radiography",
+    "name": "Bachelor of Science in Radiography",
     "createdDate": "2024-05-05",
     "lastReviewDate": "2025-05-05",
     "stage": "Active",
@@ -353,7 +353,7 @@ export const programmes = [
   {
     "id": "f8a9b0c1-d2e3-4567-8901-8901abcdef123",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Communication",
+    "name": "Bachelor of Arts in Communication",
     "createdDate": "2024-06-10",
     "lastReviewDate": "2025-06-10",
     "stage": "Active",
@@ -366,7 +366,7 @@ export const programmes = [
   {
     "id": "a9b0c1d2-e3f4-5678-9012-9012abcdef1234",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Quantity Surveying",
+    "name": "Bachelor of Science in Quantity Surveying",
     "createdDate": "2024-07-15",
     "lastReviewDate": "2025-07-15",
     "stage": "Active",
@@ -379,7 +379,7 @@ export const programmes = [
   {
     "id": "b0c1d2e3-f4a5-6789-0123-0123abcdef12345",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Software Engineering",
+    "name": "Bachelor of Science in Software Engineering",
     "createdDate": "2024-08-20",
     "lastReviewDate": "2025-08-20",
     "stage": "Active",
@@ -392,7 +392,7 @@ export const programmes = [
   {
     "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Computer Science",
+    "name": "Bachelor of Science in Computer Science",
     "createdDate": "2023-01-15",
     "lastReviewDate": "2024-01-15",
     "stage": "Active",
@@ -405,7 +405,7 @@ export const programmes = [
   {
     "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Psychology",
+    "name": "Bachelor of Arts in Psychology",
     "createdDate": "2023-02-20",
     "lastReviewDate": "2024-02-20",
     "stage": "Active",
@@ -418,7 +418,7 @@ export const programmes = [
   {
     "id": "c3d4e5f6-a7b8-9012-3456-7890abcdef12",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Environmental Biology",
+    "name": "Bachelor of Science in Environmental Biology",
     "createdDate": "2023-03-25",
     "lastReviewDate": "2024-03-25",
     "stage": "Active",
@@ -431,7 +431,7 @@ export const programmes = [
   {
     "id": "d4e5f6a7-b8c9-0123-4567-890abcdef123",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Business Administration in Marketing",
+    "name": "Bachelor of Business Administration in Marketing",
     "createdDate": "2023-04-30",
     "lastReviewDate": "2024-04-30",
     "stage": "Active",
@@ -444,7 +444,7 @@ export const programmes = [
   {
     "id": "e5f6a7b8-c9d0-1234-5678-abcdef12345",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Public Health",
+    "name": "Bachelor of Science in Public Health",
     "createdDate": "2023-05-05",
     "lastReviewDate": "2024-05-05",
     "stage": "Active",
@@ -457,7 +457,7 @@ export const programmes = [
   {
     "id": "f6a7b8c9-d0e1-2345-6789-bcdef123456",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Architectural Studies",
+    "name": "Bachelor of Science in Architectural Studies",
     "createdDate": "2023-06-10",
     "lastReviewDate": "2024-06-10",
     "stage": "Active",
@@ -470,7 +470,7 @@ export const programmes = [
   {
     "id": "a7b8c9d0-e1f2-3456-7890-cdef1234567",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Education",
+    "name": "Bachelor of Arts in Education",
     "createdDate": "2023-07-15",
     "lastReviewDate": "2024-07-15",
     "stage": "Active",
@@ -483,7 +483,7 @@ export const programmes = [
   {
     "id": "b8c9d0e1-f2a3-4567-8901-def12345678",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Applied Chemistry",
+    "name": "Bachelor of Science in Applied Chemistry",
     "createdDate": "2023-08-20",
     "lastReviewDate": "2024-08-20",
     "stage": "Active",
@@ -496,7 +496,7 @@ export const programmes = [
   {
     "id": "c9d0e1f2-a3b4-5678-9012-ef123456789",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Master of Business Administration",
+    "name": "Master of Business Administration",
     "createdDate": "2023-09-25",
     "lastReviewDate": "2024-09-25",
     "stage": "Active",
@@ -509,7 +509,7 @@ export const programmes = [
   {
     "id": "d0e1f2a3-b4c5-6789-0123-f1234567890",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Medical Laboratory Sciences",
+    "name": "Bachelor of Science in Medical Laboratory Sciences",
     "createdDate": "2023-10-30",
     "lastReviewDate": "2024-10-30",
     "stage": "Active",
@@ -522,7 +522,7 @@ export const programmes = [
   {
     "id": "e1f2a3b4-c5d6-7890-1234-1234567890ab",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Mechatronics Engineering",
+    "name": "Bachelor of Science in Mechatronics Engineering",
     "createdDate": "2023-11-05",
     "lastReviewDate": "2024-11-05",
     "stage": "Active",
@@ -535,7 +535,7 @@ export const programmes = [
   {
     "id": "f2a3b4c5-d6e7-8901-2345-234567890abc",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Information Technology",
+    "name": "Bachelor of Information Technology",
     "createdDate": "2023-12-10",
     "lastReviewDate": "2024-12-10",
     "stage": "Active",
@@ -548,7 +548,7 @@ export const programmes = [
   {
     "id": "a3b4c5d6-e7f8-9012-3456-34567890abcd",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Food Science and Technology",
+    "name": "Bachelor of Science in Food Science and Technology",
     "createdDate": "2024-01-15",
     "lastReviewDate": "2025-01-15",
     "stage": "Active",
@@ -561,7 +561,7 @@ export const programmes = [
   {
     "id": "b4c5d6e7-f8a9-0123-4567-4567890abcde",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Social Work",
+    "name": "Bachelor of Arts in Social Work",
     "createdDate": "2024-02-20",
     "lastReviewDate": "2025-02-20",
     "stage": "Active",
@@ -574,7 +574,7 @@ export const programmes = [
   {
     "id": "c5d6e7f8-a9b0-1234-5678-567890abcdef",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Construction Management",
+    "name": "Bachelor of Science in Construction Management",
     "createdDate": "2024-03-25",
     "lastReviewDate": "2025-03-25",
     "stage": "Active",
@@ -587,7 +587,7 @@ export const programmes = [
   {
     "id": "d6e7f8a9-b0c1-2345-6789-67890abcdef1",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Information Systems",
+    "name": "Bachelor of Science in Information Systems",
     "createdDate": "2024-04-30",
     "lastReviewDate": "2025-04-30",
     "stage": "Active",
@@ -600,7 +600,7 @@ export const programmes = [
   {
     "id": "e7f8a9b0-c1d2-3456-7890-7890abcdef12",
     "faculty": "Faculty of Health, Natural Resources and Applied Sciences",
-    "title": "Bachelor of Science in Radiography",
+    "name": "Bachelor of Science in Radiography",
     "createdDate": "2024-05-05",
     "lastReviewDate": "2025-05-05",
     "stage": "Active",
@@ -613,7 +613,7 @@ export const programmes = [
   {
     "id": "f8a9b0c1-d2e3-4567-8901-8901abcdef123",
     "faculty": "Faculty of Commerce, Human Sciences and Education",
-    "title": "Bachelor of Arts in Communication",
+    "name": "Bachelor of Arts in Communication",
     "createdDate": "2024-06-10",
     "lastReviewDate": "2025-06-10",
     "stage": "Active",
@@ -626,7 +626,7 @@ export const programmes = [
   {
     "id": "a9b0c1d2-e3f4-5678-9012-9012abcdef1234",
     "faculty": "Faculty of Engineering and the Built Environment",
-    "title": "Bachelor of Science in Quantity Surveying",
+    "name": "Bachelor of Science in Quantity Surveying",
     "createdDate": "2024-07-15",
     "lastReviewDate": "2025-07-15",
     "stage": "Active",
@@ -639,7 +639,7 @@ export const programmes = [
   {
     "id": "b0c1d2e3-f4a5-6789-0123-0123abcdef12345",
     "faculty": "Faculty of Computing and Informatics",
-    "title": "Bachelor of Science in Software Engineering",
+    "name": "Bachelor of Science in Software Engineering",
     "createdDate": "2024-08-20",
     "lastReviewDate": "2025-08-20",
     "stage": "Active",

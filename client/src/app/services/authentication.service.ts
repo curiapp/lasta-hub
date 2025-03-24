@@ -1,32 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { ToastService } from './toast.service';
+import { handleError } from '../functions';
 
+
+type User = {
+  username: string;
+  password: string;
+}
 @Injectable({
   providedIn: 'root'
 })
-export class UserAuthenticationService {
-  constructor(private commer: HttpClient) { }
-  lastname: string;
+export class AuthenticationService {
 
+  constructor(private http: HttpClient, private toast: ToastService) { }
 
-  login(loginName: string, loginPass: string) {
-    let authHeaders = new Headers({ 'Content-Type': 'application/json' });
-    // let authOptions = new RequestOptions({headers: authHeaders});
-    // authOptions
+  login({ username, password }: User) {
 
-    return this.commer.post('/api/users/authenticate', { username: loginName, password: loginPass }, {}).pipe(
-      map((response: any) => {
-        let user = response.json();
-        if (user && user.token) {
-          console.log("logged in", user);
-          localStorage.setItem('currentUser', JSON.stringify(user));
-        }
-      }));
+    return this.http.post(`${environment.apiUrl}/users/authenticate`, { username: username, password: password }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      // map((response: any) => response.json()),
+      catchError(handleError)
+    )
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('loggedInUser');
   }
 }

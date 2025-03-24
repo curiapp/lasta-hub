@@ -57,8 +57,7 @@ export class HomeComponent implements OnInit {
   loggedIn() {
     let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
-    console.log(currentUser);
-
+    // console.log(currentUser);
     if (currentUser) {
       this.currentUser = currentUser;
     } else {
