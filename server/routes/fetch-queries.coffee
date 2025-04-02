@@ -2,7 +2,7 @@
 couchbase = require("couchbase")
 async = require 'async'
 
-clusterConnStr = 'couchbase://localhost'
+clusterConnStr = "couchbase://#{process.env.DB_URL}"
 username = 'admin'
 password = 'password'
 bucketName = 'yester-users'
@@ -10,8 +10,6 @@ bucketName = 'yester-users'
 cluster = null
 bucket = null
 collection = null
-
-async = require "async"
 
 initializeDatabase = (callback) ->
     async.series [
