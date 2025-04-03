@@ -61,9 +61,9 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     this.uploader.onBuildItemForm = (item: any
       , form: any) => {
       form.append('devCode', this.code);
-      form.append('sdate', this.needAnalysis.startDate);
-      form.append('edate', this.needAnalysis.endDate);
-      form.append('organisation-list', JSON.stringify(this.needAnalysis.organisationList));
+      form.append('sDate', this.needAnalysis.startDate);
+      form.append('eDate', this.needAnalysis.endDate);
+      form.append('organizationList', JSON.stringify(this.needAnalysis.organisationList));
     };
 
 
