@@ -32,7 +32,7 @@ module.exports = (app, uploader) ->
         NeedAnalysisRequestHandler.getInstance().startSenatePhase request, response
 
     app.route('/api/need-analysis/senate/recommend').post  uploader.single('recommendation'), (request, response) ->
-        console.log "new POST request to /api/need-analysis/bos/recommend ..."
+        console.log "new POST request to /api/need-analysis/senate/recommend ..."
         NeedAnalysisRequestHandler.getInstance().recordSenateRecommendations request, response
 
     app.route('/api/need-analysis/apc/recommend').post uploader.single('apc'), (request, response) ->
