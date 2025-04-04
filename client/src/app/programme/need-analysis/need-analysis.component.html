@@ -431,7 +431,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <bos-submit [programmeCode]="programme.code"></bos-submit>
+    <senate-submit [code]="programme.code"></senate-submit>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -444,6 +444,11 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">APC Recommendation</h2>
+    <div class="join">
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="apc_submit.showModal()">
+        Recommendation
+      </button>
+    </div>
   </div>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
@@ -458,12 +463,31 @@
   </div>
 
 </div>
+
+<dialog id="apc_submit" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <apc-recommend [code]="programme.code"></apc-recommend>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 }
 
 @if(selectedStep ===6){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">Senate Approval</h2>
+
+    <div class="join">
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="senate_submit.showModal()">
+        Recommendation
+      </button>
+    </div>
+
   </div>
 
 
@@ -476,6 +500,17 @@
 
     <action-buttons></action-buttons>
   </div>
-
 </div>
+
+<dialog id="senate_submit" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <senate-recommend [code]="programme.code"></senate-recommend>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 }

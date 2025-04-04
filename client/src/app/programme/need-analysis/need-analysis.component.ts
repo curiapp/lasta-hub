@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NQFLevel, programmes } from '../../static';
 import { ActivatedRoute } from '@angular/router';
-import { Programme } from '../../types';
+import { ApcComponent } from "../../apc/apc.component";
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
-import { EndConsultComponent } from "../../components/forms/end-consult/end-consult.component";
-import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
 import { BosSubmitComponent } from '../../components/forms/bos-submit/bos-submit.component';
 import { BosComponent } from "../../components/forms/bos/bos.component";
+import { EndConsultComponent } from "../../components/forms/end-consult/end-consult.component";
+import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
+import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
+import { SenateSubmitComponent } from "../../components/forms/senate-submit/senate-submit.component";
+import { NQFLevel, programmes } from '../../static';
+import { Programme } from '../../types';
+import { SenateComponent } from "../senate/senate.component";
 
 
 @Component({
@@ -20,7 +23,10 @@ import { BosComponent } from "../../components/forms/bos/bos.component";
     EndConsultComponent,
     NeedAnalysisConsultationComponent,
     BosSubmitComponent,
-    BosComponent
+    BosComponent,
+    SenateSubmitComponent,
+    ApcComponent,
+    SenateComponent
 ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.scss'
