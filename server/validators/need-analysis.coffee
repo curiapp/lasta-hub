@@ -38,7 +38,7 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
             callback orgNameError, validOrgName
 
     checkAndSanitizeOrganizationNameCol: (organizationNameCol, callback) ->
-        orgaFuncs = organizationNameCol.map (orgaItem) =>
+        orgaFuncs = JSON.parse(organizationNameCol).map (orgaItem) =>
             currentOrgaFunc = (partialOrgaCallback) =>
                 @checkAndSanitizeOrganizationName orgaItem, (singleOrgaNameError, validSingleOrgaName) =>
                     partialOrgaCallback singleOrgaNameError, validSingleOrgaName
@@ -112,7 +112,7 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
                 @checkAndSanitizeConsultationDate consultationData.eDate, (consultationEDateError, validConsultationEDate) =>
                     date2PartialCallback consultationEDateError, validConsultationEDate
             organization: (organizationPartialCallback) =>
-                @checkAndSanitizeOrganizationNameCol consultationData.organization-list, (organizationNameError, validOrganizationName) =>
+                @checkAndSanitizeOrganizationNameCol consultationData.organizationList, (organizationNameError, validOrganizationName) =>
                     organizationPartialCallback organizationNameError, validOrganizationName
             devCode: (devCodePartialCallback) =>
                 @checkAndSanitizeDevCode consultationData.devCode, (devCodeError, validDevCode) =>

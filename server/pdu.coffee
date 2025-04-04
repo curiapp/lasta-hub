@@ -45,19 +45,6 @@ oneDay = 8640000
 # create the express application
 app = express()
 
-# set up view template
-# app.set 'views', __dirname + '/../client/views'
-# app.engine('html', require('ejs').renderFile)
-
-app.set 'views', __dirname + '/../local-app/dist/local-app/'
-app.engine('html', require('ejs').renderFile)
-
-app.use express.static(__dirname + '/../local-app/dist/local-app/', {maxAge: 8640000})
-
-
-# static files
-# app.use express.static(__dirname + '/../client/public/', {maxAge: oneDay})
-
 # setting file upload limit
 # app.use(express.limit('5mb'))
 
@@ -85,9 +72,10 @@ require('./routes/consultations')(app, uploader)
 require('./routes/reviews')(app, uploader)
 require('./routes/inst-bodies')(app, uploader)
 require('./routes/qualifications')(app, uploader)
+require('./routes/fetch-queries')(app, uploader)
 
 # insert view routes
-require('./routes/views')(app)
+# require('./routes/views')(app)
 
 # create the message queue producers and consumers
 MessageQueueManager.getInstance()
