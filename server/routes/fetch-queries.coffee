@@ -43,8 +43,18 @@ module.exports = (app, uploader) ->
     # Get programmes
     app.route('/api/programmes').get (request, response) ->
         console.log "new GET request to /api/programmes ..."
+        query = """
+            SELECT * FROM \`yester-programmes\`._default._default 
+        """
 
-        cluster.query("SELECT * FROM \`yester-programmes\`._default._default")
+        options =  { parameters: [] }
+        devCode = request.query.devCode
+
+        if(devCode)
+            query += "WHERE preProgComponent.devCode=$#{options.parameters.length + 1}"
+            options.parameters.push(devCode) 
+
+        cluster.query(query, options)
             .then (data) ->
                 programmes = data.rows.map (row) -> row._default
                 response.json programmes
