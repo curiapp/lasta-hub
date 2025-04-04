@@ -4,7 +4,7 @@
     <div class="form-control mb-4">
       <label for="date">Consultation Date</label>
       <div class="input-group">
-        <input id="date" type="Date" class="input input-bordered w-full" required [(ngModel)]="model.consultationDate"
+        <input id="date" type="Date" class="input input-bordered w-full" required [(ngModel)]="model.date"
           ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       </div>
       @if(cdate.invalid && cdate.touched){

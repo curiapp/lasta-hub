@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ApcComponent } from "../../apc/apc.component";
+import { ApcComponent } from "../../components/forms/apc/apc.component";
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { BosSubmitComponent } from '../../components/forms/bos-submit/bos-submit.component';
 import { BosComponent } from "../../components/forms/bos/bos.component";
@@ -11,7 +11,7 @@ import { NeedAnalysisConsultationComponent } from "../../components/forms/need-a
 import { SenateSubmitComponent } from "../../components/forms/senate-submit/senate-submit.component";
 import { NQFLevel, programmes } from '../../static';
 import { Programme } from '../../types';
-import { SenateComponent } from "../senate/senate.component";
+import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";
 
 
 @Component({

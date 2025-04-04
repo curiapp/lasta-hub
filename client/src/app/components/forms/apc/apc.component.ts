@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { FileUploadComponent } from "../components/forms/file-upload/file-upload.component";
-import { SharedModule } from '../shared.module';
+import { environment } from '../../../../environments/environment';
+import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { SharedModule } from '../../../shared.module';
 
 @Component({
   selector: 'apc-recommend',
@@ -11,7 +11,6 @@ import { SharedModule } from '../shared.module';
 export class ApcComponent {
   url = `${environment.apiUrl}/need-analysis/apc/recommend`;
   model: any = {};
-  consultationDate: Date;
   @Input() code: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
