@@ -16,7 +16,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl">Programme Details</h2>
-    <button class="btn btn-sm btn-secondary text-primary" onclick="my_modal_2.showModal()">
+    <button class="btn btn-sm btn-secondary text-primary" onclick="edit_program.showModal()">
       <!-- <span class="material-symbols-rounded">
         edit
       </span> -->
@@ -45,9 +45,11 @@
   </div>
 </div>
 
-<dialog id="my_modal_2" class="modal">
+<dialog id="edit_program" class="modal">
   <div class="modal-box">
-    <!-- <p class="py-4">Press ESC key or click outside to close</p> -->
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
     <h3 class="text-2xl">Edit Programme </h3>
 
     <form (ngSubmit)="updateProgramme()" #updateProgrammeForm="ngForm" class="space-y-3">
@@ -121,8 +123,7 @@
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
     <h2 class="text-2xl">Stakeholders' Consultation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="my_modal_2.showModal()"
-      (click)="markComplete()">
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="markComplete()">
       Mark Complete
     </button>
   </div>
@@ -205,6 +206,9 @@
 <!-- Add Stakeholder -->
 <dialog id="add_stakeholder_modal" class="modal">
   <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
     <div class="space-y-4">
       <h2 class="text-2xl">Add Stakeholders</h2>
       <form (ngSubmit)="addStakeholder()" #stakeholderForm="ngForm" class="space-y-3">
@@ -237,6 +241,9 @@
 <!-- Need analysis Consult  -->
 <dialog id="need_analysis_consult" class="modal">
   <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
     <need-analysis-consult [code]="programme.code"></need-analysis-consult>
   </div>
   <form method="dialog" class="modal-backdrop">
@@ -247,6 +254,9 @@
 <!--End  Consult  -->
 <dialog id="end_consult" class="modal">
   <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
     <end-consult [code]="programme.code"></end-consult>
   </div>
   <form method="dialog" class="modal-backdrop">
@@ -318,7 +328,7 @@
         Resubmit
       </button>
 
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="bos_submit.showModal()">
         Submit to BOS
       </button>
 
@@ -338,6 +348,9 @@
 
 <dialog id="PDQA_recommend" class="modal">
   <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
     <need-analysis-conclude [code]="programme.code"></need-analysis-conclude>
   </div>
   <form method="dialog" class="modal-backdrop">
@@ -347,7 +360,22 @@
 
 <dialog id="end_consult" class="modal">
   <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
     <end-consult [code]="programme.code"></end-consult>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="bos_submit" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <bos-submit [programmeCode]="programme.code"></bos-submit>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -360,6 +388,15 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">BOS Consultation</h2>
+    <div class="join">
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="bos_ammendments.showModal()">
+        Amendments
+      </button>
+
+      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="apc_start.showModal()">
+        Start APC
+      </button>
+    </div>
   </div>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
@@ -372,16 +409,42 @@
     <action-buttons></action-buttons>
 
   </div>
-
 </div>
+
+<!-- Dialogs -->
+<dialog id="bos_ammendments" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+
+    <bos-amendment [code]="programme.code"></bos-amendment>
+
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="apc_start" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <bos-submit [programmeCode]="programme.code"></bos-submit>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 }
+
 
 @if(selectedStep ===5){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">APC Recommendation</h2>
   </div>
-
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">

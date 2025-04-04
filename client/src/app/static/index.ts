@@ -652,6 +652,34 @@ export const programmes = [
 ];
 
 
+export const upComingEvents = [
+  {
+    "id": "event-1",
+    "title": "Programme Review Workshop: Computer Science Curriculum",
+    "date": "2025-03-15",
+    "location": "Faculty of Computing, Room 201",
+    "description": "Collaborative workshop to review and update the Computer Science undergraduate curriculum based on industry trends and student feedback.",
+    "category": "Programme Review"
+  },
+  {
+    "id": "event-2",
+    "title": "Progress Meeting: Engineering Programme Accreditation",
+    "date": "2025-03-28",
+    "location": "Faculty of Engineering, Dean's Office",
+    "description": "Progress meeting to discuss the status of documentation and preparations for the upcoming engineering programme accreditation visit.",
+    "category": "Programme Progress"
+  },
+  {
+    "id": "event-3",
+    "title": "Faculty-Wide Programme Review Training",
+    "date": "2025-03-05",
+    "location": "University Main Auditorium",
+    "description": "Training session for all faculty members on the new programme review guidelines and best practices for conducting effective reviews.",
+    "category": "Programme Review"
+  }
+];
+
+
 
 
 export const NQFLevel: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

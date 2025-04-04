@@ -1,24 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 import { handleError } from '../functions';
+import { environment } from '../../environments/environment';
 import { ToastService } from './toast.service';
+import { Observable } from 'rxjs';
 
-type User = {
-  username: string;
-  password: string;
-}
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
+export class ClientService {
 
   constructor(private http: HttpClient, private toast: ToastService) { }
 
-  login({ username, password }: User) {
 
-    return this.http.post(`${environment.apiUrl}/users/authenticate`, { username: username, password: password }, {
+  getAll<T>(path: string): Observable<T[]> {
+    return this.http.get<T[]>(`${environment.apiUrl}/${path}`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -26,9 +23,5 @@ export class AuthenticationService {
       // map((response: any) => response.json()),
       catchError(handleError)
     )
-  }
-
-  logout() {
-    sessionStorage.removeItem('loggedInUser');
   }
 }

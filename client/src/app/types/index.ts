@@ -11,6 +11,11 @@ export interface Programme {
   lastReviewDate?: string;
   actions?: string[];
   department?: string;
+  preProgComponent?: {
+    devCode: string;
+    initiator: string;
+  };
+  isPreProgramme?: boolean;
   stage?: "Active" | "Pending Review" | "Inactive" | "Completed" | string;
 }
 

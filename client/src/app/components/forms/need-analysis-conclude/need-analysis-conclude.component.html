@@ -6,23 +6,24 @@
 
   <div class="join join-horizontal lg:join-horizontal w-full justify-center">
     <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn join-item btn-primary btn-sm"
-      (click)="fileUpload.onUpload('recomment')">
+      (click)="onUpload('recomment')"
+      >
       Recommend
     </button>
     <!-- [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid" -->
 
     <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn  btn-success btn-sm join-item"
-      (click)="fileUpload.onUpload('approve')">
+      (click)="onUpload('approve')">
       Approve
     </button>
 
     <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn  btn-error btn-sm join-item"
-      (click)="fileUpload.onUpload('decline')">
+      (click)="onUpload('decline')">
       Decline
     </button>
 
     <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn btn-warning btn-sm join-item"
-      (click)="fileUpload.onUpload('defer')">
+      (click)="onUpload('defer')">
       Defer
     </button>
   </div>

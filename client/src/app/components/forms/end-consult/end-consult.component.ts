@@ -24,4 +24,8 @@ export class EndConsultComponent {
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   constructor() { }
+
+  onUpload() {
+    this.fileUpload.uploader.uploadAll()
+  }
 }

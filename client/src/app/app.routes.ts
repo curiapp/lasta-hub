@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
 import { ResumeProgrammeComponent } from './resume-programme/resume-programme.component';
 import { StartNeedAnalysisComponent } from './start-need-analysis/start-need-analysis.component';
 import { NeedAnalysisComponent } from './programme/need-analysis/need-analysis.component';
 import { ProgrammeComponent } from './programme/programme.component';
 import { TutorialComponent } from './tutorials/tutorials.component';
-import { MainComponent } from './main/main.component';
-import { AboutUsComponent } from './about-us/about-us.component';
-import { OurTeamComponent } from './our-team/our-team.component';
+import { MainComponent } from './pages/main/main.component';
+import { AboutUsComponent } from './pages/about-us/about-us.component';
+import { OurTeamComponent } from './pages/our-team/our-team.component';
 import { ProgrammeDevelopmentComponent } from './programme/programme-development/programme-development.component';
 import { ExternalStakeholdersComponent } from './programme/external-stakeholders/external-stakeholders.component';
 import { InternalStakeholdersComponent } from './programme/internal-stakeholders/internal-stakeholders.component';
@@ -55,7 +55,7 @@ import { SenateConsultationsComponent } from './senate-consultations/senate-cons
 export const routes: Routes = [
   // { path: '', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, data: { title: 'PDQA - Login' } },
   {
     path: '', component: MainComponent, data: { title: 'PDQA - Main' },
     children: [

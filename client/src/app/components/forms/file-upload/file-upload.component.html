@@ -29,11 +29,19 @@
       </div>
       }
 
-      @if(uploader.queue.length){
-      <div class="h-36 flex flex-col justify-center border-2 border-dashed rounded-box bg-gray-50 p-2">
+      @if(uploader.queue.length>0){
+      <div class="h-36 flex flex-col justify-center group border-2 border-dashed rounded-box bg-gray-50 p-2 relative">
+        <button
+          class="w-12 absolute top-2 right-2 hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle"
+          (click)="uploader.clearQueue()">
+          <span class="material-symbols-rounded">
+            close
+          </span>
+        </button>
         @for (item of uploader.queue; track item.file.size) {
-        <div class="rounded-box flex items-center gap-4 p-3 group transition-all">
-          <div class="icon size-12 rounded-box bg-gray-200 grid place-items-center">
+        <div class="rounded-box flex flex-col items-center gap-4 p-3 group transition-all">
+          <div
+            class="icon size-12 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
             <!-- {{(item.file.name | Extension)===''?}} -->
             @switch (item.file.name | Extension) {
             @case ('pdf') {
@@ -68,19 +76,16 @@
             }
             }
           </div>
-          <div class="flex-grow w-[70%] tooltip text-left" data-tip="file name">
-            <p class="line-clamp-1 w-full">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
+          <div class="flex-grow w-[70%] tooltip text-left">
+            <p class="line-clamp-2 w-full text-sm text-center">{{item.file.name}}</p>
+            <p class="text-center"><b>{{item.file.size | file}}</b></p>
+            @if(uploader.isUploading){
+            <div class="grid place-items-center">
+              <span class="loading loading-spinner loading-xs"></span>
+            </div>
+            }
           </div>
-          @if(uploader.isUploading){
-          <span class="loading loading-spinner loading-1xl"></span>
-          }
-          <button
-            class="w-12 transition-all hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle"
-            (click)="uploader.clearQueue()">
-            <span class="material-symbols-rounded">
-              close
-            </span>
-          </button>
+
         </div>
         }
       </div>

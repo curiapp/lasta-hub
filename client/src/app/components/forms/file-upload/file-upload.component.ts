@@ -1,10 +1,10 @@
-import { Component, Input, input } from '@angular/core';
-import { ToastService } from '../../../services/toast.service';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FilePipe } from "../../../pipes/file.pipe";
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
+import { objectToFormData } from '../../../functions';
 import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
-import { environment } from '../../../../environments/environment';
+import { FilePipe } from "../../../pipes/file.pipe";
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'file-upload',
@@ -23,6 +23,7 @@ export class FileUploadComponent {
   @Input() code: string;
   @Input() itemAlias: string = "check-list";
   decision: string = "";
+  formData: any = {};
 
   uploader: FileUploader;
 
@@ -47,8 +48,12 @@ export class FileUploadComponent {
     this.uploader.onBeforeUploadItem = (file) => { file.withCredentials = false; };
 
     this.uploader.onBuildItemForm = (item: any, form: any) => {
+      // console.log("Testing ", item.name);
+
+      // console.log("Decision:", form);
       form.append('devCode', this.code);
-      form.append('decission', this.decision);
+      // form.append('decission', this.decision);
+      objectToFormData(this.formData, form);
     };
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
@@ -64,9 +69,8 @@ export class FileUploadComponent {
 
   }
 
-  onUpload(decision?: string) {
-    this.decision = decision ?? "";
-    console.log("Decision:", this.decision);
+  onUpload(data) {
+    this.formData = data;
     this.uploader.uploadAll();
   }
 }

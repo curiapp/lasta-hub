@@ -1,22 +1,27 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { handleError } from '../functions';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class BoSSubmitService {
-  private _bosSubmitUrl:string="/api/need-analysis/bos/start";
-  constructor(private _http: HttpClient) {}
+  private _bosSubmitUrl = `${environment.apiUrl}/need-analysis/bos/start`;
 
-  startNeedAnalysis(programmeCode:String,startDate:Date) {
-      let body =JSON.stringify({"devCode":programmeCode,"date":startDate});
-      let startHeaders = new Headers({'Content-Type': 'application/json'});
-      // let startOptions = new RequestOptions({headers: startHeaders,method:"post"});
+  constructor(private _http: HttpClient) { }
 
-      return this._http.post(this._bosSubmitUrl, body, {})
-          .subscribe((response: HttpResponse<any>) => {
-            response = response.body;
-          });
-    }
+  startNeedAnalysis(code: String, startDate: Date) {
+
+    return this._http.post(this._bosSubmitUrl, { "devCode": code, "date": startDate }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      // map((response: any) => response.json()),
+      catchError(handleError)
+    )
+  }
 }

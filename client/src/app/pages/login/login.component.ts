@@ -2,8 +2,8 @@ import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthenticationService } from '../services/authentication.service';
-import { LoadingService } from '../services/loading.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-login',

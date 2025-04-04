@@ -1,6 +1,6 @@
-<div class="toast toast-end z-50">
+<div class="toast toast-end z-[200]">
   @for(message of toastService.messages; track message){
-  <div [class]="toastService.classes" class="alert py-2 flex items-center justify-between">
+  <div [class]="toastService.classes" class="alert relative z-[999999] bg-white py-2 flex items-center justify-between">
     <span class="text-sm">{{message}}</span>
     <button class="grid place-items-center p-2 transition  hover:bg-gray-900/20 rounded-full backdrop-blur-3"
       (click)="closeToast(message)">

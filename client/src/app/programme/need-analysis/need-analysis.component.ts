@@ -6,7 +6,9 @@ import { Programme } from '../../types';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
 import { EndConsultComponent } from "../../components/forms/end-consult/end-consult.component";
-import { NeedAnalysisConsultationComponent } from "../../need-analysis-consult/need-analysis-consult.component";
+import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
+import { BosSubmitComponent } from '../../components/forms/bos-submit/bos-submit.component';
+import { BosComponent } from "../../components/forms/bos/bos.component";
 
 
 @Component({
@@ -16,7 +18,9 @@ import { NeedAnalysisConsultationComponent } from "../../need-analysis-consult/n
     ActionButtonsComponent,
     NeedAnalysisConcludeComponent,
     EndConsultComponent,
-    NeedAnalysisConsultationComponent
+    NeedAnalysisConsultationComponent,
+    BosSubmitComponent,
+    BosComponent
 ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.scss'

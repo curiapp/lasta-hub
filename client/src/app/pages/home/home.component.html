@@ -223,26 +223,37 @@
     </div>
 
     <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-      @for (item of programmes; track item.id) {
-      <a class="group relative block h-fit rounded-lg" [routerLink]="['/programme/', item.id]">
+      @for (item of programmes; track item.preProgComponent?.devCode) {
+      <div class="group relative block h-fit rounded-lg">
         <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
         <div
           class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
-          <div class="p-4 !pt-0 transition-opacity sm:p-6">
+          @if(item.isPreProgramme && user==='PDQA'){
+          <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item.preProgComponent.devCode)">
+            Approve
+          </button>
+          }
 
-            <h2 class=" mt-4 font-medium sm:text-xl line-clamp-2">{{item.name}}</h2>
+          <!-- <a [routerLink]="['/programme/', item.preProgComponent.devCode]" class="p-4 !pt-0 transition-opacity sm:p-6"> -->
+          <a [routerLink]="['/programme/', item.id]" class="p-4 !pt-0 transition-opacity sm:p-6">
+
+            <h3 class=" mt-4 font-medium sm:text-lg line-clamp-2 capitalize">{{item.name}}</h3>
 
             <div class="flex flex-col">
-              <span class="text-xs">Stage: {{item.stage}}, Level: {{item.level}}</span>
-              <span class="text-xs line-clamp-2">Required Actions:
+              <span class="text-xs"><b>Code:</b> {{item?.preProgComponent?.devCode}},
+                <b>Level:</b> {{item.level}}</span>
+              <!-- <span class="text-xs  line-clamp-2">Required Actions:
                 @for (it of item.actions; track it; let i = $index){
                 <span class="text-xs">{{it}}
-                  @if(i < item.actions.length - 1) { <span class="text-xs">,</span>}
-              </span>
-              }
-              </span>
+                  @if(i < item.actions.length - 1) {
+                    <span class="text-xs">,</span>}
+                  </span>
+                }
+              </span> -->
+              <span class="text-xs"><b>Department:</b> {{item.department}}</span>
+              <span class="text-xs"><b>Faculty:</b> {{item.faculty}}</span>
             </div>
-          </div>
+          </a>
 
           <!-- <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
               <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
@@ -274,7 +285,7 @@
               <p class="mt-8 font-bold">Read more</p>
             </div> -->
         </div>
-      </a>
+      </div>
       } @empty {
       <div class="text-center">No programmes available</div>
       }
@@ -282,8 +293,8 @@
     </div>
 
     <div class="space-y-6">
-      <h2 class="text-lg lg:text-3xl font-light">{{user==="PDU"?"Recent Updates":"Programmes Due for Review"}}</h2>
-      <client-programme-table [programmes]="programmes" />
+      <!-- <h2 class="text-lg lg:text-3xl font-light">{{user==="PDQA"?"Recent Updates":"Programmes Due for Review"}}</h2> -->
+      <!-- <client-programme-table [programmes]="programmes" /> -->
     </div>
 
   </div>

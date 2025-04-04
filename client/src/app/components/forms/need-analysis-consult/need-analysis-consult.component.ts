@@ -1,13 +1,13 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
+import { FileItem, FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
-import { FilePipe } from "../pipes/file.pipe";
-import { FileExtensionPipe } from "../pipes/file-extension.pipe";
-import { ToastService } from '../services/toast.service';
-import { environment } from '../../environments/environment';
+import { FilePipe } from "../../../pipes/file.pipe";
+import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
+import { ToastService } from '../../../services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'need-analysis-consult',
@@ -58,8 +58,7 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
-    this.uploader.onBuildItemForm = (item: any
-      , form: any) => {
+    this.uploader.onBuildItemForm = (item: FileItem, form: any) => {
       form.append('devCode', this.code);
       form.append('sdate', this.needAnalysis.startDate);
       form.append('edate', this.needAnalysis.endDate);

@@ -3,7 +3,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
-import { ShortSummaryService } from '../services/short-summary.service';
+import { ShortSummaryService } from '../../services/short-summary.service';
 
 @Component({
   selector: 'client-main',
