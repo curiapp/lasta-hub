@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ApcComponent } from "../../components/forms/apc/apc.component";
+import { ApcComponent } from "../../components/forms/need-analysis-apc/apc.component";
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { BosSubmitComponent } from '../../components/forms/bos-submit/bos-submit.component';
-import { BosComponent } from "../../components/forms/bos/bos.component";
+import { BosComponent } from "../../components/forms/need-analysis-bos/bos.component";
 import { EndConsultComponent } from "../../components/forms/end-consult/end-consult.component";
 import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
 import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
-import { SenateSubmitComponent } from "../../components/forms/senate-submit/senate-submit.component";
+import { SenateSubmitComponent } from "../../components/forms/need-analysissenate-submit/senate-submit.component";
 import { NQFLevel, programmes } from '../../static';
 import { Programme } from '../../types';
 import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";

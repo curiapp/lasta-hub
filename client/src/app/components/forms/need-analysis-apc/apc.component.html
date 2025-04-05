@@ -13,7 +13,7 @@
     </div>
 
 
-    <file-upload [code]="code" [url]="url" itemAlias="recommendation"></file-upload>
+    <file-upload [code]="code" [url]="url" itemAlias="apc"></file-upload>
 
 
     <div class="form-control">
@@ -21,7 +21,7 @@
       <fieldset class="w-full border rounded-lg p-3">
         <div class="custom-control custom-radio custom-control-inline">
           <input type="radio" class="custom-control-input" id="status1" name="status" [(ngModel)]="model.status"
-            value="approve" required #status="ngModel" mdbInput>
+            value="recommend" required #status="ngModel" mdbInput>
           <label class="custom-control-label" for="status1"> Recommend</label>
         </div>
         <div class="custom-control custom-radio custom-control-inline">

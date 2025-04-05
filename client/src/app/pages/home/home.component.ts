@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   showAll = false;
   currentUser: any
   upComingEvents = upComingEvents;
-  programmes: Programme[] = programmes;
+  programmes: Programme[];
 
   constructor(private client: ClientService, private viewContainer: ViewContainerRef) { }
 
@@ -55,9 +55,8 @@ export class HomeComponent implements OnInit {
 
 
     this.client.getAll<Programme>("programmes").subscribe((data) => {
-      // this.programmes = data;
-
-      console.log("Hello World ", data);
+      this.programmes = data;
+      // console.log("Hello World ", data);
     })
   }
 
