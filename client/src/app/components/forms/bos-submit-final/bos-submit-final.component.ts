@@ -1,12 +1,9 @@
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-//import the file-upload plugin
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-//import the native angular http and respone libraries
-import { HttpClient as Http } from '@angular/common/http';
-import { BoSSubmitService } from '../services/bos-submit.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
+import { BoSSubmitService } from '../../../services/bos-submit.service';
 
 @Component({
     selector: 'bos-submit-final',

@@ -1,6 +1,6 @@
 <div class="p-4 bg-primary space-y-3 text-base-100">
 
-  <h2 class="text-3xl font-bold capitalize">{{programme.name}}</h2>
+  <h2 class="text-3xl font-bold capitalize">{{programme?.name}}</h2>
 
   <div class="space-y-1">
     <span class="text-xs">Overview</span>
@@ -9,12 +9,24 @@
       <div class="flex items-center gap-3 min-w-48">
         <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
           <span class="material-symbols-rounded">
-            account_balance
+            workspaces
           </span>
         </div>
         <div class="flex flex-col gap-0.5">
           <span class="text-xs">Faculty</span>
-          <span class="text-base capitalize">{{programme.faculty}}</span>
+          <span class="text-base capitalize">{{programme?.faculty}}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 min-w-48">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded text-[30px]">
+            groups_3
+          </span>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <span class="text-xs">Department</span>
+          <span class="text-base capitalize">{{programme?.department}}</span>
         </div>
       </div>
 
@@ -27,7 +39,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-xs">Lecturer</span>
-          <span class="text-base capitalize">{{programme.members[0]}}</span>
+          <span class="text-base capitalize">{{programme?.preProgComponent.initiator}}</span>
         </div>
       </div>
 
@@ -39,7 +51,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-xs">Current Stage</span>
-          <span class="text-base capitalize">{{programme.stage}}</span>
+          <span class="text-base capitalize">Need Analysis</span>
         </div>
       </div>
 

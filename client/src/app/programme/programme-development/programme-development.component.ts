@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ClientService } from '../../services/client.service';
+import { Programme } from '../../types';
+import { CdcComponent } from "../../components/forms/pd-cdc/cdc.component";
 
 @Component({
   selector: 'client-programme-development',
-  imports: [],
+  imports: [CdcComponent],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.scss'
 })
 export class ProgrammeDevelopmentComponent {
+  programme:Programme;
+
   steps = [
     {
       id: 1,
@@ -74,10 +80,21 @@ export class ProgrammeDevelopmentComponent {
       "faculty": "Natural Resources and Spatial Sciences",
       "department": "Geo-Spatial Sciences and Technology"
     }
-  ]
-    ;
+  ];
 
   onSelectStep = (step: number) => {
     this.selectedStep = step;
+  }
+
+    constructor(private route: ActivatedRoute, private client: ClientService) { }
+
+  ngOnInit() {
+    this.route.parent?.paramMap.subscribe(params => {
+      const id = params.get('id');
+      this.client.getAll<Programme>(`programmes?devCode=${id}`).subscribe((data) => {
+        // console.log("Programs ", data);
+        this.programme = data[0];
+      })
+    });
   }
 }

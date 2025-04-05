@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Programme } from '../types';
 import { programmes } from '../static';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { ClientService } from '../services/client.service';
 
 @Component({
   selector: 'client-programme',
@@ -20,11 +21,16 @@ export class ProgrammeComponent {
     { id: "n-r", title: "NQF Registration" },
   ];
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private client: ClientService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      this.programme = programmes.find(programme => programme.id === params.get('id'))
+      // this.programme = programmes.find(programme => programme.id === params.get('id'))
+
+      this.client.getAll<Programme>(`programmes?devCode=${params.get('id')}`).subscribe((data) => {
+        // console.log("Programs ", data);
+        this.programme = data[0];
+      })
     })
   }
 }

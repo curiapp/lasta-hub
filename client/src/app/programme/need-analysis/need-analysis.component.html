@@ -31,7 +31,7 @@
         <span class="text-[.6rem]">What is the proposed programme code</span>
       </div>
 
-      <span class="text-3xl uppercase">{{programme.code}}</span>
+      <span class="text-3xl uppercase">{{programme?.preProgComponent.devCode}}</span>
     </div>
     <div class="rounded-lg shadow px-4 py-2 flex items-center justify-between">
       <div class="flex flex-col -gap-1">
@@ -39,7 +39,7 @@
         <span class="text-[.6rem]">What is the NQF Level</span>
       </div>
 
-      <span class="text-3xl">{{programme.level}}</span>
+      <span class="text-3xl">{{programme?.level}}</span>
     </div>
 
   </div>
@@ -53,11 +53,6 @@
     <h3 class="text-2xl">Edit Programme </h3>
 
     <form (ngSubmit)="updateProgramme()" #updateProgrammeForm="ngForm" class="space-y-3">
-      <!-- <div [hidden]="true" class="form-group">
-        <label for="departmentName">Department</label>
-        <input id="departmentName" type="text" class="form-control" [(ngModel)]="departmentName"
-          placeholder="departmentName" name="department" />
-      </div> -->
       <div class="form-control">
         <div class="label">
           <span class="label-text">Proposed Programme Title</span>
@@ -77,7 +72,7 @@
         <div class="label">
           <span class="label-text">Proposed Programme Code</span>
         </div>
-        <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programme.code"
+        <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programme?.preProgComponent.devCode"
           name="code" #code="ngModel">
         @if (code.invalid) {
         <div class="label">
@@ -107,7 +102,7 @@
         }
       </div>
       <div class="form-control gap-2">
-        <button type="submit" class="btn btn-primary " [disabled]="!updateProgrammeForm.form.valid">Submit</button>
+        <button type="submit" class="btn btn-primary " [disabled]="!updateProgrammeForm.form.valid">Update</button>
         <!-- <button type="button" class="btn btn-default " (click)="close()">Cancel</button> -->
       </div>
     </form>
@@ -244,7 +239,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <need-analysis-consult [code]="programme.code"></need-analysis-consult>
+    <need-analysis-consult [code]="programme?.preProgComponent.devCode"></need-analysis-consult>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -257,7 +252,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <end-consult [code]="programme.code"></end-consult>
+    <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -351,7 +346,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <need-analysis-conclude [code]="programme.code"></need-analysis-conclude>
+    <need-analysis-conclude [code]="programme?.preProgComponent.devCode"></need-analysis-conclude>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -363,7 +358,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <end-consult [code]="programme.code"></end-consult>
+    <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -375,7 +370,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <bos-submit [programmeCode]="programme.code"></bos-submit>
+    <bos-submit [programmeCode]="programme?.preProgComponent.devCode"></bos-submit>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -418,7 +413,7 @@
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
 
-    <bos-amendment [code]="programme.code"></bos-amendment>
+    <bos-amendment [code]="programme?.preProgComponent.devCode"></bos-amendment>
 
   </div>
   <form method="dialog" class="modal-backdrop">
@@ -431,7 +426,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <senate-submit [code]="programme.code"></senate-submit>
+    <senate-submit [code]="programme?.preProgComponent.devCode"></senate-submit>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -469,7 +464,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <apc-recommend [code]="programme.code"></apc-recommend>
+    <apc-recommend [code]="programme?.preProgComponent.devCode"></apc-recommend>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -507,7 +502,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <senate-recommend [code]="programme.code"></senate-recommend>
+    <senate-recommend [code]="programme?.preProgComponent.devCode"></senate-recommend>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
