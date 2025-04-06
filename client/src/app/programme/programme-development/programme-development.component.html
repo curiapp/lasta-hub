@@ -11,8 +11,6 @@
   </ol>
 </div>
 
-
-
 @if(selectedStep ===1){
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
@@ -25,8 +23,8 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Curriculum Development Coordinators</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="cdc.showModal()">
-      Add CDC
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="appoint_cdc.showModal()">
+      Appoint CDC
     </button>
   </div>
 
@@ -78,8 +76,8 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Programme Advisory Committee</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="">
-      Add PAC
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="appoint_pac.showModal()">
+      Appoint PAC
     </button>
   </div>
 
@@ -129,12 +127,24 @@
 
 </div>
 
-<dialog id="end_consult" class="modal">
+<dialog id="appoint_cdc" class="modal">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <pd-cdc [code]="programme?.preProgComponent.devCode"></pd-cdc>
+    <pd-cdc [code]="code"></pd-cdc>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="appoint_pac" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <pd-pac [code]="code"></pd-pac>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -195,6 +205,9 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">Curriculum Drafting</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="draft_pdqa.showModal()">
+      Submit Draft to PDQA
+    </button>
   </div>
 
 
@@ -236,6 +249,19 @@
     </span>
   </div>
 </div>
+
+
+<dialog id="draft_pdqa" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <pd-cdc [code]="code"></pd-cdc>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 }
 
 @if(selectedStep ===3){

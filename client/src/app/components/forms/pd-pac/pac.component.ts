@@ -1,21 +1,20 @@
 //import files from the angular framework
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
 
+
 @Component({
-  selector: 'pd-cdc',
-  templateUrl: 'cdc.component.html',
-  imports: [
-    ReactiveFormsModule
-  ]
+  selector: 'pd-pac',
+  templateUrl: 'pac.component.html',
+  imports: [FormsModule, ReactiveFormsModule]
 })
 
-export class CdcComponent implements OnInit {
+export class PacComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private pacAppointUrl: string = "curriculum-development/appoint/cdc";
   @Input() code: string = "defaultDevCode";
+  pacAppointUrl:string = "curriculum-development/appoint/pac";
 
   myForm = this.fb.group({
     devCode: [this.code, [Validators.required, Validators.minLength(3)]],
@@ -23,6 +22,9 @@ export class CdcComponent implements OnInit {
       this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
+        organisation: ['', Validators.required],
+        occupation: ['', Validators.required],
+        qualification: ['', Validators.required],
         emailAddress: ['', [Validators.required, Validators.email]],
         cellphone: ['', [Validators.minLength(10)]],
         workNumber: ['', [Validators.required, Validators.minLength(10)]]
@@ -30,24 +32,28 @@ export class CdcComponent implements OnInit {
     ])
   })
 
-
-
+  // we will use form builder to simplify our syntax
   constructor(public http: ClientService, private toast: ToastService) { }
+
+
+  removeItem(index: number): void {
+    const itemsArray = this.myForm.get('cdc') as FormArray;
+    itemsArray.removeAt(index);
+  }
+
   addItem() {
     const itemArray = this.myForm.get('cdc') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      organisation: ['', Validators.required],
+      occupation: ['', Validators.required],
+      qualification: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       cellphone: ['', [Validators.minLength(10)]],
       workNumber: ['', [Validators.required, Validators.minLength(10)]]
     })
     itemArray.push(newItem);
-  }
-
-  removeItem(index: number): void {
-    const itemsArray = this.myForm.get('cdc') as FormArray;
-    itemsArray.removeAt(index);
   }
 
 
@@ -59,9 +65,13 @@ export class CdcComponent implements OnInit {
     this.myForm.get('devCode').setValue(this.code);
   }
 
+
   onCellPhoneValueChanged(value: any, controlAtX: AbstractControl) {
     console.log(value)
     let phoneNumberControl = controlAtX;
+
+    // Using setValidators to add and remove validators. No better support for adding and removing validators to controller atm.
+    // See issue: https://github.com/angular/angular/issues/10567
     if (!value) {
       phoneNumberControl.setValidators([Validators.required, Validators.minLength(11)]);
     } else {
@@ -85,4 +95,5 @@ export class CdcComponent implements OnInit {
         }
       });
   }
+
 }

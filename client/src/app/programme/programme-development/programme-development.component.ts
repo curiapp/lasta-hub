@@ -3,15 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
 import { CdcComponent } from "../../components/forms/pd-cdc/cdc.component";
+import { PacComponent } from "../../components/forms/pd-pac/pac.component";
 
 @Component({
   selector: 'client-programme-development',
-  imports: [CdcComponent],
+  imports: [CdcComponent, PacComponent],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.scss'
 })
 export class ProgrammeDevelopmentComponent {
-  programme:Programme;
+  programme: Programme;
+  code: string = "defaultDevCode";
 
   steps = [
     {
@@ -86,12 +88,13 @@ export class ProgrammeDevelopmentComponent {
     this.selectedStep = step;
   }
 
-    constructor(private route: ActivatedRoute, private client: ClientService) { }
+  constructor(private route: ActivatedRoute, private client: ClientService) { }
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      const id = params.get('id');
-      this.client.getAll<Programme>(`programmes?devCode=${id}`).subscribe((data) => {
+      // const id = params.get('id');
+      this.code = params.get('id');
+      this.client.getAll<Programme>(`programmes?devCode=${this.code}`).subscribe((data) => {
         // console.log("Programs ", data);
         this.programme = data[0];
       })

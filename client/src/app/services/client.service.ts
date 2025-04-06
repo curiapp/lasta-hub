@@ -24,4 +24,15 @@ export class ClientService {
       catchError(handleError)
     )
   }
+
+  post<T>(path: string, data: T): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/${path}`, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      // map((response: any) => response.json()),
+      catchError(handleError)
+    )
+  }
 }
