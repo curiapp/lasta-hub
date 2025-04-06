@@ -7,7 +7,7 @@ exports.CurriculumDevelopmentController = class CurriculumDevelopmentController 
         super()
 
     appointPACMembers: (pacMemberData, handlerObject) ->
-        @messageGenerator.generate cdcMemberData, (cdcMemberMessageError, cdcMemberMessage) =>
+        @messageGenerator.generate pacMemberData, (cdcMemberMessageError, cdcMemberMessage) =>
             if cdcMemberMessageError?
                 @continueWithHandler null, handlerObject, cdcMemberMessageError, null
             else
