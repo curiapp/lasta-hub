@@ -4,10 +4,11 @@ import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
 import { CdcComponent } from "../../components/forms/pd-cdc/cdc.component";
 import { PacComponent } from "../../components/forms/pd-pac/pac.component";
+import { CurriculumDevDraftReviseComponent } from "../../components/forms/pd-curriculum-dev-draft-revise/curriculum-dev-draft-revise.component";
 
 @Component({
   selector: 'client-programme-development',
-  imports: [CdcComponent, PacComponent],
+  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.scss'
 })

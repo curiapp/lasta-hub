@@ -256,7 +256,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-    <pd-cdc [code]="code"></pd-cdc>
+    <pd-curriculum-revise [code]="code"></pd-curriculum-revise>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -268,6 +268,9 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">Draft Curriculum and PDQA Recomendation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="draft_pdqa.showModal()">
+      Recommendations
+    </button>
   </div>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">

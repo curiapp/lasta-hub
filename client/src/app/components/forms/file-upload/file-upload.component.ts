@@ -43,14 +43,10 @@ export class FileUploadComponent {
       maxFileSize: 5 * 1024 * 1024, // 5MB
     });
 
-    //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBeforeUploadItem = (file) => { file.withCredentials = false; };
 
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      // console.log("Testing ", item.name);
-
-      // console.log("Decision:", form);
       form.append('devCode', this.code);
       // form.append('decission', this.decision);
       objectToFormData(this.formData, form);

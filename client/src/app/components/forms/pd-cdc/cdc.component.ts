@@ -23,6 +23,7 @@ export class CdcComponent implements OnInit {
       this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
+        organisation: ['', Validators.required],
         emailAddress: ['', [Validators.required, Validators.email]],
         cellphone: ['', [Validators.minLength(10)]],
         workNumber: ['', [Validators.required, Validators.minLength(10)]]
@@ -38,6 +39,7 @@ export class CdcComponent implements OnInit {
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      organisation: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       cellphone: ['', [Validators.minLength(10)]],
       workNumber: ['', [Validators.required, Validators.minLength(10)]]

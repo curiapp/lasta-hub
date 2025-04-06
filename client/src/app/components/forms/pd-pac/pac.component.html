@@ -1,105 +1,5 @@
 <div class="space-y-4">
   <h4>Appointment - Programme Advisory Committe</h4>
-  <!-- <form [formGroup]="myForm" novalidate (ngSubmit)="postDataToServer()">
-        <div class="form-group">
-          <label>Programme Code</label>
-          <input type="text" class="form-control" formControlName="devCode">
-          <div [hidden]="myForm.controls["devCode"]valid" class="alert alert-danger">Programme Code is required (minimum 3
-            characters).</div>
-          <small *if="!myForm.controls.devCode.valid" class="text-danger">
-            Programme Code is required (minimum 3 characters).
-          </small>
-        </div>
-        addresses
-        <div formArrayName="pac">
-          <div *for="let p of myForm.controls.pac['controls']; let i=index" class="panel panel-default">
-            <div class="panel-heading">
-              <span>PAC Member: {{i + 1}}</span>
-              <span class="glyphicon glyphicon-remove pull-right" *if="myForm.controls.pac.controls.length > 1"
-                (click)="removeAddress(i)"></span>
-            </div>
-            <div class="panel-body" [formGroupName]="i">
-              <div class="form-group col-xs-6">
-                <label>First Name</label>
-                <input type="text" class="form-control" formControlName="firstName">
-                <div [hidden]="myForm.controls.pac.controls[i].controls.firstName.valid" class="alert alert-danger">
-                  First name is required
-                </div>
-              </div>
-              <div class="form-group col-xs-6">
-                <label>Last Name</label>
-                <input type="text" class="form-control" formControlName="lastName">
-                <div [hidden]="myForm.controls.pac.controls[i].controls.lastName.valid" class="alert alert-danger">
-                  Last name is required
-                </div>
-                <div class="form-group col-xs-6">
-                  <label>Occupation</label>
-                  <input type="text" class="form-control" formControlName="occupation">
-                  <div [hidden]="myForm.controls['pac'].controls[i].controls.occupation.valid"
-                    class="alert alert-danger">
-                    Occupation is required
-                  </div>
-                  <div class="form-group col-xs-6">
-                    <label>Highest Qualification</label>
-                    <input type="text" class="form-control" formControlName="qualification">
-                    <div [hidden]="myForm.controls.pac.controls[i].controls.qualification.valid"
-                      class="alert alert-danger">
-                      Qualification is required
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group col-xs-6">
-                  <label>Organisation</label>
-                  <input type="text" class="form-control" formControlName="organisation">
-                  <div [hidden]="myForm.controls.pac.controls[i].controls.organisation.valid"
-                    class="alert alert-danger">
-                    Organisation Name is required
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group col-xs-6">
-                <label>Email address</label>
-                <input type="email" class="form-control" formControlName="emailAddress">
-                <div [hidden]="myForm.controls.pac.controls[i].controls.emailAddress.valid" class="alert alert-danger">
-                  Email address is required
-                </div>
-              </div>
-              <div class="form-group col-xs-6">
-                <label>Cell Number: </label>
-                <input type="text" class="form-control" formControlName="cellphone"
-                  (change)=onCellPhoneValueChanged(myForm.controls.pac.controls[i].controls.cellphone.value,myForm.controls.pac.controls[i].controls.workNumber)>
-                <div [hidden]="myForm.controls.pac.controls[i].controls.cellphone.valid" class="alert alert-danger">
-                  Cell Phone Number is required(minimum 10 numbers)
-                </div>
-
-              </div>
-              <div class="form-group col-xs-6">
-                <label>Work Telephone Number: </label>
-                <input type="text" class="form-control" formControlName="workNumber">
-                <div [hidden]="myForm.controls.pac.controls[i].controls.workNumber.valid" class="alert alert-danger">
-                  Work Telephone Number is required
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <a (click)="addAddress()" class="btn btn-warning" style="cursor: default">
-            Add another PAC Member+
-          </a>
-          <button type="submit" class="btn btn-success pull-right" [disabled]="!myForm.valid">Submit</button>
-        </div>
-        <div class="clearfix"></div>
-
-        <div class="margin-20">
-          <div>myForm details:-</div>
-          <pre>Is myForm valid?: <br>{{myForm.valid }}</pre>
-          <pre>form value: <br>{{myForm.value}}</pre>
-        </div>
-      </form> -->
 
   <form [formGroup]="myForm" novalidate (ngSubmit)="onSubmit()">
     <!-- <div class="form-group w-full">
@@ -111,43 +11,47 @@
           </div>
           }
         </div> -->
-
     <h2 class="text-xl font-bold">PAC - Members</h2>
     <div formArrayName="cdc">
       @for(item of items.controls; track $index){
       <div class="space-y-3 bg-gray-50 p-4 my-4 rounded-box">
+
         <div class="flex justify-between items-center">
-          <span class="font-semibold">CDC Member: {{$index + 1}}</span>
+          <span class="font-semibold">PAC Member: {{$index + 1}}</span>
           @if(myForm.controls.cdc.controls.length > 1){
           <button class="btn btn-sm btn-secondary" (click)="removeItem($index)">Remove</button>
           }
         </div>
 
-        <div class="space-y-3" [formGroupName]="$index">
-          <div class="form-control">
-            <label class="lebel label-text">First Name</label>
-            <input type="text" class="input input-bordered" formControlName="firstName">
-            @if (myForm.controls.cdc.controls[$index].controls.firstName.invalid &&
-            myForm.controls.cdc.controls[$index].controls.firstName.touched) {
-            <div class="label label-text-alt text-red-700">
-              First name is required*
+        <div class="space-y-1" [formGroupName]="$index">
+
+          <div class="grid grid-cols-2 gap-2 items-start">
+            <div class="form-control">
+              <label class="lebel label-text">First Name</label>
+              <input type="text" class="input input-bordered input-sm" formControlName="firstName">
+              @if (myForm.controls.cdc.controls[$index].controls.firstName.invalid &&
+              myForm.controls.cdc.controls[$index].controls.firstName.touched) {
+              <div class="label label-text-alt text-red-700">
+                First name is required*
+              </div>
+              }
             </div>
-            }
-          </div>
-          <div class="form-control">
-            <label>Last Name</label>
-            <input type="text" class="input input-bordered flex-auto" formControlName="lastName">
-            @if (myForm.controls.cdc.controls[$index].controls.lastName.invalid &&
-            myForm.controls.cdc.controls[$index].controls.lastName.touched) {
-            <div class="label label-text-alt text-red-700">
-              Last name is required*
+            <div class="form-control">
+              <label>Last Name</label>
+              <input type="text" class="input input-bordered input-sm" formControlName="lastName">
+              @if (myForm.controls.cdc.controls[$index].controls.lastName.invalid &&
+              myForm.controls.cdc.controls[$index].controls.lastName.touched) {
+              <div class="label label-text-alt text-red-700">
+                Last name is required*
+              </div>
+              }
             </div>
-            }
           </div>
 
+
           <div class="form-control">
-            <label>Email address</label>
-            <input type="email" class="input input-bordered" formControlName="emailAddress">
+            <label class="label label-text">Email address</label>
+            <input type="email" class="input input-bordered input-sm" formControlName="emailAddress">
             @if (myForm.controls.cdc.controls[$index].controls.emailAddress.invalid &&
             myForm.controls.cdc.controls[$index].controls.emailAddress.touched){
             <div class="label label-text-alt text-red-700">
@@ -155,55 +59,61 @@
             </div>
             }
           </div>
-          <div class="form-control">
-            <label>Cell Number: </label>
-            <input type="text" class="input input-bordered" formControlName="cellphone"
-              (change)=onCellPhoneValueChanged(myForm.controls.cdc.controls[$index].controls.cellphone.value,myForm.controls.cdc.controls[$index].controls.workNumber)>
-            @if (myForm.controls.cdc.controls[$index].controls.cellphone.invalid &&
-            myForm.controls.cdc.controls[$index].controls.cellphone.touched){
-            <div class="label label-text-alt text-red-700">
-              Cell Phone Number is required(minimum 10 numbers)
+
+          <div class="grid grid-cols-2 gap-2 items-start">
+            <div class="form-control">
+              <label class="label label-text">Cell Number: </label>
+              <input type="text" class="input input-bordered input-sm" formControlName="cellphone"
+                (change)=onCellPhoneValueChanged(myForm.controls.cdc.controls[$index].controls.cellphone.value,myForm.controls.cdc.controls[$index].controls.workNumber)>
+              @if (myForm.controls.cdc.controls[$index].controls.cellphone.invalid &&
+              myForm.controls.cdc.controls[$index].controls.cellphone.touched){
+              <div class="label label-text-alt text-red-700">
+                Cell Phone Number is required(minimum 10 numbers)
+              </div>
+              }
             </div>
-            }
+            <div class="form-control">
+              <label class="label label-text">Work Telephone Number: </label>
+              <input type="text" class="input input-bordered input-sm" formControlName="workNumber">
+              @if (myForm.controls.cdc.controls[$index].controls.workNumber.invalid &&
+              myForm.controls.cdc.controls[$index].controls.workNumber.touched){
+              <div class="label label-text-alt text-red-700">
+                Work Telephone Number is required*
+              </div>
+              }
+            </div>
           </div>
-          <div class="form-control">
-            <label>Work Telephone Number: </label>
-            <input type="text" class="input input-bordered" formControlName="workNumber">
-            @if (myForm.controls.cdc.controls[$index].controls.workNumber.invalid &&
-            myForm.controls.cdc.controls[$index].controls.workNumber.touched){
-            <div class="label label-text-alt text-red-700">
-              Work Telephone Number is required*
+
+
+          <div class="grid grid-cols-2 gap-2 items-start">
+            <div class="form-control">
+              <label class="label label-text">Qualification</label>
+              <input type="text" class="input input-bordered input-sm" formControlName="qualification">
+              @if (myForm.controls.cdc.controls[$index].controls.qualification.invalid &&
+              myForm.controls.cdc.controls[$index].controls.qualification.touched){
+              <div class="label label-text-alt text-red-700">
+                Qualification is required*
+              </div>
+              }
             </div>
-            }
+
+            <div class="form-control">
+              <label class="label label-text">Occupation</label>
+              <input type="text" class="input input-bordered input-sm" formControlName="occupation">
+              @if (myForm.controls.cdc.controls[$index].controls.occupation.invalid &&
+              myForm.controls.cdc.controls[$index].controls.occupation.touched){
+              <div class="label label-text-alt text-red-700">
+                Occupation is required*
+              </div>
+              }
+            </div>
           </div>
 
           <div class="form-control">
-            <label>Qualification</label>
-            <input type="text" class="input input-bordered" formControlName="qualification">
-            @if (myForm.controls.cdc.controls[$index].controls.qualification.invalid &&
-            myForm.controls.cdc.controls[$index].controls.qualification.touched){
-            <div class="label label-text-alt text-red-700">
-              Qualification is required*
-            </div>
-            }
-          </div>
-
-          <div class="form-control">
-            <label>Occupation</label>
-            <input type="text" class="input input-bordered" formControlName="occupation">
-            @if (myForm.controls.cdc.controls[$index].controls.occupation.invalid &&
-            myForm.controls.cdc.controls[$index].controls.occupation.touched){
-            <div class="label label-text-alt text-red-700">
-              Occupation is required*
-            </div>
-            }
-          </div>
-
-          <div class="form-control">
-            <label>Organisation</label>
-            <input type="text" class="input input-bordered" formControlName="organisation">
+            <label class="label label-text">Organisation</label>
+            <input type="text" class="input input-bordered input-sm" formControlName="organisation">
             @if (myForm.controls.cdc.controls[$index].controls.organisation.invalid &&
-            myForm.controls.cdc.controls[$index].controls.occupation.touched){
+            myForm.controls.cdc.controls[$index].controls.organisation.touched){
             <div class="label label-text-alt text-red-700">
               Organisation is required*
             </div>
@@ -215,11 +125,11 @@
       }
     </div>
     <div class="flex gap-2 mb-8">
-      <a (click)="addItem()" class="btn btn-warning cursor-pointer">
+      <a (click)="addItem()" class="btn btn-warning btn-sm cursor-pointer">
         Add PAC Member +
       </a>
 
-      <button type="submit" class="btn btn-primary flex-auto" [disabled]="myForm.invalid">Submit</button>
+      <button type="submit" class="btn btn-primary btn-sm flex-auto" [disabled]="myForm.invalid">Submit</button>
     </div>
   </form>
 </div>
