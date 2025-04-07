@@ -1,6 +1,11 @@
 'use strict'
+
 couchbase = require("couchbase")
 async = require 'async'
+fs     = require 'fs-extra'
+git    = require 'simple-git'
+path   = require 'path'
+
 
 clusterConnStr = "couchbase://#{process.env.DB_URL}"
 username = 'admin'
@@ -83,8 +88,8 @@ module.exports = (app, uploader) ->
                     console.log "Error: " + e
                     response.status(500).json msg: "Internal Server Error"
 
-    app.route('/api/need-analysis').get (request, response) ->
-        console.log "new GET request to /api/need-analysis ..."
+    app.route('/api/file').get (request, response) ->
+        console.log "new GET request to /api/file ..."
 
         if(!request.query.hash)
             return response.status(400).json({message: "Bad Request getting file!"})
