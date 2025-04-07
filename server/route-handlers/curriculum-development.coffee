@@ -158,7 +158,7 @@ exports.CurriculumDevelopmentRequestHandler = class CurriculumDevelopmentRequest
                 if draftValidationDataError?
                     response.status(400).json({message: "Bad Request!"})
                 else
-                    @repoManager.addCurriculumDraftCheckList validDraftRevisionData.devCode, request.file, validDraftValidationData.decision, (repositoryError, commitHash) =>
+                    @repoManager.addCurriculumDraftCheckList validDraftValidationData.devCode, request.file, validDraftValidationData.decision, (repositoryError, commitHash) =>
                         if repositoryError?
                             response.status(500).json({message: "Error adding a revision of the check list to the repository"})
                         else
