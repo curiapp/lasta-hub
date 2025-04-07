@@ -1,0 +1,29 @@
+<div class="space-y-4">
+  <h3 class="text-xl">Final Draft - PDQA Recommendation </h3>
+  <form #pacForm="ngForm" class="space-y-4">
+    <div class="form-control">
+      <label class="label label-text">Date</label>
+      <input id="date" type="Date" class="input input-sm input-bordered" required [(ngModel)]="model.consultationDate"
+        ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      @if (cdate.invalid && cdate.touched) {
+      <div class="label label-text-alt text-red-700">Endorsement Date is required</div>
+      }
+    </div>
+
+    <div class="form-control">
+      <label class="text-sm font-bold">Final Draft and PDQA Inputs: </label>
+      <file-upload [code]="code" [url]="url" itemAlias="recommendation"></file-upload>
+    </div>
+
+    <div class="flex gap-2 justify-center">
+      <button type="button" class="btn btn-primary btn-sm" (click)="onUpload('approve')"
+        [disabled]="!fileUpload?.uploader?.queue.length || !pacForm.form.valid">
+        Recommended to Bos &nbsp; <i class="fa fa-check"></i>
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="onUpload('decline')"
+        [disabled]="!fileUpload?.uploader?.queue.length || !pacForm.form.valid">
+        Defer &nbsp; <i class="fa fa-history"></i>
+      </button>
+    </div>
+  </form>
+</div>

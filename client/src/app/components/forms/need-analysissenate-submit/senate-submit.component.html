@@ -3,7 +3,7 @@
   <form class="space-y-4" #bossubmitForm="ngForm">
     <div class="form-control">
       <label for="ProgrammeCode" class="label label-text">Proposed Programme Code</label>
-      <input id="programmeCode" readonly type="text" class="input input-bordered" required [(ngModel)]="code"
+      <input id="programmeCode" readonly type="text" class="input input-bordered input-sm" required [(ngModel)]="code"
         name="code" #procode="ngModel">
       @if(procode.invalid && procode.touched){
       <div class="label label-text-alt text-red-600">Proposed Programme Code is required</div>
@@ -12,7 +12,7 @@
 
     <div class="form-control">
       <label for="date" class="label label-text">Start Date:</label>
-      <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="startDate" ng2-datetime-picker
+      <input id="date" type="Date" class="input input-bordered input-sm" required [(ngModel)]="startDate" ng2-datetime-picker
         date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if (cdate.invalid && cdate.touched) {
       <div class="label label-text-alt text-red-700">Submission Date is required</div>
@@ -21,9 +21,12 @@
 
     <div class="form-control">
       <!-- <button type="submit" class="btn btn-default" (click)="clear()">Cancel</button> -->
-      <button type="button" class="btn btn-primary btn-s" (click)="postDataToServer()"
+      <button type="button" class="btn btn-primary btn-sm" (click)="postDataToServer()"
         [disabled]="!bossubmitForm.form.valid">
         Submit
+        <span class="material-symbols-rounded">
+          cloud_upload
+          </span>
       </button>
     </div>
   </form>

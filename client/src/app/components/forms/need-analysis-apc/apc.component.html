@@ -47,6 +47,9 @@
       <button type="button" class="btn btn-sm btn-primary w-full" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !senateForm.form.valid">
         Submit
+        <span class="material-symbols-rounded">
+          cloud_upload
+        </span>
       </button>
       <!-- <button type="submit" class="btn btn-danger" (click)="close()">
         <i class="fa fa-close"></i> Close</button> -->

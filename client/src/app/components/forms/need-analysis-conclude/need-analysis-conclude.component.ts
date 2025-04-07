@@ -25,7 +25,6 @@ export class NeedAnalysisConcludeComponent {
 
   constructor() { }
 
-
   onUpload(decision: string = "") {
     this.fileUpload.onUpload({ "decission": decision });
   }

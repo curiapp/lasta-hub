@@ -3,9 +3,9 @@
   <form #concludeForm="ngForm">
     <label class="text-sm font-bold"> Draft Curriculum: </label>
 
-    <file-upload [code]="code" [url]="url" itemAlias="survey"></file-upload>
+    <file-upload [code]="code" [url]="url" itemAlias="check-list"></file-upload>
 
-    <div class="flex items-center gap-2 my-2">
+    <div class="flex items-center justify-center gap-2 my-2">
       <button type="button" class="btn btn-sm btn-primary btn-s flex-auto" (click)="onUpload('approve')"
         [disabled]="!fileUpload?.uploader?.queue.length || concludeForm.form.invalid">
         Recommended for consultation
@@ -13,6 +13,9 @@
       <button type="button" class="btn btn-sm btn-secondary btn-s" (click)="onUpload('decline')"
         [disabled]="!fileUpload?.uploader?.queue.length || concludeForm.form.invalid">
         Request Resubmission
+        <span class="material-symbols-rounded">
+          undo
+          </span>
       </button>
     </div>
   </form>

@@ -3,7 +3,8 @@
   <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
     @for(step of steps; track step.title; let i= $index; ){
     <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
-      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold" [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'">
+      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
+        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'">
         {{i+1}} </span>
       <span class="hidden sm:block"> {{step.title}} </span>
     </li>
@@ -16,52 +17,44 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-2xl capitalize">Circulation of Draft Programme</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="draft_programme.showModal()">
+      Upload draft Programme to start PAC Consultation
+    </button>
   </div>
-
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
-      <span class="text-base">Draft Version1</span>
+      <span class="text-base">Draft Version 1</span>
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
-    <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-      <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-          color="#000000">
-          <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round"></path>
-          <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-            stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-        </svg>
-      </button>
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
     </span>
   </div>
 </div>
+
+<dialog id="draft_programme" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <external-curriculum-dev-pac-start [code]="code"></external-curriculum-dev-pac-start>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
 }
 
 @if(selectedStep===2){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Circulation of Draft Programme</h2>
+    <h2 class="text-2xl capitalize">PAC Consultation and Benchmarking</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="consult_pac.showModal()">
+      Consultations
+    </button>
   </div>
 
 
@@ -70,36 +63,56 @@
       <span class="text-base">Draft Version1</span>
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
-
-    <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-      <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-          color="#000000">
-          <path d="M21 3L15 3M21 3L12 12M21 3V9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-            stroke-linejoin="round"></path>
-          <path d="M21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H11"
-            stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
-        onclick="stakeholder_modal.showModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-        </svg>
-      </button>
-
-      <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="size-3">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-        </svg>
-      </button>
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
     </span>
   </div>
 </div>
+
+<dialog id="consult_pac" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <external-curriculum-dev-pac-consult [code]="code"></external-curriculum-dev-pac-consult>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+}
+
+
+@if(selectedStep===3){
+<div class="space-y-4 my-6">
+  <div class="flex justify-between">
+    <h2 class="text-2xl capitalize">Final Draft Programme -PDQA Recommendations</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="final_draft.showModal()">
+      Recommendations
+    </button>
+  </div>
+
+
+  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
+    <div class="flex flex-col -gap-2">
+      <span class="text-base">Final</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
+    </div>
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
+    </span>
+  </div>
+</div>
+
+<dialog id="final_draft" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <external-pac-consult-endorse [code]="code"></external-pac-consult-endorse>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 }

@@ -55,12 +55,13 @@
             <span class="material-symbols-rounded">
               group
             </span>
-            <input type="text" placeholder="enter stakeholder" id="organisation" name="organisation"
-             required class="grow" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
+            <input type="text" placeholder="enter stakeholder" id="organisation" name="organisation" required
+              class="grow" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
           </label>
           <!-- <div class="validator-hint hidden">Enter Stakeholder Name</div> -->
         </div>
-        <button [disabled]="org.invalid" [dir]="org.valid" (click)="addOrganisation()" class="btn btn-sm btn-primary join-item">Add</button>
+        <button [disabled]="org.invalid" [dir]="org.valid" (click)="addOrganisation()"
+          class="btn btn-sm btn-primary join-item">Add</button>
       </div>
       <!-- @if(org.invalid && org.touched){
       <div class="label">
@@ -151,6 +152,9 @@
       <button type="button" class="btn btn-primary btn-sm join-item w-full" (click)="submitInfo(consultForm)"
         [disabled]="!uploader.queue.length">
         submit
+        <span class="material-symbols-rounded">
+          cloud_upload
+        </span>
       </button>
     </div>
   </form>

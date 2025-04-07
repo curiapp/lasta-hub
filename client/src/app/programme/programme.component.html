@@ -69,8 +69,9 @@
       <ul class="mt-6 space-y-6">
         @for (stage of stages; track stage.id){
         <li>
-          <a [routerLink]=[stage.id]
-            class="block cursor-pointer capitalize font-light active:font-medium rounded-lg active:bg-gray-100 active:text-gray-700 px-4 py-2 text-sm">
+          <a [routerLink]=[stage.id] (click)="onSelect(stage.id)"
+            class="block cursor-pointer capitalize font-light active:font-medium rounded-lg active:bg-gray-100 active:text-gray-700 px-4 py-2 text-sm"
+            [class]="currentPath()==stage.id?'bg-white text-black':''">
             {{stage.title}}
           </a>
         </li>

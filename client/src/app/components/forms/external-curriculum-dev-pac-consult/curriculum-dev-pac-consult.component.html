@@ -1,0 +1,28 @@
+<div class="space-y-4">
+  <h3 class="form-title-label">PAC Consultation & Benchmarking</h3>
+    <form #consultForm="ngForm" class="space-y-4">
+      <div class="form-group">
+        <label class="label label-text">Date</label>
+        <div class="input-control">
+          <input id="date" type="date" class="input input-sm input-bordered w-full" required [(ngModel)]="model.consultationDate"
+            ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+        </div>
+        @if (cdate.invalid && cdate.touched) {
+        <div class="label label-text-alt text-red-700">Consultation Date is required</div>
+        }
+      </div>
+      <div class="form-control">
+        <label class="text-sm font-bold"> Final Draft/Minutes/Comments/Endorsement Letters: </label>
+        <file-upload [code]="code" [url]="url" itemAlias="pac-start"></file-upload>
+      </div>
+      <div class="flex items-center justify-center">
+        <button type="button" class="btn btn-primary btn-sm" (click)="onUpload()"
+          [disabled]="!fileUpload?.uploader?.queue.length || !consultForm.form.valid">
+          submit
+          <span class="material-symbols-rounded">
+            cloud_upload
+            </span>
+        </button>
+      </div>
+    </form>
+</div>
