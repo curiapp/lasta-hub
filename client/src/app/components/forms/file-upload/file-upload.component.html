@@ -41,7 +41,7 @@
         @for (item of uploader.queue; track item.file.size) {
         <div class="rounded-box flex flex-col items-center gap-4 p-3 group transition-all">
           <div
-            class="icon size-12 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
+            class="icon size-10 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
             <!-- {{(item.file.name | Extension)===''?}} -->
             @switch (item.file.name | Extension) {
             @case ('pdf') {
@@ -76,7 +76,7 @@
             }
             }
           </div>
-          <div class="flex-grow w-[70%] tooltip text-left">
+          <div class="flex-grow w-[70%] tooltip text-left mb-2">
             <p class="line-clamp-2 w-full text-sm text-center">{{item.file.name}}</p>
             <p class="text-center"><b>{{item.file.size | file}}</b></p>
             @if(uploader.isUploading){
@@ -85,7 +85,6 @@
             </div>
             }
           </div>
-
         </div>
         }
       </div>

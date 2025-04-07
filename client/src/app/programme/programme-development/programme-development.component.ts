@@ -5,10 +5,12 @@ import { Programme } from '../../types';
 import { CdcComponent } from "../../components/forms/pd-cdc/cdc.component";
 import { PacComponent } from "../../components/forms/pd-pac/pac.component";
 import { CurriculumDevDraftReviseComponent } from "../../components/forms/pd-curriculum-dev-draft-revise/curriculum-dev-draft-revise.component";
+import { CurriculumDevDraftPDUApprovComponent } from "../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component";
+import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 
 @Component({
   selector: 'client-programme-development',
-  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent],
+  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.scss'
 })

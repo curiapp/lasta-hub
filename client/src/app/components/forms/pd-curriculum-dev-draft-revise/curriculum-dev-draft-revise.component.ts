@@ -1,16 +1,11 @@
-import { Router } from '@angular/router';
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-import { HttpClient } from '@angular/common/http';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
+import { FileUploadComponent } from "../file-upload/file-upload.component";
 
-//create the component properties
 @Component({
-  //define the element to be selected from the html structure.
   selector: 'pd-curriculum-revise',
-  //location of our template rather than writing inline templates.
   templateUrl: 'curriculum-dev-draft-revise.component.html',
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
@@ -25,8 +20,6 @@ export class CurriculumDevDraftReviseComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  @ViewChild('selectedFile') selectedFile: any;
 
   onUpload() {
     this.fileUpload.onUpload({});

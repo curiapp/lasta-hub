@@ -1,11 +1,11 @@
 <div class="space-y-4">
-  <h3 class="form-title-label">Curriculum - Drafting</h3>
-  <form #endconsultForm="ngForm">
+  <h3 class="text-xl">Curriculum - Drafting</h3>
+  <form #endconsultForm="ngForm" >
     <label class="text-sm font-bold">Draft Curriculum: </label>
     <file-upload [code]="code" [url]="url" itemAlias="survey"></file-upload>
 
-    <div class="form-control">
-      <button type="button" class="btn btn-success btn-s" (click)="onUpload()"
+    <div class="form-control mt-4">
+      <button type="button" class="btn btn-primary btn-s" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || endconsultForm.form.invalid">
         Submit to PDU
       </button>
