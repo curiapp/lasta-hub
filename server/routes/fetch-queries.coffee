@@ -37,10 +37,7 @@ module.exports = (app, uploader) ->
     # Get programmes
     app.route('/api/programmes').get (request, response) ->
         console.log "new GET request to /api/programmes ..."
-
-        if(!request.query.devCode)
-            return response.status(400).json({message: "Bad Request getting programmes!"})
-
+        
         query = """
             SELECT * FROM \`yester-programmes\`._default._default 
         """
