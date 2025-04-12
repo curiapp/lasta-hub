@@ -1,15 +1,17 @@
 'use strict'
+
 couchbase = require("couchbase")
 async = require 'async'
+fs     = require 'fs-extra'
+git    = require 'simple-git'
+path   = require 'path'
+
 
 clusterConnStr = "couchbase://#{process.env.DB_URL}"
 username = 'admin'
 password = 'password'
-bucketName = 'yester-users'
 
 cluster = null
-bucket = null
-collection = null
 
 initializeDatabase = (callback) ->
     async.series [
@@ -21,14 +23,6 @@ initializeDatabase = (callback) ->
                 cluster = conn
                 cb null
             .catch (err) -> cb err
-
-        (cb) ->
-            try
-                bucket = cluster.bucket(bucketName)
-                collection = bucket.scope('_default').collection('_default')
-                cb null
-            catch err
-                cb err
     ], (err) ->
         if err
             console.error "Database initialization failed:", err
@@ -43,6 +37,7 @@ module.exports = (app, uploader) ->
     # Get programmes
     app.route('/api/programmes').get (request, response) ->
         console.log "new GET request to /api/programmes ..."
+        
         query = """
             SELECT * FROM \`yester-programmes\`._default._default 
         """
@@ -66,13 +61,22 @@ module.exports = (app, uploader) ->
                     console.log "Error: " + e
                     response.status(500).json msg: "Internal Server Error"
 
-    app.route('/api/another').get (request, response) ->
-        console.log "new GET request to /api/another ..."
+    app.route('/api/need-analysis').get (request, response) ->
+        console.log "new GET request to /api/need-analysis ..."
 
-        collection.get("palema")
+        if(!request.query.devCode)
+            return response.status(400).json({message: "Bad Request getting need analysis!"})
+
+        options =  { parameters: [request.query.devCode] }
+        query = """
+            SELECT * FROM \`yester-need-analyses\`._default._default 
+            WHERE META(_default).id=$1
+        """
+
+        cluster.query(query, options)
             .then (data) ->
-                console.log data, ' from db...'
-                response.json data.content
+                needAnalysisObj = data.rows.map (row) -> row._default
+                response.json needAnalysisObj
             .catch (e) ->
                 if e instanceof couchbase.DocumentNotFoundError
                     console.log "Document does not exist"
@@ -80,3 +84,12 @@ module.exports = (app, uploader) ->
                 else
                     console.log "Error: " + e
                     response.status(500).json msg: "Internal Server Error"
+
+    app.route('/api/file').get (request, response) ->
+        console.log "new GET request to /api/file ..."
+
+        if(!request.query.hash)
+            return response.status(400).json({message: "Bad Request getting file!"})
+
+
+
