@@ -48,8 +48,18 @@
             <!-- <div class="label">
               <span class="label-text">Password</span>
             </div> -->
-            <input class="input w-full bg-slate-400 text-white placeholder:text-white" id="password" type="password"
-              placeholder="Enter Password" [(ngModel)]="model.password" required name="password" #password="ngModel">
+            <label class="relative">
+              <input #pass class="w-full input bg-slate-400 text-white placeholder:text-white" id="password"
+                [type]="showPassword?'text':'password'" placeholder="Enter Password" [(ngModel)]="model.password"
+                required name="password" #password="ngModel">
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-200 flex items-center"
+                (click)="togglePasswordVisibility();pass.focus()">
+                <!-- <i [class]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i> -->
+                <span class="material-symbols-rounded">
+                  {{showPassword ? 'visibility_off' : 'visibility'}}
+                </span>
+              </span>
+            </label>
             <div class="label">
               @if(password.invalid && loginForm.submitted){
               <span class="label-text-alt text-red-300">Password is required</span>

@@ -144,7 +144,12 @@ export class NeedAnalysisComponent {
       this.client.getAll<Programme>(`programmes?devCode=${id}`).subscribe((data) => {
         // console.log("Programs ", data);
         this.programme = data[0];
-      })
+      });
+
+      this.client.getAll<any>(`need-analysis?devCode=${id}`).subscribe((data) => {
+        console.log("Need Analysis data ", data);
+        // this.programme = data[0];
+      });
     });
   }
 

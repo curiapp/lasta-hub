@@ -2,7 +2,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ProgrammeTableComponent } from '../../programme-table/programme-table.component';
-import { programmes, upComingEvents } from '../../static';
+import { upComingEvents } from '../../static';
 import { Programme } from '../../types';
 import { generateNext7Days } from '../../functions';
 import { ClientService } from '../../services/client.service';
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   showAll = false;
   currentUser: any
   upComingEvents = upComingEvents;
-  programmes: Programme[];
+  programmes: Programme[] = [];
 
   constructor(private client: ClientService, private viewContainer: ViewContainerRef) { }
 
@@ -41,9 +41,9 @@ export class HomeComponent implements OnInit {
 
   updateDisplayedPrograms() {
     if (this.showAll) {
-      this.programmes = [...programmes];
+      this.programmes = [...this.programmes];
     } else {
-      this.programmes = programmes.slice(0, 10);
+      this.programmes = this.programmes.slice(0, 10);
     }
   }
 

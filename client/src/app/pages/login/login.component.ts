@@ -27,13 +27,18 @@ export class LoginComponent {
   message: string;
   private _loading = inject(LoadingService);
   isLoading = this?._loading.isLoading;
+  showPassword: boolean = false;
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
     this.authService.login(this.model)
       .subscribe(
         {
           next: (data) => {
-            console.log('Hi I am here', data);
+            // console.log('Hi I am here', data);
             sessionStorage.setItem('loggedInUser', JSON.stringify(data));
             this.router.navigate(['/home']);
           },
