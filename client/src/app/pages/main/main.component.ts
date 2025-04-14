@@ -45,14 +45,14 @@ export class MainComponent {
     }
   }
   logout() {
-    console.log("User ..", JSON.parse(sessionStorage.getItem('loggedInUser')));
+    // console.log("User ..", JSON.parse(sessionStorage.getItem('loggedInUser')));
     sessionStorage.removeItem('loggedInUser');
-    window.location.reload();
     this.router.navigate(["/home"])
+    window.location.reload();
   }
 
   isActive(path) {
-    console.log(this._location);
+    // console.log(this._location);
     return this._location.path().indexOf(path) > -1;
   }
   goBack() {

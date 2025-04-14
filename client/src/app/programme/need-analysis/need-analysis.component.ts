@@ -8,7 +8,7 @@ import { BosComponent } from "../../components/forms/need-analysis-bos/bos.compo
 import { EndConsultComponent } from "../../components/forms/need-analysis-end-consult/end-consult.component";
 import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
 import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
-import { SenateSubmitComponent } from "../../components/forms/need-analysissenate-submit/senate-submit.component";
+import { SenateSubmitComponent } from "../../components/forms/need-analysis-apc-submit/senate-submit.component";
 import { NQFLevel, programmes } from '../../static';
 import { Programme } from '../../types';
 import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";

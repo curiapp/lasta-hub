@@ -3,10 +3,169 @@
   <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
     @for(step of steps; track step.title; let i= $index; ){
     <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
-      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold" [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'">
+      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
+        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'">
         {{i+1}} </span>
       <span class="hidden sm:block"> {{step.title}} </span>
     </li>
     }
   </ol>
 </div>
+
+@if(selectedStep==1){
+<div class="space-y-4 my-6">
+  <div class="flex justify-between">
+    <h2 class="text-2xl capitalize">Internal Consultations</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="internal_consult.showModal()">
+      Start Internal Consultations
+    </button>
+  </div>
+
+  <p class="text-gray-700 text-sm">
+    This sub stage requires CDC to identify relevant internal stakeholders for consultation to seek inputs on teaching,
+    learning and assessment (TL &A), delivery, cooperative education, quality assurance, and circulate the programme
+    document.
+  </p>
+
+  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
+    <div class="flex flex-col -gap-2">
+      <span class="text-base">Draft Version 1</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
+    </div>
+
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
+    </span>
+  </div>
+</div>
+
+<dialog id="internal_consult" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <tlu-ceu-qa-start [code]="code"></tlu-ceu-qa-start>
+    <!-- <external-curriculum-dev-pac-start [code]="code"></external-curriculum-dev-pac-start> -->
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+}
+
+@if(selectedStep==2){
+<div class="space-y-4 my-6">
+  <div class="flex justify-between">
+    <h2 class="text-2xl capitalize">ADSTLT Review</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="adstlt_review.showModal()">
+      ADSTLT Review
+    </button>
+  </div>
+
+  <p class="text-gray-700 text-sm">
+    The Department responsible advice the department on the appropriate teaching, learning and assessment strategies on
+    the various courses and makes a recommendation.
+  </p>
+
+  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
+    <div class="flex flex-col -gap-2">
+      <span class="text-base">ADSTLT Review</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
+    </div>
+
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
+    </span>
+  </div>
+</div>
+
+<dialog id="adstlt_review" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <tlu-recommend [code]="code"></tlu-recommend>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+}
+
+@if(selectedStep==3){
+<div class="space-y-4 my-6">
+  <div class="flex justify-between">
+    <h2 class="text-2xl capitalize">CE Review</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="ce_review.showModal()">
+      CE Review
+    </button>
+  </div>
+
+  <p class="text-gray-700 text-sm">
+    The Department responsible ensure the integration of the Work Integrated Learning (WIL) component in the
+    undergraduate programme and makes a recommendation.
+  </p>
+
+  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
+    <div class="flex flex-col -gap-2">
+      <span class="text-base">CE Review</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
+    </div>
+
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
+    </span>
+  </div>
+</div>
+
+<dialog id="ce_review" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <ceu-recommend [code]="code"></ceu-recommend>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+}
+
+@if(selectedStep==4){
+<div class="space-y-4 my-6">
+  <div class="flex justify-between">
+    <h2 class="text-2xl capitalize">PDQA Recommendation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="pdqa_review.showModal()">
+      PDQA Recommendation
+    </button>
+  </div>
+
+  <p class="text-gray-700 text-sm">
+    The department review and verify the readiness of the programme for submission to BOS, makes a recommendation and
+    provide a checklist.
+  </p>
+
+  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
+    <div class="flex flex-col -gap-2">
+      <span class="text-base">PDQA Recommendation</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
+    </div>
+
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
+    </span>
+  </div>
+</div>
+
+<dialog id="pdqa_review" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <internal-pdqa-review [code]="code"></internal-pdqa-review>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+}

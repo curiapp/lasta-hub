@@ -156,6 +156,10 @@
     </button> -->
   </div>
 
+  <p class="text-gray-700 text-sm">
+    CDC provides relevant information related to stakeholders consultation on the need of the proposed programme
+  </p>
+
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @for(submission of submissions; track submission.id){
     <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
@@ -330,6 +334,10 @@
     </div>
   </div>
 
+  <p class="text-sm text-gray-700">
+    The Programme Development Quality Assurance (PDQA) reviews and make recommendation on the Need Analysis (NA) report.
+  </p>
+
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
       <span class="text-base">Final NA Report</span>
@@ -394,6 +402,10 @@
     </div>
   </div>
 
+  <p class="text-sm text-gray-700">
+    Boards of Studies (BOS) review the NA report and provides recommendation
+  </p>
+
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
       <span class="text-base">Recommendations</span>
@@ -412,9 +424,7 @@
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
-
     <bos-amendment [code]="programme?.preProgComponent.devCode"></bos-amendment>
-
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
@@ -445,6 +455,10 @@
       </button>
     </div>
   </div>
+
+  <p class="text-sm text-gray-700">
+    Department submit programme document to APC for review and APC make recommendations.
+  </p>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
@@ -482,8 +496,11 @@
         Recommendation
       </button>
     </div>
-
   </div>
+
+  <p class="text-sm text-gray-700">
+    Department submit programme document to Senate and Senate makes a decision.
+  </p>
 
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">

@@ -15,20 +15,18 @@
 @if(selectedStep==1){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">NQF Documentation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="nqf_start.showModal()">
-      Preparation for NQA Submission
+    <h2 class="text-2xl capitalize">Final Draft to BOS Submission</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="bos_submit.showModal()">
+      BOS Submit
     </button>
   </div>
-
-  <p class="text-sm text-gray-700">
-    The CDC prepares the NQF qualification documentation for submission to ADS within 14 working days upon Senate
-    approval
+  <p class="text-gray-700 text-sm">
+    On recommendation made by ADS in Stage 4, the department circulate the final draft programme for submission to BOS.
   </p>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
-      <span class="text-base">Submission</span>
+      <span class="text-base">Draft Version 1</span>
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
@@ -38,7 +36,7 @@
   </div>
 </div>
 
-<dialog id="nqf_start" class="modal">
+<dialog id="bos_submit" class="modal">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -54,20 +52,20 @@
 @if(selectedStep==2){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">NQF Submission</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="nqf_submit.showModal()">
-      Preparation for NQA Submission
+    <h2 class="text-2xl capitalize">Faculty BOS-Consultation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="bos_recommend.showModal()">
+      Recommendations
     </button>
   </div>
 
-  <p class="text-sm text-gray-700">
-    ADS review the NQF submission from the department and prepare NQF application documentation for submission.
+  <p class="text-gray-700 text-sm">
+    BOS review the draft programme and make recommendations.
   </p>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
-      <span class="text-base">Submission</span>
-      <span class="text-xs text-gray-500">Submitted: 29 April 2025</span>
+      <span class="text-base">Recommendations</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
     <span class="absolute right-1 top-1">
@@ -76,7 +74,45 @@
   </div>
 </div>
 
-<dialog id="nqf_submit" class="modal">
+
+<div class="space-y-4 my-6">
+  <div class="flex justify-between">
+    <h2 class="text-2xl capitalize">Other Faculty BOS Consultation (Optional)</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="other_recommend.showModal()">
+      Recommendations
+    </button>
+  </div>
+
+  <p class="text-gray-700 text-sm">
+    This sub stage is only applicable to multi-disciplinary or inter-disciplinary programmes. CDC circulate the draft
+    programme to relevant the faculties programmes for recommendations
+  </p>
+
+  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
+    <div class="flex flex-col -gap-2">
+      <span class="text-base">Recommendations</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
+    </div>
+
+    <span class="absolute right-1 top-1">
+      <action-buttons></action-buttons>
+    </span>
+  </div>
+</div>
+
+<dialog id="bos_recommend" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <!-- <tlu-ceu-qa-start [code]="code"></tlu-ceu-qa-start> -->
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<dialog id="other_recommend" class="modal">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -92,20 +128,20 @@
 @if(selectedStep==3){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">NQF Feedback</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="nqf_feedback.showModal()">
-      NQF Feedback
+    <h2 class="text-2xl capitalize">Academic Planning Committee (APC) Recommedation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="apc_recommend.showModal()">
+      Recommendations
     </button>
   </div>
 
-  <p class="text-sm text-gray-700">
-    NQF Feedback information
+  <p class="text-gray-700 text-sm">
+    APC review the draft programme and provide recommendations
   </p>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
-      <span class="text-base">Feedback</span>
-      <span class="text-xs text-gray-500">Submitted: 01 May 2025</span>
+      <span class="text-base">Draft Version 1</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
     <span class="absolute right-1 top-1">
@@ -114,7 +150,7 @@
   </div>
 </div>
 
-<dialog id="nqf_feedback" class="modal">
+<dialog id="apc_recommend" class="modal">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -130,21 +166,20 @@
 @if(selectedStep==4){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">NQF Registration</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="nqf_reg.showModal()">
-      NQF Registration
+    <h2 class="text-2xl capitalize">Senate Recommedation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="apc_recommend.showModal()">
+      Recommendations
     </button>
   </div>
 
-  <p class="text-sm text-gray-700">
-    ADS submits a complete application to the Namibia Qualification Authority(NQA) for registration on the National
-    Qualification Framework(NQF)
+  <p class="text-gray-700 text-sm">
+    Senate review the draft programme and provide recommendation on approval.
   </p>
 
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
-      <span class="text-base">NQF Registration</span>
-      <span class="text-xs text-gray-500">Submitted: 01 May 2025</span>
+      <span class="text-base">Recommedation</span>
+      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
 
     <span class="absolute right-1 top-1">
@@ -153,7 +188,7 @@
   </div>
 </div>
 
-<dialog id="nqf_reg" class="modal">
+<dialog id="apc_recommend" class="modal">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>

@@ -1,28 +1,33 @@
 <div class="container">
   <h3 class="text-xl mb-4">Submission to BOS</h3>
-  <form #bossubmitForm="ngForm" class="space-y-6">
+  <form #bossubmitForm="ngForm" (ngSubmit)="submitBOS(bossubmitForm)" class="space-y-6">
     <div class="form-control">
       <label for="ProgrammeCode" class="label-text">Programme Code</label>
-      <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programmeCode" name="devCode"
-        #procode="ngModel" readonly>
+      <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programmeCode"
+        name="devCode" #procode="ngModel" readonly>
       @if(procode.invalid && procode.touched){<div class="label-text-alt text-red-700">Proposed Programme Code is
         required*</div>}
     </div>
     <div class="form-group">
       <label for="date" class="label-text">Start Date:</label>
-      <input id="date" type="Date" class="input w-full input-bordered" required [(ngModel)]="startDate" ng2-datetime-picker
-        date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      <input id="date" type="Date" class="input w-full input-bordered" required [(ngModel)]="startDate"
+        ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if(cdate.invalid && cdate.touched){<div class="label-text-alt text-red-700">Submission Date is required*
       </div>}
     </div>
     <div class="form-group">
       <!-- <button type="submit" class="btn btn-default" (click)="clear()">Cancel</button> -->
-      <button type="button" class="btn btn-primary btn-sm w-full" (click)="submitBOS()"
-        [disabled]="!bossubmitForm.form.valid">
-        Submit
-        <span class="material-symbols-rounded">
-          cloud_upload
+      <button type="submit" class="btn btn-primary btn-sm w-full" [disabled]="!bossubmitForm.form.valid">
+        @if (loading.isLoading) {
+        <span class="flex items-center gap-2">
+          Submit
+          <span class="material-symbols-rounded">
+            cloud_upload
           </span>
+        </span>
+        }@else {
+        <span class="loading loading-spinner loading-sm"></span>
+        }
       </button>
     </div>
   </form>

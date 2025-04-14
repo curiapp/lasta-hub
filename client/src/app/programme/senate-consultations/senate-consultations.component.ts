@@ -1,32 +1,32 @@
 import { Component } from '@angular/core';
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { Programme } from '../../types';
 import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
+import { Programme } from '../../types';
+import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 
 @Component({
-  selector: 'client-nqf-registration',
+  selector: 'client-senate-consultations',
   imports: [ActionButtonsComponent],
-  templateUrl: './nqf-registration.component.html',
-  styleUrl: './nqf-registration.component.scss'
+  templateUrl: './senate-consultations.component.html',
+  styleUrl: './senate-consultations.component.scss'
 })
-export class NqfRegistrationComponent {
+export class SenateConsultationsComponent {
   steps = [
     {
       id: 1,
-      title: "NQF Documentation",
+      title: "Final Draft to BOS Submission",
     },
     {
       id: 2,
-      title: "NQF Submission",
+      title: "Faculty BOS Consultation",
     },
     {
       id: 3,
-      title: "NQF Feedback"
+      title: "APC Recommendation"
     },
     {
       id: 4,
-      title: "NQF Registration"
+      title: "Final Senate Recommendation"
     }
   ];
   programme: Programme;
@@ -53,6 +53,4 @@ export class NqfRegistrationComponent {
       });
     });
   }
-
-
 }

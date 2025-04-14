@@ -1,13 +1,14 @@
 //import files from the angular framework
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 //import the file-upload plugin
 //import the native angular http and respone libraries
 import { SenateSubmitService } from '../../../services/senate-submit.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ToastService } from '../../../services/toast.service';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'senate-submit',
@@ -21,6 +22,7 @@ export class SenateSubmitComponent implements OnInit {
   startDate: Date;
   dataService: SenateSubmitService;
   postMyDataToServer: string;
+  loading = inject(LoadingService);
 
   constructor(private _dataService: SenateSubmitService, private toast: ToastService) {
     this.dataService = _dataService;
@@ -28,12 +30,11 @@ export class SenateSubmitComponent implements OnInit {
   ngOnInit() {
   }
 
-  postDataToServer() {
-
+  onSumbit(form: NgForm) {
     this._dataService.startNeedAnalysis(this.code, this.startDate)
       .subscribe({
         next: (data) => {
-          this.postMyDataToServer = JSON.stringify(data);
+          // this.postMyDataToServer = JSON.stringify(data);
           // alert('Senate session started !');
           this.toast.success("Senate session started !");
         }, // put the data returned from the server in our variable

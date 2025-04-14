@@ -1,0 +1,70 @@
+<div class="space-y-4">
+  <h3 class="text-xl">Start Internal Consultation</h3>
+  <form #consultForm="ngForm">
+    <!-- <div class="form-group">
+      <label for="ProgrammeCode">Programme Code</label>
+      <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"
+        name="devCode" #procode="ngModel">
+      <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
+    </div> -->
+    <div class="form-control my-2">
+      <label class="label label-text" for="date">Date</label>
+      <div class="input-group">
+        <input id="date" type="Date" class="input input-bordered w-full" required [(ngModel)]="model.consultationDate"
+          ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      </div>
+      @if(cdate.invalid && cdate.touched){<div class="label label-text-alt text-red-700">Consultation Date is required
+      </div>}
+    </div>
+    <div class="form-control">
+      <label class="text-sm font-semibold text-primary">Drafted Programme: </label>
+      <file-upload [code]="code" itemAlias="review-start" [url]="url"></file-upload>
+    </div>
+    <div class="form-control">
+      <label class="label label-text" for="doc">WIL Component (optional): </label>
+      <div class="rounded-lg border p-2">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline1" name="isWil" [(ngModel)]="model.wil"
+            #wil="ngModel">
+
+          <label class="custom-control-label" for="defaultInline1"> {{model.wil?'Includes':'Excludes'}} WIL
+            Component
+          </label>
+        </div>
+      </div>
+      <!-- <div [hidden]="model.wil ===true || model.distance ===true" class="alert alert-danger"></div> -->
+    </div>
+
+    <div class="form-control">
+      <label class="label label-text">Recommend to: </label>
+      <div class="rounded-lg flex items-center gap-2 border p-2">
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline3" name="status" ngModel value="ceu"
+            required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
+          <label class="label" for="defaultInline3">CEU</label>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline4" name="status" ngModel value="coll"
+            required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
+          <label class="label" for="defaultInline4">COLL</label>
+        </div>
+        <div class="flex gap-2 items-center">
+          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline5" name="status" ngModel value="tlp"
+            required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
+          <label class="label" for="defaultInline5">TLP</label>
+        </div>
+      </div>
+      @if (this.model.recommendto.length<0) { <div class="label label-text-alt text-red-600">
+        Recommend to at least one body is required*
+    </div>
+
+    }
+</div>
+<div class="form-control mt-4">
+  <button type="button" class="btn btn-sm btn-primary" (click)="onUpload()"
+    [disabled]="!fileUpload?.uploader.queue.length || !consultForm.form.valid">
+    Submit
+  </button>
+</div>
+</form>
+</div>

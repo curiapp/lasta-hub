@@ -45,13 +45,14 @@ export class StartNeedAnalysisComponent implements OnInit {
     }
   }
 
-  postDataToServer() {
+  onSubmit(form: NgForm) {
 
     this._dataService.startNeedAnalysis(this.programme)
       .subscribe({
         next: (data) => {
           this.postMyDataToServer = JSON.stringify(data)
-          console.log("Data: ", this.postMyDataToServer);
+          // console.log("Data: ", this.postMyDataToServer);
+          form.reset();
           this.toast.success("New programme created")
         },
         error: (error) => {

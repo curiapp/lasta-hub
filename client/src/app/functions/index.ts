@@ -44,8 +44,6 @@ export function objectToFormData(
     }
   }
 
-  console.log("Form Data ", formData);
-
   return formData;
 }
 
