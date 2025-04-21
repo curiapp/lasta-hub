@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
+import { FinalDraftComponent } from "../../components/forms/bos-final-draft/final-draft.component";
 
 @Component({
   selector: 'client-senate-consultations',
-  imports: [ActionButtonsComponent],
+  imports: [ActionButtonsComponent, FinalDraftComponent],
   templateUrl: './senate-consultations.component.html',
   styleUrl: './senate-consultations.component.scss'
 })

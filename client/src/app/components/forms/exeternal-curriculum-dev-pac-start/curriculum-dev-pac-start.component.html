@@ -1,7 +1,7 @@
 <div class="space-y-4">
   <h3 class="text-xl">Circulation of Draft Programme</h3>
   <form #consultForm="ngForm" class="space-y-4">
-    <div class="form-group">
+    <div class="form-control">
       <label class="label label-text">Date</label>
       <div class="input-control">
         <input id="date" type="date" class="input input-sm input-bordered w-full" required [(ngModel)]="model.consultationDate"
@@ -19,10 +19,7 @@
       <button type="button" class="btn btn-primary btn-sm" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !consultForm.form.valid">
         submit
-
-        <span class="material-symbols-rounded">
-          cloud_upload
-          </span>
+        <span class="material-symbols-rounded">cloud_upload</span>
       </button>
     </div>
   </form>
