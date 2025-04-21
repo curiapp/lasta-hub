@@ -197,7 +197,7 @@
 <div class="p-4 flex items-start gap-8">
 
   <div class="space-y-8 flex-grow">
-    @if(user==='PDU'){
+    @if(user==='PDQA'){
     <div class="space-y-4">
       <h2 class="text-lg lg:text-3xl font-light">Programme Management Tools</h2>
       <div class="flex items-center gap-2">
@@ -222,6 +222,9 @@
       </div>
     </div>
 
+    @if(_loading.isLoading()){
+    <programme-tamplate />
+    }@else {
     <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
       @for (item of programmes; track item?.preProgComponent?.devCode) {
       <div class="group relative block h-fit rounded-lg">
@@ -243,57 +246,61 @@
               <span class="text-xs"><b>Code:</b> {{item?.preProgComponent?.devCode}},
                 <b>Level:</b> {{item.level}}</span>
               <!-- <span class="text-xs  line-clamp-2">Required Actions:
-                @for (it of item.actions; track it; let i = $index){
-                <span class="text-xs">{{it}}
-                  @if(i < item.actions.length - 1) {
-                    <span class="text-xs">,</span>}
-                  </span>
-                }
-              </span> -->
+                  @for (it of item.actions; track it; let i = $index){
+                  <span class="text-xs">{{it}}
+                    @if(i < item.actions.length - 1) {
+                      <span class="text-xs">,</span>}
+                    </span>
+                  }
+                </span> -->
               <span class="text-xs"><b>Department:</b> {{item.department}}</span>
               <span class="text-xs"><b>Faculty:</b> {{item.faculty}}</span>
             </div>
           </a>
 
           <!-- <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
-              <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
+                <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
 
-              <p class="mt-4 text-xs sm:text-sm line-clamp-2">
-                {{item.description}}
-              </p>
+                <p class="mt-4 text-xs sm:text-sm line-clamp-2">
+                  {{item.description}}
+                </p>
 
-              <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
+                <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
 
-                <div class="avatar placeholder">
-                  <div class="bg-primary text-neutral-content w-8">
-                    <span>UP</span>
+                  <div class="avatar placeholder">
+                    <div class="bg-primary text-neutral-content w-8">
+                      <span>UP</span>
+                    </div>
                   </div>
-                </div>
-                <div class="avatar placeholder">
-                  <div class="bg-primary text-neutral-content w-8">
-                    <span>MS</span>
+                  <div class="avatar placeholder">
+                    <div class="bg-primary text-neutral-content w-8">
+                      <span>MS</span>
+                    </div>
                   </div>
-                </div>
-                <div class="avatar placeholder">
-                  <div class="bg-primary text-neutral-content w-8">
-                    <span>+2</span>
+                  <div class="avatar placeholder">
+                    <div class="bg-primary text-neutral-content w-8">
+                      <span>+2</span>
+                    </div>
                   </div>
+
                 </div>
 
-              </div>
-
-              <p class="mt-8 font-bold">Read more</p>
-            </div> -->
+                <p class="mt-8 font-bold">Read more</p>
+              </div> -->
         </div>
       </div>
       } @empty {
-      <div class="text-center w-full rounded-box bg-gray-100 h-64 flex items-center justify-center flex-col gap-3 col-span-full">
+      <div
+        class="text-center w-full rounded-box bg-gray-100 h-64 flex items-center justify-center flex-col gap-3 col-span-full">
         <img src="assets/circled-x.svg" alt="empty image" class="size-8">
         <span class="text-sm">no programmes</span>
       </div>
       }
 
     </div>
+    }
+
+
 
     <div class="space-y-6">
       <!-- <h2 class="text-lg lg:text-3xl font-light">{{user==="PDQA"?"Recent Updates":"Programmes Due for Review"}}</h2> -->

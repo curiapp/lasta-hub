@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ProgrammeTableComponent } from '../../programme-table/programme-table.component';
@@ -8,12 +8,14 @@ import { generateNext7Days } from '../../functions';
 import { ClientService } from '../../services/client.service';
 import { Observable } from 'rxjs';
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
+import { ProgrammeTamplateComponent } from "../../components/loaders/programme-tamplate/programme-tamplate.component";
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [RouterModule, FormsModule, ProgrammeTableComponent]
+  imports: [RouterModule, FormsModule, ProgrammeTableComponent, ProgrammeTamplateComponent]
 })
 export class HomeComponent implements OnInit {
   username: string;
@@ -31,6 +33,8 @@ export class HomeComponent implements OnInit {
   currentUser: any
   upComingEvents = upComingEvents;
   programmes: Programme[] = [];
+  _loading = inject(LoadingService);
+  // isLoadig: boolean = this._loading.isLoading;
 
   constructor(private client: ClientService, private viewContainer: ViewContainerRef) { }
 

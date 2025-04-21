@@ -38,3 +38,14 @@ export type User = {
   token?: string,
   expires?: number
 }
+
+
+export type ToastMessage = {
+  id: string;
+  message: string;
+  type?: string;
+  classes?: string;
+  duration?: number;
+  show?: boolean;
+  removeAfterTimeout?: boolean;
+}

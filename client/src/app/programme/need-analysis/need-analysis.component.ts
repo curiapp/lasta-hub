@@ -13,6 +13,7 @@ import { NQFLevel, programmes } from '../../static';
 import { Programme } from '../../types';
 import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";
 import { ClientService } from '../../services/client.service';
+import { NeedAnalysisEditProgramComponent } from "../../components/forms/need-analysis-edit-programme/need-analysis-edit-program.component";
 
 
 @Component({
@@ -27,8 +28,9 @@ import { ClientService } from '../../services/client.service';
     BosComponent,
     SenateSubmitComponent,
     ApcComponent,
-    SenateComponent
-  ],
+    SenateComponent,
+    NeedAnalysisEditProgramComponent
+],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.scss'
 })
@@ -118,14 +120,6 @@ export class NeedAnalysisComponent {
   addStakeholder() {
     this.stakeholders.push(this.stakeholder);
     this.stakeholder = { name: '', email: '' };
-  }
-
-  changed(event) {
-    this.programme.level = event;
-  }
-
-  updateProgramme() {
-
   }
 
   markComplete() {

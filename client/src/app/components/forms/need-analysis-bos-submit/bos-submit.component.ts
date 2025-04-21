@@ -27,10 +27,10 @@ export class BosSubmitComponent {
         next: (data) => {
           console.log("data: " + JSON.stringify(data));
           this.toast.success("Bos session started !");
-          form.reset();
+          // form.reset();
         },
         error: (error) => {
-          console.log("Error HTTP Post Service");
+          // console.log("Error HTTP Post Service");
           this.toast.error("An error occurred while starting Bos session.");
         }
       }

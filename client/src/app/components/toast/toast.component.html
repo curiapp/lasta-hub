@@ -1,16 +1,24 @@
-<div class="toast toast-end z-[200]">
-  @for(message of toastService.messages; track message){
-  <div [class]="toastService.classes" class="alert relative z-[999999] bg-white py-2 flex items-center justify-between">
-    <span class="text-sm">{{message}}</span>
-    <button class="grid place-items-center p-2 transition  hover:bg-gray-900/20 rounded-full backdrop-blur-3"
-      (click)="closeToast(message)">
-      <svg class="size-4" stroke-width="0.9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor">
-        <path
-          d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426"
-          stroke="currentColor" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </button>
+<div class="fixed bottom-8 right-8 transition-all ease-out duration-700">
+  <div
+    class="space-y-1 transition-all ease-out duration-700 stack hover:w-full hover:!flex hover:!flex-col stack-top h-fit">
+    @for(toast of toastService.messages(); track toast.id){
+    <div class="rounded-lg py-1 px-2 bg-white border mb-1">
+      <div class="flex gap-2 items-center">
+        <div class="size-8 grid place-items-center bg-gray-100 rounded-lg">
+          <img class="size-4" [src]="url[toast.type]" alt="icon">
+        </div>
+        <span class="text-xs capitalize flex-grow">{{toast.message}}</span>
+        <button class="grid place-items-center p-2 transition  hover:bg-gray-900/20 rounded-full backdrop-blur-3"
+          (click)="close(toast.id)">
+          <svg class="size-4" stroke-width="0.9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            stroke="currentColor">
+            <path
+              d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426"
+              stroke="currentColor" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    }
   </div>
-  }
 </div>

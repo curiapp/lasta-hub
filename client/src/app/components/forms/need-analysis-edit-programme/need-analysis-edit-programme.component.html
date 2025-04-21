@@ -1,0 +1,65 @@
+<form (ngSubmit)="updateProgramme(updateProgrammeForm)" #updateProgrammeForm="ngForm" class="space-y-3">
+  <div class="form-control">
+    <div class="label">
+      <span class="label-text">Proposed Programme Title</span>
+    </div>
+    <input id="title" type="text" class="input input-bordered" required [(ngModel)]="programme.name" name="title"
+      #ptitle="ngModel">
+    @if (ptitle.invalid && ptitle.touched) {
+    <div class="label">
+      <span class="label label-text-alt text-error">
+        Programme title is required
+      </span>
+    </div>
+    }
+  </div>
+
+  <div class="form-control">
+    <div class="label">
+      <span class="label-text">Proposed Programme Code</span>
+    </div>
+    <input id="programmeCode" type="text" class="input input-bordered" required
+      [(ngModel)]="programme?.preProgComponent.devCode" name="code" #code="ngModel">
+    @if (code.invalid && code.touched) {
+    <div class="label label-text-alt text-error">
+      <span class="label-text">
+        Proposed Programme Code is required
+      </span>
+    </div>
+    }
+  </div>
+
+
+  <div class="form-control w-full">
+    <div class="label">
+      <span class="label-text">NQF Level</span>
+    </div>
+
+    <select class="select select-bordered w-full" title="Select level" required [(ngModel)]="programme.level"
+      name="level" #level="ngModel" (ngModelChange)="changed($event)">
+      <option disabled>Select NQF Level</option>
+      @for (level of levels;track level){
+      <option [value]="level">{{level}}</option>
+      }
+    </select>
+    @if (level.invalid && level.touched) {
+    <div class="label">
+      <span class="label label-text-alt text-error">NQF Level required!</span>
+    </div>
+    }
+
+  </div>
+  <div class="form-control gap-2">
+    <button type="submit" class="btn btn-sm btn-primary flex gap-1 items-center"
+      [disabled]="updateProgrammeForm.form.invalid">
+      @if (!_loading?.isLoading()) {
+      <span class="flex items-center gap-2">
+        <span class="material-symbols-rounded">edit</span>
+        <span>Update</span>
+      </span>
+      } @else {
+      <span class="loading loading-spinner loading-sm"></span>
+      }
+    </button>
+  </div>
+</form>

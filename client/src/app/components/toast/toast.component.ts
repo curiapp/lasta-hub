@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -8,11 +8,16 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './toast.component.scss'
 })
 export class ToastComponent {
+  toastService = inject(ToastService);
+  url = {
+    success:"/assets/face.svg",
+    info:"/assets/exclamation-point.svg",
+    error:"/assets/circled-x.svg",
+    warning:"/assets/balloon.svg",
+  }
 
-  constructor(public toastService: ToastService) { }
-
-  closeToast = (message: string) => {
-    this.toastService.clear(message)
+  close = (id: string) => {
+    this.toastService.remove(id)
   };
 
 }

@@ -77,14 +77,10 @@
     </div>
 
     <div class="form-control my-2">
-      <!-- <button type="submit" class="btn btn-warning" (click)="onUpload">Clear</button> -->
-
       <button type="button" class="btn btn-sm btn-primary w-full btn-s" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !bosForm.form.valid">
         Submit
-        <span class="material-symbols-rounded">
-          cloud_upload
-          </span>
+        <span class="material-symbols-rounded">cloud_upload</span>
       </button>
     </div>
   </form>

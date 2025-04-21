@@ -1,56 +1,50 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { v4 as uuidv4 } from 'uuid';
+import { ToastMessage } from '../types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
 
-  constructor() { }
-
-  messages: string[] = [];
+  duration = 10000;
+  messages = signal<ToastMessage[]>([]);
   type: string;
   classes = "";
-  show(message: string, type?: string) {
-    // switch (type) {
-    //   case 'success':
-    //     this.classes = "alert-success text-white";
-    //     break;
-    //   case 'error':
-    //     this.classes = "alert-danger text-white";
-    //     break;
-    //   case 'info':
-    //     this.classes = "alert-info text-white";
-    //     break;
-    //   case 'warning':
-    //     this.classes = "alert-warning text-white";
-    //     break;
-    //   default:
-    //     this.classes = "bg-primary text-black";
-    //     break;
-    // }
-    this.messages.push(message);
+  add(message: string, type: string = 'info') {
+    const id = uuidv4();
+    this.messages.update((currentMessages) => [...currentMessages, { id, message, type }]);
+    // this.removeAfterTimeout(id);
   }
 
-  clear(value: string) {
-    this.messages = this.messages.filter(message => message !== value);
+  remove(id: string): void {
+    this.messages.update((currentMessages) =>
+      currentMessages.filter((msg) => msg.id !== id)
+    );
   }
 
-  clearAll(){
-    this.messages = [];
+  removeAll() {
+    this.messages.set([]);
   }
 
   error(message: string) {
-    this.show(message, 'error');
+    this.add(message, 'error');
   }
 
   success(message: string) {
-    this.show(message, 'success');
+    this.add(message, 'success');
   }
   info(message: string) {
-    this.show(message, 'info');
+    this.add(message, 'info');
   }
   warning(message: string) {
-    this.show(message, 'warning');
+    this.add(message, 'warning');
+  }
+
+  private removeAfterTimeout(id: string): void {
+    setTimeout(() => {
+      this.remove(id);
+    }, this.duration);
   }
 
 }
