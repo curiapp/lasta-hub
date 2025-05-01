@@ -31,7 +31,9 @@ storerOption         =
 limitOption =
     fileSize: 52428800
 storer               = multer.diskStorage storerOption
-uploader             = multer({ storage: storer, limits: limitOption })
+#uploader             = multer({ storage: storer, limits: limitOption })
+uploader             = multer({ storage: storer })
+
 
 # expiration time
 oneDay = 8640000
