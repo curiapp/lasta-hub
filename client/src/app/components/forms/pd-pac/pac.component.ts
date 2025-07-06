@@ -3,6 +3,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
+import { LoadingService } from '../../../services/loading.service';
 
 
 @Component({
@@ -14,15 +15,16 @@ import { ToastService } from '../../../services/toast.service';
 export class PacComponent implements OnInit {
   private fb = inject(FormBuilder);
   @Input() code: string = "defaultDevCode";
-  pacAppointUrl:string = "curriculum-development/appoint/pac";
+  pacAppointUrl: string = "curriculum-development/appoint/pac";
+  ld = inject(LoadingService);
 
   myForm = this.fb.group({
     devCode: [this.code, [Validators.required, Validators.minLength(3)]],
-    cdc: this.fb.array([
+    pac: this.fb.array([
       this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
-        organisation: ['', Validators.required],
+        organization: ['', Validators.required],
         occupation: ['', Validators.required],
         qualification: ['', Validators.required],
         emailAddress: ['', [Validators.required, Validators.email]],
@@ -37,16 +39,16 @@ export class PacComponent implements OnInit {
 
 
   removeItem(index: number): void {
-    const itemsArray = this.myForm.get('cdc') as FormArray;
+    const itemsArray = this.myForm.get('pac') as FormArray;
     itemsArray.removeAt(index);
   }
 
   addItem() {
-    const itemArray = this.myForm.get('cdc') as FormArray;
+    const itemArray = this.myForm.get('pac') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      organisation: ['', Validators.required],
+      organization: ['', Validators.required],
       occupation: ['', Validators.required],
       qualification: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
@@ -58,7 +60,7 @@ export class PacComponent implements OnInit {
 
 
   get items(): FormArray {
-    return this.myForm.get('cdc') as FormArray;
+    return this.myForm.get('pac') as FormArray;
   }
 
   ngOnInit() {
@@ -87,7 +89,7 @@ export class PacComponent implements OnInit {
       .subscribe({
         next: data => {
           console.log("data", data);
-          this.toast.success("CDC successfully submitted!");
+          this.toast.success("PAC successfully submitted!");
         },
         error: error => {
           console.log("Error HTTP Post Service", error)

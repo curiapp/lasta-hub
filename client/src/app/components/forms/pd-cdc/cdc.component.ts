@@ -3,6 +3,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'pd-cdc',
@@ -16,6 +17,7 @@ export class CdcComponent implements OnInit {
   private fb = inject(FormBuilder);
   private pacAppointUrl: string = "curriculum-development/appoint/cdc";
   @Input() code: string = "defaultDevCode";
+  ld = inject(LoadingService);
 
   myForm = this.fb.group({
     devCode: [this.code, [Validators.required, Validators.minLength(3)]],
@@ -23,7 +25,8 @@ export class CdcComponent implements OnInit {
       this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
-        organisation: ['', Validators.required],
+        organization: ['', Validators.required],
+        qualification: ['', Validators.required],
         emailAddress: ['', [Validators.required, Validators.email]],
         cellphone: ['', [Validators.minLength(10)]],
         workNumber: ['', [Validators.required, Validators.minLength(10)]]
@@ -31,15 +34,14 @@ export class CdcComponent implements OnInit {
     ])
   })
 
-
-
   constructor(public http: ClientService, private toast: ToastService) { }
   addItem() {
     const itemArray = this.myForm.get('cdc') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      organisation: ['', Validators.required],
+      organization: ['', Validators.required],
+      qualification: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       cellphone: ['', [Validators.minLength(10)]],
       workNumber: ['', [Validators.required, Validators.minLength(10)]]
