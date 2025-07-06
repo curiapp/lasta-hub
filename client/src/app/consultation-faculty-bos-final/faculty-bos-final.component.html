@@ -1,93 +1,65 @@
-<div class="container" style="padding-top:70px">
-  <div class="row justify-content-md-center">
-    <div class="col-md-6 col-md-offset-3">
-      <div class="login-wrapper">
-        <form #bosForm="ngForm">
-          <h3 class="form-title-label"> 5.2 Faculty Bos -- Consultation</h3>
-          <!-- <button type="submit" class="btn btn-default" (click)="backClicked()">Go back</button> -->
-          <hr class="colorgraph">
-          <br>
-          <div class="form-group">
-            <label for="ProgrammeCode">Programme Code</label>
-            <input id="programmeCode" type="text" class="form-control" required [(ngModel)]="model.programmeCode"
-              name="devCode" #procode="ngModel">
-            <div [hidden]="procode.valid" class="alert alert-danger">Proposed Programme Code is required</div>
-          </div>
-          <br>
-          <div class="form-group">
-            <label for="date">BOS Date</label>
-            <div class="input-group">
-              <input id="date" type="Date" class="form-control" required [(ngModel)]="model.consultationDate"
-                ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-              <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-              </span>
-            </div>
-            <div [hidden]="cdate.valid" class="alert alert-danger">Consultation Date is required</div>
-          </div>
-          <br>
-          <div class="form-group">
-            <label for="doc"> Programme Draft: </label>
-            <div class="input-group mb-0">
-              <div class="input-group-prepend">
-                <label>
-                  <span style="height:40px" class="m-0 px-3 py-2 btn btn-primary btn-lg" id="button-addon1">
-                    Browse
-                    <input class="form-control" #selectedFile type="file" name="recommendation" ng2FileSelect
-                      [uploader]="uploader" (change)="updateFile()" style="display: none;" />
-                  </span>
-                </label>
-              </div>
-              <input style="height:40px" type="text" id="file-name" class="form-control" placeholder="NO FILE SELECTED"
-                aria-describedby="button-addon1" readonly>
-              <div class="input-group-append">
-                <button mdbBtn type="button" color="danger" class="m-0 px-3 py-2" style="height:40px" mdbWavesEffect
-                  (click)="removefile();uploader.clearQueue();"
-                  [disabled]="!uploader.getNotUploadedItems().length">X</button>
-              </div>
-            </div>
-            <div [hidden]="uploader.getNotUploadedItems().length" class="alert alert-danger" style="margin-top:-8px;">Programme draft documents are required</div>
-          </div>
-          <div class="form-group">
-            <label class="control-label">Recommended to: </label>
-            <fieldset style="border:solid 0.4px;border-radius:4px;width:100%;height:30px;border-color:lightgray;">
-              <div style="text-align:center;">
-                <label class="radio-inline"> <input type="radio" name="recommend" [(ngModel)]="model.recommend"
-                    value="recommend-apc" required #recommend="ngModel"> APC &nbsp;</label>
-               
-              </div>
-            </fieldset>
-            <div [hidden]="recommend.valid" class="alert alert-danger">Recommendations status is needed</div>
-          </div>
-          <br>
-<!-- here -->
-<div class="form-group">
-  <label class="control-label">Defer to: </label>
-  <fieldset style="border:solid 0.4px;border-radius:4px;width:100%;height:30px;border-color:lightgray;">
-    <div style="text-align:center;">
-      <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status"
-          value="recommend-bosec" required #status="ngModel"> BOSEC &nbsp;</label>
-      <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status"
-          value="resubmit" required #status="ngModel"> BOS &nbsp;</label>
-      <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="defer"
-          required #status="ngModel"> Other Faculty BOS </label>
-    </div>
-  </fieldset>
-  <div [hidden]="status.valid" class="alert alert-danger">Defer to status is needed</div>
-</div>
-<br>
-
-<!-- end -->
-
-          <div class="form-group">
-            <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()">Clear</button>
-            <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
-              [disabled]="!uploader.getNotUploadedItems().length || !bosForm.form.valid">
-              Submit &nbsp; </button>
-            <!-- <button type="submit" class="btn btn-danger" (click)="backClicked()">Close &nbsp; <i class="fa fa-times"></i></button> -->
-          </div>
-        </form>
+<div class="space-y-4">
+  <h3 class="text-xl">Faculty Bos -- Consultation</h3>
+  <form #bosForm="ngForm" class="space-y-4">
+    <div class="form-control">
+      <label for="date" class="label label-text font-bold">BOS Date</label>
+      <div class="input-group">
+        <input id="date" type="date" class="input w-full input-bordered" required
+          [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD"
+          #cdate="ngModel" />
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
       </div>
+      @if (cdate.invalid && cdate.touched) {
+      <div class="label label-text-alt text-error">Consultation Date is required</div>
+      }
     </div>
-  </div>
+
+    <div class="form-control">
+      <label class="text-sm font-bold">Programme Draft: </label>
+      <file-upload [code]="code" [url]="url" itemAlias="faculty-bos"></file-upload>
+    </div>
+
+    <div class="form-control">
+      <label class="label label-text font-bold">Recommended to: </label>
+      <fieldset>
+          <label class="flex gap-2 items-center">
+            <input class="radio" type="radio" name="recommend" [(ngModel)]="model.recommend"
+              value="recommend-apc" required #recommend="ngModel"> APC &nbsp;
+          </label>
+      </fieldset>
+      @if (recommend.invalid && recommend.touched) {
+      <div class="label label-text-alt text-error">Recommendations status is needed</div>
+      }
+    </div>
+    <!-- here -->
+    <div class="form-group">
+      <label class="label label-text font-bold">Defer to: </label>
+      <fieldset>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2"> <input class="radio" type="radio" name="status" [(ngModel)]="model.status"
+              value="recommend-bosec" required #status="ngModel"> BOSEC &nbsp;</label>
+          <label class="flex items-center gap-2"> <input class="radio" type="radio" name="status" [(ngModel)]="model.status" value="resubmit" required
+              #status="ngModel"> BOS &nbsp;</label>
+          <label class="flex items-center gap-2"> <input class="radio" type="radio" name="status" [(ngModel)]="model.status" value="defer" required
+              #status="ngModel"> Other Faculty BOS </label>
+        </div>
+      </fieldset>
+      @if(status.invalid && status.touched) {
+      <div class="label label-text-alt text-error">Defer to status is needed</div>
+      }
+    </div>
+
+    <!-- end -->
+    <div class="form-control">
+      <!-- <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()">Clear</button> -->
+      <button type="submit" class="btn btn-primary" (click)="onUpload()"
+        [disabled]="!fileUpload?.uploader?.queue.length || !bosForm.form.valid">
+        Submit
+        <span class="material-symbols-rounded">cloud_upload</span>
+      </button>
+      <!-- <button type="submit" class="btn btn-danger" (click)="backClicked()">Close &nbsp; <i class="fa fa-times"></i></button> -->
+    </div>
+  </form>
 </div>

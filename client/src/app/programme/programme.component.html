@@ -63,15 +63,15 @@
 
 <div class="flex items-start">
 
-  <div class="flex h-dvh flex-col justify-between bg-primary w-0 md:w-64  text-white">
+  <div class="w-64 flex h-dvh flex-col justify-between bg-primary text-white">
     <div class="px-4 py-2">
 
       <ul class="mt-6 space-y-6">
         @for (stage of stages; track stage.id){
         <li>
           <a [routerLink]=[stage.id] (click)="onSelect(stage.id)"
-            class="block cursor-pointer capitalize font-light active:font-medium rounded-lg active:bg-gray-100 active:text-gray-700 px-4 py-2 text-sm"
-            [class]="currentPath()==stage.id?'bg-white text-black':''">
+            class="block cursor-pointer transition-all ease-in capitalize font-light active:font-medium rounded-lg active:bg-gray-100 active:text-gray-700 px-4 py-2 text-sm"
+            [class]="currentPath()==stage.id?'bg-white text-black':'bg-transparent text-white'">
             {{stage.title}}
           </a>
         </li>
@@ -80,7 +80,7 @@
     </div>
   </div>
 
-  <div class="flex-grow h-screen p-8">
+  <div class="flex-auto border-4 overflow-x-scroll h-screen p-8">
     <router-outlet></router-outlet>
   </div>
 

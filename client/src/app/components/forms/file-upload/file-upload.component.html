@@ -78,7 +78,7 @@
           </div>
           <div class="flex-grow w-[70%] tooltip text-left mb-2">
             <p class="line-clamp-2 w-full text-sm text-center">{{item.file.name}}</p>
-            <p class="text-center"><b>{{item.file.size | file}}</b></p>
+            <p class="text-center text-xs"><b>{{item.file.size | file}}</b></p>
             @if(uploader.isUploading){
             <div class="grid place-items-center">
               <span class="loading loading-spinner loading-xs"></span>

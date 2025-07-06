@@ -1,0 +1,61 @@
+<div class="space-y-4">
+  <h3 class="text-xl">Other Faculty Bos - Consultation(optional)</h3>
+  <form #bosForm="ngForm" class="space-y-4">
+    <div class="form-group">
+      <label for="OtherFacultyName" class="label label-text font-bold">Other Faculty Name</label>
+      <input id="OtherFacultyName" type="text" class="input input-bordered w-full" required
+        [(ngModel)]="model.OtherFacultyName" name="OtherFacultyName" #othercode="ngModel">
+      @if (othercode.invalid && othercode.touched) {
+      <div class="alert alert-danger">Other Faculty Name is required</div>
+      }
+    </div>
+    <div class="form-control">
+      <label for="date" class="label label-text font-bold">BOS Date</label>
+      <div class="input-group">
+        <input id="date" type="date" class="input w-full input-bordered" required
+          [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD"
+          #cdate="ngModel" />
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+      @if (cdate.invalid && cdate.touched) {
+      <div class="label label-text-alt text-error">Consultation Date is required</div>
+      }
+    </div>
+
+    <div class="form-control">
+      <label class="text-sm font-bold">Programme Draft: </label>
+      <file-upload [code]="code" [url]="url" itemAlias="other-faculty-recommendation"></file-upload>
+    </div>
+
+    <div class="form-control">
+      <label class="label label-text font-bold">Recommended to: </label>
+      <div class="rounded flex gap-4">
+        <div class="flex items-center gap-2">
+          <input type="radio" class="radio" id="defaultInline1" name="recommendTo" [(ngModel)]="model.recommendTo"
+            value="apc" required #recommendTo="ngModel" mdbInput>
+          <label class="custom-control-label" for="defaultInline1">APC</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="radio" class="radio" id="defaultInline2" name="recommendTo" [(ngModel)]="model.recommendTo"
+            value="BOSEC" required #recommendTo="ngModel" mdbInput>
+          <label class="custom-control-label" for="defaultInline2">BOSEC</label>
+        </div>
+      </div>
+      @if (recommendTo.invalid && recommendTo.touched) {
+      <div class="label label-text-alt text-error">Recommendation is required</div>
+      }
+    </div>
+
+    <div class="form-control">
+      <!-- <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()">Clear</button> -->
+      <button type="submit" class="btn btn-primary" (click)="onUpload()"
+        [disabled]="!fileUpload?.uploader?.queue.length || bosForm.form.invalid">
+        Submit
+        <span class="material-symbols-rounded">cloud_upload</span>
+      </button>
+      <!-- <button type="submit" class="btn btn-default" (click)="close()" >Close</button> -->
+    </div>
+  </form>
+</div>

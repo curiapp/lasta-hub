@@ -1,0 +1,32 @@
+<div class="space-y-2">
+  <h3 class="text-xl">Academic Planning Committee Recommendations </h3>
+  <form #concludeForm="ngForm" class="space-y-4">
+    <div class="form-group">
+      <div class="form-control">
+        <label for="date" class="label label-text font-bold">APC Date</label>
+        <input id="date" type="date" class="input input-sm input-bordered" required [(ngModel)]="model.consultationDate"
+          ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      </div>
+      @if(cdate.invalid && cdate.touched) {
+      <div class="label label-text-alt text-error">Consultation Date is required</div>
+      }
+    </div>
+
+    <div class="form-control">
+      <label class="text-sm font-bold">Programme Draft: </label>
+      <file-upload [code]="code" [url]="url" itemAlias="apc-recommendation"></file-upload>
+    </div>
+
+    <div class="form-control">
+      <label class="label label-text font-bold">APC Decision</label>
+      <div class="flex gap-2">
+        <button type="button" class="btn btn-primary btn-sm" (click)="onUpload('approve')"
+          [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+          Recommend (Senate) &nbsp; </button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="onUpload('decline')"
+          [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+          Defer (Faculty) &nbsp; </button>
+      </div>
+    </div>
+  </form>
+</div>

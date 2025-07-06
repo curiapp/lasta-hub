@@ -1,20 +1,38 @@
-<div class="space-y-4">
-  <h3 class="text-xl">Final Draft Submission to BOS</h3>
-  <form #concludeForm="ngForm" class="space-y-4">
+<div class="space-y-2">
+  <h3 class="text-xl">Final Senate - Recommendation</h3>
+  <form #senateForm="ngForm" class="space-y-4">
+
     <div class="form-control">
-      <label class="label label-text text-primary">Date</label>
-      <div class="input-control">
-        <input id="date" type="date" class="input input-sm input-bordered w-full" required
-          [(ngModel)]="model.bosSubmissionDate" ng2-datetime-picker date-only="true" name="consultationDate"
-          placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      <div class="form-control">
+        <label for="date" class="label label-text font-bold">Senate Date</label>
+        <input id="date" type="Date" class="input input-sm input-bordered" required [(ngModel)]="model.consultationDate"
+          ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       </div>
-      @if (cdate.invalid && cdate.touched) {
-      <div class="label label-text-alt text-red-700">Consultation Date is required</div>
+      @if(cdate.invalid && cdate.touched) {
+      <div class="label label-text-alt text-error">Consultation date is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="label label-text font-bold">Senate Recommendation: </label>
+      <fieldset class="border rounded-lg p-2">
+        <div class="flex flex-wrap gap-4">
+          <label class="flex gap-2 items-center text-sm"> <input class="radio radio-xs" type="radio" name="status"
+              [(ngModel)]="model.status" value="endorse" required #status="ngModel"> Approve &nbsp;&nbsp;</label>
+          <label class="flex gap-2 items-center text-sm"> <input class="radio radio-xs" type="radio" name="status"
+              [(ngModel)]="model.status" value="defer_faculty" required #status="ngModel"> Defer (Faculty)
+            &nbsp;&nbsp;</label>
+          <label class="flex gap-2 items-center text-sm"> <input class="radio radio-xs" type="radio" name="status"
+              [(ngModel)]="model.status" value="defer_senex" required #status="ngModel"> Defer (SENEX) </label>
+        </div>
+      </fieldset>
+      @if(status.invalid && status.touched) {
+      <div class="label label-text-alt text-error">Recommendations status is required</div>
       }
     </div>
 
     <div class="form-control">
-      <label for="doc" class="label label-text text-primary">Select Document Type</label>
+      <label for="doc" class="label label-text text-primary font-bold">Select Document Type</label>
       <select class="select select-sm select-bordered" name="documentName" id="documentName" required
         [(ngModel)]="model.documentType" #docType="ngModel">
         <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
@@ -23,7 +41,7 @@
         }
       </select>
       @if (docType.invalid && docType.touched) {
-      <div class="label label-text-alt text-error">Document type is required</div>
+      <div class="label label-text-alt text-error">Document type is required*</div>
       }
     </div>
 
@@ -49,11 +67,6 @@
         </label>
       </div>
 
-      <!-- @if (docType.invalid) {
-      <label for="doc" class="text-primary font-bold label label-text-alt"> Select and Upload :
-          {{this.model.documentType}}
-        </label>
-        } -->
       @if (docType.invalid) {
       <label for="doc" class="text-primary font-bold label label-text-alt"> Please select document type</label>
       }
@@ -61,7 +74,7 @@
     }
 
     @if(uploader?.queue.length){
-    <div class="border rounded-lg">
+    <div class="p-1 pb-3 border-2 border-dashed rounded-lg">
       <h3 class="text-sm capitalize text-primary font-bold my-2 ml-2">Selected Files</h3>
       <table class="table table-xs">
         <thead>
@@ -99,16 +112,13 @@
 
 
     <div class="form-control">
-      <!-- <button type="submit" class="btn btn-danger" (click)="clear();uploader.clearQueue();">Clear</button> -->
-      <button type="button" class="btn btn-primary btn-sm" (click)="uploader.uploadAll()"
+      <button class="btn btn-sm btn-primary" (click)="uploader.uploadAll()"
         [disabled]="!uploader?.queue.length || cdate.invalid">
         Submit
-        <span class="material-symbols-rounded">cloud_upload</span>
+        <span class="material-symbols-rounded">
+          cloud_upload
+        </span>
       </button>
     </div>
   </form>
 </div>
-
-<!--reset() {
-  this.form.reset();
-}-->

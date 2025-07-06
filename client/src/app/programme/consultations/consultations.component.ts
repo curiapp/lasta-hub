@@ -3,13 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { FinalDraftComponent } from "../../components/forms/bos-final-draft/final-draft.component";
+import { FinalDraftComponent } from "../../components/forms/consultation-final-draft/final-draft.component";
+import { FacultyBosFinalComponent } from "../../consultation-faculty-bos-final/faculty-bos-final.component";
+import { OtherFacultyBosComponent } from "../../consultation-other-faculty-bos/other-faculty-bos.component";
+import { ApcRecommendComponent } from "../../components/forms/consultation-apc-recommend/apc-recommend.component";
+import { FinalSenateRecommendComponent } from "../../components/forms/consultation-final-senate-recommend/final-senate-recommend.component";
 
 @Component({
-  selector: 'client-senate-consultations',
-  imports: [ActionButtonsComponent, FinalDraftComponent],
-  templateUrl: './senate-consultations.component.html',
-  styleUrl: './senate-consultations.component.scss'
+  selector: 'consultations',
+  imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent],
+  templateUrl: './consultations.component.html',
+  styleUrl: './consultations.component.scss'
 })
 export class SenateConsultationsComponent {
   steps = [
