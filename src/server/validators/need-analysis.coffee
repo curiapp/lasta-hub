@@ -105,12 +105,9 @@ exports.NeedAnalysisValidator = class NeedAnalysisValidator extends SchemaValida
 
     checkAndSanitizeForConsultation: (consultationData, callback) ->
         consultationOptions =
-            startDate: (date1PartialCallback) =>
-                @checkAndSanitizeConsultationDate consultationData.sDate, (consultationSDateError, validConsultationSDate) =>
-                    date1PartialCallback consultationSDateError, validConsultationSDate
-            endDate: (date2PartialCallback) =>
-                @checkAndSanitizeConsultationDate consultationData.eDate, (consultationEDateError, validConsultationEDate) =>
-                    date2PartialCallback consultationEDateError, validConsultationEDate
+            date: (date1PartialCallback) =>
+                @checkAndSanitizeConsultationDate consultationData.date, (consultationDateError, validConsultationDate) =>
+                    date1PartialCallback consultationDateError, validConsultationDate
             organization: (organizationPartialCallback) =>
                 @checkAndSanitizeOrganizationNameCol consultationData.organization-list, (organizationNameError, validOrganizationName) =>
                     organizationPartialCallback organizationNameError, validOrganizationName
