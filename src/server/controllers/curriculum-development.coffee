@@ -7,7 +7,15 @@ exports.CurriculumDevelopmentController = class CurriculumDevelopmentController 
         super()
 
     appointPACMembers: (pacMemberData, handlerObject) ->
-        @messageGenerator.generate cdcMemberData, (cdcMemberMessageError, cdcMemberMessage) =>
+        if not pacMemberData.organization?
+            pacMemberData["organization"] = "None"
+        end
+
+        if not pacMemberData.occupation?
+            pacMemberData["occupation"] = "None"
+        end
+
+        @messageGenerator.generate pacMemberData, (cdcMemberMessageError, cdcMemberMessage) =>
             if cdcMemberMessageError?
                 @continueWithHandler null, handlerObject, cdcMemberMessageError, null
             else
@@ -159,6 +167,13 @@ exports.CurriculumDevelopmentController = class CurriculumDevelopmentController 
             @continueWithHandler null, handlerObject, null, documentBosAmendmentResult
 
     appointCDCMembers: (cdcMemberData, handlerObject) ->
+        if not cdcMemberData.organization?
+            cdcMemberData["organization"] = "None"
+        end
+
+        if not cdcMemberData.occupation?
+            cdcMemberData["occupation"] = "None"
+        end
         @messageGenerator.generate cdcMemberData, (cdcMemberMessageError, cdcMemberMessage) =>
             if cdcMemberMessageError?
                 @continueWithHandler null, handlerObject, cdcMemberMessageError, null
