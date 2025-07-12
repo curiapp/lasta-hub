@@ -1,0 +1,38 @@
+<div class="space-y-2">
+  <h3 class="text-xl">NQF Submission </h3>
+  <form #concludeForm="ngForm" class="space-y-4">
+
+    <div class="form-control">
+      <label class="label label-text font-bold">Submission type: </label>
+      <div class="p-2 rounded-lg border-2 border-dashed flex gap-4 items-center flex-wrap">
+        <div class="flex items-center gap-2">
+          <input type="radio" class="radio radio-xs" id="status1" name="type" [(ngModel)]="model.type" [value]="true"
+            required #type="ngModel" mdbInput>
+          <label class="label label-text" for="status1"> Initial Submit </label>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="radio" class="radio radio-xs" id="status2" name="type" [(ngModel)]="model.type" [value]="false"
+            required #type="ngModel" mdbInput>
+          <label class="label label-text" for="status2">Resubmission</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-control">
+      <label class="label label-text font-bold">Documentation:</label>
+      <file-upload [code]="code" [url]="url" itemAlias="pdu-recommendation"></file-upload>
+    </div>
+
+    <div class="flex gap-2 justify-center">
+      <button type="button" class="btn btn-primary btn-sm" (click)="onUpload('approve')"
+        [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+        Save
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="onUpload('defer')"
+        [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+        Defer &nbsp;
+      </button>
+    </div>
+
+  </form>
+</div>

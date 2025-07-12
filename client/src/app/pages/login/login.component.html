@@ -3,18 +3,18 @@
   <div class="!py-10 mx-auto grid place-items-center h-screen">
     <div class="h-full flex flex-col md:flex-row justify-center items-center gap-10 w-full p-8 md:p-0">
 
-      <div class="login-bg rounded-md md:w-1/2 !h-52 md:!h-full relative">
+      <div class="login-bg rounded-lg md:w-1/2 !h-52 md:!h-full relative">
 
         <div
           class="top-0 left-0 w-full h-full flex-grow bg-gradient-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
 
           <div class="flex justify-between items-start flex-grow">
             <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
-            <a routerLink="/home" class="btn btn-sm border-none text-white bg-slate-500/20">Back to Website &rarr;</a>
+            <a routerLink="/home" class="btn btn-sm border-none text-white bg-slate-500/20 hover:bg-primary/15 hover:backdrop-blur-lg group"><span class="transition-all group-hover:scale-105">Back to Website</span> <span class="transition-all group-hover:translate-x-1">&rarr;</span></a>
           </div>
 
           <div class="my-3">
-            <p class="text-white lg:text-2xl text-center w-full lg:w-96 font-thin mx-auto">
+            <p class="text-white lg:text-xl text-center w-full lg:w-96 font-thin mx-auto">
               Streamline Curriculum
               Development, Maintenance, and
               Modernization
@@ -23,14 +23,14 @@
         </div>
       </div>
 
-      <div class="w-full md:w-1/2 space-y-8">
-        <div class="space-y-1 flex flex-col mb-4 max-w-sm w-full mx-auto">
+      <div class="w-full md:w-1/2 space-y-8 py-2">
+        <div class="space-y-1 flex flex-col max-w-sm w-full mx-auto">
           <span class="text-4xl font-bold text-white">Sign In</span>
           <span class="text-xs text-gray-100">Welcome to PDQA - Let's get started</span>
           <hr>
         </div>
 
-        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-6 max-w-sm w-full mx-auto">
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-6 md:space-y-8 max-w-sm w-full mx-auto">
 
           <div class="form-control w-full">
             <!-- <div class="label">
@@ -40,10 +40,11 @@
               placeholder="Enter Username" required [(ngModel)]="model.username" name="username" #username="ngModel">
             @if(username.invalid && loginForm.submitted){
             <div class="label">
-              <span class="label-text-alt text-red-300">Username is required</span>
+              <span class="label-text-alt text-error">Username is required</span>
             </div>
             }
           </div>
+
           <div class="form-control w-full">
             <!-- <div class="label">
               <span class="label-text">Password</span>
@@ -60,18 +61,21 @@
                 </span>
               </span>
             </label>
+            @if(password.invalid && loginForm.submitted){
             <div class="label">
-              @if(password.invalid && loginForm.submitted){
-              <span class="label-text-alt text-red-300">Password is required</span>
-              }@else{
-              <span class="label-text-alt text-red-300"></span>
-              }
-              <!-- <a class="label-text-alt float-end text-gray-200">Forgot Password</a> -->
+              <span class="label-text-alt text-error">Password is required</span>
             </div>
-            <!-- <div  class="alert alert-danger">Password is required</div> -->
+            }
+            <!-- @else{
+            <div class="label">
+              <span class="label-text-alt text-error"></span>
+            </div>
+            } -->
+            <!-- <a class="label-text-alt float-end text-gray-200">Forgot Password</a> -->
           </div>
+          <!-- <div  class="alert alert-danger">Password is required</div> -->
 
-          <div class="w-full">
+          <div class="form-control w-full">
             <!-- <button (click)="close()" type="button" class="btn btn-ghost">Close</button> -->
             <button type="submit" class="btn btn-primary w-full" [disabled]="!loginForm.form.valid">
               @if(isLoading()){
@@ -83,7 +87,7 @@
           </div>
 
           @if (message) {
-          <span class="text-red-400 text-xs">{{message}}</span>
+          <span class="text-error text-xs">{{message}}</span>
           }
         </form>
       </div>

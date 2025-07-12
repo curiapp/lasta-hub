@@ -3,10 +3,13 @@ import { ActionButtonsComponent } from "../../components/action-buttons/action-b
 import { Programme } from '../../types';
 import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
+import { NqaPreparationComponent } from "../../components/forms/nqf-preparation/nqa-preparation.component";
+import { PduRecommendComponent } from "../../components/forms/nqf-pdu-recommend/pdu-recommend.component";
+import { NQARegComponent } from "../../nqa-reg/nqa-reg.component";
 
 @Component({
   selector: 'client-nqf-registration',
-  imports: [ActionButtonsComponent],
+  imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent],
   templateUrl: './nqf-registration.component.html',
   styleUrl: './nqf-registration.component.scss'
 })

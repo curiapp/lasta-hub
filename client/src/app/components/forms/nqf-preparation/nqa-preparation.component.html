@@ -1,0 +1,104 @@
+<div class="space-y-2">
+  <h3 class="text-xl">NQF Documentation </h3>
+  <form #concludeForm="ngForm" class="space-y-2">
+
+
+    <div class="form-control">
+      <label for="doc" class="label label-text text-primary font-bold">Select Document Type</label>
+      <select class="select select-sm select-bordered" name="documentName" id="documentName" required
+        [(ngModel)]="model.documentType" #docType="ngModel">
+        <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
+        @for (filetag of fileList; track $index) {
+        <option value="{{ filetag }}">{{filetag}}</option>
+        }
+      </select>
+      @if (docType.invalid && docType.touched) {
+      <div class="label label-text-alt text-error">Document type is required*</div>
+      }
+    </div>
+
+    @if(docType.valid){
+    <div class="form-control">
+      <label for="doc" class="text-primary font-bold label label-text"> Draft Programme: </label>
+      <div class="flex items-center justify-center w-full">
+        <label for="dropzone-file"
+          class="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+          ng2FileDrop [uploader]="uploader" (change)="updateFile()">
+          <div class="flex flex-col items-center justify-center pt-4 pb-4 space-y-1">
+            <svg class="size-6 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 20 16">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
+              or drag and drop</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 50MB)</p>
+          </div>
+          <input [disabled]="fileList.length===0" required name="file" ngModel #doc="ngModel" id="dropzone-file"
+            type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
+        </label>
+      </div>
+
+      @if (docType.invalid) {
+      <label for="doc" class="text-primary font-bold label label-text-alt"> Please select document type</label>
+      }
+    </div>
+    }
+
+    @if(uploader?.queue.length){
+    <div class="p-1 pb-3 border-2 border-dashed rounded-lg">
+      <h3 class="text-sm capitalize text-primary font-bold my-2 ml-2">Selected Files</h3>
+      <table class="table table-xs">
+        <thead>
+          <tr>
+            <th class="h6">Document Type</th>
+            <th class="h6">Selected File name</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of selectedFiles; track $index) {
+          <tr>
+            <td class="text-primary">
+              {{item[0]}}
+            </td>
+            <td class="group flex items-center gap-2 transition-all ease-out">
+              {{item[1]}} &nbsp;
+              @if(uploader?.isUploading){
+              <span class="loading loading-spinner loading-1xl"></span>
+              }
+
+              <button
+                class="size-6 hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 rounded-full"
+                (click)="removeFile(item[1], item[0])">
+                <span class="material-symbols-rounded text-[16px]">
+                  close
+                </span>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+
+
+
+    <div class="form-control">
+      @if(!showWarning){
+      <div class="label label-text-alt text-gray-500">
+        Please complete all required fields (Marked as * - required)
+      </div>
+      }
+
+      <button type="button" class="btn btn-primary btn-sm"
+        (click)="submitInfo(concludeForm)"><!--/button> [disabled]="!uploader.getNotUploadedItems().length  || !concludeForm.form.valid"-->
+        Submit
+        <span class="material-symbols-rounded">
+          cloud_upload
+        </span>
+      </button>
+
+    </div>
+  </form>
+</div>
