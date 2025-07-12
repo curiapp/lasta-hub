@@ -5,23 +5,24 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-const URL = '/api/nqa/recommend';
+import { environment } from '../../environments/environment';
 
 //create the component properties
 @Component({
-    selector: 'nqa-recommend',
-    templateUrl: 'nqa-recommend.component.html',
-    imports: [FormsModule, FileUploadModule]
+  selector: 'nqa-recommend',
+  templateUrl: 'nqa-recommend.component.html',
+  imports: [FormsModule, FileUploadModule]
 })
-export class NQARecommendComponent implements OnInit {
+export class NQARecommendComponent {
+  url = `${environment.apiUrl}/api/nqa/recommend`;
   model: any = {};
-  devCode: String;
-  decision: String;
+  devCode: string;
+  decision: string;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
-  //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-  public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'nqa-recommendation' });
+  //pass in the url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
+  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'nqa-recommendation' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
 
@@ -65,7 +66,7 @@ export class NQARecommendComponent implements OnInit {
       if (i != 0)
         (<HTMLInputElement>document.getElementById("file-name")).value += " ; " + this.uploader.queue[i].file.name;
       else
-          (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
+        (<HTMLInputElement>document.getElementById("file-name")).value = this.uploader.queue[i].file.name;
       console.log(this.uploader.queue[i].file.name);
     }
   }
@@ -73,8 +74,8 @@ export class NQARecommendComponent implements OnInit {
     this.decision = dec;
     console.log(this.decision);
   }
-  removefile(){
-      (<HTMLInputElement>document.getElementById("file-name")).value = "";
+  removefile() {
+    (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
 
 }

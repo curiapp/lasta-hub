@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { NqaPreparationComponent } from "../../components/forms/nqf-preparation/nqa-preparation.component";
 import { PduRecommendComponent } from "../../components/forms/nqf-pdu-recommend/pdu-recommend.component";
-import { NQARegComponent } from "../../nqa-reg/nqa-reg.component";
+import { NQARegComponent } from "../../components/forms/nqa-reg/nqa-reg.component";
+import { NqaSubmitComponent } from "../../components/forms/nqa-submit/nqa-submit.component";
 
 @Component({
   selector: 'client-nqf-registration',
-  imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent],
+  imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent],
   templateUrl: './nqf-registration.component.html',
   styleUrl: './nqf-registration.component.scss'
 })

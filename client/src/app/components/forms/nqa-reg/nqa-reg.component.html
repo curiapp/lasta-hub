@@ -1,36 +1,36 @@
 <div class="space-y-2">
   <h3 class="text-xl">NQF Registration</h3>
-  <form #consultForm="ngForm" class="space-y-4">
+  <form #consultForm="ngForm" class="space-y-2">
     <div class="form-control">
       <label for="ProgrammeCode" class="label label-text font-bold">Programme Code </label>
-      <input id="programmeCode" disabled type="text" class="form-control" required [(ngModel)]="code" name="devCode"
+      <input id="programmeCode" disabled type="text" class="input input-bordered" required [(ngModel)]="code" name="devCode"
         #procode="ngModel">
-      @if(procode.valid){
+      @if(procode.invalid && procode.touched){
       <div class="label label-text text-error">Proposed Programme Code is required*</div>
       }
     </div>
     <div class="form-control">
       <label for="qualificationTitle" class="label label-text font-bold">Qualification Title</label>
-      <input id="qualificationTitle" type="text" class="form-control" required [(ngModel)]="model.qualificationTitle"
+      <input id="qualificationTitle" type="text" class="input input-bordered" required [(ngModel)]="model.qualificationTitle"
         name="qtitle" #qtitle="ngModel">
-      @if (qtitle.invalid) {
+      @if (qtitle.invalid && qtitle.touched) {
       <div class="label label-text text-error">Qualification Title is required</div>
       }
     </div>
     <div class="form-control">
       <label for="nqfId" class="label label-text font-bold">NQF ID</label>
-      <input id="nqfId" type="text" class="form-control" required [(ngModel)]="model.nqfId" name="nqfId"
+      <input id="nqfId" type="text" class="input input-bordered" required [(ngModel)]="model.nqfId" name="nqfId"
         #nqfId="ngModel">
-      @if(nqfId.valid){
+      @if(nqfId.invalid && nqfId.touched){
       <div class="label label-text text-error">NQF ID is required*</div>
       }
     </div>
 
     <div class="form-control">
       <label for="date" class="label label-text font-bold">Registration Date</label>
-      <input id="date" type="Date" class="input" required [(ngModel)]="model.regDate" ng2-datetime-picker
+      <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="model.regDate" ng2-datetime-picker
         date-only="true" name="regDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-      @if (cdate.invalid) {
+      @if (cdate.invalid && cdate.touched) {
       <div class="label label-text-alt text-error">Registration Date is required*</div>
       }
     </div>
@@ -54,7 +54,7 @@
     </div>
 
     <div class="flex gap-2 justify-center">
-      <button type="submit" class="btn btn-primary btn-sm" (click)="onUpload()"
+      <button type="submit" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !consultForm.form.valid">
         Save
       </button>
