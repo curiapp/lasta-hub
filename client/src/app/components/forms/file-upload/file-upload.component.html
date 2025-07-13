@@ -41,12 +41,17 @@
         @for (item of uploader.queue; track item.file.size) {
         <div class="rounded-box flex flex-col items-center gap-4 p-3 group transition-all">
           <div
-            class="icon size-10 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
+            class="size-12 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
             <!-- {{(item.file.name | Extension)===''?}} -->
-            @switch (item.file.name | Extension) {
+            <!-- @switch (item.file.name | Extension) {
             @case ('pdf') {
             <span class="material-symbols-rounded text-[35px]">
               picture_as_pdf
+            </span>
+            }
+            @case ('doc') {
+            <span class="material-symbols-rounded text-[35px]">
+              docs
             </span>
             }
             @case ('docs') {
@@ -74,11 +79,12 @@
               draft
             </span>
             }
-            }
+            } -->
+            <file-icon [fileName]="item.file.name"></file-icon>
           </div>
           <div class="flex-grow w-[70%] tooltip text-left mb-2">
-            <p class="line-clamp-2 w-full text-sm text-center">{{item.file.name}}</p>
-            <p class="text-center text-xs"><b>{{item.file.size | file}}</b></p>
+            <p class="line-clamp-2 w-full text-sm text-center text-gray-600 font-semibold">{{item.file.name}}</p>
+            <p class="text-center text-xs">{{item.file.size | file}}</p>
             @if(uploader.isUploading){
             <div class="grid place-items-center">
               <span class="loading loading-spinner loading-xs"></span>

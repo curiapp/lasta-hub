@@ -4,11 +4,12 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { ToastService } from '../../../services/toast.service';
+import { FileIconComponent } from "../../file-icon/file-icon.component";
 
 @Component({
   selector: 'final-draft',
   templateUrl: 'final-draft.component.html',
-  imports: [FormsModule, FileUploadModule]
+  imports: [FormsModule, FileUploadModule, FileIconComponent]
 })
 export class FinalDraftComponent implements OnInit {
   url = `${environment.apiUrl}/bos-senate/draft`;

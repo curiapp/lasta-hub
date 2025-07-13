@@ -58,7 +58,7 @@
     @if(uploader?.queue.length){
     <div class="p-1 pb-3 border-2 border-dashed rounded-lg">
       <h3 class="text-sm capitalize text-primary font-bold my-2 ml-2">Selected Files</h3>
-      <table class="table table-xs">
+      <!-- <table class="table table-xs">
         <thead>
           <tr>
             <th class="h6">Document Type</th>
@@ -88,7 +88,27 @@
           </tr>
           }
         </tbody>
-      </table>
+      </table> -->
+      <div class="space-y-1">
+        @for (item of selectedFiles; track $index) {
+        <div class="rounded-lg p-1 border flex items-center gap-3">
+          <div class="size-8 rounded-lg bg-gray-100 grid place-items-center">
+            <file-icon [fileName]="item[1]"></file-icon>
+          </div>
+          <div class="flex flex-col flex-grow">
+            <span class="font-semibold text-sm break-all">{{item[1]}}</span>
+            <span class="text-xs">{{item[0]}}</span>
+          </div>
+          <div
+            class="size-8 hover:bg-gray-100 hover:scale-105 rounded-full grid place-items-center cursor-pointer transition-all">
+            <span class="material-symbols-rounded text-[24px] cursor-pointer" (click)="removeFile(item[1], item[0])">
+              delete
+            </span>
+          </div>
+        </div>
+        }
+      </div>
+
     </div>
     }
 

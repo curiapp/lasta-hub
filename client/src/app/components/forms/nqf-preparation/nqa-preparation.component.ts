@@ -7,13 +7,15 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
+import { FileIconComponent } from "../../file-icon/file-icon.component";
 
 // create the component properties
 @Component({
   // define the element to be selected from the html structure.
   selector: 'nqa-preparation',
   templateUrl: 'nqa-preparation.component.html',
-  imports: [FormsModule, FileUploadModule]
+  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FileIconComponent]
 })
 export class NqaPreparationComponent implements OnInit {
   url = `${environment.apiUrl}/nqa/preparation`;

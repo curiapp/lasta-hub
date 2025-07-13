@@ -8,6 +8,7 @@ import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
 import { FilePipe } from "../../../pipes/file.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
+import { FileIconComponent } from "../../file-icon/file-icon.component";
 
 
 //create the component properties
@@ -15,7 +16,7 @@ import { environment } from '../../../../environments/environment';
   //define the element to be selected from the html structure.
   selector: 'consultation-final-senate-recommend',
   templateUrl: 'final-senate-recommend.component.html',
-  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FilePipe]
+  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FilePipe, FileIconComponent]
 })
 export class FinalSenateRecommendComponent implements OnInit {
   url = `${environment.apiUrl}/bos-senate/final-senate`;
