@@ -3,11 +3,10 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 // import the file-upload plugin
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 // import the native angular http and respone libraries
-import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
 import { FileIconComponent } from "../../file-icon/file-icon.component";
 
 // create the component properties
@@ -15,7 +14,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
   // define the element to be selected from the html structure.
   selector: 'nqa-preparation',
   templateUrl: 'nqa-preparation.component.html',
-  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FileIconComponent]
+  imports: [FormsModule, FileUploadModule, FileIconComponent]
 })
 export class NqaPreparationComponent implements OnInit {
   url = `${environment.apiUrl}/nqa/preparation`;

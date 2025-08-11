@@ -19,7 +19,7 @@
       <span class="label-text">Proposed Programme Code</span>
     </div>
     <input id="programmeCode" type="text" class="input input-bordered" required
-      [(ngModel)]="programme?.preProgComponent.devCode" name="code" #code="ngModel">
+      [(ngModel)]="programme.preProgComponent.devCode" name="code" #code="ngModel">
     @if (code.invalid && code.touched) {
     <div class="label label-text-alt text-error">
       <span class="label-text">
