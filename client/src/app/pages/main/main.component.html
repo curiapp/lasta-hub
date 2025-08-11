@@ -16,8 +16,8 @@
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
       </div>
-      <img alt="NUST logo" src="/logo.png" class="h-6 ml-3" />
-      <a routerLink="/home" class="btn btn-ghost text-xl">PDQA</a>
+      <img alt="NUST logo" src="/logo.png" class="h-6 ml-4" />
+      <a routerLink="/home" class="btn btn-ghost text-xl ml-2">PDQA</a>
       |
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
@@ -35,33 +35,40 @@
 
       @if(currentUser){
       <details class="dropdown dropdown-bottom dropdown-left">
-        <summary class="btn btn-ghost btn-circle avatar">
-          <div class="avata avatar-placeholder">
-            <div class="bg-white text-primary w-10 h-10 p-0 flex items-center justify-center rounded-full">
-              <span class="uppercase text-xl">{{currentUser?.firstname?.slice(0,1)}}{{currentUser?.lastname?.slice(0,1)}}</span>
+        <summary class="btn btn-ghost btn-circle">
+          <div class="avatar avatar-placeholder">
+            <div class="bg-white text-primary size-10 p-0 flex items-center justify-center rounded-full">
+              <span class="uppercase text-xl">
+                {{currentUser?.firstname?.slice(0,1)}}{{currentUser?.lastname?.slice(0,1)}}
+              </span>
             </div>
           </div>
         </summary>
 
         <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-56  mt-3 p-2 shadow">
+
           <li>
-            <h6 class="text-lg">Profile</h6>
-          </li>
-          <li>
-            <span class="text-xs">Name: {{currentUser?.firstname}} {{currentUser?.lastname}}</span>
-          </li>
-          <li>
-            <span class="text-xs">Email: {{currentUser?.emailAddress}}</span>
-          </li>
-          <li>
-            <span class="text-xs">Faculty: {{currentUser?.usrUnit?.faculty}}</span>
-          </li>
-          <li>
-            <span class="text-xs">Department: {{currentUser?.usrUnit?.department}}</span>
+            <div class="flex items-center flex-col gap-1 justify-center">
+              <div class="avatar avatar-online avatar-placeholder">
+                <div class="bg-neutral text-neutral-content w-16 rounded-full">
+                  <span
+                    class="text-xl">{{currentUser?.firstname?.slice(0,1)}}{{currentUser?.lastname?.slice(0,1)}}</span>
+                </div>
+              </div>
+              <span class="text-lg">{{currentUser?.firstname}} {{currentUser?.lastname}}</span>
+              <span class="text-xs">{{currentUser?.emailAddress}}</span>
+              <span class="text-sm">{{currentUser?.usrUnit?.faculty}}</span>
+              <span class="text-xs">{{currentUser?.usrUnit?.department}}</span>
+            </div>
           </li>
           <hr>
-          <li><a>Settings</a></li>
-          <li><a (click)="logout()">Logout</a></li>
+          <li>
+            <div class="join">
+              <button class="btn btn-sm join-item">Settings</button>
+              <button class="btn btn-sm join-item" (click)="logout()">Logout</button>
+            </div>
+          </li>
+
         </ul>
       </details>
       }@else {
@@ -88,7 +95,8 @@
             <a href="#">Terms of Service</a> | <a href="#">Privacy</a> | <a href="#">Help</a>
           </p>
           <p class="text-center text-xs">
-            Copyright &copy; {{ currentYear }} Programme Development and Quality Assurance at the Namibia University of Science and Technology (NUST). All rights reserved
+            Copyright &copy; {{ currentYear }} Programme Development and Quality Assurance at the Namibia University of
+            Science and Technology (NUST). All rights reserved
           </p>
         </div>
       </div>

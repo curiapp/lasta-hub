@@ -8,7 +8,7 @@ import { ClientService } from '../services/client.service';
   selector: 'client-programme',
   imports: [RouterOutlet, RouterLink],
   templateUrl: './programme.component.html',
-  styleUrl: './programme.component.scss'
+  styleUrl: './programme.component.css'
 })
 export class ProgrammeComponent {
   programme: Programme;

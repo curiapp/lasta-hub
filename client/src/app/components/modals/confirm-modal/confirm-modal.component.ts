@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'client-confirm-modal',
   imports: [],
   templateUrl: './confirm-modal.component.html',
-  styleUrl: './confirm-modal.component.scss'
+  styleUrl: './confirm-modal.component.css'
 })
 export class ConfirmModalComponent {
 

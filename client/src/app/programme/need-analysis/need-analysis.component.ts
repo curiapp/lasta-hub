@@ -32,7 +32,7 @@ import { NeedAnalysisEditProgramComponent } from "../../components/forms/need-an
     NeedAnalysisEditProgramComponent
 ],
   templateUrl: './need-analysis.component.html',
-  styleUrl: './need-analysis.component.scss'
+  styleUrl: './need-analysis.component.css'
 })
 export class NeedAnalysisComponent {
   steps = [

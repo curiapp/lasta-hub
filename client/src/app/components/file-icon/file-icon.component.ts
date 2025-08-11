@@ -5,7 +5,7 @@ import { FileExtensionPipe } from "../../pipes/file-extension.pipe";
   selector: 'file-icon',
   imports: [FileExtensionPipe],
   templateUrl: './file-icon.component.html',
-  styleUrl: './file-icon.component.scss'
+  styleUrl: './file-icon.component.css'
 })
 export class FileIconComponent {
   @Input() fileName: string;

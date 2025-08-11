@@ -11,7 +11,7 @@ import { PacConsultEndorseComponent } from "../../components/forms/external-pac-
   selector: 'client-external-stakeholders',
   imports: [ActionButtonsComponent, CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent],
   templateUrl: './external-stakeholders.component.html',
-  styleUrl: './external-stakeholders.component.scss'
+  styleUrl: './external-stakeholders.component.css'
 })
 export class ExternalStakeholdersComponent {
   steps = [

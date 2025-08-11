@@ -17,7 +17,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
     FileIconComponent
 ],
   templateUrl: './file-upload.component.html',
-  styleUrl: './file-upload.component.scss'
+  styleUrl: './file-upload.component.css'
 })
 export class FileUploadComponent {
 

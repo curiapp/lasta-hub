@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ResumeProgrammeComponent } from './resume-programme/resume-programme.component';
-import { StartNeedAnalysisComponent } from './start-need-analysis/start-need-analysis.component';
+import { StartNeedAnalysisComponent } from './pages/start-need-analysis/start-need-analysis.component';
 import { NeedAnalysisComponent } from './programme/need-analysis/need-analysis.component';
 import { ProgrammeComponent } from './programme/programme.component';
 import { TutorialComponent } from './tutorials/tutorials.component';

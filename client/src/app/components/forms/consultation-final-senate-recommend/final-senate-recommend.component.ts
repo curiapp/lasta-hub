@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
-import { FilePipe } from "../../../pipes/file.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
 import { FileIconComponent } from "../../file-icon/file-icon.component";
@@ -16,7 +15,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
   //define the element to be selected from the html structure.
   selector: 'consultation-final-senate-recommend',
   templateUrl: 'final-senate-recommend.component.html',
-  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FilePipe, FileIconComponent]
+  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FileIconComponent]
 })
 export class FinalSenateRecommendComponent implements OnInit {
   url = `${environment.apiUrl}/bos-senate/final-senate`;
@@ -27,8 +26,6 @@ export class FinalSenateRecommendComponent implements OnInit {
   fileList: string [];
   toast = inject(ToastService);
 
-  //declare a property called fileuploader and assign it to an instance of a new fileUploader.
-  //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
   public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'final-senate-recommendation' });
 
   ngOnInit() {

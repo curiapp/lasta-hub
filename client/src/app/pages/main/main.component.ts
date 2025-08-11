@@ -9,7 +9,7 @@ import { ShortSummaryService } from '../../services/short-summary.service';
   selector: 'client-main',
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss',
+  styleUrl: './main.component.css',
   providers: [ShortSummaryService],
 })
 export class MainComponent {

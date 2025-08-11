@@ -10,7 +10,7 @@ import { NQFLevel } from '../../../static';
   selector: 'need-analysis-edit-program',
   imports: [FormsModule],
   templateUrl: './need-analysis-edit-programme.component.html',
-  styleUrl: './need-analysis-edit-programme.component.scss'
+  styleUrl: './need-analysis-edit-programme.component.css'
 })
 export class NeedAnalysisEditProgramComponent {
   public _loading = inject(LoadingService);

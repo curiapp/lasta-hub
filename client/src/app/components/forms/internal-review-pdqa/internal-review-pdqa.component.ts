@@ -7,7 +7,7 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
 @Component({
     selector: 'internal-pdqa-review',
     templateUrl: './internal-review-pdqa.component.html',
-    styleUrls: ['./internal-review-pdqa.component.scss'],
+    styleUrls: ['./internal-review-pdqa.component.css'],
     imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class InternalReviewPduComponent {
