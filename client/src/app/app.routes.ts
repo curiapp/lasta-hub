@@ -5,7 +5,7 @@ import { ResumeProgrammeComponent } from './resume-programme/resume-programme.co
 import { StartNeedAnalysisComponent } from './pages/start-need-analysis/start-need-analysis.component';
 import { NeedAnalysisComponent } from './programme/need-analysis/need-analysis.component';
 import { ProgrammeComponent } from './programme/programme.component';
-import { TutorialComponent } from './tutorials/tutorials.component';
+import { TutorialComponent } from './pages/tutorials/tutorials.component';
 import { MainComponent } from './pages/main/main.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
 import { OurTeamComponent } from './pages/our-team/our-team.component';

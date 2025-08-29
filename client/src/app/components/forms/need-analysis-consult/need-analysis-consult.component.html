@@ -19,7 +19,7 @@
       <div class="row px-3">
         <label class="label-text" for="date">Consultation End Date</label>
       </div>
-      <input id="edate" type="date" class="input input-bordered input-sm" required [(ngModel)]="needAnalysis.endDate"
+      <input id="edate" type="date" class="input input-sm" required [(ngModel)]="needAnalysis.endDate"
         date-only="true" name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
       @if(edate.invalid && edate.touched){
       <div class="label">
@@ -51,12 +51,12 @@
     <div class="form-control">
       <div class="join w-full border-inherit items-center">
         <div class="w-full">
-          <label class="join-item input input-bordered input-sm flex gap-2 items-center ">
+          <label class="join-item input input-sm flex flex-auto gap-2 items-center ">
             <span class="material-symbols-rounded">
               group
             </span>
             <input type="text" placeholder="enter stakeholder" id="organisation" name="organisation" required
-              class="grow" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
+              class="flex-auto" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
           </label>
           <!-- <div class="validator-hint hidden">Enter Stakeholder Name</div> -->
         </div>
@@ -93,7 +93,7 @@
 
       <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-lg p-2 space-y-2">
         @for (item of uploader.queue; track item.file.size) {
-        <div class="flex items-center gap-4 p-1 border-b group transition-all">
+        <div class="flex items-center gap-4 p-1 border-b border-b-gray-500/5 group transition-all">
           <div class="icon size-8 rounded-md bg-gray-200 grid place-items-center">
             @switch (item.file.name | Extension) {
             @case ('pdf') {
@@ -129,7 +129,7 @@
             }
           </div>
           <div class="flex-grow w-[70%] tooltip text-left">
-            <p class="line-clamp-1 w-full">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
+            <p class="line-clamp-1 w-full text-xs">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
           </div>
           @if(uploader.isUploading){
           <span class="loading loading-spinner loading-1xl"></span>
