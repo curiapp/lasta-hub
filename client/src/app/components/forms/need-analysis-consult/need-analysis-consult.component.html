@@ -1,26 +1,25 @@
 <div class="">
   <h3 class="text-xl mb-4">Stakeholders' Consultation</h3>
   <form #consultForm="ngForm" class="space-y-4">
-    <div class="form-control">
-      <div class="label">
-        <label class="label-text">Consultation Start Date</label>
-      </div>
-      <input id="sdate" type="date" class="input input-bordered input-sm" required [(ngModel)]="needAnalysis.startDate"
-        date-only="true" name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Consultation Start Date</legend>
+      <input id="sdate" type="date" class="input" required [(ngModel)]="needAnalysis.startDate" date-only="true"
+        name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
       @if(sdate.invalid && sdate.touched){
-      <div class="label-text">
-        <span class="label-text-alt text-red-700">Start date is required*</span>
+      <div class="label">
+        <span class="text-red-700">Start date is required*</span>
       </div>
       }
+
       <!-- <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div> -->
-    </div>
+    </fieldset>
 
     <div class="form-control">
       <div class="row px-3">
         <label class="label-text" for="date">Consultation End Date</label>
       </div>
-      <input id="edate" type="date" class="input input-sm" required [(ngModel)]="needAnalysis.endDate"
-        date-only="true" name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
+      <input id="edate" type="date" class="input input-sm" required [(ngModel)]="needAnalysis.endDate" date-only="true"
+        name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
       @if(edate.invalid && edate.touched){
       <div class="label">
         <span class="label-text-alt text-red-600">End date is required*</span>

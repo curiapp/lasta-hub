@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @plugin "daisyui";
-
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
@@ -29,13 +28,16 @@
   --radius-selector: 1rem;
   --radius-field: 0.5rem;
   --radius-box: 1rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
   --border: 1px;
   --depth: 1;
   --noise: 0;
 }
 
+.input{
+  width: 100%;
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 
@@ -44,9 +46,6 @@
   --Yellow: #fcaf17;
   --Red: #da2128;
 }
-
-
-
 
 .material-symbols-rounded {
   font-variation-settings:
