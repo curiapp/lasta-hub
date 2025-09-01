@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://196.216.167.200/api'
+  apiUrl: 'https:/cd.nust.na/api'
 };
 
 /*
