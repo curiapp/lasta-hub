@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui";
 @plugin "daisyui/theme" {
@@ -35,11 +37,9 @@
   --noise: 0;
 }
 
-.input{
+.input,.select{
   width: 100%;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 
 :root {
   --Blue: #1b2c5d;
