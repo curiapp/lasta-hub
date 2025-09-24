@@ -15,6 +15,7 @@ import { InternalStakeholdersComponent } from './programme/internal-stakeholders
 // import { SenateComponent } from './programme/senate/senate.component';
 import { NqfRegistrationComponent } from './programme/nqf-registration/nqf-registration.component';
 import { SenateConsultationsComponent } from './programme/consultations/consultations.component';
+import { LoadingPageComponent } from './components/loading-page/loading-page.component';
 // import { NeedAnalysisConcludeComponent } from './need-analysis-conclude/need-analysis-conclude.component';
 // import { EndConsultComponent } from './end-consult/end-consult.component';
 // import { BosSubmitComponent } from './bos-submit/bos-submit.component';
@@ -56,6 +57,7 @@ export const routes: Routes = [
   // { path: '', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
   { path: 'login', component: LoginComponent, data: { title: 'PDQA - Login' } },
+  { path: 'loading', component: LoadingPageComponent, data: { title: 'Loading' } },
   {
     path: '', component: MainComponent, data: { title: 'PDQA - Main' },
     children: [

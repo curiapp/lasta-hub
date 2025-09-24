@@ -45,7 +45,7 @@
           </div>
         </summary>
 
-        <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-56  mt-3 p-2 shadow">
+        <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-56  mt-3 p-4 shadow">
 
           <li>
             <div class="flex items-center flex-col gap-1 justify-center">
@@ -61,18 +61,17 @@
               <span class="text-xs">{{currentUser?.usrUnit?.department}}</span>
             </div>
           </li>
-          <hr>
-          <li>
-            <div class="join">
-              <button class="btn btn-sm join-item">Settings</button>
-              <button class="btn btn-sm join-item" (click)="logout()">Logout</button>
-            </div>
-          </li>
+          <!-- <hr> -->
 
+          <div class="join join-horizontal my-2 justify-center">
+            <button class="btn join-item">Settings</button>
+            <button class="btn join-item" (click)="logout()">Logout</button>
+          </div>
         </ul>
+
       </details>
       }@else {
-      <a routerLink='/login' routerLinkActive="active" class="btn btn-sm bg-secondary border-none">Login</a>
+      <a routerLink='/login' routerLinkActive="active" class="btn btn-sm bg-secondary border-none px-5">Login</a>
       }
     </div>
 

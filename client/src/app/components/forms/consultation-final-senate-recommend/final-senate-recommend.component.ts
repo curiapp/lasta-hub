@@ -15,7 +15,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
   //define the element to be selected from the html structure.
   selector: 'consultation-final-senate-recommend',
   templateUrl: 'final-senate-recommend.component.html',
-  imports: [FormsModule, FileUploadModule, FileExtensionPipe, FileIconComponent]
+  imports: [FormsModule, FileUploadModule, FileIconComponent]
 })
 export class FinalSenateRecommendComponent implements OnInit {
   url = `${environment.apiUrl}/bos-senate/final-senate`;

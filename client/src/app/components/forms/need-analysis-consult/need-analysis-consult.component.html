@@ -14,26 +14,22 @@
       <!-- <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div> -->
     </fieldset>
 
-    <div class="form-control">
-      <div class="row px-3">
-        <label class="label-text" for="date">Consultation End Date</label>
-      </div>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend" for="date">Consultation End Date</legend>
       <input id="edate" type="date" class="input input-sm" required [(ngModel)]="needAnalysis.endDate" date-only="true"
         name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
       @if(edate.invalid && edate.touched){
-      <div class="label">
+      <label class="fieldset-label">
         <span class="label-text-alt text-red-600">End date is required*</span>
-      </div>
+      </label>
       }
-    </div>
+    </fieldset>
 
-    <div class="form-control mb-3">
-      <div class="label">
-        <label class="text-xl font-medium">Stakeholders List</label>
-      </div>
+    <div class="form-control mb-4">
+        <label class="text-xl fieldset-label">Stakeholders List</label>
       <div class="flex gap-2 flex-wrap">
         @for (item of needAnalysis?.organisationList; track item) {
-        <div class="group px-2 py-2 rounded-md bg-primary/20 flex gap-4 items-center justify-between">
+        <div class="group px-2 py-2 rounded-md bg-gray-200 flex gap-4 items-center justify-between">
           <p class="line-clamp-2">{{item}}</p>
           <button class="btn btn-ghost btn-circle btn-xs hidden group-hover:block" (click)="removeOrganisation(item)">
             <span class="material-symbols-rounded">
@@ -69,8 +65,8 @@
       } -->
     </div>
 
-    <div class="form-control space-y-4">
-      <label class="text-sm font-semibold" for="doc"> Questionnaires from Respodents: </label>
+    <fieldset class="fieldset space-y-4">
+      <legend class="fieldset-legend" for="doc">Questionnaires from Respodents:</legend>
 
       <div class="flex items-center justify-center w-full">
         <label for="dropzone-file"
@@ -145,7 +141,7 @@
         <span class="text-xs text-center my-2 w-full h-full">No file selected</span>
         }
       </div>
-    </div>
+    </fieldset>
 
     <div class="join join-horizontal lg:join-horizontal w-full justify-center">
       <button type="button" class="btn btn-primary btn-sm join-item w-full" (click)="submitInfo(consultForm)"

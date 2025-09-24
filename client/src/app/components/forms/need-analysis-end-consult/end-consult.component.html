@@ -4,7 +4,7 @@
 
   <file-upload [code]="code" [url]="url" itemAlias="survey"></file-upload>
 
-  <div class="join join-horizontal lg:join-horizontal w-full justify-center">
+  <div class="w-full flex justify-center mt-4">
     <button type="button" class="btn btn-sm btn-primary" (click)="onUpload()"
       [disabled]="!fileUpload?.uploader.queue.length">
       Submit

@@ -4,7 +4,7 @@
 
   <file-upload [code]="code" [url]="url" itemAlias="check-list"></file-upload>
 
-  <div class="join join-horizontal lg:join-horizontal w-full justify-center">
+  <div class="join join-horizontal lg:join-horizontal w-full justify-center !mt-4">
     <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn join-item btn-primary btn-sm"
       (click)="onUpload('recomment')"
       >
