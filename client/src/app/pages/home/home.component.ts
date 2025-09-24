@@ -15,7 +15,7 @@ import { LoadingService } from '../../services/loading.service';
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [RouterModule, FormsModule, ProgrammeTableComponent, ProgrammeTamplateComponent]
+  imports: [RouterModule, FormsModule, ProgrammeTamplateComponent]
 })
 export class HomeComponent implements OnInit {
   username: string;
