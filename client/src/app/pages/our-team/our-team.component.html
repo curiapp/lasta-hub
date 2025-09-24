@@ -1,64 +1,54 @@
-<!--Section: FAQ-->
-<section style="padding-top:70px" class="p-5 container mx-auto space-y-8">
-  <h3 class="text-primary text-xl lg:text-4xl">
+<div class="max-w-5xl mx-auto p-4 md:p-8 lg:py-16 space-y-8">
+  <!--div class="wrapper" -->
 
-    FAQ
-    <span class="material-symbols-rounded">
-      help
-    </span>
-  </h3>
-  <h4 class="text-2xl">
-    <u>Find the answers for the most frequently asked questions below</u>
-  </h4>
+  <div class="space-y-4">
+    <h1 class="text-2xl font-semibold">
+      Our team
+    </h1>
 
-  <div class="my-6">
-    <div class="space-y-8">
-      <h4 class="text-xl text-primary"> 1) What does the processes for developing and review a programme
-        entails?</h4>
-      <p class="text-base">
-        <strong><u>The following stages underpin the development or review process of a programme!</u></strong>
-      </p>
-      <img src="../../assets/images/faq1.png" class="h-[300px] lg:h-[500px]">
-    </div>
-    <!-- </div><br/><div class="row"> -->
-    <div class="my-4 space-y-4">
-      <h5 class="text-xl text-primary"> 2) How many Programme Advisory Committee (PAC) member should be appointed?</h5>
-      <p class="">
-        The appointment is informed through the ToRs on the appointment of PAC members. Thus, a minimum of twenty
-        members (five from department including Coordinator, Chairperson and current student) fifteen should be from
-        industry (including one from professional where required) - Refer to ToRs on the appointment of PAC.
-      </p>
-    </div>
-
-    <div class="space-y-4">
-      <h5 class="text-xl text-primary"> 3) How many universities should we benchmark with?</h5>
-      <p>
-        <strong><u></u></strong>
-        At a minimum three from SADC and three beyond SADC is required.
-      </p>
-    </div>
-
-    <div class="my-4 space-y-4">
-      <h5 class="text-xl text-primary"> 4) How many support letters are required in support of the submission of a
-        programme to the various committee e.g. BOS, APC and Senate?
-      </h5>
-      <p>
-        At a minimum, three letters from SADC and three beyond SADC is required from the universities benchmarked with
-        and a minimum of eleven from PAC members (including professional bodies where required).
-      </p>
-    </div>
-
-    <div class="my-4 space-y-4">
-      <h5 class="text-xl text-primary"> 5) How long does it take to complete a process for development or review a
-        programme?
-      </h5>
-      <p>
-        The duration is influenced by a variety of factors such as the programme itself i.e an undergraduate programme
-        may take longer to complete. The urgency and commitment by the department also influence the lengthening of the
-        process. Utmost it may takes a minimum of three months.
-      </p>
-    </div>
-
+    <p class="text-xs text-gray-500 max-w-xl ">
+      Our department is committed to supporting academic innovation through the development and introduction of new
+      courses and programs. We work closely with faculties to design curricula that meet institutional standards,
+      address emerging needs, and enhance the learning experience for students.
+    </p>
   </div>
-</section>
-<!--Section: FAQ-->
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+
+    @for (team of teamMembers; track $index) {
+    <a class="group block">
+      <img [src]="team.image" alt="" class="transition-all group-hover:scale-105 h-[180px] sm:h-[350px] md:h-[280px] xl:h-[220px] w-full object-fit" />
+
+      <div class="mt-3 relative text-sm">
+        <div class="opacity-100 group-hover:opacity-0 transition-all">
+          <h3 class="text-gray-900 uppercase ">
+            {{team.name}}
+          </h3>
+
+          <p class="mt-1.5 text-xs text-pretty text-gray-500">
+            {{team.role}}
+          </p>
+        </div>
+
+        <div class="absolute left-1 top-0 bg-white bg-opacity-95 p-4 opacity-0 group-hover:opacity-100 transition-all group-hover:scale-110">
+          <h3 class="text-gray-900 uppercase text-xs font-semibold">
+            {{team.name}}
+          </h3>
+
+          <p class="mt-1 text-xs text-pretty text-gray-500">
+            {{team.office}}
+          </p>
+          <p class="mt-1 text-xs text-pretty text-gray-500">
+            Email: <b>{{team.email}}</b>
+          </p>
+          <p class="mt-1 text-xs text-pretty text-gray-500">
+            Phone: <b>{{team.phone}}</b>
+          </p>
+        </div>
+
+
+      </div>
+    </a>
+    }
+  </div>
+</div>

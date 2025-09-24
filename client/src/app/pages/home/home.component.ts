@@ -14,7 +14,7 @@ import { LoadingService } from '../../services/loading.service';
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.css'],
   imports: [RouterModule, FormsModule, ProgrammeTableComponent, ProgrammeTamplateComponent]
 })
 export class HomeComponent implements OnInit {

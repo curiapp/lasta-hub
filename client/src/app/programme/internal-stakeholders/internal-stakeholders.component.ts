@@ -12,7 +12,7 @@ import { InternalReviewPduComponent } from "../../components/forms/internal-revi
   selector: 'client-internal-stakeholders',
   imports: [ActionButtonsComponent, TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent],
   templateUrl: './internal-stakeholders.component.html',
-  styleUrl: './internal-stakeholders.component.scss'
+  styleUrl: './internal-stakeholders.component.css'
 })
 export class InternalStakeholdersComponent {
   steps = [

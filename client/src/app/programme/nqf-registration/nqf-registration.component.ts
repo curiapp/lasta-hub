@@ -12,7 +12,7 @@ import { NqaSubmitComponent } from "../../components/forms/nqa-submit/nqa-submit
   selector: 'client-nqf-registration',
   imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent],
   templateUrl: './nqf-registration.component.html',
-  styleUrl: './nqf-registration.component.scss'
+  styleUrl: './nqf-registration.component.css'
 })
 export class NqfRegistrationComponent {
   steps = [

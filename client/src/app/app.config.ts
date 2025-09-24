@@ -1,9 +1,8 @@
 import { ApplicationConfig, provideZoneChangeDetection, isDevMode, importProvidersFrom } from '@angular/core';
 import { provideRouter, RouterModule } from '@angular/router';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -11,8 +10,10 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     // importProvidersFrom(RouterModule),
-    provideClientHydration(withEventReplay()),
+    provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({
+      includeRequestsWithAuthHeaders: true,
+      includePostRequests: true
+    })),
     provideHttpClient(withFetch(), withInterceptors([loadingInterceptor])),
-    provideAnimationsAsync()
   ]
 };

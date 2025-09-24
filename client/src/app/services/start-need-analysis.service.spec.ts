@@ -6,7 +6,7 @@ describe('StartNeedAnalysisService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: StartNeedAnalysisService = TestBed.get(StartNeedAnalysisService);
+    const service: StartNeedAnalysisService = TestBed.inject(StartNeedAnalysisService);
     expect(service).toBeTruthy();
   });
 });

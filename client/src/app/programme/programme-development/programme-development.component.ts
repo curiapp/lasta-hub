@@ -12,7 +12,7 @@ import { ActionButtonsComponent } from "../../components/action-buttons/action-b
   selector: 'client-programme-development',
   imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent],
   templateUrl: './programme-development.component.html',
-  styleUrl: './programme-development.component.scss'
+  styleUrl: './programme-development.component.css'
 })
 export class ProgrammeDevelopmentComponent {
   programme: Programme;

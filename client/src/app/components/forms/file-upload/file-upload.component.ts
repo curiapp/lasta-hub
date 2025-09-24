@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { objectToFormData } from '../../../functions';
-import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
 import { FilePipe } from "../../../pipes/file.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { FileIconComponent } from "../../file-icon/file-icon.component";
@@ -13,11 +12,10 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
     FormsModule,
     FileUploadModule,
     FilePipe,
-    FileExtensionPipe,
     FileIconComponent
 ],
   templateUrl: './file-upload.component.html',
-  styleUrl: './file-upload.component.scss'
+  styleUrl: './file-upload.component.css'
 })
 export class FileUploadComponent {
 

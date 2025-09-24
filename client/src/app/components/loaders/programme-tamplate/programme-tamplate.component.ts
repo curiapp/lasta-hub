@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'programme-tamplate',
   imports: [],
   templateUrl: './programme-tamplate.component.html',
-  styleUrl: './programme-tamplate.component.scss'
+  styleUrl: './programme-tamplate.component.css'
 })
 export class ProgrammeTamplateComponent {
 

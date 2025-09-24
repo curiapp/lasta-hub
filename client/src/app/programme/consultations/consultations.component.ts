@@ -13,7 +13,7 @@ import { FinalSenateRecommendComponent } from "../../components/forms/consultati
   selector: 'consultations',
   imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent],
   templateUrl: './consultations.component.html',
-  styleUrl: './consultations.component.scss'
+  styleUrl: './consultations.component.css'
 })
 export class SenateConsultationsComponent {
   steps = [

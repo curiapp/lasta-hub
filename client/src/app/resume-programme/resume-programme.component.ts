@@ -6,20 +6,18 @@ import { FileUploadModule } from 'ng2-file-upload';
 @Component({
     selector: 'resume',
     templateUrl: './resume-programme.component.html',
-    styleUrls: ['./resume-programme.component.scss'],
+    styleUrls: ['./resume-programme.component.css'],
     imports: [FormsModule, FileUploadModule, NgClass]
 })
-export class ResumeProgrammeComponent implements OnInit {
+export class ResumeProgrammeComponent {
 
   programmes: String[] = ['07BACS', '08BHSE', '09MSCS', '05DBMA'];
   programme: string;
   public showID = 0;
   public delay = 60000;
   public pannelID: Number;
-  constructor() { }
 
-  ngOnInit() {
-  }
+  constructor() { }
 
   changed(event) {
     this.programme = event;

@@ -5,7 +5,7 @@ import { ToastService } from '../../services/toast.service';
   selector: 'toast',
   imports: [],
   templateUrl: './toast.component.html',
-  styleUrl: './toast.component.scss'
+  styleUrl: './toast.component.css'
 })
 export class ToastComponent {
   toastService = inject(ToastService);

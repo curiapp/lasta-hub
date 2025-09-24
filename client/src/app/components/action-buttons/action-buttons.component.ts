@@ -5,7 +5,7 @@ import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.com
   selector: 'action-buttons',
   imports: [],
   templateUrl: './action-buttons.component.html',
-  styleUrl: './action-buttons.component.scss'
+  styleUrl: './action-buttons.component.css'
 })
 export class ActionButtonsComponent {
   // @ViewChild('container', { read: ViewContainerRef, static: true }) container: ViewContainerRef;

@@ -1,40 +1,35 @@
 <div class="">
   <h3 class="text-xl mb-4">Stakeholders' Consultation</h3>
   <form #consultForm="ngForm" class="space-y-4">
-    <div class="form-control">
-      <div class="label">
-        <label class="label-text">Consultation Start Date</label>
-      </div>
-      <input id="sdate" type="date" class="input input-bordered input-sm" required [(ngModel)]="needAnalysis.startDate"
-        date-only="true" name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Consultation Start Date</legend>
+      <input id="sdate" type="date" class="input" required [(ngModel)]="needAnalysis.startDate" date-only="true"
+        name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
       @if(sdate.invalid && sdate.touched){
-      <div class="label-text">
-        <span class="label-text-alt text-red-700">Start date is required*</span>
+      <div class="label">
+        <span class="text-red-700">Start date is required*</span>
       </div>
       }
+
       <!-- <div [hidden]="cdate.valid" class="alert alert-danger">consultationDate is required</div> -->
-    </div>
+    </fieldset>
 
-    <div class="form-control">
-      <div class="row px-3">
-        <label class="label-text" for="date">Consultation End Date</label>
-      </div>
-      <input id="edate" type="date" class="input input-bordered input-sm" required [(ngModel)]="needAnalysis.endDate"
-        date-only="true" name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend" for="date">Consultation End Date</legend>
+      <input id="edate" type="date" class="input input-sm" required [(ngModel)]="needAnalysis.endDate" date-only="true"
+        name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
       @if(edate.invalid && edate.touched){
-      <div class="label">
+      <label class="fieldset-label">
         <span class="label-text-alt text-red-600">End date is required*</span>
-      </div>
+      </label>
       }
-    </div>
+    </fieldset>
 
-    <div class="form-control mb-3">
-      <div class="label">
-        <label class="text-xl font-medium">Stakeholders List</label>
-      </div>
+    <div class="form-control mb-4">
+        <label class="text-xl fieldset-label">Stakeholders List</label>
       <div class="flex gap-2 flex-wrap">
         @for (item of needAnalysis?.organisationList; track item) {
-        <div class="group px-2 py-2 rounded-md bg-primary/20 flex gap-4 items-center justify-between">
+        <div class="group px-2 py-2 rounded-md bg-gray-200 flex gap-4 items-center justify-between">
           <p class="line-clamp-2">{{item}}</p>
           <button class="btn btn-ghost btn-circle btn-xs hidden group-hover:block" (click)="removeOrganisation(item)">
             <span class="material-symbols-rounded">
@@ -51,12 +46,12 @@
     <div class="form-control">
       <div class="join w-full border-inherit items-center">
         <div class="w-full">
-          <label class="join-item input input-bordered input-sm flex gap-2 items-center ">
+          <label class="join-item input input-sm flex flex-auto gap-2 items-center ">
             <span class="material-symbols-rounded">
               group
             </span>
             <input type="text" placeholder="enter stakeholder" id="organisation" name="organisation" required
-              class="grow" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
+              class="flex-auto" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
           </label>
           <!-- <div class="validator-hint hidden">Enter Stakeholder Name</div> -->
         </div>
@@ -70,8 +65,8 @@
       } -->
     </div>
 
-    <div class="form-control space-y-4">
-      <label class="text-sm font-semibold" for="doc"> Questionnaires from Respodents: </label>
+    <fieldset class="fieldset space-y-4">
+      <legend class="fieldset-legend" for="doc">Questionnaires from Respodents:</legend>
 
       <div class="flex items-center justify-center w-full">
         <label for="dropzone-file"
@@ -93,7 +88,7 @@
 
       <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-lg p-2 space-y-2">
         @for (item of uploader.queue; track item.file.size) {
-        <div class="flex items-center gap-4 p-1 border-b group transition-all">
+        <div class="flex items-center gap-4 p-1 border-b border-b-gray-500/5 group transition-all">
           <div class="icon size-8 rounded-md bg-gray-200 grid place-items-center">
             @switch (item.file.name | Extension) {
             @case ('pdf') {
@@ -129,7 +124,7 @@
             }
           </div>
           <div class="flex-grow w-[70%] tooltip text-left">
-            <p class="line-clamp-1 w-full">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
+            <p class="line-clamp-1 w-full text-xs">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
           </div>
           @if(uploader.isUploading){
           <span class="loading loading-spinner loading-1xl"></span>
@@ -146,7 +141,7 @@
         <span class="text-xs text-center my-2 w-full h-full">No file selected</span>
         }
       </div>
-    </div>
+    </fieldset>
 
     <div class="join join-horizontal lg:join-horizontal w-full justify-center">
       <button type="button" class="btn btn-primary btn-sm join-item w-full" (click)="submitInfo(consultForm)"
