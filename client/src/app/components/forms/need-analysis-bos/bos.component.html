@@ -7,7 +7,7 @@
       <label for="date">BOS Date</label>
       <div class="form-control">
         <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="model.date"
-          ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+          date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -25,8 +25,8 @@
                 <label for="status">Status: </label>
                 <fieldset style="border:solid 0.4px;border-radius: 4px;width:100%;height:36px;">
                 <div class="input-group controls-row" >
-                    <label class="radio-inline control-label"><input type="radio" name="status" [(ngModel)]="model.status" [value]="true" class="form-control" required #status="ngModel">Recommend to proceed (Senate)</label>
-                    <label class="radio-inline control-label"><input type="radio" name="status" [(ngModel)]="model.status" [value]="false" class="form-control" required #status="ngModel">Recommend to resubmit (BOS)</label>
+                    <label class="radio-inline control-label"><input type="radio" class="radio radio-xs" name="status" [(ngModel)]="model.status" [value]="true" class="form-control" required #status="ngModel">Recommend to proceed (Senate)</label>
+                    <label class="radio-inline control-label"><input type="radio" class="radio radio-xs" name="status" [(ngModel)]="model.status" [value]="false" class="form-control" required #status="ngModel">Recommend to resubmit (BOS)</label>
                 </div></fieldset>
                 <div [hidden]="status.valid" class="alert alert-danger">Recommendations status is needed</div>
               </div -->
@@ -38,15 +38,17 @@
         <div style="text-align:left;">
           <div>
             <label class="radio-inline">
-              <input type="radio" name="status" [(ngModel)]="model.status" value="senate" required #status="ngModel">
+              <input type="radio" class="radio radio-xs" name="status" [(ngModel)]="model.status" value="senate" required #status="ngModel">
               Recommend to Senate
             </label>
           </div>
           <div>
-            <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="bos"
+            <label class="radio-inline">
+              <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="bos"
                 required #status="ngModel"> Resubmit to BOS </label>
           </div>
-          <label class="radio-inline"> <input type="radio" name="status" [(ngModel)]="model.status" value="decline"
+          <label class="radio-inline">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="decline"
               required #status="ngModel"> Decline </label>
         </div>
       </fieldset>

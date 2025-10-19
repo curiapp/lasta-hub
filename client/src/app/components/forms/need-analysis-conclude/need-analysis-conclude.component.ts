@@ -1,11 +1,11 @@
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../../../services/toast.service';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadComponent } from '../file-upload/file-upload.component';
 
 @Component({
   selector: 'need-analysis-conclude',
@@ -21,6 +21,7 @@ export class NeedAnalysisConcludeComponent {
   decision: String;
   url = `${environment.apiUrl}/need-analysis/conclude`;
   @Input() code?: string;
+  @Output() completed = new EventEmitter<void>();
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   constructor() { }

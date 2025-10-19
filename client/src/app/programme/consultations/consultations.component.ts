@@ -8,10 +8,11 @@ import { FacultyBosFinalComponent } from "../../consultation-faculty-bos-final/f
 import { OtherFacultyBosComponent } from "../../consultation-other-faculty-bos/other-faculty-bos.component";
 import { ApcRecommendComponent } from "../../components/forms/consultation-apc-recommend/apc-recommend.component";
 import { FinalSenateRecommendComponent } from "../../components/forms/consultation-final-senate-recommend/final-senate-recommend.component";
+import { ModalComponent } from "../../components/modal/modal.component";
 
 @Component({
   selector: 'consultations',
-  imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent],
+  imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent],
   templateUrl: './consultations.component.html',
   styleUrl: './consultations.component.css'
 })

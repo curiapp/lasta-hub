@@ -2,21 +2,20 @@
 //import files from the angular framework
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { StartNeedAnalysisService } from '../../services/start-need-analysis.service';
-import { Faculty } from '../../models/faculty';
-import { Department } from '../../models/department';
+import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
+import { Faculty } from '../../../models/faculty';
+import { Department } from '../../../models/department';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Programme } from '../../types';
-import { ToastService } from '../../services/toast.service';
+import { Programme } from '../../../types';
+import { ToastService } from '../../../services/toast.service';
 // import {RouteConfig,  ROUTER_DIRECTIVES, ROUTER_PROVIDERS,
 //          LocationStrategy, HashLocationStrategy,} from '@angular/router';
 
 @Component({
-  //moduleId: module.id,
-  selector: 'StartNeedAnalysis',
+  selector: 'start-need-analysis',
   templateUrl: 'start-need-analysis.component.html',
-  //styleUrls: ['about-us.component.css']
+  styleUrls: ['start-need-analysis.component.css'],
   providers: [StartNeedAnalysisService],
   imports: [FormsModule]
   //directives: [ ]
@@ -35,7 +34,6 @@ export class StartNeedAnalysisComponent implements OnInit {
       this.programme["initiator"] = "Ndina";
       this.programme["Faculty"] = "Computing and Informatics";
       this.programme["department"] = "Computer Science";
-      // console.log("user not loggen in, we are using default values...");
     }
     else {
       let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));

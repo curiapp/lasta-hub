@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { TLUCEUQAStartComponent } from "../../components/forms/internal-tlu-ceu-qa-start/tlu-ceu-qa-start.component";
-import { Programme } from '../../types';
 import { ActivatedRoute } from '@angular/router';
-import { ClientService } from '../../services/client.service';
-import { TLURecommendComponent } from "../../components/forms/internal-tlu-recommend/tlu-recommend.component";
+import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { CEURecommendComponent } from "../../components/forms/internal-ceu-recommend/ceu-recommend.component";
 import { InternalReviewPduComponent } from "../../components/forms/internal-review-pdqa/internal-review-pdqa.component";
+import { TLUCEUQAStartComponent } from "../../components/forms/internal-tlu-ceu-qa-start/tlu-ceu-qa-start.component";
+import { TLURecommendComponent } from "../../components/forms/internal-tlu-recommend/tlu-recommend.component";
+import { ModalComponent } from "../../components/modal/modal.component";
+import { ClientService } from '../../services/client.service';
+import { Programme } from '../../types';
 
 @Component({
   selector: 'client-internal-stakeholders',
-  imports: [ActionButtonsComponent, TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent],
+  imports: [ActionButtonsComponent, TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent, ModalComponent],
   templateUrl: './internal-stakeholders.component.html',
   styleUrl: './internal-stakeholders.component.css'
 })

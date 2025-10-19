@@ -1,12 +1,11 @@
 <div
   class="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
   <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
-    @for(step of steps; track step.title; let i= $index; ){
-    <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
-      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
-        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'">
-        {{i+1}} </span>
-      <span class="hidden sm:block"> {{step.title}} </span>
+    @for(step of steps;track step.id;let i= $index; ){
+    <li class="flex items-center gap-1 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
+      <span class="size-10 md:size-6 xl:size-8 rounded-full grid place-items-center text-xs lg:text-[14px]/6 font-bold"
+        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'"> {{i+1}} </span>
+      <span class="hidden md:block md:text-xs"> {{step.title}} </span>
     </li>
     }
   </ol>
@@ -14,9 +13,9 @@
 
 @if(selectedStep==1){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Internal Consultations</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="internal_consult.showModal()">
+  <div class="flex justify-between gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">Internal Consultations</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="internal_consult.open()">
       Start Internal Consultations
     </button>
   </div>
@@ -39,25 +38,16 @@
   </div>
 </div>
 
-<dialog id="internal_consult" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <tlu-ceu-qa-start [code]="code"></tlu-ceu-qa-start>
-    <!-- <external-curriculum-dev-pac-start [code]="code"></external-curriculum-dev-pac-start> -->
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #internal_consult>
+  <tlu-ceu-qa-start [code]="code"></tlu-ceu-qa-start>
+</modal>
 }
 
 @if(selectedStep==2){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">ADSTLT Review</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="adstlt_review.showModal()">
+    <h2 class="text-xl md:text-2xl capitalize">ADSTLT Review</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="adstlt_review.open()">
       ADSTLT Review
     </button>
   </div>
@@ -79,24 +69,16 @@
   </div>
 </div>
 
-<dialog id="adstlt_review" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <tlu-recommend [code]="code"></tlu-recommend>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #adstlt_review>
+  <tlu-recommend [code]="code"></tlu-recommend>
+</modal>
 }
 
 @if(selectedStep==3){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">CE Review</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="ce_review.showModal()">
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl md:text-2xl capitalize">CE Review</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="ce_review.open()">
       CE Review
     </button>
   </div>
@@ -118,24 +100,16 @@
   </div>
 </div>
 
-<dialog id="ce_review" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <ceu-recommend [code]="code"></ceu-recommend>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #ce_review>
+  <ceu-recommend [code]="code"></ceu-recommend>
+</modal>
 }
 
 @if(selectedStep==4){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">PDQA Recommendation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="pdqa_review.showModal()">
+  <div class="flex justify-between items-center gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">PDQA Recommendation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="pdqa_review.open()">
       PDQA Recommendation
     </button>
   </div>
@@ -157,15 +131,7 @@
   </div>
 </div>
 
-<dialog id="pdqa_review" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <internal-pdqa-review [code]="code"></internal-pdqa-review>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #pdqa_review>
+  <internal-pdqa-review [code]="code"></internal-pdqa-review>
+</modal>
 }

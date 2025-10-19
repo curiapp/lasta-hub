@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DialogService } from './dialog.service';
+import { ModalControlService } from './modal-control.service';
 
-describe('DialogService', () => {
-  let service: DialogService;
+describe('ModalControlService', () => {
+  let service: ModalControlService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DialogService);
+    service = TestBed.inject(ModalControlService);
   });
 
   it('should be created', () => {

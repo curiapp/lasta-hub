@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Programme } from '../types';
+import { Programme } from '../../../types';
 
 @Component({
   selector: 'client-programme-table',

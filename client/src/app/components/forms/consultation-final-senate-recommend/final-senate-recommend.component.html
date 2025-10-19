@@ -17,13 +17,18 @@
       <label class="label label-text font-bold">Senate Recommendation: </label>
       <fieldset class="border rounded-lg p-2">
         <div class="flex flex-wrap gap-4">
-          <label class="flex gap-2 items-center text-sm"> <input class="radio radio-xs" type="radio" name="status"
-              [(ngModel)]="model.status" value="endorse" required #status="ngModel"> Approve &nbsp;&nbsp;</label>
-          <label class="flex gap-2 items-center text-sm"> <input class="radio radio-xs" type="radio" name="status"
-              [(ngModel)]="model.status" value="defer_faculty" required #status="ngModel"> Defer (Faculty)
-            &nbsp;&nbsp;</label>
-          <label class="flex gap-2 items-center text-sm"> <input class="radio radio-xs" type="radio" name="status"
-              [(ngModel)]="model.status" value="defer_senex" required #status="ngModel"> Defer (SENEX) </label>
+          <label class="flex gap-2 items-center text-sm">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="endorse" required
+              #status="ngModel"> Approve &nbsp;&nbsp;
+          </label>
+          <label class="flex gap-2 items-center text-sm">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="defer_faculty"
+              required #status="ngModel"> Defer (Faculty)&nbsp;&nbsp;
+          </label>
+          <label class="flex gap-2 items-center text-sm">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="defer_senex"
+              required #status="ngModel"> Defer (SENEX)
+          </label>
         </div>
       </fieldset>
       @if(status.invalid && status.touched) {

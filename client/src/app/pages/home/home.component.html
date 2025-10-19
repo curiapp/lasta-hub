@@ -61,7 +61,6 @@
       <a href="#slide1" class="btn btn-circle">❯</a>
     </div>
   </div>
-
 </div>
 }
 
@@ -75,11 +74,6 @@
 
 @if (!currentUser){
 <div class="my-4 py-10 container mx-auto flex justify-center">
-
-  <!-- <div class="col-md-4 bg-muted">
-          <course-due-for-review></course-due-for-review>
-        </div> -->
-
   <div class="space-y-4 w-full md:w-96">
     <article class="rounded-lg border border-gray-100 bg-white p-6">
       <div class="flex items-center justify-between">
@@ -148,7 +142,7 @@
 
   <h2 class="text-3xl font-bold capitalize">{{currentUser?.firstname}} {{currentUser?.lastname}}</h2>
 
-  <div class="space-y-1">
+  <div class="space-y-1 hidden md:block">
     <span class="text-xs">Overview</span>
     <div class="flex gap-6">
 
@@ -163,7 +157,6 @@
           <span class="text-lg capitalize">{{currentUser?.usrUnit?.faculty}}</span>
         </div>
       </div>
-
 
       <div class="flex items-center gap-3">
         <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
@@ -192,6 +185,38 @@
     </div>
   </div>
 
+  <div class="hidden md:hidden">
+    <span class="text-xs">Overview</span>
+    <div class="flex gap-2 flex-wrap">
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            account_balance
+          </span>
+        </div>
+        <span>Faculty: {{currentUser?.usrUnit?.faculty}}</span>
+      </div>
+
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            lan
+          </span>
+        </div>
+        <span>Department: {{currentUser?.usrUnit?.department}}</span>
+      </div>
+
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            school
+          </span>
+        </div>
+        <span>Programmes: {{programmes?.length}}</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="p-4 flex items-start gap-8">
@@ -217,9 +242,12 @@
           {{showAll?"Minimize":"View All"}}
         </button>
         <!-- @if(user==='LECTURER'){ -->
-        <button class="btn btn-sm btn-primary" routerLink="/StartNeedAnalysis">Create Programme</button>
+        <button class="btn btn-sm btn-primary" (click)="create_programme.open()">Create Programme</button>
         <!-- } -->
       </div>
+      <modal #create_programme>
+        <start-need-analysis></start-need-analysis>
+      </modal>
     </div>
 
     @if(_loading.isLoading()){
@@ -257,36 +285,6 @@
               <span class="text-xs"><b>Faculty:</b> {{item.faculty}}</span>
             </div>
           </a>
-
-          <!-- <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
-                <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
-
-                <p class="mt-4 text-xs sm:text-sm line-clamp-2">
-                  {{item.description}}
-                </p>
-
-                <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
-
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-neutral-content w-8">
-                      <span>UP</span>
-                    </div>
-                  </div>
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-neutral-content w-8">
-                      <span>MS</span>
-                    </div>
-                  </div>
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-neutral-content w-8">
-                      <span>+2</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                <p class="mt-8 font-bold">Read more</p>
-              </div> -->
         </div>
       </div>
       } @empty {
