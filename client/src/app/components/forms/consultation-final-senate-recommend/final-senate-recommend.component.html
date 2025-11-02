@@ -15,7 +15,7 @@
 
     <div class="form-group">
       <label class="label label-text font-bold">Senate Recommendation: </label>
-      <fieldset class="border rounded-lg p-2">
+      <fieldset class="border-2 border-dashed border-gray-300 rounded-lg p-2">
         <div class="flex flex-wrap gap-4">
           <label class="flex gap-2 items-center text-sm">
             <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="endorse" required
@@ -136,7 +136,7 @@
 
 
     <div class="form-control">
-      <button class="btn btn-sm btn-primary" (click)="uploader.uploadAll()"
+      <button class="btn btn-sm btn-primary w-full" (click)="uploader.uploadAll()"
         [disabled]="!uploader?.queue.length || cdate.invalid">
         Submit
         <span class="material-symbols-rounded">

@@ -1,13 +1,12 @@
 @if(!currentUser){
-<div class="carousel w-full">
+<!-- <div class="carousel hero w-full">
   <div id="slide1" class="carousel-item relative w-full">
     <video class="video-fluid w-full h-full" autoplay loop>
       <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
     </video>
 
-    <!--Caption-->
     <div
-      class="carousel-caption text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
+      class="text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
       <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
         <h3 class="text-3xl font-bold"> Welcome to Programme Development Application</h3>
         <p class="text-center font-thin">
@@ -29,7 +28,7 @@
     </div>
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-      <a href="#slide2" class="btn btn-circle">❮</a>
+      <a href="#slide1" class="btn btn-circle">❮</a>
       <a href="#slide2" class="btn btn-circle">❯</a>
     </div>
   </div>
@@ -38,8 +37,6 @@
     <video class="video-fluid w-full h-full border" autoplay loop>
       <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
     </video>
-
-    <!--Caption-->
     <div
       class="carousel-caption text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
       <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
@@ -58,19 +55,25 @@
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide1" class="btn btn-circle">❮</a>
-      <a href="#slide1" class="btn btn-circle">❯</a>
+      <a href="#slide2" class="btn btn-circle">❯</a>
+    </div>
+  </div>
+</div> -->
+
+<div class="hero bg-base-200 min-h-screen">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">Hello there</h1>
+      <p class="py-6">
+        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+        quasi. In deleniti eaque aut repudiandae et a id nisi.
+      </p>
+      <button class="btn btn-primary">Get Started</button>
     </div>
   </div>
 </div>
+
 }
-
-<!-- <video class="video-fluid" autoplay loop>
-  <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
-</video>
-
-<video class="video-fluid" autoplay loop>
-  <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
-</video> -->
 
 @if (!currentUser){
 <div class="my-4 py-10 container mx-auto flex justify-center">
@@ -123,17 +126,16 @@
 
     </article>
   </div>
-
-  <!-- <div class="col-md-4">
-    <course-in-progress></course-in-progress>
-  </div>
-
-  <div class="col-md-4">
-    <course-recently-approved></course-recently-approved>
-  </div> -->
-
 </div>
 }
+
+<!-- <video class="video-fluid" autoplay loop>
+  <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
+</video>
+
+<video class="video-fluid" autoplay loop>
+  <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
+</video> -->
 
 @if(currentUser){
 <div class="p-4 bg-primary space-y-3 text-base-100">
