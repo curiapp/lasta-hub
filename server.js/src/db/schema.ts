@@ -69,7 +69,7 @@ export const phaseSteps = pgTable("phase_steps", {
 	check("phase_steps_phase_id_not_null", sql`NOT NULL phase_id`),
 ]);
 
-export const programPhaseSteps = pgTable("program_phase_steps", {
+export const programmePhaseSteps = pgTable("programme_phase_steps", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
 	programmePhaseId: uuid("programme_phase_id"),
 	phaseStepId: uuid("phase_step_id"),

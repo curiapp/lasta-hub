@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, programmes, phases, phaseSteps, programPhaseSteps, programmePhases } from "./schema";
+import { users, programmes, phases, phaseSteps, programmePhaseSteps, programmePhases } from "./schema";
 
 export const programmesRelations = relations(programmes, ({one, many}) => ({
 	user: one(users, {
@@ -18,7 +18,7 @@ export const phaseStepsRelations = relations(phaseSteps, ({one, many}) => ({
 		fields: [phaseSteps.phaseId],
 		references: [phases.id]
 	}),
-	programPhaseSteps: many(programPhaseSteps),
+	programmePhaseSteps: many(programmePhaseSteps),
 }));
 
 export const phasesRelations = relations(phases, ({many}) => ({
@@ -26,19 +26,19 @@ export const phasesRelations = relations(phases, ({many}) => ({
 	programmePhases: many(programmePhases),
 }));
 
-export const programPhaseStepsRelations = relations(programPhaseSteps, ({one}) => ({
+export const programmePhaseStepsRelations = relations(programmePhaseSteps, ({one}) => ({
 	phaseStep: one(phaseSteps, {
-		fields: [programPhaseSteps.phaseStepId],
+		fields: [programmePhaseSteps.phaseStepId],
 		references: [phaseSteps.id]
 	}),
 	programmePhase: one(programmePhases, {
-		fields: [programPhaseSteps.programmePhaseId],
+		fields: [programmePhaseSteps.programmePhaseId],
 		references: [programmePhases.id]
 	}),
 }));
 
 export const programmePhasesRelations = relations(programmePhases, ({one, many}) => ({
-	programPhaseSteps: many(programPhaseSteps),
+	programmePhaseSteps: many(programmePhaseSteps),
 	programme: one(programmes, {
 		fields: [programmePhases.programId],
 		references: [programmes.id]
