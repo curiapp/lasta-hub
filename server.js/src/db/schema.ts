@@ -104,14 +104,14 @@ export const events = pgTable("events", {
 
 export const programmePhases = pgTable("programme_phases", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programId: uuid("program_id").notNull(),
+	programmeId: uuid("programme_id").notNull(),
 	phaseId: uuid("phase_id").notNull(),
 	status: text().default('not_started').notNull(),
 	startedAt: timestamp("started_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	completedAt: timestamp("completed_at", { withTimezone: true, mode: 'string' }),
 }, (table) => [
 	foreignKey({
-			columns: [table.programId],
+			columns: [table.programmeId],
 			foreignColumns: [programmes.id],
 			name: "program_phases_program_id_fkey"
 		}).onDelete("cascade"),
@@ -120,10 +120,10 @@ export const programmePhases = pgTable("programme_phases", {
 			foreignColumns: [phases.id],
 			name: "programme_phases_phase_id_fkey"
 		}),
-	unique("program_phases_program_id_phase_id_key").on(table.programId, table.phaseId),
+	unique("program_phases_program_id_phase_id_key").on(table.programmeId, table.phaseId),
 	check("program_phases_status_check", sql`status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'completed'::text])`),
 	check("program_phases_id_not_null", sql`NOT NULL id`),
-	check("programme_phases_program_id_not_null", sql`NOT NULL program_id`),
+	check("programme_phases_program_id_not_null", sql`NOT NULL programme_id`),
 	check("programme_phases_phase_id_not_null", sql`NOT NULL phase_id`),
 	check("programme_phases_status_not_null", sql`NOT NULL status`),
 	check("programme_phases_started_at_not_null", sql`NOT NULL started_at`),

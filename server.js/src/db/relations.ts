@@ -40,7 +40,7 @@ export const programmePhaseStepsRelations = relations(programmePhaseSteps, ({one
 export const programmePhasesRelations = relations(programmePhases, ({one, many}) => ({
 	programmePhaseSteps: many(programmePhaseSteps),
 	programme: one(programmes, {
-		fields: [programmePhases.programId],
+		fields: [programmePhases.programmeId],
 		references: [programmes.id]
 	}),
 	phase: one(phases, {
