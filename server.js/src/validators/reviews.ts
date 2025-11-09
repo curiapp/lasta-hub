@@ -1,8 +1,7 @@
 import Joi from "joi";
 import { programmeIdSchema } from "./base";
 
-const reviewRecommendSchema = Joi.object({
-  ...programmeIdSchema,
+const reviewRecommendSchema = programmeIdSchema.append({
   reviewUnit: Joi.string()
     .valid("TLA", "CE", "QA", "COLL", "PDU")
     .required()
