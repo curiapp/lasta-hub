@@ -1,4 +1,29 @@
 .toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  transition-property: all;
+  transition-duration: 300ms;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast-container:hover {
+  flex-direction: row;
+}
+
+.toast-container .alert {
+  margin-bottom: 0.5rem;
+}
+
+.toast-container:hover .alert {
+  margin-bottom: 0;
+}
+
+
+/* .toast-container {
   @apply fixed top-4 right-4 z-50 transition-all duration-300 flex flex-col gap-2;
 }
 
@@ -12,4 +37,4 @@
 
 .toast-container:hover .alert {
   @apply mb-0;
-}
+} */
