@@ -1,15 +1,15 @@
 .toast-container {
-  @apply fixed top-4 right-4 z-50 transition-all duration-300 flex flex-col gap-2; /* Default stacked layout */
+  @apply fixed top-4 right-4 z-50 transition-all duration-300 flex flex-col gap-2;
+}
 
-  &:hover {
-    @apply flex-row; /* Expand to row on hover */
+.toast-container:hover {
+  @apply flex-row;
+}
 
-    .alert {
-      @apply mb-0; /* Ensure no bottom margin in expanded state */
-    }
-  }
+.toast-container .alert {
+  @apply mb-2;
+}
 
-  .alert {
-    @apply mb-2; /* Default bottom margin for stacked layout */
-  }
+.toast-container:hover .alert {
+  @apply mb-0;
 }
