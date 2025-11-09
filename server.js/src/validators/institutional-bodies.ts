@@ -1,8 +1,7 @@
 import Joi from "joi";
 import { programmeBaseSchema } from "./base";
 
-const facultyBosRecommendSchema = Joi.object({
-  ...programmeBaseSchema,
+const facultyBosRecommendSchema = programmeBaseSchema.append({
   status: Joi.string()
     .valid("recommend-bosec", "resubmit", "defer")
     .required()
@@ -12,15 +11,13 @@ const facultyBosRecommendSchema = Joi.object({
     }),
 });
 
-const apcRecommendSchema = Joi.object({
-  ...programmeBaseSchema,
+const apcRecommendSchema = programmeBaseSchema.append({
   decision: Joi.string().valid("approve", "decline").required().messages({
     "any.only": "Status must be one of: approve, decline",
   }),
 });
 
-const finalSenateSchema = Joi.object({
-  ...programmeBaseSchema,
+const finalSenateSchema = programmeBaseSchema.append({
   decision: Joi.string()
     .valid("endorse", "defer-faculty", "defer-senex")
     .required()

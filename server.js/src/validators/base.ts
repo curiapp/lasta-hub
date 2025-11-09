@@ -2,8 +2,7 @@ import Joi from "joi";
 
 const programmeIdSchema = Joi.object({ programmeId: Joi.string().required() });
 
-const programmeBaseSchema = Joi.object({
-  ...programmeIdSchema,
+const programmeBaseSchema = programmeIdSchema.append({
   date: Joi.date().required(),
 });
 

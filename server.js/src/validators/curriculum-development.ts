@@ -12,25 +12,21 @@ const memberDetailsSchema = Joi.object({
   Organization: Joi.string().required(),
 });
 
-const appointPacSchema = Joi.object({
-  ...programmeIdSchema,
+const appointPacSchema = programmeIdSchema.append({
   members: Joi.array().items(memberDetailsSchema),
 });
 
-const draftValidateSchema = Joi.object({
-  ...programmeIdSchema,
+const draftValidateSchema = programmeIdSchema.append({
   decision: Joi.string().valid("approve", "decline").required().messages({
     "any.only": "Status must be one of: approve, decline",
   }),
 });
 
-const appointCDCSchema = Joi.object({
-  ...programmeIdSchema,
+const appointCDCSchema = programmeIdSchema.append({
   members: Joi.array().items(memberDetailsSchema),
 });
 
-const reviewSchema = Joi.object({
-  ...programmeIdSchema,
+const reviewSchema = programmeIdSchema.append({
   code: Joi.string().required(),
   initiator: Joi.string().required(),
 });

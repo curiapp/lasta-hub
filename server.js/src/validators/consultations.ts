@@ -1,8 +1,7 @@
 import Joi from "joi";
 import { programmeBaseSchema } from "./base";
 
-const pacEndorse = Joi.object({
-    ...programmeBaseSchema,
+const pacEndorse = programmeBaseSchema.append({
   decision: Joi.string().valid("approve", "decline").required().messages({
     "any.only": "Status must be one of: approve, decline, defer, recommend",
   }),

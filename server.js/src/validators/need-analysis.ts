@@ -27,15 +27,13 @@ const concludeSchema = Joi.object({
     }),
 });
 
-const bosRecommendSchema = Joi.object({
-  ...programmeBaseSchema,
+const bosRecommendSchema = programmeBaseSchema.append({
   status: Joi.string().valid("senate", "bos", "decline").required().messages({
     "any.only": "Status must be one of: senate, bos, decline",
   }),
 });
 
-const senateRecommendSchema = Joi.object({
-  ...programmeBaseSchema,
+const senateRecommendSchema = programmeBaseSchema.append({
   status: Joi.string()
     .valid("approve", "decline", "defer")
     .required()
@@ -44,8 +42,7 @@ const senateRecommendSchema = Joi.object({
     }),
 });
 
-const apcRecommendSchema = Joi.object({
-  ...programmeBaseSchema,
+const apcRecommendSchema = programmeBaseSchema.append({
   status: Joi.string()
     .valid("recommend", "decline", "defer")
     .required()

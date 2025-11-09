@@ -41,7 +41,7 @@ export default async (app: Express, upload: Multer) => {
 
     //Create programme phase record
     await db.insert(programmePhases).values({
-      programId: programmeRecord[0].id,
+      programmeId: programmeRecord[0].id,
       phaseId: naId[0].id,
       status: "In Progress",
     });
@@ -69,7 +69,7 @@ export default async (app: Express, upload: Multer) => {
       }
 
       //save files and get url
-
+      
       const [naPhaseStep] = await db
         .select({ id: phaseSteps.id })
         .from(phaseSteps)
@@ -88,7 +88,7 @@ export default async (app: Express, upload: Multer) => {
         .where(
           and(
             eq(programmePhases.phaseId, naPhaseStep.id),
-            eq(programmePhases.programId, value.programmeId)
+            eq(programmePhases.programmeId, value.programmeId)
           )
         )
         .limit(1);
@@ -140,7 +140,7 @@ export default async (app: Express, upload: Multer) => {
         programmePhases,
         eq(programmePhaseSteps.programmePhaseId, programmePhases.id)
       )
-      .where(eq(programmePhases.programId, programmeId))
+      .where(eq(programmePhases.programmeId, programmeId))
       .limit(1);
 
     if (!record)
