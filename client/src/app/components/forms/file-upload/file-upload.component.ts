@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { objectToFormData } from '../../../functions';
 import { FilePipe } from "../../../pipes/file.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { FileIconComponent } from "../../file-icon/file-icon.component";
+import { ModalControlService } from '../../../services/modal-control.service';
 
 @Component({
   selector: 'file-upload',
@@ -13,7 +14,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
     FileUploadModule,
     FilePipe,
     FileIconComponent
-],
+  ],
   templateUrl: './file-upload.component.html',
   styleUrl: './file-upload.component.css'
 })
@@ -24,13 +25,11 @@ export class FileUploadComponent {
   @Input() itemAlias: string = "check-list";
   decision: string = "";
   formData: any = {};
-
   uploader: FileUploader;
-
-  constructor(private toast: ToastService) { }
+  modalControl = inject(ModalControlService);
+  toast = inject(ToastService);
 
   ngOnInit() {
-
     this.uploader = new FileUploader({
       url: this.url,
       method: 'POST',
@@ -55,8 +54,10 @@ export class FileUploadComponent {
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       if (status == 201) {
         this.toast?.success("FileUpload: successfully");
+        this.modalControl.close();
         this.uploader.clearQueue();
       } else if (status == 500) {
+        this.modalControl.close();
         this.toast?.error("Failed upload file");
       } else {
         this.toast?.error("Failed upload");

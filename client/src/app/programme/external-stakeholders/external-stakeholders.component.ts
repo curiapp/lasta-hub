@@ -6,10 +6,11 @@ import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
 import { CurriculumDevPACConsultComponent } from "../../components/forms/external-curriculum-dev-pac-consult/curriculum-dev-pac-consult.component";
 import { PacConsultEndorseComponent } from "../../components/forms/external-pac-consult-endorse/pac-consult-endorse.component";
+import { ModalComponent } from "../../components/modal/modal.component";
 
 @Component({
   selector: 'client-external-stakeholders',
-  imports: [ActionButtonsComponent, CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent],
+  imports: [ActionButtonsComponent, CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent, ModalComponent],
   templateUrl: './external-stakeholders.component.html',
   styleUrl: './external-stakeholders.component.css'
 })
@@ -41,12 +42,7 @@ export class ExternalStakeholdersComponent {
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      // const id = params.get('id');
       this.code = params.get('id');
-      // this.client.getAll<Programme>(`programmes?devCode=${this.code}`).subscribe((data) => {
-      //   // console.log("Programs ", data);
-      //   this.programme = data[0];
-      // })
     });
   }
 

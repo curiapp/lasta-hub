@@ -7,10 +7,11 @@ import { NqaPreparationComponent } from "../../components/forms/nqf-preparation/
 import { PduRecommendComponent } from "../../components/forms/nqf-pdu-recommend/pdu-recommend.component";
 import { NQARegComponent } from "../../components/forms/nqa-reg/nqa-reg.component";
 import { NqaSubmitComponent } from "../../components/forms/nqa-submit/nqa-submit.component";
+import { ModalComponent } from "../../components/modal/modal.component";
 
 @Component({
   selector: 'client-nqf-registration',
-  imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent],
+  imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent],
   templateUrl: './nqf-registration.component.html',
   styleUrl: './nqf-registration.component.css'
 })

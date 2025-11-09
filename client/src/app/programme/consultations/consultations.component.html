@@ -1,12 +1,11 @@
 <div
   class="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
   <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
-    @for(step of steps; track step.title; let i= $index; ){
-    <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
-      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
-        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'">
-        {{i+1}} </span>
-      <span class="hidden sm:block"> {{step.title}} </span>
+    @for(step of steps;track step.id;let i= $index; ){
+    <li class="flex items-center gap-1 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
+      <span class="size-10 md:size-6 xl:size-8 rounded-full grid place-items-center text-xs lg:text-[14px]/6 font-bold"
+        [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'"> {{i+1}} </span>
+      <span class="hidden md:block md:text-xs"> {{step.title}} </span>
     </li>
     }
   </ol>
@@ -14,9 +13,9 @@
 
 @if(selectedStep==1){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Final Draft to BOS Submission</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="bos_submit.showModal()">
+  <div class="flex justify-between items-center gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">Final Draft to BOS Submission</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_submit.open()">
       BOS Submit
     </button>
   </div>
@@ -36,26 +35,16 @@
   </div>
 </div>
 
-<dialog id="bos_submit" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-
-    <final-draft [code]="code" />
-
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #bos_submit>
+  <final-draft [code]="code" />
+</modal>
 }
 
 @if(selectedStep==2){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Faculty BOS-Consultation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="bos_recommend.showModal()">
+  <div class="flex justify-between items-center gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">Faculty BOS-Consultation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -78,9 +67,9 @@
 
 
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Other Faculty BOS Consultation (Optional)</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="other_recommend.showModal()">
+  <div class="flex justify-between items-center gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">Other Faculty BOS Consultation (Optional)</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="other_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -102,36 +91,20 @@
   </div>
 </div>
 
-<dialog id="bos_recommend" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <consultation-faculty-bos-final [code]="code" />
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #bos_recommend>
+  <consultation-faculty-bos-final [code]="code" />
+</modal>
 
-<dialog id="other_recommend" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <consultations-other-faculty-bos [code]="code" />
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #other_recommend>
+  <consultations-other-faculty-bos [code]="code" />
+</modal>
 }
 
 @if(selectedStep==3){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Academic Planning Committee (APC) Recommedation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="apc_recommend.showModal()">
+  <div class="flex justify-between items-center gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">Academic Planning Committee (APC) Recommedation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -152,24 +125,16 @@
   </div>
 </div>
 
-<dialog id="apc_recommend" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <consultation-apc-recommend [code]="code"></consultation-apc-recommend>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #apc_recommend>
+  <consultation-apc-recommend [code]="code"></consultation-apc-recommend>
+</modal>
 }
 
 @if(selectedStep==4){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Senate Recommedation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="apc_recommend.showModal()">
+  <div class="flex justify-between items-center gap-2 flex-wrap">
+    <h2 class="text-xl md:text-2xl capitalize">Senate Recommedation</h2>
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -190,15 +155,7 @@
   </div>
 </div>
 
-<dialog id="apc_recommend" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <consultation-final-senate-recommend [code]="code"></consultation-final-senate-recommend>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #apc_recommend>
+  <consultation-final-senate-recommend [code]="code"></consultation-final-senate-recommend>
+</modal>
 }

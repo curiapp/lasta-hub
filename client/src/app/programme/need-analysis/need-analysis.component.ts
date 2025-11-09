@@ -14,6 +14,7 @@ import { Programme } from '../../types';
 import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";
 import { ClientService } from '../../services/client.service';
 import { NeedAnalysisEditProgramComponent } from "../../components/forms/need-analysis-edit-programme/need-analysis-edit-program.component";
+import { ModalComponent } from "../../components/modal/modal.component";
 
 
 @Component({
@@ -29,7 +30,8 @@ import { NeedAnalysisEditProgramComponent } from "../../components/forms/need-an
     SenateSubmitComponent,
     ApcComponent,
     SenateComponent,
-    NeedAnalysisEditProgramComponent
+    NeedAnalysisEditProgramComponent,
+    ModalComponent
 ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.css'

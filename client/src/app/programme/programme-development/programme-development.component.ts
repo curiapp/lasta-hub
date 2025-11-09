@@ -7,10 +7,11 @@ import { PacComponent } from "../../components/forms/pd-pac/pac.component";
 import { CurriculumDevDraftReviseComponent } from "../../components/forms/pd-curriculum-dev-draft-revise/curriculum-dev-draft-revise.component";
 import { CurriculumDevDraftPDUApprovComponent } from "../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component";
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
+import { ModalComponent } from "../../components/modal/modal.component";
 
 @Component({
   selector: 'client-programme-development',
-  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent],
+  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent, ModalComponent],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.css'
 })

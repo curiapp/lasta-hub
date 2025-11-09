@@ -4,9 +4,8 @@
     <div class="form-control">
       <label for="date" class="label label-text font-bold">BOS Date</label>
       <div class="input-group">
-        <input id="date" type="date" class="input w-full input-bordered" required
-          [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD"
-          #cdate="ngModel" />
+        <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.consultationDate"
+          ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -24,10 +23,10 @@
     <div class="form-control">
       <label class="label label-text font-bold">Recommended to: </label>
       <fieldset>
-          <label class="flex gap-2 items-center">
-            <input class="radio" type="radio" name="recommend" [(ngModel)]="model.recommend"
-              value="recommend-apc" required #recommend="ngModel"> APC &nbsp;
-          </label>
+        <label class="flex gap-2 items-center">
+          <input class="radio radio-xs" type="radio" name="recommend" [(ngModel)]="model.recommend"
+            value="recommend-apc" required #recommend="ngModel"> APC &nbsp;
+        </label>
       </fieldset>
       @if (recommend.invalid && recommend.touched) {
       <div class="label label-text-alt text-error">Recommendations status is needed</div>
@@ -38,12 +37,18 @@
       <label class="label label-text font-bold">Defer to: </label>
       <fieldset>
         <div class="flex gap-4">
-          <label class="flex items-center gap-2"> <input class="radio" type="radio" name="status" [(ngModel)]="model.status"
-              value="recommend-bosec" required #status="ngModel"> BOSEC &nbsp;</label>
-          <label class="flex items-center gap-2"> <input class="radio" type="radio" name="status" [(ngModel)]="model.status" value="resubmit" required
-              #status="ngModel"> BOS &nbsp;</label>
-          <label class="flex items-center gap-2"> <input class="radio" type="radio" name="status" [(ngModel)]="model.status" value="defer" required
-              #status="ngModel"> Other Faculty BOS </label>
+          <label class="flex items-center gap-2">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="recommend-bosec"
+              required #status="ngModel"> BOSEC &nbsp;
+          </label>
+          <label class="flex items-center gap-2">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="resubmit"
+              required #status="ngModel"> BOS &nbsp;
+          </label>
+          <label class="flex items-center gap-2">
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="defer" required
+              #status="ngModel"> Other Faculty BOS
+          </label>
         </div>
       </fieldset>
       @if(status.invalid && status.touched) {
@@ -54,12 +59,11 @@
     <!-- end -->
     <div class="form-control">
       <!-- <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()">Clear</button> -->
-      <button type="submit" class="btn btn-primary" (click)="onUpload()"
+      <button type="submit" class="btn btn-sm btn-primary" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !bosForm.form.valid">
         Submit
         <span class="material-symbols-rounded">cloud_upload</span>
       </button>
-      <!-- <button type="submit" class="btn btn-danger" (click)="backClicked()">Close &nbsp; <i class="fa fa-times"></i></button> -->
     </div>
   </form>
 </div>

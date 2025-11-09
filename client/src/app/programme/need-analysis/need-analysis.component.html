@@ -2,10 +2,10 @@
   class="relative after:absolute after:inset-x-0 after:top-1/2 after:block after:h-0.5 after:-translate-y-1/2 after:rounded-lg after:bg-gray-100">
   <ol class="relative z-10 flex justify-between text-sm font-medium text-gray-500">
     @for(step of steps;track step.id;let i= $index; ){
-    <li class="flex items-center gap-2 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
-      <span class="size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
+    <li class="flex items-center gap-1 p-2 cursor-pointer" (click)="onSelectStep(step.id)">
+      <span class="size-10 md:size-6 xl:size-8 rounded-full grid place-items-center text-[14px]/6 font-bold"
         [class]="selectedStep==step.id?'bg-primary text-white':'bg-gray-100'"> {{i+1}} </span>
-      <span class="hidden sm:block"> {{step.title}} </span>
+      <span class="hidden md:block md:text-xs"> {{step.title}} </span>
     </li>
     }
   </ol>
@@ -15,8 +15,8 @@
 @if(selectedStep ===1){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl">Programme Details</h2>
-    <button class="btn btn-sm btn-secondary text-primary" onclick="edit_program.showModal()">
+    <h2 class="text-xl md:text-2xl">Programme Details</h2>
+    <button class="btn btn-sm btn-secondary text-primary" (click)="edit_program.open()">
       <span class="material-symbols-rounded text-[20px]">
         edit
       </span>
@@ -45,24 +45,16 @@
   </div>
 </div>
 
-<dialog id="edit_program" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <h3 class="text-2xl">Edit Programme </h3>
-    @if (programme) {<need-analysis-edit-program [programme]="programme" />}
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #edit_program>
+  <h3 class="text-2xl">Edit Programme </h3>
+  @if (programme) {<need-analysis-edit-program [programme]="programme" />}
+</modal>
 }
 
 @if(selectedStep ===2){
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
-    <h2 class="text-2xl">Stakeholders' Consultation</h2>
+    <h2 class="text-xl md:text-2xl">Stakeholders' Consultation</h2>
     <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="markComplete()">
       Mark Complete
     </button>
@@ -70,10 +62,10 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Stakeholders</h2>
-    <!-- <button class="btn btn-sm font-normal btn-secondary text-primary" onclick="add_stakeholder_modal.showModal()">
+    <!-- <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="add_stakeholder_modal.open()">
       Add
     </button> -->
-    <button onclick="need_analysis_consult.showModal()" class="btn btn-sm font-normal btn-secondary text-primary">
+    <button (click)="need_analysis_consult.open()" class="btn btn-sm font-normal btn-secondary text-primary">
       Add
     </button>
   </div>
@@ -85,9 +77,7 @@
         <span class="text-base">{{stake.name}}</span>
         <span class="text-xs text-gray-500">{{stake.email}}</span>
       </div>
-
       <action-buttons></action-buttons>
-
     </div>
     }@empty {
     <p class="text-sm text-primary">No Stakeholders</p>
@@ -96,7 +86,7 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Consultations</h2>
-    <!-- <button onclick="need_analysis_consult.showModal()" class="btn btn-sm font-normal btn-secondary text-primary">
+    <!-- <button (click)="need_analysis_consult.open()" class="btn btn-sm font-normal btn-secondary text-primary">
       Add
     </button> -->
   </div>
@@ -124,7 +114,7 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Survey/Questionnaire</h2>
-    <button onclick="end_consult.showModal()" class="btn btn-sm font-normal btn-secondary text-primary">
+    <button (click)="end_consult.open()" class="btn btn-sm font-normal btn-secondary text-primary">
       Add
     </button>
   </div>
@@ -138,7 +128,6 @@
       </div>
 
       <action-buttons></action-buttons>
-
     </div>
     }@empty {
     <p class="text-sm text-primary">No Submission</p>
@@ -148,131 +137,58 @@
 
 </div>
 <!-- Add Stakeholder -->
-<dialog id="add_stakeholder_modal" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <div class="space-y-4">
-      <h2 class="text-2xl">Add Stakeholders</h2>
-      <form (ngSubmit)="addStakeholder()" #stakeholderForm="ngForm" class="space-y-3">
-        <div class="form-control">
-          <div class="label">
-            <span class="label-text">Name</span>
-          </div>
-          <input required class="input input-bordered" type="text" placeholder="name" [(ngModel)]="stakeholder.name"
-            name="name" #stakename="ngModel">
-        </div>
-        <div class="form-control">
-          <div class="label">
-            <span class="label-text">Email</span>
-          </div>
-          <input required class="input input-bordered" type="email" placeholder="email" [(ngModel)]="stakeholder.email"
-            name="email" #stakeEmail="ngModel" />
-        </div>
-        <div class="form-control gap-2">
-          <button type="submit" onclick="add_stakeholder_modal.close()" [disabled]="stakeholderForm.invalid"
-            class="btn btn-primary">Add</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
-
-<!-- Need analysis Consult  -->
-<dialog id="need_analysis_consult" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <need-analysis-consult [code]="programme?.preProgComponent.devCode"></need-analysis-consult>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
-
-<!--End  Consult  -->
-<dialog id="end_consult" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
-
-
-
-<!-- Edit Stakeholder Modal -->
-<!-- <dialog id="stakeholder_modal" class="modal">
-  <div class="modal-box">
-    <h3 class="text-2xl">Edit Programme </h3>
-
-    <form (ngSubmit)="updateProgramme()" #startForm="ngForm" class="space-y-3">
+<modal #add_stakeholder_modal>
+  <div class="space-y-4">
+    <h2 class="text-xl md:text-2xl capitalize">Add Stakeholders</h2>
+    <form (ngSubmit)="addStakeholder()" #stakeholderForm="ngForm" class="space-y-3">
       <div class="form-control">
         <div class="label">
           <span class="label-text">Name</span>
         </div>
-        <input id="name" type="text" class="input input-bordered" required [(ngModel)]="stakeholder.name" name="name"
-          #name="ngModel">
-        @if (name.invalid) {
-        <div class="label">
-          <span class="label-text">
-            name is required
-          </span>
-        </div>
-        }
+        <input required class="input input-bordered" type="text" placeholder="name" [(ngModel)]="stakeholder.name"
+          name="name" #stakename="ngModel">
       </div>
-
       <div class="form-control">
         <div class="label">
-          <span class="label-text">Proposed Programme Code</span>
+          <span class="label-text">Email</span>
         </div>
-        <input id="email" type="email" class="input input-bordered" required [(ngModel)]="stakeholder.email"
-          name="email" #email="ngModel">
-        @if (email.invalid) {
-        <div class="label">
-          <span class="label-text">
-            email is required
-          </span>
-        </div>
-        }
+        <input required class="input input-bordered" type="email" placeholder="email" [(ngModel)]="stakeholder.email"
+          name="email" #stakeEmail="ngModel" />
       </div>
-
       <div class="form-control gap-2">
-        <button type="submit" class="btn btn-primary " [disabled]="!startForm.form.valid">Add</button>
+        <button type="submit" (click)="add_stakeholder_modal.close()" [disabled]="stakeholderForm.invalid"
+          class="btn btn-primary">Add</button>
       </div>
     </form>
-
   </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog> -->
+</modal>
+
+<!-- Need analysis Consult  -->
+<modal #need_analysis_consult>
+  <need-analysis-consult [code]="programme?.preProgComponent.devCode"></need-analysis-consult>
+</modal>
+
+<!--End  Consult  -->
+<modal #end_consult>
+  <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
+</modal>
 
 }
 
 @if(selectedStep ===3){
 <div class="space-y-4 my-6">
-  <div class="flex justify-between">
-    <h2 class="text-2xl">PDQA Recommendation </h2>
+  <div class="flex flex-wrap gap-2 justify-between">
+    <h2 class="text-xl md:text-2xl capitalize">PDQA Recommendation</h2>
     <div class="join">
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="PDQA_recommend.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="pdqa_recommend.open()">
         PDQA Decision
       </button>
 
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="end_consult.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="end_consult.open()">
         Resubmit
       </button>
 
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="bos_submit.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="bos_submit.open()">
         Submit to BOS
       </button>
 
@@ -294,54 +210,30 @@
 
 </div>
 
-<dialog id="PDQA_recommend" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <need-analysis-conclude [code]="programme?.preProgComponent.devCode"></need-analysis-conclude>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
 
-<dialog id="end_consult" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #pdqa_recommend>
+  <need-analysis-conclude [code]="programme?.preProgComponent.devCode"></need-analysis-conclude>
+</modal>
 
-<dialog id="bos_submit" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <bos-submit [programmeCode]="programme?.preProgComponent.devCode"></bos-submit>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #end_consult>
+  <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
+</modal>
+
+<modal #bos_submit>
+  <bos-submit [programmeCode]="programme?.preProgComponent.devCode"></bos-submit>
+</modal>
 }
 
 
 @if(selectedStep ===4){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">BOS Consultation</h2>
+    <h2 class="text-xl md:text-2xl capitalize">BOS Consultation</h2>
     <div class="join">
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="bos_ammendments.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="bos_ammendments.open()">
         Amendments
       </button>
-
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="apc_start.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="apc_start.open()">
         Start APC
       </button>
     </div>
@@ -363,39 +255,23 @@
   </div>
 </div>
 
-<!-- Dialogs -->
-<dialog id="bos_ammendments" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <bos-amendment [code]="programme?.preProgComponent.devCode"></bos-amendment>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<!-- modals -->
+<modal #bos_ammendments>
+  <bos-amendment [code]="programme?.preProgComponent.devCode"></bos-amendment>
+</modal>
 
-<dialog id="apc_start" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <senate-submit [code]="programme?.preProgComponent.devCode"></senate-submit>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #apc_start>
+  <senate-submit [code]="programme?.preProgComponent.devCode"></senate-submit>
+</modal>
 }
 
 
 @if(selectedStep ===5){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">APC Recommendation</h2>
+    <h2 class="text-xl md:text-2xl capitalize">APC Recommendation</h2>
     <div class="join">
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="apc_submit.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="apc_submit.open()">
         Recommendation
       </button>
     </div>
@@ -418,26 +294,18 @@
 
 </div>
 
-<dialog id="apc_submit" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <apc-recommend [code]="programme?.preProgComponent.devCode"></apc-recommend>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #apc_submit>
+  <apc-recommend [code]="programme?.preProgComponent.devCode"></apc-recommend>
+</modal>
 }
 
 @if(selectedStep ===6){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
-    <h2 class="text-2xl capitalize">Senate Approval</h2>
+    <h2 class="text-xl md:text-2xl capitalize">Senate Approval</h2>
 
     <div class="join">
-      <button class="btn btn-sm join-item btn-secondary text-primary" onclick="senate_submit.showModal()">
+      <button class="btn btn-sm join-item btn-secondary text-primary" (click)="senate_submit.open()">
         Recommendation
       </button>
     </div>
@@ -459,15 +327,7 @@
   </div>
 </div>
 
-<dialog id="senate_submit" class="modal">
-  <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <senate-recommend [code]="programme?.preProgComponent.devCode"></senate-recommend>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<modal #senate_submit>
+  <senate-recommend [code]="programme?.preProgComponent.devCode"></senate-recommend>
+</modal>
 }

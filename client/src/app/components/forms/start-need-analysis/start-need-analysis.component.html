@@ -1,0 +1,45 @@
+<div class="h-full">
+  <h3 class="text-2xl">Create A New Programme </h3>
+  <form (ngSubmit)="onSubmit(startForm)" #startForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Proposed Programme Name</legend>
+      <input id="programmeName" type="text" class="input input-bordered" required [(ngModel)]="programme.name"
+        name="ProgrammeName" #pron="ngModel">
+      @if (pron.invalid && pron.touched) {
+      <span class="label">
+        Programme title is required
+      </span>
+      }
+    </fieldset>
+
+    <div class="fieldset">
+      <legend class="fieldset-legend">Proposed Programme Code</legend>
+      <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programme.code"
+        name="devCode" #code="ngModel">
+      @if (code.invalid && pron.touched) {
+      <div class="label">
+        Proposed programme code is required
+      </div>
+      }
+    </div>
+
+    <div class="fieldset">
+      <legend class="fieldset-legend">NQF Level</legend>
+      <select class="select select-bordered w-full" title="Select level" required [(ngModel)]="programme.level"
+        name="level" #level="ngModel">
+        <option disabled>Select NQF Level</option>
+        @for (singleLevel of levels;track singleLevel){
+        <option [value]="singleLevel">{{singleLevel}}</option>
+        }
+      </select>
+      @if (level.invalid) {
+      <div class="label">
+        NQF Level required!
+      </div>
+      }
+    </div>
+    <div class="form-control gap-2">
+      <button type="submit" class="btn btn-primary w-full" [disabled]="!startForm.form.valid">Submit</button>
+    </div>
+  </form>
+</div>

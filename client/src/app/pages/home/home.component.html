@@ -1,13 +1,12 @@
 @if(!currentUser){
-<div class="carousel w-full">
+<!-- <div class="carousel hero w-full">
   <div id="slide1" class="carousel-item relative w-full">
     <video class="video-fluid w-full h-full" autoplay loop>
       <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
     </video>
 
-    <!--Caption-->
     <div
-      class="carousel-caption text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
+      class="text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
       <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
         <h3 class="text-3xl font-bold"> Welcome to Programme Development Application</h3>
         <p class="text-center font-thin">
@@ -29,7 +28,7 @@
     </div>
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-      <a href="#slide2" class="btn btn-circle">❮</a>
+      <a href="#slide1" class="btn btn-circle">❮</a>
       <a href="#slide2" class="btn btn-circle">❯</a>
     </div>
   </div>
@@ -38,8 +37,6 @@
     <video class="video-fluid w-full h-full border" autoplay loop>
       <source src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4" />
     </video>
-
-    <!--Caption-->
     <div
       class="carousel-caption text-white absolute inset-0 m-auto flex-center z-20 container w-full h-full grid place-items-center">
       <div class="animate flex flex-col justify-center items-center max-w-2xl mx-auto gap-4">
@@ -58,28 +55,28 @@
 
     <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
       <a href="#slide1" class="btn btn-circle">❮</a>
-      <a href="#slide1" class="btn btn-circle">❯</a>
+      <a href="#slide2" class="btn btn-circle">❯</a>
     </div>
   </div>
+</div> -->
 
+<div class="hero bg-base-200 min-h-screen">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">Hello there</h1>
+      <p class="py-6">
+        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+        quasi. In deleniti eaque aut repudiandae et a id nisi.
+      </p>
+      <button class="btn btn-primary">Get Started</button>
+    </div>
+  </div>
 </div>
+
 }
-
-<!-- <video class="video-fluid" autoplay loop>
-  <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
-</video>
-
-<video class="video-fluid" autoplay loop>
-  <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
-</video> -->
 
 @if (!currentUser){
 <div class="my-4 py-10 container mx-auto flex justify-center">
-
-  <!-- <div class="col-md-4 bg-muted">
-          <course-due-for-review></course-due-for-review>
-        </div> -->
-
   <div class="space-y-4 w-full md:w-96">
     <article class="rounded-lg border border-gray-100 bg-white p-6">
       <div class="flex items-center justify-between">
@@ -129,17 +126,16 @@
 
     </article>
   </div>
-
-  <!-- <div class="col-md-4">
-    <course-in-progress></course-in-progress>
-  </div>
-
-  <div class="col-md-4">
-    <course-recently-approved></course-recently-approved>
-  </div> -->
-
 </div>
 }
+
+<!-- <video class="video-fluid" autoplay loop>
+  <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
+</video>
+
+<video class="video-fluid" autoplay loop>
+  <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
+</video> -->
 
 @if(currentUser){
 <div class="p-4 bg-primary space-y-3 text-base-100">
@@ -148,7 +144,7 @@
 
   <h2 class="text-3xl font-bold capitalize">{{currentUser?.firstname}} {{currentUser?.lastname}}</h2>
 
-  <div class="space-y-1">
+  <div class="space-y-1 hidden md:block">
     <span class="text-xs">Overview</span>
     <div class="flex gap-6">
 
@@ -163,7 +159,6 @@
           <span class="text-lg capitalize">{{currentUser?.usrUnit?.faculty}}</span>
         </div>
       </div>
-
 
       <div class="flex items-center gap-3">
         <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
@@ -192,6 +187,38 @@
     </div>
   </div>
 
+  <div class="hidden md:hidden">
+    <span class="text-xs">Overview</span>
+    <div class="flex gap-2 flex-wrap">
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            account_balance
+          </span>
+        </div>
+        <span>Faculty: {{currentUser?.usrUnit?.faculty}}</span>
+      </div>
+
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            lan
+          </span>
+        </div>
+        <span>Department: {{currentUser?.usrUnit?.department}}</span>
+      </div>
+
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            school
+          </span>
+        </div>
+        <span>Programmes: {{programmes?.length}}</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="p-4 flex items-start gap-8">
@@ -217,9 +244,12 @@
           {{showAll?"Minimize":"View All"}}
         </button>
         <!-- @if(user==='LECTURER'){ -->
-        <button class="btn btn-sm btn-primary" routerLink="/StartNeedAnalysis">Create Programme</button>
+        <button class="btn btn-sm btn-primary" (click)="create_programme.open()">Create Programme</button>
         <!-- } -->
       </div>
+      <modal #create_programme>
+        <start-need-analysis></start-need-analysis>
+      </modal>
     </div>
 
     @if(_loading.isLoading()){
@@ -257,36 +287,6 @@
               <span class="text-xs"><b>Faculty:</b> {{item.faculty}}</span>
             </div>
           </a>
-
-          <!-- <div class="absolute p-4 opacity-0 transition-opacity group-hover:relative group-hover:opacity-100">
-                <h3 class="mt-4 text-lg font-medium sm:text-xl capitalize">{{item.programme}}</h3>
-
-                <p class="mt-4 text-xs sm:text-sm line-clamp-2">
-                  {{item.description}}
-                </p>
-
-                <div class="avatar-group -space-x-6 transition-all hover:space-x-1 rtl:space-x-reverse">
-
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-neutral-content w-8">
-                      <span>UP</span>
-                    </div>
-                  </div>
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-neutral-content w-8">
-                      <span>MS</span>
-                    </div>
-                  </div>
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-neutral-content w-8">
-                      <span>+2</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                <p class="mt-8 font-bold">Read more</p>
-              </div> -->
         </div>
       </div>
       } @empty {
