@@ -19,6 +19,7 @@ import {
   startSchema,
 } from "@/validators/need-analysis";
 import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
+import { saveFile } from "@/helpers/save-file";
 
 export default async (app: Express, upload: Multer) => {
   app.post("/need-analysis/start", async (req, res) => {
@@ -69,7 +70,14 @@ export default async (app: Express, upload: Multer) => {
       }
 
       //save files and get url
-      
+      const questionaireFiles: string[] = [];
+      if (req.files && Array.isArray(req.files)) {
+        for (const file of req.files) {
+          const fileUrl = saveFile(file as Express.Multer.File, "need-analysis");
+          questionaireFiles.push(fileUrl);
+        }
+      }
+
       const [naPhaseStep] = await db
         .select({ id: phaseSteps.id })
         .from(phaseSteps)
@@ -100,7 +108,7 @@ export default async (app: Express, upload: Multer) => {
         extraData: JSON.stringify({
           //save file url from each organization
           organizations: value.organizations,
-          questionaires: [],
+          questionaires: questionaireFiles,
           startDate: value.startDate,
           endDate: value.endDate,
         }),
@@ -129,6 +137,7 @@ export default async (app: Express, upload: Multer) => {
     }
 
     //save submitted file
+    const fileUrl = saveFile(req.file as Express.Multer.File, "need-analysis");
 
     const [record] = await db
       .select({
@@ -153,7 +162,7 @@ export default async (app: Express, upload: Multer) => {
       : {};
       
     const existingQuestions = extraData.surveyQuestions || [];
-    // extraData.surveyQuestions = [...existingQuestions, ...newQuestions];
+    extraData.surveyQuestions = [...existingQuestions, ...fileUrl];
 
     await db
       .update(programmePhaseSteps)

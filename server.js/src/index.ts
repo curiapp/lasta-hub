@@ -7,6 +7,7 @@ import needAnalysisRoutes from "./routes/need-analysis";
 import graphqlRoutes from "./routes/graphql";
 import { v7 as uuid } from "uuid";
 import fs from "fs";
+import { saveFile } from "./helpers/save-file";
 
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
