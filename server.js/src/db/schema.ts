@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, check, uuid, varchar, smallint, text, jsonb, timestamp, unique, time, boolean } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, check, uuid, varchar, smallint, text, jsonb, timestamp, unique, boolean, bigint } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -38,8 +38,8 @@ export const users = pgTable("users", {
 	email: text().notNull(),
 	displayName: text("display_name").notNull(),
 	role: text().notNull(),
-	createdAt: time("created_at", { withTimezone: true }).defaultNow().notNull(),
-	updatedAt: time("updated_at", { withTimezone: true }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }),
 }, (table) => [
 	unique("users_ad_user_id_key").on(table.adUserId),
 	unique("users_email_key").on(table.email),
@@ -47,26 +47,7 @@ export const users = pgTable("users", {
 	check("users_email_not_null", sql`NOT NULL email`),
 	check("users_display_name_not_null", sql`NOT NULL display_name`),
 	check("users_role_not_null", sql`NOT NULL role`),
-	check("users_created_at_not_null", sql`NOT NULL created_at`),
-]);
-
-export const phaseSteps = pgTable("phase_steps", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	name: varchar({ length: 50 }).notNull(),
-	description: varchar({ length: 150 }),
-	orderIndex: smallint("order_index").notNull(),
-	phaseId: uuid("phase_id").notNull(),
-}, (table) => [
-	foreignKey({
-			columns: [table.phaseId],
-			foreignColumns: [phases.id],
-			name: "phase_steps_phase_id_fkey"
-		}),
-	unique("phase_steps_order_index_phase_id_key").on(table.phaseId, table.orderIndex),
-	check("phases_id_not_null", sql`NOT NULL id`),
-	check("phases_name_not_null", sql`NOT NULL name`),
-	check("phase_steps_order_index_not_null", sql`NOT NULL order_index`),
-	check("phase_steps_phase_id_not_null", sql`NOT NULL phase_id`),
+	check("users_created_at_not_null1", sql`NOT NULL created_at`),
 ]);
 
 export const programmePhaseSteps = pgTable("programme_phase_steps", {
@@ -92,6 +73,27 @@ export const programmePhaseSteps = pgTable("programme_phase_steps", {
 		}).onDelete("cascade"),
 	unique("program_phase_steps_program_phase_id_phase_step_id_key").on(table.programmePhaseId, table.phaseStepId),
 	check("program_phase_steps_id_not_null", sql`NOT NULL id`),
+]);
+
+export const phaseSteps = pgTable("phase_steps", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	name: varchar({ length: 50 }).notNull(),
+	description: varchar({ length: 150 }),
+	orderIndex: smallint("order_index").notNull(),
+	phaseId: uuid("phase_id").notNull(),
+	slug: text(),
+}, (table) => [
+	foreignKey({
+			columns: [table.phaseId],
+			foreignColumns: [phases.id],
+			name: "phase_steps_phase_id_fkey"
+		}),
+	unique("phase_steps_order_index_phase_id_key").on(table.phaseId, table.orderIndex),
+	unique("phase_steps_slug_unique").on(table.slug),
+	check("phases_id_not_null", sql`NOT NULL id`),
+	check("phases_name_not_null", sql`NOT NULL name`),
+	check("phase_steps_order_index_not_null", sql`NOT NULL order_index`),
+	check("phase_steps_phase_id_not_null", sql`NOT NULL phase_id`),
 ]);
 
 export const events = pgTable("events", {
@@ -134,8 +136,36 @@ export const phases = pgTable("phases", {
 	name: varchar({ length: 50 }).notNull(),
 	orderIndex: smallint("order_index").notNull(),
 	description: varchar({ length: 150 }),
+	slug: text(),
 }, (table) => [
+	unique("phases_slug_unique").on(table.slug),
 	check("phases_id_not_null1", sql`NOT NULL id`),
 	check("phases_name_not_null1", sql`NOT NULL name`),
 	check("phases_order_index_not_null", sql`NOT NULL order_index`),
+]);
+
+export const attachments = pgTable("attachments", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	programmePhaseStepId: uuid("programme_phase_step_id").notNull(),
+	path: text().notNull(),
+	uploadedBy: uuid("uploaded_by"),
+	uploadedAt: timestamp("uploaded_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	mimeType: text("mime_type"),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	size: bigint({ mode: "number" }),
+}, (table) => [
+	foreignKey({
+			columns: [table.programmePhaseStepId],
+			foreignColumns: [programmePhaseSteps.id],
+			name: "attachments_programme_phase_step_id_fkey"
+		}),
+	foreignKey({
+			columns: [table.uploadedBy],
+			foreignColumns: [users.id],
+			name: "attachments_uploaded_by_fkey"
+		}),
+	check("attachments_id_not_null", sql`NOT NULL id`),
+	check("attachments_programme_phase_step_id_not_null", sql`NOT NULL programme_phase_step_id`),
+	check("attachments_file_url_not_null", sql`NOT NULL path`),
+	check("attachments_uploaded_at_not_null", sql`NOT NULL uploaded_at`),
 ]);
