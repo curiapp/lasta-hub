@@ -4,7 +4,8 @@
   "description": "PDQA Server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "dev": "yarn tsx watch ./src/index.ts",
     "start": "node index.js"
   },
@@ -26,10 +27,20 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^2.0.0",
+    "@types/node": "^24.10.1",
     "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
     "drizzle-kit": "^0.31.5",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
-    "tsx": "^4.20.6"
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.9"
   }
 }

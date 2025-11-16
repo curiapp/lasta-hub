@@ -8,7 +8,7 @@ const startSchema = Joi.object({
   level: Joi.number().integer().min(5).max(9).required(),
   faculty: Joi.string().required(),
   department: Joi.string().required(),
-});
+}).required();
 
 const consultSchema = Joi.object({
   programmeId: Joi.string().required(),

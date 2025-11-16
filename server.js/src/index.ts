@@ -7,7 +7,6 @@ import needAnalysisRoutes from "./routes/need-analysis";
 import graphqlRoutes from "./routes/graphql";
 import { v7 as uuid } from "uuid";
 import fs from "fs";
-import { saveFile } from "./helpers/save-file";
 
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
@@ -25,6 +24,8 @@ const upload = multer({
 });
 
 const app = express();
+app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
 
 needAnalysisRoutes(app, upload);
@@ -48,3 +49,5 @@ app.use((err, _, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+export { app };

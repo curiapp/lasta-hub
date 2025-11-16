@@ -13,6 +13,8 @@ import {
 } from "@/validators/need-analysis";
 import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
 import { saveFile } from "@/helpers/save-file";
+import { isDbKnownError } from "@/helpers/db-errors";
+import { sql } from "drizzle-orm";
 
 const PHASE = "needs-analysis";
 
@@ -26,10 +28,8 @@ export default async (app: Express, upload: Multer) => {
         try {
             // Save data in db
             const [programmeRecord] = await db.insert(programmes).values(value).returning({ id: programmes.id });
-
             const programmeId = programmeRecord.id;
-
-            await db.execute(`SELECT fn_get_or_create_step(${programmeId}, ${"programme-resume"})`);
+            await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"programme-resume"})`);
 
             res.send({ message: "Need analysis started" });
         } catch (err) {
@@ -57,10 +57,10 @@ export default async (app: Express, upload: Multer) => {
             const programmeId = value.programmeId;
 
             const result = await db.execute(
-                `SELECT fn_get_or_create_step(${programmeId}, ${"stakeholders-consultation"})`
+                sql`SELECT fn_get_or_create_step(${programmeId}, ${"stakeholders-consultation"})`
             );
 
-            const ppsId = (result.rows[0] as any).pps_id as string;
+            const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             // then save files referencing ppsId
             const attachmentIds: string[] = [];
@@ -73,13 +73,13 @@ export default async (app: Express, upload: Multer) => {
 
             const stepData = {
                 organizations: value.organizations,
-                questionaires: attachmentIds,
+                questionnaires: attachmentIds,
                 startDate: value.startDate,
                 endDate: value.endDate,
             };
 
             await db.execute(
-                `SELECT fn_update_step_data(${programmeId}, ${"stakeholders-consultation"}, ${JSON.stringify(
+                sql`SELECT fn_update_step_data(${programmeId}, ${"stakeholders-consultation"}, ${JSON.stringify(
                     stepData
                 )}::jsonb)`
             );
@@ -119,7 +119,7 @@ export default async (app: Express, upload: Multer) => {
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
             await db.execute(
-                `SELECT fn_step_array_append('${programmeId}', 'stakeholders-consultation', 'surveyQuestions', '"${attachmentId}"'::jsonb)`
+                sql`SELECT fn_step_array_append('${programmeId}', 'stakeholders-consultation', 'surveyQuestions', '"${attachmentId}"'::jsonb)`
             );
 
             return res.send({ message: "Survey questions saved successfully" });
@@ -145,7 +145,7 @@ export default async (app: Express, upload: Multer) => {
 
         try {
             const programmeId = value.programmeId;
-            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'pqda-recommendation')`);
+            const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'pqda-recommendation')`);
 
             const ppsId = (result.rows[0] as any).pps_id as string;
 
@@ -155,7 +155,7 @@ export default async (app: Express, upload: Multer) => {
             if (attachmentId) stepData.recommendationDoc = attachmentId;
 
             await db.execute(
-                `SELECT fn_update_step_data(
+                sql`SELECT fn_update_step_data(
                 '${programmeId}',
                 'pqda-recommendation',
                 '${JSON.stringify(stepData)}'::jsonb
@@ -188,10 +188,10 @@ export default async (app: Express, upload: Multer) => {
         const { programmeId, date } = value;
 
         try {
-            await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
+            await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
 
             await db.execute(
-                `SELECT fn_update_step_data(
+                sql`SELECT fn_update_step_data(
                   '${programmeId}',
                   'bos-consultation',
                   '{"startDate": "${date}"}'::jsonb
@@ -222,7 +222,7 @@ export default async (app: Express, upload: Multer) => {
         const { programmeId, date, status } = value;
 
         try {
-            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
+            const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
             const ppsId = (result.rows[0] as any).pps_id as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
@@ -234,7 +234,7 @@ export default async (app: Express, upload: Multer) => {
             };
 
             await db.execute(
-                `SELECT fn_update_step_data(
+                sql`SELECT fn_update_step_data(
                 '${programmeId}',
                 'bos-consultation',
                 '${JSON.stringify(json)}'::jsonb
@@ -265,14 +265,14 @@ export default async (app: Express, upload: Multer) => {
         const { programmeId, date } = value;
 
         try {
-            await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
+            await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
 
             const stepData = {
                 recommendationDate: date,
             };
 
             await db.execute(
-                `SELECT fn_update_step_data(
+                sql`SELECT fn_update_step_data(
                 '${programmeId}',
                 'apc-recommendation',
                 '${JSON.stringify(stepData)}'::jsonb
@@ -302,7 +302,7 @@ export default async (app: Express, upload: Multer) => {
 
         const { programmeId, date, status } = value;
         try {
-            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
+            const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
             const ppsId = (result.rows[0] as any).pps_id as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
@@ -314,7 +314,7 @@ export default async (app: Express, upload: Multer) => {
             };
 
             await db.execute(
-                `SELECT fn_update_step_data(
+                sql`SELECT fn_update_step_data(
                   '${programmeId}',
                   'apc-recommendation',
                   '${JSON.stringify(stepData)}'::jsonb
@@ -345,7 +345,7 @@ export default async (app: Express, upload: Multer) => {
         const { programmeId, date, status } = value;
 
         try {
-            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'senate-approval')`);
+            const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'senate-approval')`);
             const ppsId = (result.rows[0] as any).pps_id as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
@@ -357,7 +357,7 @@ export default async (app: Express, upload: Multer) => {
             };
 
             await db.execute(
-                `SELECT fn_update_step_data(
+                sql`SELECT fn_update_step_data(
                 '${programmeId}',
                 'senate-approval',
                 '${JSON.stringify(stepData)}'::jsonb
