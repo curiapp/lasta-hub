@@ -1,8 +1,7 @@
 import { Express } from "express";
-import { and, eq, or } from "drizzle-orm";
 import { Multer } from "multer";
 
-import { programmes, phaseSteps, programmePhases, phases, programmePhaseSteps } from "@/db/schema";
+import { programmes } from "@/db/schema";
 import { db } from "@/db/index";
 import {
     apcRecommendSchema,
@@ -15,7 +14,7 @@ import {
 import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
 import { saveFile } from "@/helpers/save-file";
 
-const STEP = 'needs-analysis';
+const PHASE = "needs-analysis";
 
 export default async (app: Express, upload: Multer) => {
     app.post("/need-analysis/start", async (req, res) => {
@@ -67,7 +66,7 @@ export default async (app: Express, upload: Multer) => {
             const attachmentIds: string[] = [];
             if (req.files && Array.isArray(req.files)) {
                 for (const file of req.files) {
-                    const attId = await saveFile(file as Express.Multer.File, STEP, ppsId);
+                    const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
                     attachmentIds.push(attId);
                 }
             }
@@ -112,13 +111,15 @@ export default async (app: Express, upload: Multer) => {
         }
 
         try {
-            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', ${STEP})`);
+            const result = await db.execute(
+                `SELECT fn_get_or_create_step('${programmeId}', ${"stakeholders-consultation"})`
+            );
             const ppsId = (result.rows[0] as any).pps_id as string;
 
-            const attachmentId = await saveFile(req.file as Express.Multer.File, STEP, ppsId);
+            const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
             await db.execute(
-                `SELECT fn_step_array_append('${programmeId}', 'survey', 'surveyQuestions', '"${attachmentId}"'::jsonb)`
+                `SELECT fn_step_array_append('${programmeId}', 'stakeholders-consultation', 'surveyQuestions', '"${attachmentId}"'::jsonb)`
             );
 
             return res.send({ message: "Survey questions saved successfully" });
@@ -129,7 +130,7 @@ export default async (app: Express, upload: Multer) => {
         }
     });
 
-    app.post("/need-analysis/conclude", upload.single("file"), (req, res) => {
+    app.post("/need-analysis/conclude", upload.single("file"), async (req, res) => {
         const { error, value } = concludeSchema.validate(
             {
                 ...req.body,
@@ -142,10 +143,36 @@ export default async (app: Express, upload: Multer) => {
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
-        return res.send("Conclude step - Not implemented");
+        try {
+            const programmeId = value.programmeId;
+            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'pqda-recommendation')`);
+
+            const ppsId = (result.rows[0] as any).pps_id as string;
+
+            const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
+
+            const stepData: Record<string, any> = { decision: value.decision };
+            if (attachmentId) stepData.recommendationDoc = attachmentId;
+
+            await db.execute(
+                `SELECT fn_update_step_data(
+                '${programmeId}',
+                'pqda-recommendation',
+                '${JSON.stringify(stepData)}'::jsonb
+            )`
+            );
+
+            return res.send({
+                message: "PQDA recommendation submitted successfully",
+            });
+        } catch (err) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
+        }
     });
 
-    app.post("/need-analysis/bos/start", (req, res) => {
+    app.post("/need-analysis/bos/start", async (req, res) => {
         const { error, value } = programmeBaseSchema.validate(
             {
                 ...req.body,
@@ -158,10 +185,28 @@ export default async (app: Express, upload: Multer) => {
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
-        return res.send("Bos start step - Not implemented");
+        const { programmeId, date } = value;
+
+        try {
+            await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
+
+            await db.execute(
+                `SELECT fn_update_step_data(
+                  '${programmeId}',
+                  'bos-consultation',
+                  '{"startDate": "${date}"}'::jsonb
+                )`
+            );
+
+            return res.send({ message: "BoS consultation started" });
+        } catch (err) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
+        }
     });
 
-    app.post("/need-analysis/bos/recommend", upload.single("file"), (req, res) => {
+    app.post("/need-analysis/bos/recommend", upload.single("file"), async (req, res) => {
         const { error, value } = bosRecommendSchema.validate(
             {
                 ...req.body,
@@ -174,10 +219,37 @@ export default async (app: Express, upload: Multer) => {
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
-        return res.send("Bos recommend step - Not implemented");
+        const { programmeId, date, status } = value;
+
+        try {
+            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
+            const ppsId = (result.rows[0] as any).pps_id as string;
+
+            const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
+
+            const json = {
+                recommendationDate: date,
+                status,
+                recommendationFile: attachmentId,
+            };
+
+            await db.execute(
+                `SELECT fn_update_step_data(
+                '${programmeId}',
+                'bos-consultation',
+                '${JSON.stringify(json)}'::jsonb
+            )`
+            );
+
+            return res.send({ message: "BoS recommendation recorded" });
+        } catch (err) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
+        }
     });
 
-    app.post("/need-analysis/senate/start", (req, res) => {
+    app.post("/need-analysis/apc/start", async (req, res) => {
         const { error, value } = programmeBaseSchema.validate(
             {
                 ...req.body,
@@ -190,10 +262,74 @@ export default async (app: Express, upload: Multer) => {
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
-        return res.send("Senate start step - Not implemented");
+        const { programmeId, date } = value;
+
+        try {
+            await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
+
+            const stepData = {
+                recommendationDate: date,
+            };
+
+            await db.execute(
+                `SELECT fn_update_step_data(
+                '${programmeId}',
+                'apc-recommendation',
+                '${JSON.stringify(stepData)}'::jsonb
+            )`
+            );
+
+            return res.send({ message: "APC start recorded successfully" });
+        } catch (err) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
+        }
     });
 
-    app.post("/need-analysis/senate/recommend", upload.single("file"), (req, res) => {
+    app.post("/need-analysis/apc/recommend", upload.single("file"), async (req, res) => {
+        const { error, value } = apcRecommendSchema.validate(
+            {
+                ...req.body,
+            },
+            { abortEarly: false }
+        );
+
+        if (error) {
+            console.log(error);
+            return res.status(400).send(error.details.map(({ message }) => message));
+        }
+
+        const { programmeId, date, status } = value;
+        try {
+            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
+            const ppsId = (result.rows[0] as any).pps_id as string;
+
+            const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
+
+            const stepData: any = {
+                consultationDate: date,
+                status,
+                recommendationFile: attachmentId,
+            };
+
+            await db.execute(
+                `SELECT fn_update_step_data(
+                  '${programmeId}',
+                  'apc-recommendation',
+                  '${JSON.stringify(stepData)}'::jsonb
+                )`
+            );
+
+            return res.send({ message: "APC recommendation recorded successfully" });
+        } catch (err) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
+        }
+    });
+
+    app.post("/need-analysis/senate/recommend", upload.single("file"), async (req, res) => {
         const { error, value } = senateRecommendSchema.validate(
             {
                 ...req.body,
@@ -206,20 +342,33 @@ export default async (app: Express, upload: Multer) => {
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
-        return res.send("Senate recommend step - Not implemented");
-    });
+        const { programmeId, date, status } = value;
 
-    app.post("/need-analysis/apc/recommend", (req, res) => {
-        const { error, value } = apcRecommendSchema.validate(
-            {
-                ...req.body,
-            },
-            { abortEarly: false }
-        );
+        try {
+            const result = await db.execute(`SELECT fn_get_or_create_step('${programmeId}', 'senate-approval')`);
+            const ppsId = (result.rows[0] as any).pps_id as string;
 
-        if (error) {
-            console.log(error);
-            return res.status(400).send(error.details.map(({ message }) => message));
+            const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
+
+            const stepData: any = {
+                recommendationDate: date,
+                status,
+                recommendationFile: attachmentId,
+            };
+
+            await db.execute(
+                `SELECT fn_update_step_data(
+                '${programmeId}',
+                'senate-approval',
+                '${JSON.stringify(stepData)}'::jsonb
+            )`
+            );
+
+            return res.send({ message: "Senate recommendation recorded successfully" });
+        } catch (err: any) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
         }
 
         return res.send("Senate recommend step - Not implemented");

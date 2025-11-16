@@ -33,21 +33,21 @@ const bosRecommendSchema = programmeBaseSchema.append({
   }),
 });
 
-const senateRecommendSchema = programmeBaseSchema.append({
-  status: Joi.string()
-    .valid("approve", "decline", "defer")
-    .required()
-    .messages({
-      "any.only": "Status must be one of: approve, decline, defer",
-    }),
-});
-
 const apcRecommendSchema = programmeBaseSchema.append({
   status: Joi.string()
     .valid("recommend", "decline", "defer")
     .required()
     .messages({
       "any.only": "Status must be one of: recommend, decline, defer",
+    }),
+});
+
+const senateRecommendSchema = programmeBaseSchema.append({
+  status: Joi.string()
+    .valid("approve", "decline", "defer")
+    .required()
+    .messages({
+      "any.only": "Status must be one of: approve, decline, defer",
     }),
 });
 
