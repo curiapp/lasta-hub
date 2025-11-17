@@ -155,4 +155,155 @@ describe("Needs Analysis Endpoints", () => {
         expect(Array.isArray(stepData.surveyQuestions)).toBe(true);
         expect(stepData.surveyQuestions.length).toBeGreaterThan(0);
     });
+
+    it("submits PQDA recommendation", async () => {
+        const filePath = path.resolve(__dirname, "fixtures/sample.pdf");
+
+        const res = await request(app)
+            .post("/need-analysis/conclude")
+            .field("programmeId", testProgrammeId)
+            .field("decision", "approve")
+            .attach("file", filePath);
+
+        expect(res.status).toBe(200);
+
+        const rows = await getStep(testProgrammeId, "pdqa-recommendation");
+        expect(rows.length).toBe(1);
+
+        const step = rows[0];
+        const data = step.extraData as any;
+
+        // Check decision saved
+        expect(data.decision).toBe("approve");
+
+        // Check file stored
+        expect(typeof data.recommendationDoc).toBe("string");
+        expect(data.recommendationDoc.length).toBeGreaterThan(10);
+
+        // Ensure timestamps exist and are valid
+        // expect(step.createdAt instanceof Date).toBe(true);
+        // expect(step.updatedAt instanceof Date).toBe(true);
+    });
+
+    it("starts the BoS consultation", async () => {
+        const payload = {
+            programmeId: testProgrammeId,
+            date: "2025-01-10",
+        };
+
+        const res = await request(app).post("/need-analysis/bos/start").send(payload);
+
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("BoS consultation started");
+
+        const rows = await getStep(testProgrammeId, "bos-consultation");
+
+        expect(rows.length).toBe(1);
+
+        const stepData = rows[0].extraData as any;
+
+        expect(stepData).toHaveProperty("startDate");
+        expect(stepData.startDate.startsWith("2025-01-10")).toBe(true);
+    });
+
+    it("records a BoS recommendation", async () => {
+        const filePath = path.resolve(__dirname, "fixtures/sample.pdf");
+
+        const payload = {
+            programmeId: testProgrammeId,
+            date: "2025-01-12",
+            status: "senate",
+        };
+
+        const res = await request(app)
+            .post("/need-analysis/bos/recommend")
+            .field("programmeId", payload.programmeId)
+            .field("date", payload.date)
+            .field("status", payload.status)
+            .attach("file", filePath);
+
+        expect(res.status).toBe(200);
+
+        const rows = await getStep(testProgrammeId, "bos-consultation");
+        expect(rows.length).toBe(1);
+
+        const stepData = rows[0].extraData as any;
+
+        expect(stepData).toHaveProperty("recommendationDate");
+        expect(stepData).toHaveProperty("status", "senate");
+
+        expect(stepData).toHaveProperty("recommendationFile");
+        expect(typeof stepData.recommendationFile).toBe("string");
+        expect(stepData.recommendationFile.length).toBeGreaterThan(0);
+    });
+
+    it("records APC start date", async () => {
+        const testDate = "2025-01-12";
+
+        const res = await request(app).post("/need-analysis/apc/start").send({
+            programmeId: testProgrammeId,
+            date: testDate,
+        });
+
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("APC start recorded successfully");
+
+        const rows = await getStep(testProgrammeId, "apc-recommendation");
+        expect(rows.length).toBe(1);
+
+        const stepData = rows[0].extraData as any;
+
+        expect(stepData.recommendationDate.startsWith(testDate)).toBe(true);
+    });
+
+    it("records APC recommendation", async () => {
+        const testDate = "2025-01-12";
+        const testStatus = "recommend";
+        const filePath = path.resolve(__dirname, "fixtures/sample.pdf");
+
+        const res = await request(app)
+            .post("/need-analysis/apc/recommend")
+            .field("programmeId", testProgrammeId)
+            .field("date", testDate)
+            .field("status", testStatus)
+            .attach("file", filePath);
+
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("APC recommendation recorded successfully");
+
+        const rows = await getStep(testProgrammeId, "apc-recommendation");
+        expect(rows.length).toBe(1);
+
+        const stepData = rows[0].extraData as any;
+
+        // Timestamp-safe date check
+        expect(stepData.consultationDate.startsWith(testDate)).toBe(true);
+        expect(stepData.status).toBe(testStatus);
+        expect(stepData.recommendationFile).toBeDefined();
+    });
+
+    it("records Senate recommendation", async () => {
+        const testDate = "2025-01-12";
+        const testStatus = "defer";
+        const filePath = path.resolve(__dirname, "fixtures/sample.pdf");
+
+        const res = await request(app)
+            .post("/need-analysis/senate/recommend")
+            .field("programmeId", testProgrammeId)
+            .field("date", testDate)
+            .field("status", testStatus)
+            .attach("file", filePath);
+
+        expect(res.status).toBe(200);
+        expect(res.body.message).toBe("Senate recommendation recorded successfully");
+
+        const rows = await getStep(testProgrammeId, "senate-approval");
+        expect(rows.length).toBe(1);
+
+        const stepData = rows[0].extraData as any;
+
+        expect(stepData.recommendationDate.startsWith(testDate)).toBe(true);
+        expect(stepData.status).toBe(testStatus);
+        expect(stepData.recommendationFile).toBeDefined();
+    });
 });
