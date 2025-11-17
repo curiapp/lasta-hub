@@ -114,7 +114,7 @@ export default async (app: Express, upload: Multer) => {
             const result = await db.execute(
                 `SELECT fn_get_or_create_step('${programmeId}', ${"stakeholders-consultation"})`
             );
-            const ppsId = (result.rows[0] as any).pps_id as string;
+            const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
@@ -147,7 +147,7 @@ export default async (app: Express, upload: Multer) => {
             const programmeId = value.programmeId;
             const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'pqda-recommendation')`);
 
-            const ppsId = (result.rows[0] as any).pps_id as string;
+            const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
@@ -223,7 +223,7 @@ export default async (app: Express, upload: Multer) => {
 
         try {
             const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'bos-consultation')`);
-            const ppsId = (result.rows[0] as any).pps_id as string;
+            const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
@@ -303,7 +303,7 @@ export default async (app: Express, upload: Multer) => {
         const { programmeId, date, status } = value;
         try {
             const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'apc-recommendation')`);
-            const ppsId = (result.rows[0] as any).pps_id as string;
+            const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
@@ -346,7 +346,7 @@ export default async (app: Express, upload: Multer) => {
 
         try {
             const result = await db.execute(sql`SELECT fn_get_or_create_step('${programmeId}', 'senate-approval')`);
-            const ppsId = (result.rows[0] as any).pps_id as string;
+            const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
