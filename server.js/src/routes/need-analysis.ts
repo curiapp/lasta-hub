@@ -112,14 +112,15 @@ export default async (app: Express, upload: Multer) => {
 
         try {
             const result = await db.execute(
-                `SELECT fn_get_or_create_step('${programmeId}', ${"stakeholders-consultation"})`
+                sql`SELECT fn_get_or_create_step(${programmeId}, ${"stakeholders-consultation"})`
             );
+
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
 
             await db.execute(
-                sql`SELECT fn_step_array_append('${programmeId}', 'stakeholders-consultation', 'surveyQuestions', '"${attachmentId}"'::jsonb)`
+                sql`SELECT fn_step_array_append(${programmeId}, ${"stakeholders-consultation"}, ${"surveyQuestions"}, ${JSON.stringify(attachmentId)}::jsonb)`
             );
 
             return res.send({ message: "Survey questions saved successfully" });

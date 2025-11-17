@@ -135,18 +135,24 @@ describe("Needs Analysis Endpoints", () => {
         expect(stepData.questionnaires.length).toBeGreaterThan(0);
     });
 
-    // it("saves survey questions", async () => {
-    //     const filePath = path.resolve(__dirname, "fixtures/sample.pdf");
+    it("saves survey questions", async () => {
+        const filePath = path.resolve(__dirname, "fixtures/sample.pdf");
 
-    //     const res = await request(app)
-    //         .post("/need-analysis/survey")
-    //         .field("programmeId", testProgrammeId)
-    //         .attach("file", filePath);
+        const res = await request(app)
+            .post("/need-analysis/survey")
+            .field("programmeId", testProgrammeId)
+            .attach("file", filePath);
 
-    //     expect(res.status).toBe(200);
-    //     expect(res.body.message).toBe("Survey questions saved successfully");
+        expect(res.status).toBe(200);
 
-    //     const [step] = await db.select("programme_phase_steps").where({ programme_id: testProgrammeId }).limit(1);
-    //     expect(step.extra_data.surveyQuestions.length).toBeGreaterThan(0);
-    // });
+        const rows = await getStep(testProgrammeId, "stakeholders-consultation");
+
+        expect(rows.length).toBe(1);
+
+        const stepData = rows[0].extraData as any;
+
+        // Validate survey questions array exists
+        expect(Array.isArray(stepData.surveyQuestions)).toBe(true);
+        expect(stepData.surveyQuestions.length).toBeGreaterThan(0);
+    });
 });
