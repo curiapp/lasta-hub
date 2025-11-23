@@ -12,7 +12,7 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
 })
 export class InternalReviewPduComponent {
   url = `${environment.apiUrl}/reviews/recommend`;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload(decision: string = "") {

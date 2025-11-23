@@ -8,19 +8,19 @@ import { LoadingService } from '../../../services/loading.service';
 @Component({
   selector: 'pd-cdc',
   templateUrl: 'cdc.component.html',
-  imports: [
-    ReactiveFormsModule
-  ]
+  imports: [ReactiveFormsModule]
 })
 
 export class CdcComponent implements OnInit {
   private fb = inject(FormBuilder);
   private pacAppointUrl: string = "curriculum-development/appoint/cdc";
-  @Input() code: string = "defaultDevCode";
+  @Input() pid: string = "";
   ld = inject(LoadingService);
+  http = inject(ClientService);
+  toast = inject(ToastService);
 
-  myForm = this.fb.group({
-    devCode: [this.code, [Validators.required, Validators.minLength(3)]],
+  cdcForm = this.fb.group({
+    id: [this.pid, [Validators.required, Validators.minLength(3)]],
     cdc: this.fb.array([
       this.fb.group({
         firstName: ['', Validators.required],
@@ -34,9 +34,8 @@ export class CdcComponent implements OnInit {
     ])
   })
 
-  constructor(public http: ClientService, private toast: ToastService) { }
   addItem() {
-    const itemArray = this.myForm.get('cdc') as FormArray;
+    const itemArray = this.cdcForm.get('cdc') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -50,34 +49,32 @@ export class CdcComponent implements OnInit {
   }
 
   removeItem(index: number): void {
-    const itemsArray = this.myForm.get('cdc') as FormArray;
+    const itemsArray = this.cdcForm.get('cdc') as FormArray;
     itemsArray.removeAt(index);
   }
 
 
   get items(): FormArray {
-    return this.myForm.get('cdc') as FormArray;
+    return this.cdcForm.get('cdc') as FormArray;
   }
 
   ngOnInit() {
-    this.myForm.get('devCode').setValue(this.code);
+    this.cdcForm.get('id').setValue(this.pid);
   }
 
   onCellPhoneValueChanged(value: any, controlAtX: AbstractControl) {
-    console.log(value)
     let phoneNumberControl = controlAtX;
     if (!value) {
       phoneNumberControl.setValidators([Validators.required, Validators.minLength(11)]);
     } else {
       phoneNumberControl.setValidators([]);
     }
-
-    phoneNumberControl.updateValueAndValidity(); //Need to call this to trigger a update
+    phoneNumberControl.updateValueAndValidity();
     return null;
   }
 
   onSubmit() {
-    this.http.post<any>(this.pacAppointUrl, this.myForm.value)
+    this.http.post<any>(this.pacAppointUrl, this.cdcForm.value)
       .subscribe({
         next: data => {
           console.log("data", data);

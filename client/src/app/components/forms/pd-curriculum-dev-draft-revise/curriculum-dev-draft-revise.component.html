@@ -1,13 +1,13 @@
 <div class="space-y-4">
   <h3 class="text-xl">Curriculum - Drafting</h3>
-  <form #endconsultForm="ngForm" class="space-y-4">
-    <div class="form-control">
-      <label class="text-sm font-bold">Draft Curriculum: </label>
-      <file-upload [code]="code" [url]="url" itemAlias="survey"></file-upload>
-    </div>
+  <form #endconsultForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Draft Curriculum</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="survey"></file-upload>
+    </fieldset>
 
     <div class="flex justify-center">
-      <button type="button" class="btn btn-primary btn-sm" (click)="onUpload()"
+      <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || endconsultForm.form.invalid">
         Submit to PDU
         <span class="material-symbols-rounded">

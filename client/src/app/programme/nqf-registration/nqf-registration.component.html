@@ -38,7 +38,7 @@
 </div>
 
 <modal #nqf_start>
-  <nqa-preparation [code]="code"></nqa-preparation>
+  <nqa-preparation [pid]="pid"></nqa-preparation>
 </modal>
 }
 
@@ -68,7 +68,7 @@
 </div>
 
 <modal #nqf_submit>
-  <nqf-pdu-recommend [code]="code"></nqf-pdu-recommend>
+  <nqf-pdu-recommend [pid]="pid"></nqf-pdu-recommend>
 </modal>
 
 }
@@ -99,7 +99,7 @@
 </div>
 
 <modal #nqf_feedback>
-  <nqa-submit [code]="code"></nqa-submit>
+  <nqa-submit [pid]="pid"></nqa-submit>
 </modal>
 }
 
@@ -130,6 +130,6 @@
 </div>
 
 <modal #nqf_reg>
-  <nqa-registration [code]="code"></nqa-registration>
+  <nqa-registration [pid]="pid"></nqa-registration>
 </modal>
 }

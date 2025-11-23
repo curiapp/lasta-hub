@@ -11,10 +11,9 @@ import { FileUploadComponent } from "../file-upload/file-upload.component";
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class NqaSubmitComponent {
-
   url = `${environment.apiUrl}/nqa/submit`;
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   decision: string;
   showWarning: boolean = false;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;

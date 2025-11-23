@@ -1,135 +1,126 @@
 <div class="space-y-4">
-  <h4>Appointment - Programme Advisory Committe</h4>
-
-  <form [formGroup]="myForm" novalidate (ngSubmit)="onSubmit()">
-    <!-- <div class="form-group w-full">
-          <label class="label label-text">Programme Code</label>
-          <input type="text" class="input input-bordered w-full" formControlName="devCode">
-          @if (myForm.controls.devCode.invalid && myForm.controls.devCode.touched) {
-          <div class="label label-text-alt text-red-700">
-            Programme Code is required (minimum 3 characters).
-          </div>
-          }
-        </div> -->
+  <h4 class="text-xl">Appointment - Programme Advisory Committe</h4>
+  <form [formGroup]="pacForm" novalidate (ngSubmit)="onSubmit()">
     <h2 class="text-xl font-bold">PAC - Members</h2>
     <div formArrayName="pac">
       @for(item of items.controls; track $index){
-      <div class="space-y-3 bg-gray-50 p-4 my-4 rounded-box">
+      <div class="space-y-3 bg-gray-100 p-4 my-2 rounded-box">
 
         <div class="flex justify-between items-center">
           <span class="font-semibold">PAC Member: {{$index + 1}}</span>
-          @if(myForm.controls.pac.controls.length > 1){
+          @if(pacForm.controls.pac.controls.length > 1){
           <button class="btn btn-sm btn-secondary" (click)="removeItem($index)">Remove</button>
           }
         </div>
 
         <div class="space-y-1" [formGroupName]="$index">
-
           <div class="grid grid-cols-2 gap-2 items-start">
-            <div class="form-control">
-              <label class="lebel label-text">First Name</label>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">First Name</legend>
               <input type="text" class="input input-bordered input-sm" formControlName="firstName">
-              @if (myForm.controls.pac.controls[$index].controls.firstName.invalid &&
-              myForm.controls.pac.controls[$index].controls.firstName.touched) {
-              <div class="label label-text-alt text-red-700">
-                First name is required*
-              </div>
+              @if (pacForm.controls.pac.controls[$index].controls.firstName.invalid &&
+              pacForm.controls.pac.controls[$index].controls.firstName.touched) {
+              <span class="label text-error">
+                First name required*
+              </span>
               }
-            </div>
-            <div class="form-control">
-              <label>Last Name</label>
+            </fieldset>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Last Name</legend>
               <input type="text" class="input input-bordered input-sm" formControlName="lastName">
-              @if (myForm.controls.pac.controls[$index].controls.lastName.invalid &&
-              myForm.controls.pac.controls[$index].controls.lastName.touched) {
-              <div class="label label-text-alt text-red-700">
-                Last name is required*
+              @if (pacForm.controls.pac.controls[$index].controls.lastName.invalid &&
+              pacForm.controls.pac.controls[$index].controls.lastName.touched) {
+              <div class="label text-error">
+                Last name required*
               </div>
               }
-            </div>
+            </fieldset>
           </div>
 
 
-          <div class="form-control">
-            <label class="label label-text">Email address</label>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Email address</legend>
             <input type="email" class="input input-bordered input-sm" formControlName="emailAddress">
-            @if (myForm.controls.pac.controls[$index].controls.emailAddress.invalid &&
-            myForm.controls.pac.controls[$index].controls.emailAddress.touched){
-            <div class="label label-text-alt text-red-700">
-              Email address is required*
-            </div>
+            @if (pacForm.controls.pac.controls[$index].controls.emailAddress.invalid &&
+            pacForm.controls.pac.controls[$index].controls.emailAddress.touched){
+            <span class="label text-error">
+              Email address required*
+            </span>
             }
-          </div>
+          </fieldset>
 
           <div class="grid grid-cols-2 gap-2 items-start">
-            <div class="form-control">
-              <label class="label label-text">Cell Number: </label>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Cell Number: </legend>
               <input type="text" class="input input-bordered input-sm" formControlName="cellphone"
-                (change)=onCellPhoneValueChanged(myForm.controls.pac.controls[$index].controls.cellphone.value,myForm.controls.pac.controls[$index].controls.workNumber)>
-              @if (myForm.controls.pac.controls[$index].controls.cellphone.invalid &&
-              myForm.controls.pac.controls[$index].controls.cellphone.touched){
-              <div class="label label-text-alt text-red-700">
-                Cell Phone Number is required(minimum 10 numbers)
-              </div>
+                (change)=onCellPhoneValueChanged(pacForm.controls.pac.controls[$index].controls.cellphone.value,pacForm.controls.pac.controls[$index].controls.workNumber)>
+              @if (pacForm.controls.pac.controls[$index].controls.cellphone.invalid &&
+              pacForm.controls.pac.controls[$index].controls.cellphone.touched){
+              <span class="label text-error">
+                Cell Phone Number required(minimum 10 numbers)
+              </span>
               }
-            </div>
-            <div class="form-control">
-              <label class="label label-text">Work Telephone Number: </label>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Work Telephone Number: </legend>
               <input type="text" class="input input-bordered input-sm" formControlName="workNumber">
-              @if (myForm.controls.pac.controls[$index].controls.workNumber.invalid &&
-              myForm.controls.pac.controls[$index].controls.workNumber.touched){
-              <div class="label label-text-alt text-red-700">
-                Work Telephone Number is required*
+              @if (pacForm.controls.pac.controls[$index].controls.workNumber.invalid &&
+              pacForm.controls.pac.controls[$index].controls.workNumber.touched){
+              <div class="label text-error">
+                Work Telephone Number required*
               </div>
               }
-            </div>
+            </fieldset>
           </div>
 
 
           <div class="grid grid-cols-2 gap-2 items-start">
-            <div class="form-control">
-              <label class="label label-text">Qualification</label>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Qualification</legend>
               <input type="text" class="input input-bordered input-sm" formControlName="qualification">
-              @if (myForm.controls.pac.controls[$index].controls.qualification.invalid &&
-              myForm.controls.pac.controls[$index].controls.qualification.touched){
-              <div class="label label-text-alt text-red-700">
-                Qualification is required*
+              @if (pacForm.controls.pac.controls[$index].controls.qualification.invalid &&
+              pacForm.controls.pac.controls[$index].controls.qualification.touched){
+              <div class="label text-error">
+                Qualification required*
               </div>
               }
-            </div>
+            </fieldset>
 
-            <div class="form-control">
-              <label class="label label-text">Occupation</label>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Occupation</legend>
               <input type="text" class="input input-bordered input-sm" formControlName="occupation">
-              @if (myForm.controls.pac.controls[$index].controls.occupation.invalid &&
-              myForm.controls.pac.controls[$index].controls.occupation.touched){
-              <div class="label label-text-alt text-red-700">
-                Occupation is required*
+              @if (pacForm.controls.pac.controls[$index].controls.occupation.invalid &&
+              pacForm.controls.pac.controls[$index].controls.occupation.touched){
+              <div class="label text-error">
+                Occupation required*
               </div>
               }
-            </div>
+            </fieldset>
           </div>
 
-          <div class="form-control">
-            <label class="label label-text">Organisation</label>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Organisation</legend>
             <input type="text" class="input input-bordered input-sm" formControlName="organization">
-            @if (myForm.controls.pac.controls[$index].controls.organization.invalid &&
-            myForm.controls.pac.controls[$index].controls.organization.touched){
-            <div class="label label-text-alt text-red-700">
-              Organisation is required*
-            </div>
+            @if (pacForm.controls.pac.controls[$index].controls.organization.invalid &&
+            pacForm.controls.pac.controls[$index].controls.organization.touched){
+            <span class="label text-error">
+              Organisation required*
+            </span>
             }
-          </div>
+          </fieldset>
 
         </div>
       </div>
       }
     </div>
+
     <div class="flex gap-2 mb-8">
       <button (click)="addItem()" [disabled]="ld.isLoading()" class="btn btn-warning btn-sm cursor-pointer">
         Add PAC Member +
       </button>
 
-      <button type="submit" class="btn btn-primary btn-sm flex-auto" [disabled]="myForm.invalid">
+      <button type="submit" class="btn btn-primary btn-sm flex-auto" [disabled]="pacForm.invalid">
         Submit
         @if(ld.isLoading()){
         <span class="loading loading-spinner loading-1xl"></span>

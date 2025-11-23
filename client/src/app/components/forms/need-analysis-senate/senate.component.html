@@ -1,22 +1,23 @@
 <div class="space-y-4">
   <h3 class="text-xl mb-4">Senate Recommedation</h3>
-  <form #senateForm="ngForm" class="space-y-4">
-    <div class="form-control mb-4">
-      <label for="date">Consultation Date</label>
-      <div class="input-group">
-        <input id="date" type="Date" class="input input-bordered w-full" required [(ngModel)]="model.date"
-          ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-      </div>
+  <form #senateForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Consultation Date</legend>
+      <input id="date" type="Date" class="input input-bordered w-full" required [(ngModel)]="model.date"
+        ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if(cdate.invalid && cdate.touched){
-      <div class="label label-text-alt text-red-700">consultation date is required</div>
+      <div class="label text-error">consultation date required*</div>
       }
-    </div>
+    </fieldset>
 
-    <file-upload [code]="code" [url]="url" itemAlias="recommendation"></file-upload>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Recommendation</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="recommendation"></file-upload>
+    </fieldset>
 
-    <div class="form-control">
-      <label class="control-label">Decision: </label>
-      <fieldset class="w-full border rounded-lg p-3">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Decision</legend>
+      <fieldset class="w-full border-2 border-gray-300 border-dashed rounded-lg p-3">
         <div class="custom-control custom-radio custom-control-inline">
           <input class="radio radio-xs" type="radio" id="status1" name="status" [(ngModel)]="model.status"
             value="approve" required #status="ngModel" mdbInput>
@@ -28,29 +29,24 @@
           <label class="custom-control-label" for="status2"> Decline</label>
         </div>
         <div class="custom-control custom-radio custom-control-inline">
-          <input class="radio radio-xs" type="radio" id="status3" name="status" [(ngModel)]="model.status"
-            value="defer" required #status="ngModel" mdbInput>
+          <input class="radio radio-xs" type="radio" id="status3" name="status" [(ngModel)]="model.status" value="defer"
+            required #status="ngModel" mdbInput>
           <label class="custom-control-label" for="status3"> Defer</label>
         </div>
       </fieldset>
       @if(status.invalid && status.touched){
       <div class="label label-text-alt text-red-700">APC Decision is required</div>
       }
-    </div>
+    </fieldset>
 
     <div class="form-control">
-      <!-- <button type="submit" class="btn btn-default" (click)="clear();uploader.clearQueue()">
-        <i class="fa fa-refresh"></i> Clear All</button> -->
-      <!-- routerLink="/senate" -->
       <button type="button" class="btn btn-sm btn-primary w-full" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !senateForm.form.valid">
         Submit
         <span class="material-symbols-rounded">
           cloud_upload
-          </span>
+        </span>
       </button>
-      <!-- <button type="submit" class="btn btn-danger" (click)="close()">
-        <i class="fa fa-close"></i> Close</button> -->
     </div>
   </form>
 </div>

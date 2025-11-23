@@ -17,10 +17,9 @@ export class FinalDraftComponent implements OnInit {
   date: Date;
   selectedFiles: string[][] = [];
   fileList: Array<string>;
-
   public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'bos-draft' });
   consultationDate: Date;
-  @Input() code: string;
+  @Input() pid: string;
   // @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
   toast = inject(ToastService);
 
@@ -31,7 +30,7 @@ export class FinalDraftComponent implements OnInit {
   ngOnInit() {
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('devCode', this.code);
+      form.append('id', this.pid);
       form.append('date', this.model.bosSubmissionDate);
       form.append('fileList', this.selectedFiles);
     };

@@ -10,6 +10,12 @@ const startSchema = Joi.object({
   department: Joi.string().required(),
 }).required();
 
+const updateSchema = Joi.object({
+  code: Joi.string().alphanum().min(3).max(30).required(),
+  title: Joi.string().required(),
+  level: Joi.number().integer().min(5).max(9).required(),
+}).required();
+
 const consultSchema = Joi.object({
   programmeId: Joi.string().required(),
   organizations: Joi.array().items(Joi.string()).min(1).required(),
@@ -53,6 +59,7 @@ const senateRecommendSchema = programmeBaseSchema.append({
 
 export {
   startSchema,
+  updateSchema,
   consultSchema,
   concludeSchema,
   bosRecommendSchema,

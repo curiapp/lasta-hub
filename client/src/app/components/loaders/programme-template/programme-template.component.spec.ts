@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgrammeTamplateComponent } from './programme-tamplate.component';
+import { ProgrammeTemplateComponent } from './programme-template.component';
 
 describe('ProgrammeTamplateComponent', () => {
-  let component: ProgrammeTamplateComponent;
-  let fixture: ComponentFixture<ProgrammeTamplateComponent>;
+  let component: ProgrammeTemplateComponent;
+  let fixture: ComponentFixture<ProgrammeTemplateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProgrammeTamplateComponent]
+      imports: [ProgrammeTemplateComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProgrammeTamplateComponent);
+    fixture = TestBed.createComponent(ProgrammeTemplateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

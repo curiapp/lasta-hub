@@ -16,7 +16,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class CEURecommendComponent {
   url = `${environment.apiUrl}/reviews/recommend`;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload(decision: string = "") {

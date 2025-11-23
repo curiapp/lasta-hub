@@ -12,7 +12,7 @@ export class OtherFacultyBosComponent implements OnInit {
   url = `${environment.apiUrl}/bos-senate/other-faculty-recommend`;
   model: any = {};
   consultationDate: Date;
-  @Input() code: string;
+  @Input() pid: string;
   OtherFacultyName: string;
   recommendTo: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;

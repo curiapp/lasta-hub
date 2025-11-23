@@ -17,10 +17,9 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class EndConsultComponent {
-  devCode: String;
   decision: String;
   url = `${environment.apiUrl}/need-analysis/survey`;
-  @Input() code?: string;
+  @Input() pid?: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   constructor() { }

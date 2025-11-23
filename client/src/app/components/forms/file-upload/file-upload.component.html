@@ -1,14 +1,6 @@
 <div class="">
   <div class="login-wrapper">
     <form class="space-y-4" #concludeForm="ngForm">
-      <!-- <div class="form-control w-full">
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Final NA Report:</legend>
-          <input type="file" class="file-input w-full" ng2FileSelect [uploader]="uploader" />
-          <label class="fieldset-label">Max size 5MB</label>
-        </fieldset>
-      </div> -->
-
       @if(uploader.queue.length===0){
       <div class="flex items-center justify-center w-full">
         <label for="dropzone-file"
@@ -42,44 +34,6 @@
         <div class="rounded-box flex flex-col items-center gap-4 p-3 group transition-all">
           <div
             class="size-12 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
-            <!-- {{(item.file.name | Extension)===''?}} -->
-            <!-- @switch (item.file.name | Extension) {
-            @case ('pdf') {
-            <span class="material-symbols-rounded text-[35px]">
-              picture_as_pdf
-            </span>
-            }
-            @case ('doc') {
-            <span class="material-symbols-rounded text-[35px]">
-              docs
-            </span>
-            }
-            @case ('docs') {
-            <span class="material-symbols-rounded text-[35px]">
-              docs
-            </span>
-            }
-            @case ('docx') {
-            <span class="material-symbols-rounded text-[35px]">
-              docs
-            </span>
-            }
-            @case ('xlsx') {
-            <span class="material-symbols-rounded text-[35px]">
-              csv
-            </span>
-            }
-            @case ('csv') {
-            <span class="material-symbols-rounded text-[35px]">
-              csv
-            </span>
-            }
-            @default {
-            <span class="material-symbols-rounded text-[35px]">
-              draft
-            </span>
-            }
-            } -->
             <file-icon [fileName]="item.file.name"></file-icon>
           </div>
           <div class="flex-grow w-[70%] tooltip text-left mb-2">

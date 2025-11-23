@@ -8,17 +8,13 @@ import { environment } from '../../../../environments/environment';
   templateUrl: 'curriculum-dev-draft-pdu-approval.component.html',
   imports: [FormsModule, FileUploadComponent]
 })
-export class CurriculumDevDraftPDUApprovComponent implements OnInit {
+export class CurriculumDevDraftPDUApprovComponent {
   url = `${environment.apiUrl}/curriculum-development/draft/validate`;
   model: any = {};
   devCode: String;
   decision: String;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
-
-  constructor() { }
-
-  ngOnInit() { }
 
   onUpload(decision: string = "") {
     this.fileUpload.onUpload({ decision });

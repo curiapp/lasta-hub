@@ -12,7 +12,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 export class NQARegComponent {
   url = `${environment.apiUrl}/nqa/register`;
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   regDate: Date;
   courseName: string;
   courseCode: string;
@@ -21,7 +21,7 @@ export class NQARegComponent {
 
   onUpload() {
     this.fileUpload.onUpload({
-      'devCode': this.code,
+      'id': this.pid,
       'date': this.model.regDate,
       'courseName': this.model.courseName,
       'courseCode': this.model.courseCode,

@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { FileItem, FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -16,8 +16,19 @@ import { environment } from '../../../../environments/environment';
 })
 export class NeedAnalysisConsultationComponent implements OnInit {
   url = `${environment.apiUrl}/need-analysis/consult`;
-  devCode: String;
-  @Input() code: string;
+  @Input() pid: string;
+
+  isStakeholderShown = signal(false);
+  isShown = signal(true);
+
+  toggleAdd() {
+    this.isStakeholderShown.update((isShown) => !isShown);
+  }
+
+  toggle() {
+    this.isShown.update((isShown) => !isShown);
+  }
+
 
   needAnalysis: {
     startDate: Date;
@@ -59,7 +70,7 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: FileItem, form: any) => {
-      form.append('devCode', this.code);
+      form.append('devCode', this.pid);
       form.append('sDate', this.needAnalysis.startDate);
       form.append('eDate', this.needAnalysis.endDate);
       form.append('organizationList', JSON.stringify(this.needAnalysis.organisationList));

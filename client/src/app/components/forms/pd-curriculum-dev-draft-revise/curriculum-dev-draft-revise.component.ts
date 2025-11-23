@@ -9,17 +9,12 @@ import { FileUploadComponent } from "../file-upload/file-upload.component";
   templateUrl: 'curriculum-dev-draft-revise.component.html',
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
-export class CurriculumDevDraftReviseComponent implements OnInit {
+export class CurriculumDevDraftReviseComponent {
   url = `${environment.apiUrl}/curriculum-development/draft/revise`;
   model: any = {};
   endDate: Date;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
   onUpload() {
     this.fileUpload.onUpload({});

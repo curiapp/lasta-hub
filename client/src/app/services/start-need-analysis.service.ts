@@ -9,17 +9,17 @@ import { handleError } from '../functions';
 
 @Injectable(
   {
-      providedIn: 'root'
+    providedIn: 'root'
   }
 )
 export class StartNeedAnalysisService {
   private _startNeedAnalysisUrl: string = `${environment.apiUrl}/need-analysis/start`;
-  private _updateNeedAnalysisUrl: string = `${environment.apiUrl}/need-analysis/update`;
+  private _updateNeedAnalysisUrl: string = `${environment.apiUrl}/need-analysis/start`;
 
   constructor(private _http: HttpClient) { }
 
-  startNeedAnalysis({ code, name, faculty, department, initiator, level }: Programme) {
-    let body = { "initiator": initiator, "name": name, "devCode": code, "faculty": faculty, "department": department, "level": level };
+  startNeedAnalysis({ code, title, faculty, department, initiator, level }: Programme) {
+    let body = { "initiator": initiator, "title": title, "devCode": code, "faculty": faculty, "department": department, "level": level };
 
     return this._http.post(this._startNeedAnalysisUrl, body, {
       headers: {
@@ -30,10 +30,10 @@ export class StartNeedAnalysisService {
     );
   }
 
-  updateNeedAnalysis({ code, name, level }: Programme) {
-    let body = { "name": name, "devCode": code,  "level": level };
+  updateNeedAnalysis({ code, title, level, id }: Programme) {
+    let body = { "title": title, "code": code, "level": level };
 
-    return this._http.put(this._updateNeedAnalysisUrl, body, {
+    return this._http.put(`${this._updateNeedAnalysisUrl}/${id}`, body, {
       headers: {
         'Content-Type': 'application/json'
       }

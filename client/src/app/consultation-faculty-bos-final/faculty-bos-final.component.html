@@ -1,41 +1,36 @@
 <div class="space-y-4">
-  <h3 class="text-xl">Faculty Bos -- Consultation</h3>
-  <form #bosForm="ngForm" class="space-y-4">
-    <div class="form-control">
-      <label for="date" class="label label-text font-bold">BOS Date</label>
-      <div class="input-group">
-        <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.consultationDate"
-          ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-        <span class="input-group-addon">
-          <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>
+  <h3 class="text-xl">Faculty Bos - Consultation</h3>
+  <form #bosForm="ngForm" class="space-y-2">
+    <div class="fieldset">
+      <legend class="fieldset-legend">BOS Date</legend>
+      <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.consultationDate"
+        ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if (cdate.invalid && cdate.touched) {
-      <div class="label label-text-alt text-error">Consultation Date is required</div>
+      <span class="label text-error">Consultation date required*</span>
       }
     </div>
 
-    <div class="form-control">
-      <label class="text-sm font-bold">Programme Draft: </label>
-      <file-upload [code]="code" [url]="url" itemAlias="faculty-bos"></file-upload>
-    </div>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Programme Draft</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="faculty-bos"></file-upload>
+    </fieldset>
 
-    <div class="form-control">
-      <label class="label label-text font-bold">Recommended to: </label>
-      <fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Recommended to</legend>
+      <fieldset class="border-2 border-dashed border-gray-300 p-2 rounded-xl">
         <label class="flex gap-2 items-center">
           <input class="radio radio-xs" type="radio" name="recommend" [(ngModel)]="model.recommend"
             value="recommend-apc" required #recommend="ngModel"> APC &nbsp;
         </label>
       </fieldset>
       @if (recommend.invalid && recommend.touched) {
-      <div class="label label-text-alt text-error">Recommendations status is needed</div>
+      <div class="label label-text-alt text-error">Recommendations status needed*</div>
       }
-    </div>
-    <!-- here -->
-    <div class="form-group">
-      <label class="label label-text font-bold">Defer to: </label>
-      <fieldset>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Defer to</legend>
+      <fieldset class="border-2 border-dashed border-gray-300 p-2 rounded-xl">
         <div class="flex gap-4">
           <label class="flex items-center gap-2">
             <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="recommend-bosec"
@@ -52,14 +47,12 @@
         </div>
       </fieldset>
       @if(status.invalid && status.touched) {
-      <div class="label label-text-alt text-error">Defer to status is needed</div>
+      <div class="label label-text-alt text-error">Defer to status needed*</div>
       }
-    </div>
+    </fieldset>
 
-    <!-- end -->
     <div class="form-control">
-      <!-- <button type="submit" class="btn btn-warning" (click)="clear();uploader.clearQueue()">Clear</button> -->
-      <button type="submit" class="btn btn-sm btn-primary" (click)="onUpload()"
+      <button type="submit" class="btn btn-sm btn-primary w-full" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !bosForm.form.valid">
         Submit
         <span class="material-symbols-rounded">cloud_upload</span>

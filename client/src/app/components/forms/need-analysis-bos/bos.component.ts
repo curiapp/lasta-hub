@@ -17,7 +17,7 @@ export class BosComponent {
   url = `${environment.apiUrl}/need-analysis/bos/recommend`;
   model: any = {};
   consultationDate: Date;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload() {

@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import multer from "multer";
 import path from "path";
-
+import cors from "cors";
 import needAnalysisRoutes from "./routes/need-analysis";
 import graphqlRoutes from "./routes/graphql";
 import { v7 as uuid } from "uuid";
@@ -25,6 +25,11 @@ const upload = multer({
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:4200',
+//   methods: 'GET,POST,PUT,DELETE,OPTIONS',
+//   allowedHeaders: 'Content-Type,Authorization'
+}));
 
 const PORT = process.env.PORT || 3000;
 

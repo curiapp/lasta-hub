@@ -21,7 +21,7 @@ import { ModalControlService } from '../../../services/modal-control.service';
 export class FileUploadComponent {
 
   @Input() url: string = "";
-  @Input() code: string;
+  @Input() pid: string;
   @Input() itemAlias: string = "check-list";
   decision: string = "";
   formData: any = {};
@@ -46,8 +46,7 @@ export class FileUploadComponent {
     this.uploader.onBeforeUploadItem = (file) => { file.withCredentials = false; };
 
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('devCode', this.code);
-      // form.append('decission', this.decision);
+      form.append('id', this.pid);
       objectToFormData(this.formData, form);
     };
 

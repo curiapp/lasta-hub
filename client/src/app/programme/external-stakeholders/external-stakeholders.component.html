@@ -37,7 +37,7 @@
 </div>
 
 <modal #draft_programme>
-  <external-curriculum-dev-pac-start [code]="code"></external-curriculum-dev-pac-start>
+  <external-curriculum-dev-pac-start [pid]="pid"></external-curriculum-dev-pac-start>
 </modal>
 
 }
@@ -69,7 +69,7 @@
 </div>
 
 <modal #consult_pac>
-  <external-curriculum-dev-pac-consult [code]="code"></external-curriculum-dev-pac-consult>
+  <external-curriculum-dev-pac-consult [pid]="pid"></external-curriculum-dev-pac-consult>
 </modal>
 }
 
@@ -99,6 +99,6 @@
 </div>
 
 <modal #final_draft>
-  <external-pac-consult-endorse [code]="code"></external-pac-consult-endorse>
+  <external-pac-consult-endorse [pid]="pid"></external-pac-consult-endorse>
 </modal>
 }

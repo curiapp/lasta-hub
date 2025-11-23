@@ -9,10 +9,10 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
   imports: [FormsModule, FileUploadComponent]
 })
 export class PacConsultEndorseComponent {
-  url = `${environment.apiUrl}/consultations/pac/consult`;
+  url = `${environment.apiUrl}/consultations/pac/final-draft`;
   model: any = {};
   consultationDate: Date;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload(decision: string = "") {

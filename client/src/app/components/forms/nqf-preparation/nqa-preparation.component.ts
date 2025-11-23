@@ -19,36 +19,14 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
 export class NqaPreparationComponent implements OnInit {
   url = `${environment.apiUrl}/nqa/preparation`;
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   private fileMap = new Map();
   showWarning: boolean = false;
   selectedFiles: string[][] = [];
   fileList: Array<string>;
-
-  // declare a property called fileuploader and assign it to an instance of a new fileUploader.
-  // pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
   public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'nqa-pre' });
-
-  ngOnInit() {
-    // override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
-    // this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
-    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
-    this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('devCode', this.model.programmeCode);
-    };
-    // overide the onCompleteItem property of the uploader so we are
-    // able to deal with the server response.
-    this.uploader.onCompleteAll = () => {
-
-    }
-    this.fileList = ['Final Senate Approved Document', 'NQF Qualification Document', 'Review Report', 'Rationale Statement', 'Letters of Supports', 'Benchmarking'];
-
-  }
-  // declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: HttpClient, private el: ElementRef, private router: Router) {
-
-  }
   @ViewChild('selectedFile') selectedFile: any;
+
   clear() {
     this.model.programmeCode = "";
     this.model.status = "";
@@ -59,6 +37,7 @@ export class NqaPreparationComponent implements OnInit {
     // (<HTMLInputElement>document.getElementById("qualification-doc")).value = "";
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
+
   uploadFiles() {
     const request = new XMLHttpRequest();
     // POST to httpbin which returns the POST data as JSON
@@ -72,25 +51,7 @@ export class NqaPreparationComponent implements OnInit {
     console.log(newform);
     request.send(newform);
   }
-  // updateFile(id: string) {
 
-  //   for (var i = 0; i < this.uploader.queue.length - 1; i++) {
-  //     console.log(this.uploader.queue[i]);
-
-  //   }
-  //   (<HTMLInputElement>document.getElementById(id)).value = "";
-  //   if (this.uploader.queue.length > 2) {
-  //     for (var i = 0; i < this.uploader.queue.length - 1; i++) {
-  //       this.uploader.queue[i] = this.uploader.queue[i + 1];
-
-  //       console.log(this.uploader.queue[i]);
-  //     }
-  //     this.uploader.queue[2].remove();
-  //   }
-
-  //   this.fileMap.set(this.uploader.queue[this.uploader.queue.length - 1].file.name, id);
-  //   (<HTMLInputElement>document.getElementById(id)).value = this.uploader.queue[this.uploader.queue.length - 1].file.name;
-  // }
   updateFile() {
     let end = this.uploader.queue.length;
     this.selectedFiles.push([this.model.documentType, this.uploader.queue[end - 1].file.name]);
@@ -114,10 +75,7 @@ export class NqaPreparationComponent implements OnInit {
     this.selectedFile.nativeElement.value = '';
     (<HTMLInputElement>document.getElementById("file-name")).value = "";
   }
-  close() {
-    console.log("closing the window...");
-    this.router.navigate(['/home']);
-  }
+
   submitInfo(formData: NgForm) {
     if (this.uploader.getNotUploadedItems().length || formData.valid) {
       this.showWarning = false
@@ -126,7 +84,7 @@ export class NqaPreparationComponent implements OnInit {
       this.showWarning = true
   }
 
-    removeFile(name: any, type: string) {
+  removeFile(name: any, type: string) {
     this.fileList.push(type);
 
     this.uploader.queue.forEach(element => {
@@ -135,6 +93,18 @@ export class NqaPreparationComponent implements OnInit {
         this.selectedFiles = this.selectedFiles.filter((item) => item[1] !== name);
       }
     });
+  }
+
+  ngOnInit() {
+    this.fileList = ['Final Senate Approved Document', 'NQF Qualification Document', 'Review Report', 'Rationale Statement', 'Letters of Supports', 'Benchmarking'];
+    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
+    this.uploader.onBuildItemForm = (item: any, form: any) => {
+      form.append('pid', this.pid);
+    };
+
+    this.uploader.onCompleteAll = () => {
+
+    }
   }
 
 }

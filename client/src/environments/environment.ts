@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://cd.nust.na/api'
+  // apiUrl: 'https://cd.nust.na/api'
+  apiUrl: 'http://localhost:3000',
+  graphqlUrl: 'http://localhost:3000/graphql'
 };
 
 /*

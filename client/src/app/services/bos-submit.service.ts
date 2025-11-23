@@ -13,8 +13,7 @@ export class BoSSubmitService {
 
   constructor(private _http: HttpClient) { }
 
-  startNeedAnalysis(code: String, startDate: Date) {
-
+  startBOS(code: String, startDate: Date) {
     return this._http.post(this._bosSubmitUrl, { "devCode": code, "date": startDate }, {
       headers: {
         'Content-Type': 'application/json'

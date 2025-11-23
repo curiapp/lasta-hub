@@ -11,7 +11,7 @@ import { SharedModule } from '../../../shared.module';
 export class ApcComponent {
   url = `${environment.apiUrl}/need-analysis/apc/recommend`;
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload() {

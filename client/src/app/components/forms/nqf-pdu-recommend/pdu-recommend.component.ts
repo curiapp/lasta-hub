@@ -17,7 +17,7 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
 export class PduRecommendComponent {
   url = `${environment.apiUrl}/nqa/pdu-recommend`;
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   decision: string;
   showWarning: boolean = false;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;

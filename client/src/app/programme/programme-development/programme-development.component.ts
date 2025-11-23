@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
@@ -8,6 +8,10 @@ import { CurriculumDevDraftReviseComponent } from "../../components/forms/pd-cur
 import { CurriculumDevDraftPDUApprovComponent } from "../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component";
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { ModalComponent } from "../../components/modal/modal.component";
+import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
+import { Apollo } from 'apollo-angular';
+import { LoadingService } from '../../services/loading.service';
+import { programme_steps } from '../../static';
 
 @Component({
   selector: 'client-programme-development',
@@ -17,22 +21,11 @@ import { ModalComponent } from "../../components/modal/modal.component";
 })
 export class ProgrammeDevelopmentComponent {
   programme: Programme;
-  code: string = "defaultDevCode";
+  pid: string = "defaultDevCode";
+  apollo = inject(Apollo);
+  _loading = inject(LoadingService);
 
-  steps = [
-    {
-      id: 1,
-      title: "CDC and PAC Appointment",
-    },
-    {
-      id: 2,
-      title: "Curriculum Drafting",
-    },
-    {
-      id: 3,
-      title: "Draft Curriculum and PDQA Recomendation",
-    }
-  ]
+  steps = programme_steps['programme_development'];
   selectedStep = 1;
   coordinators = [
     {
@@ -96,12 +89,16 @@ export class ProgrammeDevelopmentComponent {
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      // const id = params.get('id');
-      this.code = params.get('id');
-      this.client.getAll<Programme>(`programmes?devCode=${this.code}`).subscribe((data) => {
-        // console.log("Programs ", data);
-        this.programme = data[0];
-      })
+      this.pid = params.get('id');
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_BY_ID,
+        variables: {
+          id: params.get('id')
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programme = result?.data?.programmes[0];
+      });
     });
   }
 }

@@ -19,14 +19,9 @@ export class NeedAnalysisEditProgramComponent {
   levels = NQFLevel;
   @Input() programme: Programme;
 
-  changed(event) {
-    this.programme.level = event;
-  }
   updateProgramme(form: NgForm) {
-    console.log("Form ", form.value);
-
     if (form.valid) {
-      this.needAnalysisService.updateNeedAnalysis(form.value).subscribe({
+      this.needAnalysisService.updateNeedAnalysis({ ...form.value, id: this.programme.id }).subscribe({
         next: (response) => {
           this.toastService.success("Programme updated successfully!");
         },

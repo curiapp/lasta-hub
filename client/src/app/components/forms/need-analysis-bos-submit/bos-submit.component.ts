@@ -16,7 +16,7 @@ import { ModalControlService } from '../../../services/modal-control.service';
 })
 export class BosSubmitComponent {
   model: any = {};
-  @Input() programmeCode: String;
+  @Input() pid: String;
   startDate: Date;
   modalControl = inject(ModalControlService);
   _dataService = inject(BoSSubmitService);
@@ -25,7 +25,7 @@ export class BosSubmitComponent {
 
 
   submitBOS(form: NgForm) {
-    this._dataService.startNeedAnalysis(this.programmeCode, this.startDate)
+    this._dataService.startBOS(this.pid, this.startDate)
       .subscribe({
         next: (data) => {
           console.log("data: " + JSON.stringify(data));

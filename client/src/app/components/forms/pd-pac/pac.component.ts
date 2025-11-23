@@ -5,7 +5,6 @@ import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
 
-
 @Component({
   selector: 'pd-pac',
   templateUrl: 'pac.component.html',
@@ -14,12 +13,12 @@ import { LoadingService } from '../../../services/loading.service';
 
 export class PacComponent implements OnInit {
   private fb = inject(FormBuilder);
-  @Input() code: string = "defaultDevCode";
+  @Input() pid: string = "defaultDevCode";
   pacAppointUrl: string = "curriculum-development/appoint/pac";
   ld = inject(LoadingService);
 
-  myForm = this.fb.group({
-    devCode: [this.code, [Validators.required, Validators.minLength(3)]],
+  pacForm = this.fb.group({
+    id: [this.pid, [Validators.required, Validators.minLength(3)]],
     pac: this.fb.array([
       this.fb.group({
         firstName: ['', Validators.required],
@@ -34,17 +33,15 @@ export class PacComponent implements OnInit {
     ])
   })
 
-  // we will use form builder to simplify our syntax
   constructor(public http: ClientService, private toast: ToastService) { }
 
-
   removeItem(index: number): void {
-    const itemsArray = this.myForm.get('pac') as FormArray;
+    const itemsArray = this.pacForm.get('pac') as FormArray;
     itemsArray.removeAt(index);
   }
 
   addItem() {
-    const itemArray = this.myForm.get('pac') as FormArray;
+    const itemArray = this.pacForm.get('pac') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -58,34 +55,27 @@ export class PacComponent implements OnInit {
     itemArray.push(newItem);
   }
 
-
   get items(): FormArray {
-    return this.myForm.get('pac') as FormArray;
+    return this.pacForm.get('pac') as FormArray;
   }
 
   ngOnInit() {
-    this.myForm.get('devCode').setValue(this.code);
+    this.pacForm.get('id').setValue(this.pid);
   }
 
-
   onCellPhoneValueChanged(value: any, controlAtX: AbstractControl) {
-    console.log(value)
     let phoneNumberControl = controlAtX;
-
-    // Using setValidators to add and remove validators. No better support for adding and removing validators to controller atm.
-    // See issue: https://github.com/angular/angular/issues/10567
     if (!value) {
       phoneNumberControl.setValidators([Validators.required, Validators.minLength(11)]);
     } else {
       phoneNumberControl.setValidators([]);
     }
-
     phoneNumberControl.updateValueAndValidity(); //Need to call this to trigger a update
     return null;
   }
 
   onSubmit() {
-    this.http.post<any>(this.pacAppointUrl, this.myForm.value)
+    this.http.post<any>(this.pacAppointUrl, this.pacForm.value)
       .subscribe({
         next: data => {
           console.log("data", data);

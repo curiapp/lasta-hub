@@ -2,9 +2,8 @@
   <h3 class="text-xl">NQF Documentation </h3>
   <form #concludeForm="ngForm" class="space-y-2">
 
-
-    <div class="form-control">
-      <label for="doc" class="label label-text text-primary font-bold">Select Document Type</label>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Select Document Type</legend>
       <select class="select select-sm select-bordered" name="documentName" id="documentName" required
         [(ngModel)]="model.documentType" #docType="ngModel">
         <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
@@ -13,13 +12,13 @@
         }
       </select>
       @if (docType.invalid && docType.touched) {
-      <div class="label label-text-alt text-error">Document type is required*</div>
+      <div class="label label-text-alt text-error">Document type required*</div>
       }
-    </div>
+    </fieldset>
 
     @if(docType.valid){
-    <div class="form-control">
-      <label for="doc" class="text-primary font-bold label label-text"> Draft Programme: </label>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Draft Programme</legend>
       <div class="flex items-center justify-center w-full">
         <label for="dropzone-file"
           class="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
@@ -40,54 +39,23 @@
       </div>
 
       @if (docType.invalid) {
-      <label for="doc" class="text-primary font-bold label label-text-alt"> Please select document type</label>
+      <span class="text-primary font-bold label"> Please select document type</span>
       }
-    </div>
+    </fieldset>
     }
 
     @if(uploader?.queue.length){
-    <div class="p-1 pb-3 border-2 border-dashed rounded-lg">
-      <h3 class="text-sm capitalize text-primary font-bold my-2 ml-2">Selected Files</h3>
-      <!-- <table class="table table-xs">
-        <thead>
-          <tr>
-            <th class="h6">Document Type</th>
-            <th class="h6">Selected File name</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of selectedFiles; track $index) {
-          <tr>
-            <td class="text-primary">
-              {{item[0]}}
-            </td>
-            <td class="group flex items-center gap-2 transition-all ease-out">
-              {{item[1]}} &nbsp;
-              @if(uploader?.isUploading){
-              <span class="loading loading-spinner loading-1xl"></span>
-              }
-
-              <button
-                class="size-6 hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 rounded-full"
-                (click)="removeFile(item[1], item[0])">
-                <span class="material-symbols-rounded text-[16px]">
-                  close
-                </span>
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table> -->
+    <fieldset class="p-1 pb-3 border-2 border-dashed border-gray-300 rounded-lg fieldset">
+      <legend class="fieldset-legend ml-2">Selected Files</legend>
       <div class="space-y-1">
         @for (item of selectedFiles; track $index) {
-        <div class="rounded-lg p-1 border flex items-center gap-3">
+        <div class="rounded-lg p-1 bg-gray-50 flex items-center gap-3">
           <div class="size-8 rounded-lg bg-gray-100 grid place-items-center">
             <file-icon [fileName]="item[1]"></file-icon>
           </div>
           <div class="flex flex-col flex-grow">
-            <span class="font-semibold text-sm break-all">{{item[1]}}</span>
-            <span class="text-xs">{{item[0]}}</span>
+            <span class="font-normal text-sm break-all">{{item[1]}}</span>
+            <span class="text-xs text-gray-500">{{item[0]}}</span>
           </div>
           <div
             class="size-8 hover:bg-gray-100 hover:scale-105 rounded-full grid place-items-center cursor-pointer transition-all">
@@ -98,19 +66,17 @@
         </div>
         }
       </div>
-    </div>
+    </fieldset>
     }
 
-
-
-    <div class="form-control">
+    <div class="form-control space-y-2">
       @if(!showWarning){
-      <div class="label label-text-alt text-gray-500">
+      <div class="label text-xs text-gray-500">
         Please complete all required fields (Marked as * - required)
       </div>
       }
 
-      <button type="button" class="btn btn-primary btn-sm"
+      <button type="button" class="btn btn-primary btn-sm w-full"
         (click)="submitInfo(concludeForm)"><!--/button> [disabled]="!uploader.getNotUploadedItems().length  || !concludeForm.form.valid"-->
         Submit
         <span class="material-symbols-rounded">

@@ -1,8 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { Programme } from '../types';
-import { programmes } from '../static';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Apollo, gql } from 'apollo-angular';
 import { ClientService } from '../services/client.service';
+import { LoadingService } from '../services/loading.service';
+import { Programme } from '../types';
+import { GET_PROGRAMME_BY_ID } from '../graphql/graphql.queries';
+
 
 @Component({
   selector: 'client-programme',
@@ -21,6 +24,8 @@ export class ProgrammeComponent {
     { id: "n-r", title: "NQF Registration" },
   ];
   currentPath = signal("");
+  apollo = inject(Apollo);
+  _loading = inject(LoadingService);
 
   constructor(private route: ActivatedRoute, private router: Router, private client: ClientService) {
     const path = this.router.url.split("/")
@@ -35,10 +40,25 @@ export class ProgrammeComponent {
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       // this.programme = programmes.find(programme => programme.id === params.get('id'))
-      this.client.getAll<Programme>(`programmes?devCode=${params.get('id')}`).subscribe((data) => {
-        // console.log("Programs ", data);
-        this.programme = data[0];
-      })
+      // this.client.getAll<Programme>(`programmes?devCode=${params.get('id')}`).subscribe((data) => {
+      //   // console.log("Programs ", data);
+      //   this.programme = data[0];
+      // })
+
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_BY_ID,
+        variables: {
+          id: params.get('id')
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programme = result?.data?.programmes[0];
+        console.log("Programmes get", result);
+      });
+
     });
+
+
+
   }
 }

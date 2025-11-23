@@ -679,7 +679,116 @@ export const upComingEvents = [
   }
 ];
 
-
-
-
 export const NQFLevel: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+
+export const programme_steps = {
+  need_analysis: [
+    {
+      id: 1,
+      title: "Programme Resume",
+    },
+    {
+      id: 2,
+      title: "Stakeholders' Consultation",
+    },
+    {
+      id: 3,
+      title: "PDQA Recommendation",
+    },
+    {
+      id: 4,
+      title: "BOS Consultation",
+    },
+    {
+      id: 5,
+      title: "APC Recommendation",
+    },
+    {
+      id: 6,
+      title: "Senate Approval",
+    }
+  ],
+  programme_development: [
+    {
+      id: 1,
+      title: "CDC and PAC Appointment",
+    },
+    {
+      id: 2,
+      title: "Curriculum Drafting",
+    },
+    {
+      id: 3,
+      title: "Draft Curriculum and PDQA Recomendation",
+    }
+  ],
+  external_stakeholders_consultations: [
+    {
+      id: 1,
+      title: "Circulation of Draft Programme",
+    },
+    {
+      id: 2,
+      title: "PAC Consultation and Benchmarking",
+    },
+    {
+      id: 3,
+      title: "Final Draft and PDQA Recommendations"
+    }
+  ],
+  internal_stakeholders_consultations: [
+    {
+      id: 1,
+      title: "Internal Consultations",
+    },
+    {
+      id: 2,
+      title: "ADSTLT Review",
+    },
+    {
+      id: 3,
+      title: "CEU Review"
+    },
+    {
+      id: 4,
+      title: "PDQA Recommendations"
+    }
+  ],
+  bos_apc_senate_consultations: [
+    {
+      id: 1,
+      title: "Final Draft to BOS Submission",
+    },
+    {
+      id: 2,
+      title: "Faculty BOS Consultation",
+    },
+    {
+      id: 3,
+      title: "APC Recommendation"
+    },
+    {
+      id: 4,
+      title: "Final Senate Recommendation"
+    }
+  ],
+  nqf_registration: [
+    {
+      id: 1,
+      title: "NQF Documentation",
+    },
+    {
+      id: 2,
+      title: "NQF Submission",
+    },
+    {
+      id: 3,
+      title: "NQF Feedback"
+    },
+    {
+      id: 4,
+      title: "NQF Registration"
+    }
+  ]
+}

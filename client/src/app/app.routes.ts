@@ -14,7 +14,7 @@ import { ExternalStakeholdersComponent } from './programme/external-stakeholders
 import { InternalStakeholdersComponent } from './programme/internal-stakeholders/internal-stakeholders.component';
 // import { SenateComponent } from './programme/senate/senate.component';
 import { NqfRegistrationComponent } from './programme/nqf-registration/nqf-registration.component';
-import { SenateConsultationsComponent } from './programme/consultations/consultations.component';
+import { SenateConsultationsComponent } from './programme/bos-apc-senate-consultations/consultations.component';
 import { LoadingPageComponent } from './components/loaders/loading-page/loading-page.component';
 // import { NeedAnalysisConcludeComponent } from './need-analysis-conclude/need-analysis-conclude.component';
 // import { EndConsultComponent } from './end-consult/end-consult.component';

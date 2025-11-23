@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { CEURecommendComponent } from "../../components/forms/internal-ceu-recommend/ceu-recommend.component";
@@ -8,6 +8,10 @@ import { TLURecommendComponent } from "../../components/forms/internal-tlu-recom
 import { ModalComponent } from "../../components/modal/modal.component";
 import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
+import { Apollo } from 'apollo-angular';
+import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
+import { LoadingService } from '../../services/loading.service';
+import { programme_steps } from '../../static';
 
 @Component({
   selector: 'client-internal-stakeholders',
@@ -16,27 +20,12 @@ import { Programme } from '../../types';
   styleUrl: './internal-stakeholders.component.css'
 })
 export class InternalStakeholdersComponent {
-  steps = [
-    {
-      id: 1,
-      title: "Internal Consultations",
-    },
-    {
-      id: 2,
-      title: "ADSTLT Review",
-    },
-    {
-      id: 3,
-      title: "CEU Review"
-    },
-    {
-      id: 4,
-      title: "PDQA Recommendations"
-    }
-  ];
+  steps = programme_steps['internal_stakeholders_consultations'];
   programme: Programme;
-  code: string;
+  pid: string;
   selectedStep = 1;
+    apollo = inject(Apollo);
+  _loading = inject(LoadingService);
 
   constructor(private route: ActivatedRoute, private client: ClientService) { }
 
@@ -46,15 +35,15 @@ export class InternalStakeholdersComponent {
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      this.code = params.get('id');
-      this.client.getAll<Programme>(`programmes?devCode=${this.code}`).subscribe((data) => {
-        // console.log("Programs ", data);
-        this.programme = data[0];
-      });
-
-      this.client.getAll<any>(`need-analysis?devCode=${this.code}`).subscribe((data) => {
-        console.log("Need Analysis data ", data);
-        // this.programme = data[0];
+      this.pid = params.get('id');
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_BY_ID,
+        variables: {
+          id: params.get('id')
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programme = result?.data?.programmes[0];
       });
     });
   }

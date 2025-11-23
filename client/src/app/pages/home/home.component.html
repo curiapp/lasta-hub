@@ -137,7 +137,7 @@
   <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
 </video> -->
 
-@if(currentUser){
+@if(!currentUser){
 <div class="p-4 bg-primary space-y-3 text-base-100">
 
   <h3 class="capitalize">{{greetingMessage}}</h3>
@@ -246,14 +246,14 @@
         <!-- @if(user==='LECTURER'){ -->
         <button class="btn btn-sm btn-primary" (click)="create_programme.open()">Create Programme</button>
         <!-- } -->
+        <modal #create_programme>
+          <start-need-analysis></start-need-analysis>
+        </modal>
       </div>
-      <modal #create_programme>
-        <start-need-analysis></start-need-analysis>
-      </modal>
     </div>
 
     @if(_loading.isLoading()){
-    <programme-tamplate />
+    <programme-template />
     }@else {
     <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
       @for (item of programmes; track item?.preProgComponent?.devCode) {
@@ -261,19 +261,18 @@
         <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
         <div
           class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
-          @if(item.isPreProgramme && user==='PDQA'){
+          <!-- @if(item.isPreProgramme && user==='PDQA'){
           <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item?.preProgComponent?.devCode)">
             Approve
           </button>
-          }
+          } -->
 
-          <a [routerLink]="['/programme/', item?.preProgComponent?.devCode]"
-            class="p-4 !pt-0 transition-opacity sm:p-6">
+          <a [routerLink]="['/programme/', item?.id]" class="p-4 !pt-0 transition-opacity sm:p-6">
             <!-- <a [routerLink]="['/programme/', item.id]" class="p-4 !pt-0 transition-opacity sm:p-6"> -->
-            <h3 class=" mt-4 font-medium sm:text-lg line-clamp-2 capitalize">{{item.name}}</h3>
+            <h3 class=" mt-4 font-medium sm:text-lg line-clamp-2 capitalize">{{item?.title}}</h3>
 
             <div class="flex flex-col">
-              <span class="text-xs"><b>Code:</b> {{item?.preProgComponent?.devCode}},
+              <span class="text-xs"><b>Code:</b> {{item?.code}},
                 <b>Level:</b> {{item.level}}</span>
               <!-- <span class="text-xs  line-clamp-2">Required Actions:
                   @for (it of item.actions; track it; let i = $index){
@@ -293,7 +292,7 @@
       <div
         class="text-center w-full rounded-box bg-gray-100 h-64 flex items-center justify-center flex-col gap-3 col-span-full">
         <img src="assets/circled-x.svg" alt="empty image" class="size-8">
-        <span class="text-sm">no programmes</span>
+        <span class="text-sm">No Programmes</span>
       </div>
       }
 

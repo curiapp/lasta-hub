@@ -17,14 +17,11 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
   ]
 })
 export class NeedAnalysisConcludeComponent {
-  devCode: String;
   decision: String;
   url = `${environment.apiUrl}/need-analysis/conclude`;
-  @Input() code?: string;
+  @Input() pid?: string;
   @Output() completed = new EventEmitter<void>();
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
-
-  constructor() { }
 
   onUpload(decision: string = "") {
     this.fileUpload.onUpload({ "decission": decision });

@@ -16,9 +16,9 @@ import { LoadingService } from '../../../services/loading.service';
   imports: [FormsModule]
 })
 
-export class SenateSubmitComponent implements OnInit {
+export class SenateSubmitComponent {
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   startDate: Date;
   dataService: SenateSubmitService;
   postMyDataToServer: string;
@@ -27,24 +27,19 @@ export class SenateSubmitComponent implements OnInit {
   constructor(private _dataService: SenateSubmitService, private toast: ToastService) {
     this.dataService = _dataService;
   }
-  ngOnInit() {
-  }
 
   onSumbit(form: NgForm) {
-    this._dataService.startNeedAnalysis(this.code, this.startDate)
+    this._dataService.startNeedAnalysis(this.pid, this.startDate)
       .subscribe({
         next: (data) => {
-          // this.postMyDataToServer = JSON.stringify(data);
-          // alert('Senate session started !');
           this.toast.success("Senate session started !");
-        }, // put the data returned from the server in our variable
+        },
         error: (error) => {
-          console.log("Error HTTP Post Service");
+          // console.log("Error HTTP Post Service");
           this.toast.error("An error occurred while starting Bos session.");
         }
       });
   }
-
 
   clear() {
     this.model.programmeCode = '';

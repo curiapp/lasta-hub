@@ -15,7 +15,7 @@ export class CurriculumDevPACStartComponent {
   url = `${environment.apiUrl}/consultations/pac/start`;
   model: any = {};
   consultationDate: Date;
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload() {

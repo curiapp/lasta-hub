@@ -75,56 +75,12 @@
 </div>
 
 <modal #appoint_cdc>
-  <pd-cdc [code]="code"></pd-cdc>
+  <pd-cdc [pid]="pid"></pd-cdc>
 </modal>
 
 <modal #appoint_pac>
-  <pd-pac [code]="code"></pd-pac>
+  <pd-pac [pid]="pid"></pd-pac>
 </modal>
-
-<!-- Edit Stakeholder Modal -->
-<!-- <modal #stakeholder_modal>
-  <div class="modal-box">
-    <h3 class="text-2xl">Edit Programme </h3>
-
-    <form (ngSubmit)="updateProgramme()" #startForm="ngForm" class="space-y-3">
-      <div class="form-control">
-        <div class="label">
-          <span class="label-text">Name</span>
-        </div>
-        <input #name" type="text" class="input input-bordered" required [(ngModel)]="stakeholder.name" name="name"
-          #name="ngModel">
-        @if (name.invalid) {
-        <div class="label">
-          <span class="label-text">
-            name is required
-          </span>
-        </div>
-        }
-      </div>
-
-      <div class="form-control">
-        <div class="label">
-          <span class="label-text">Proposed Programme Code</span>
-        </div>
-        <input #email" type="email" class="input input-bordered" required [(ngModel)]="stakeholder.email"
-          name="email" #email="ngModel">
-        @if (email.invalid) {
-        <div class="label">
-          <span class="label-text">
-            email is required
-          </span>
-        </div>
-        }
-      </div>
-
-      <div class="form-control gap-2">
-        <button type="submit" class="btn btn-primary " [disabled]="!startForm.form.valid">Add</button>
-      </div>
-    </form>
-
-</modal> -->
-
 }
 
 
@@ -156,7 +112,7 @@
 
 
 <modal #draft_pdqa>
-  <pd-curriculum-revise [code]="code"></pd-curriculum-revise>
+  <pd-curriculum-revise [pid]="pid"></pd-curriculum-revise>
 </modal>
 }
 
@@ -186,6 +142,6 @@
 </div>
 
 <modal #pdqa_approval>
-  <pd-curriculum-dev-draft-pdu-approval [code]="code"></pd-curriculum-dev-draft-pdu-approval>
+  <pd-curriculum-dev-draft-pdu-approval [pid]="pid"></pd-curriculum-dev-draft-pdu-approval>
 </modal>
 }

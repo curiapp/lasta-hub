@@ -1,10 +1,9 @@
-<div class="space-y-2">
+<div class="space-y-4">
   <h3 class="text-xl">NQF Submission </h3>
-  <form #concludeForm="ngForm" class="space-y-4">
-
-    <div class="form-control">
-      <label class="label label-text font-bold">Submission type: </label>
-      <div class="p-2 rounded-lg border-2 border-dashed flex gap-4 items-center flex-wrap">
+  <form #concludeForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Submission type</legend>
+      <div class="p-2 rounded-lg border-2 border-dashed border-gray-300 flex gap-4 items-center flex-wrap">
         <div class="flex items-center gap-2">
           <input class="radio radio-xs" type="radio" id="status1" name="type" [(ngModel)]="model.type" [value]="true"
             required #type="ngModel" mdbInput>
@@ -16,23 +15,22 @@
           <label class="label label-text" for="status2">Resubmission</label>
         </div>
       </div>
-    </div>
+    </fieldset>
 
-    <div class="form-control">
-      <label class="label label-text font-bold">Documentation:</label>
-      <file-upload [code]="code" [url]="url" itemAlias="pdu-recommendation"></file-upload>
-    </div>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Documentation:</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="pdu-recommendation"></file-upload>
+    </fieldset>
 
     <div class="flex gap-2 justify-center">
-      <button type="button" class="btn btn-primary btn-sm" (click)="onUpload('approve')"
+      <button type="button" class="btn btn-primary btn-sm w-6/12" (click)="onUpload('approve')"
         [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
         Save
       </button>
-      <button type="button" class="btn btn-secondary btn-sm" (click)="onUpload('defer')"
+      <button type="button" class="btn btn-secondary btn-sm flex-auto" (click)="onUpload('defer')"
         [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
         Defer &nbsp;
       </button>
     </div>
-
   </form>
 </div>

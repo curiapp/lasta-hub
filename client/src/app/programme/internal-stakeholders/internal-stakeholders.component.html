@@ -39,7 +39,7 @@
 </div>
 
 <modal #internal_consult>
-  <tlu-ceu-qa-start [code]="code"></tlu-ceu-qa-start>
+  <tlu-ceu-qa-start [pid]="pid"></tlu-ceu-qa-start>
 </modal>
 }
 
@@ -70,7 +70,7 @@
 </div>
 
 <modal #adstlt_review>
-  <tlu-recommend [code]="code"></tlu-recommend>
+  <tlu-recommend [pid]="pid"></tlu-recommend>
 </modal>
 }
 
@@ -101,7 +101,7 @@
 </div>
 
 <modal #ce_review>
-  <ceu-recommend [code]="code"></ceu-recommend>
+  <ceu-recommend [pid]="pid"></ceu-recommend>
 </modal>
 }
 
@@ -132,6 +132,6 @@
 </div>
 
 <modal #pdqa_review>
-  <internal-pdqa-review [code]="code"></internal-pdqa-review>
+  <internal-pdqa-review [pid]="pid"></internal-pdqa-review>
 </modal>
 }

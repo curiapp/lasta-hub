@@ -10,11 +10,12 @@ import {
     consultSchema,
     senateRecommendSchema,
     startSchema,
+    updateSchema,
 } from "@/validators/need-analysis";
 import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
 import { saveFile } from "@/helpers/save-file";
 import { isDbKnownError } from "@/helpers/db-errors";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const PHASE = "needs-analysis";
 
@@ -32,6 +33,26 @@ export default async (app: Express, upload: Multer) => {
             await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"programme-resume"})`);
 
             res.send({ message: "Need analysis started" });
+        } catch (err) {
+            console.error(err);
+            if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
+            res.status(500).send({ message: "Internal server error" });
+        }
+    });
+
+    app.put("/need-analysis/start/:id", async (req, res) => {
+        const { error, value } = updateSchema.validate(req.body);
+        if (error) {
+            return res.status(400).send(error.details[0].message);
+        }
+
+        try {
+            // Save data in db
+            const [programmeRecord] = await db.update(programmes)
+                .set(value).where(eq(programmes.id, req.params.id))
+                .returning({ id: programmes.id });
+
+            res.send({ message: "Programme updated!" });
         } catch (err) {
             console.error(err);
             if (isDbKnownError(err)) return res.status(400).send({ message: err.message });

@@ -1,11 +1,12 @@
 <div class="space-y-4">
-  <h3 class="form-title-label">Draft Curriculum - PDQA Recomendation </h3>
-  <form #concludeForm="ngForm">
-    <label class="text-sm font-bold"> Draft Curriculum: </label>
+  <h3 class="text-xl">Draft Curriculum - PDQA Recomendation </h3>
+  <form #concludeForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Draft Curriculum</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="check-list"></file-upload>
+    </fieldset>
 
-    <file-upload [code]="code" [url]="url" itemAlias="check-list"></file-upload>
-
-    <div class="flex items-center justify-center gap-2 my-2">
+    <div class="flex items-center justify-center gap-2">
       <button type="button" class="btn btn-sm btn-primary btn-s flex-auto" (click)="onUpload('approve')"
         [disabled]="!fileUpload?.uploader?.queue.length || concludeForm.form.invalid">
         Recommended for consultation
@@ -15,7 +16,7 @@
         Request Resubmission
         <span class="material-symbols-rounded">
           undo
-          </span>
+        </span>
       </button>
     </div>
   </form>

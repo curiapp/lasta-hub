@@ -2,7 +2,7 @@ export interface Programme {
   id?: string;
   code: string;
   level: number;
-  name: string;
+  title: string;
   faculty: string;
   members?: string[];
   initiator?: string;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Programme } from '../../types';
@@ -9,6 +9,10 @@ import { OtherFacultyBosComponent } from "../../consultation-other-faculty-bos/o
 import { ApcRecommendComponent } from "../../components/forms/consultation-apc-recommend/apc-recommend.component";
 import { FinalSenateRecommendComponent } from "../../components/forms/consultation-final-senate-recommend/final-senate-recommend.component";
 import { ModalComponent } from "../../components/modal/modal.component";
+import { Apollo } from 'apollo-angular';
+import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
+import { LoadingService } from '../../services/loading.service';
+import { programme_steps } from '../../static';
 
 @Component({
   selector: 'consultations',
@@ -17,27 +21,12 @@ import { ModalComponent } from "../../components/modal/modal.component";
   styleUrl: './consultations.component.css'
 })
 export class SenateConsultationsComponent {
-  steps = [
-    {
-      id: 1,
-      title: "Final Draft to BOS Submission",
-    },
-    {
-      id: 2,
-      title: "Faculty BOS Consultation",
-    },
-    {
-      id: 3,
-      title: "APC Recommendation"
-    },
-    {
-      id: 4,
-      title: "Final Senate Recommendation"
-    }
-  ];
+  steps = programme_steps['bos_apc_senate_consultations'];
   programme: Programme;
-  code: string;
+  pid: string;
   selectedStep = 1;
+  apollo = inject(Apollo);
+  _loading = inject(LoadingService);
 
   constructor(private route: ActivatedRoute, private client: ClientService) { }
 
@@ -47,15 +36,15 @@ export class SenateConsultationsComponent {
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      this.code = params.get('id');
-      this.client.getAll<Programme>(`programmes?devCode=${this.code}`).subscribe((data) => {
-        // console.log("Programs ", data);
-        this.programme = data[0];
-      });
-
-      this.client.getAll<any>(`need-analysis?devCode=${this.code}`).subscribe((data) => {
-        console.log("Need Analysis data ", data);
-        // this.programme = data[0];
+      this.pid = params.get('id');
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_BY_ID,
+        variables: {
+          id: params.get('id')
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programme = result?.data?.programmes[0];
       });
     });
   }

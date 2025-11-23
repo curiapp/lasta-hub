@@ -1,0 +1,29 @@
+.stakeholder-input-container {
+  visibility: hidden;
+  transition: visibility 1s;
+}
+
+.open {
+  visibility: visible;
+}
+
+
+.enter-animation {
+  animation: slide-fade 1s;
+}
+
+.enter-animation1 {
+  animation: slide-fade 1s;
+  animation-direction: reverse;
+}
+
+@keyframes slide-fade {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

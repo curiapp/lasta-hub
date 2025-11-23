@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { Programme } from '../../types';
 import { ActivatedRoute } from '@angular/router';
@@ -8,6 +8,10 @@ import { PduRecommendComponent } from "../../components/forms/nqf-pdu-recommend/
 import { NQARegComponent } from "../../components/forms/nqa-reg/nqa-reg.component";
 import { NqaSubmitComponent } from "../../components/forms/nqa-submit/nqa-submit.component";
 import { ModalComponent } from "../../components/modal/modal.component";
+import { Apollo } from 'apollo-angular';
+import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
+import { LoadingService } from '../../services/loading.service';
+import { programme_steps } from '../../static';
 
 @Component({
   selector: 'client-nqf-registration',
@@ -16,27 +20,12 @@ import { ModalComponent } from "../../components/modal/modal.component";
   styleUrl: './nqf-registration.component.css'
 })
 export class NqfRegistrationComponent {
-  steps = [
-    {
-      id: 1,
-      title: "NQF Documentation",
-    },
-    {
-      id: 2,
-      title: "NQF Submission",
-    },
-    {
-      id: 3,
-      title: "NQF Feedback"
-    },
-    {
-      id: 4,
-      title: "NQF Registration"
-    }
-  ];
+  steps = programme_steps['nqf_registration'];
   programme: Programme;
-  code: string;
+  pid: string;
   selectedStep = 1;
+  apollo = inject(Apollo);
+  _loading = inject(LoadingService);
 
   constructor(private route: ActivatedRoute, private client: ClientService) { }
 
@@ -46,15 +35,15 @@ export class NqfRegistrationComponent {
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      this.code = params.get('id');
-      this.client.getAll<Programme>(`programmes?devCode=${this.code}`).subscribe((data) => {
-        // console.log("Programs ", data);
-        this.programme = data[0];
-      });
-
-      this.client.getAll<any>(`need-analysis?devCode=${this.code}`).subscribe((data) => {
-        console.log("Need Analysis data ", data);
-        // this.programme = data[0];
+      this.pid = params.get('id');
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_BY_ID,
+        variables: {
+          id: params.get('id')
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programme = result?.data?.programmes[0];
       });
     });
   }

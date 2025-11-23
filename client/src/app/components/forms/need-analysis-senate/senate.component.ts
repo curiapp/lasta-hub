@@ -12,7 +12,7 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
 export class SenateComponent {
   url = `${environment.apiUrl}/need-analysis/senate/recommend`;
   model: any = {};
-  @Input() code: string;
+  @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload() {

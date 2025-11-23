@@ -1,42 +1,31 @@
 <form (ngSubmit)="updateProgramme(updateProgrammeForm)" #updateProgrammeForm="ngForm" class="space-y-3">
-  <div class="form-control">
-    <div class="label">
-      <span class="label-text">Proposed Programme Title</span>
-    </div>
-    <input id="title" type="text" class="input input-bordered" required [(ngModel)]="programme.name" name="title"
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Proposed Programme Title</legend>
+    <input id="title" type="text" class="input input-bordered" required [ngModel]="programme.title" name="title"
       #ptitle="ngModel">
     @if (ptitle.invalid && ptitle.touched) {
-    <div class="label">
-      <span class="label label-text-alt text-error">
-        Programme title is required
-      </span>
-    </div>
+    <span class="label label-text-alt text-error">
+      Programme title required*
+    </span>
     }
-  </div>
+  </fieldset>
 
-  <div class="form-control">
-    <div class="label">
-      <span class="label-text">Proposed Programme Code</span>
-    </div>
-    <input id="programmeCode" type="text" class="input input-bordered" required
-      [(ngModel)]="programme.preProgComponent.devCode" name="code" #code="ngModel">
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Proposed Programme Code</legend>
+    <input id="programmeCode" type="text" class="input input-bordered" required [ngModel]="programme.code" name="code"
+      #code="ngModel">
     @if (code.invalid && code.touched) {
-    <div class="label label-text-alt text-error">
-      <span class="label-text">
-        Proposed Programme Code is required
-      </span>
-    </div>
+    <span class="label-text label-text-alt text-error">
+      Programme code required*
+    </span>
     }
-  </div>
+  </fieldset>
 
 
-  <div class="form-control w-full">
-    <div class="label">
-      <span class="label-text">NQF Level</span>
-    </div>
-
-    <select class="select select-bordered w-full" title="Select level" required [(ngModel)]="programme.level"
-      name="level" #level="ngModel" (ngModelChange)="changed($event)">
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">NQF Level</legend>
+    <select class="select select-bordered w-full" title="Select level" required [ngModel]="programme.level" name="level"
+      #level="ngModel">
       <option disabled>Select NQF Level</option>
       @for (level of levels;track level){
       <option [value]="level">{{level}}</option>
@@ -44,13 +33,13 @@
     </select>
     @if (level.invalid && level.touched) {
     <div class="label">
-      <span class="label label-text-alt text-error">NQF Level required!</span>
+      <span class="label label-text-alt text-error">NQF Level required*</span>
     </div>
     }
+  </fieldset>
 
-  </div>
   <div class="form-control gap-2">
-    <button type="submit" class="btn btn-sm btn-primary flex gap-1 items-center"
+    <button type="submit" class="btn btn-sm btn-primary w-full flex gap-1 items-center"
       [disabled]="updateProgrammeForm.form.invalid">
       @if (!_loading?.isLoading()) {
       <span class="flex items-center gap-2">

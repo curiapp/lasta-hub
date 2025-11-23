@@ -1,57 +1,37 @@
 <div class="space-y-2">
   <h3 class="text-xl">NQF Registration</h3>
   <form #consultForm="ngForm" class="space-y-2">
-    <div class="form-control">
-      <label for="ProgrammeCode" class="label label-text font-bold">Programme Code </label>
-      <input id="programmeCode" disabled type="text" class="input input-bordered" required [(ngModel)]="code" name="devCode"
-        #procode="ngModel">
-      @if(procode.invalid && procode.touched){
-      <div class="label label-text text-error">Proposed Programme Code is required*</div>
-      }
-    </div>
-    <div class="form-control">
-      <label for="qualificationTitle" class="label label-text font-bold">Qualification Title</label>
-      <input id="qualificationTitle" type="text" class="input input-bordered" required [(ngModel)]="model.qualificationTitle"
-        name="qtitle" #qtitle="ngModel">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Qualification Title</legend>
+      <input id="qualificationTitle" type="text" class="input input-bordered" required
+        [(ngModel)]="model.qualificationTitle" name="qtitle" #qtitle="ngModel">
       @if (qtitle.invalid && qtitle.touched) {
-      <div class="label label-text text-error">Qualification Title is required</div>
+      <span class="legend text-error">Qualification title required*</span>
       }
-    </div>
-    <div class="form-control">
-      <label for="nqfId" class="label label-text font-bold">NQF ID</label>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="legend legend-text font-bold">NQF ID</legend>
       <input id="nqfId" type="text" class="input input-bordered" required [(ngModel)]="model.nqfId" name="nqfId"
         #nqfId="ngModel">
       @if(nqfId.invalid && nqfId.touched){
-      <div class="label label-text text-error">NQF ID is required*</div>
+      <span class="label text-error">NQF ID required*</span>
       }
-    </div>
+    </fieldset>
 
-    <div class="form-control">
-      <label for="date" class="label label-text font-bold">Registration Date</label>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Registration Date</legend>
       <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="model.regDate" ng2-datetime-picker
         date-only="true" name="regDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if (cdate.invalid && cdate.touched) {
-      <div class="label label-text-alt text-error">Registration Date is required*</div>
+      <span class="label text-error">Registration Date is required*</span>
       }
-    </div>
+    </fieldset>
 
-
-    <!-- <div class="form-control">
-            <label for="organisation">Course Name</label>
-            <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.courseName" name="courseName" #org="ngModel">
-            <div [hidden]="org.valid" class="alert alert-danger">Course Name is required</div>
-          </div>
-          <br>
-          <div class="form-control">
-            <label for="organisation">Course Code</label>
-            <input id="organisation" type="text" class="form-control" required [(ngModel)]="model.courseCode" name="courseCode" #org="ngModel">
-            <div [hidden]="org.valid" class="alert alert-danger">Course Code is required</div>
-          </div> -->
-
-    <div class="form-control">
-      <label class="label label-text font-bold">Registered Qualification Document:</label>
-      <file-upload [code]="code" [url]="url" itemAlias="course-document"></file-upload>
-    </div>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Registered Qualification Document</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="course-document"></file-upload>
+    </fieldset>
 
     <div class="flex gap-2 justify-center">
       <button type="submit" class="btn btn-primary btn-sm w-full" (click)="onUpload()"

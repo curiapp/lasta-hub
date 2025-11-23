@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApcComponent } from "../../components/forms/need-analysis-apc/apc.component";
@@ -9,12 +9,15 @@ import { EndConsultComponent } from "../../components/forms/need-analysis-end-co
 import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
 import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
 import { SenateSubmitComponent } from "../../components/forms/need-analysis-apc-submit/senate-submit.component";
-import { NQFLevel, programmes } from '../../static';
+import { NQFLevel, programme_steps, programmes } from '../../static';
 import { Programme } from '../../types';
 import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";
 import { ClientService } from '../../services/client.service';
 import { NeedAnalysisEditProgramComponent } from "../../components/forms/need-analysis-edit-programme/need-analysis-edit-program.component";
 import { ModalComponent } from "../../components/modal/modal.component";
+import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
+import { LoadingService } from '../../services/loading.service';
+import { Apollo } from 'apollo-angular';
 
 
 @Component({
@@ -32,41 +35,19 @@ import { ModalComponent } from "../../components/modal/modal.component";
     SenateComponent,
     NeedAnalysisEditProgramComponent,
     ModalComponent
-],
+  ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.css'
 })
 export class NeedAnalysisComponent {
-  steps = [
-    {
-      id: 1,
-      title: "Programme Resume",
-    },
-    {
-      id: 2,
-      title: "Stakeholders' Consultation",
-    },
-    {
-      id: 3,
-      title: "PDQA Recommendation",
-    },
-    {
-      id: 4,
-      title: "BOS Consultation",
-    },
-    {
-      id: 5,
-      title: "APC Recommendation",
-    },
-    {
-      id: 6,
-      title: "Senate Approval",
-    }
-  ]
+  pid: string;
+  steps = programme_steps['need_analysis'];
   selectedStep = 1;
   levels = NQFLevel;
   programme: Programme;
   stakeholder: { name: string, email: string } = { name: '', email: '' };
+  apollo = inject(Apollo);
+  _loading = inject(LoadingService);
 
   stakeholders = [
     {
@@ -124,10 +105,6 @@ export class NeedAnalysisComponent {
     this.stakeholder = { name: '', email: '' };
   }
 
-  markComplete() {
-
-  }
-
   onSelectStep = (step: number) => {
     this.selectedStep = step;
   }
@@ -136,15 +113,15 @@ export class NeedAnalysisComponent {
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
-      const id = params.get('id');
-      this.client.getAll<Programme>(`programmes?devCode=${id}`).subscribe((data) => {
-        // console.log("Programs ", data);
-        this.programme = data[0];
-      });
-
-      this.client.getAll<any>(`need-analysis?devCode=${id}`).subscribe((data) => {
-        console.log("Need Analysis data ", data);
-        // this.programme = data[0];
+      this.pid = params.get('id');
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_BY_ID,
+        variables: {
+          id: params.get('id')
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programme = result?.data?.programmes[0];
       });
     });
   }

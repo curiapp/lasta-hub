@@ -1,16 +1,16 @@
 <div class="space-y-4">
-  <h3 class="text-xl mb-4">Need Identification -- End of Consultation</h3>
-  <label class="text-sm font-bold">Survey/ Final Report: </label>
+  <h3 class="text-xl mb-4">Need Identification - End of Consultation</h3>
 
-  <file-upload [code]="code" [url]="url" itemAlias="survey"></file-upload>
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Survey/ Final Report: </legend>
+    <file-upload [pid]="pid" [url]="url" itemAlias="survey"></file-upload>
+  </fieldset>
 
   <div class="w-full flex justify-center mt-4">
-    <button type="button" class="btn btn-sm btn-primary" (click)="onUpload()"
+    <button type="button" class="btn btn-sm btn-primary w-full" (click)="onUpload()"
       [disabled]="!fileUpload?.uploader.queue.length">
       Submit
-      <span class="material-symbols-rounded">
-        cloud_upload
-      </span>
+      <span class="material-symbols-rounded">cloud_upload</span>
     </button>
   </div>
 </div>

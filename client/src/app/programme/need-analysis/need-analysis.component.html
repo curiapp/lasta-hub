@@ -11,7 +11,6 @@
   </ol>
 </div>
 
-
 @if(selectedStep ===1){
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
@@ -31,14 +30,13 @@
         <span class="text-[.6rem]">What is the proposed programme code</span>
       </div>
 
-      <span class="text-3xl uppercase">{{programme?.preProgComponent.devCode}}</span>
+      <span class="text-3xl uppercase">{{programme?.code}}</span>
     </div>
     <div class="rounded-lg shadow px-4 py-2 flex items-center justify-between">
       <div class="flex flex-col -gap-1">
         <span class="text-xl">NQF Level</span>
         <span class="text-[.6rem]">What is the NQF Level</span>
       </div>
-
       <span class="text-3xl">{{programme?.level}}</span>
     </div>
 
@@ -55,19 +53,17 @@
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl">Stakeholders' Consultation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="markComplete()">
-      Mark Complete
+    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="need_analysis_consult.open()">
+      Consultations
     </button>
   </div>
 
+  <p class="text-gray-700 text-sm">
+    CDC provides relevant information related to stakeholders consultation on the need of the proposed programme
+  </p>
+
   <div class="flex justify-between">
     <h2 class="text-xl">Stakeholders</h2>
-    <!-- <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="add_stakeholder_modal.open()">
-      Add
-    </button> -->
-    <button (click)="need_analysis_consult.open()" class="btn btn-sm font-normal btn-secondary text-primary">
-      Add
-    </button>
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -91,10 +87,6 @@
     </button> -->
   </div>
 
-  <p class="text-gray-700 text-sm">
-    CDC provides relevant information related to stakeholders consultation on the need of the proposed programme
-  </p>
-
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @for(submission of submissions; track submission.id){
     <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
@@ -115,62 +107,34 @@
   <div class="flex justify-between">
     <h2 class="text-xl">Survey/Questionnaire</h2>
     <button (click)="end_consult.open()" class="btn btn-sm font-normal btn-secondary text-primary">
-      Add
+      Submit Survey/Questionnaire
     </button>
   </div>
 
-  <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(submission of submissions; track submission.id){
+  <div class="flex md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <!-- @if(submission of submissions; track submission.id){ -->
     <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
       <div class="flex flex-col -gap-2">
-        <span class="text-base">{{submission.title}}</span>
-        <span class="text-xs text-gray-500">{{submission.submissionDate}}</span>
+        <span class="text-base">Final Survey Report</span>
+        <span class="text-xs text-gray-500">2025-11-26</span>
       </div>
 
       <action-buttons></action-buttons>
     </div>
-    }@empty {
+    <!-- }@empty {
     <p class="text-sm text-primary">No Submission</p>
-    }
-
+    } -->
   </div>
-
 </div>
-<!-- Add Stakeholder -->
-<modal #add_stakeholder_modal>
-  <div class="space-y-4">
-    <h2 class="text-xl md:text-2xl capitalize">Add Stakeholders</h2>
-    <form (ngSubmit)="addStakeholder()" #stakeholderForm="ngForm" class="space-y-3">
-      <div class="form-control">
-        <div class="label">
-          <span class="label-text">Name</span>
-        </div>
-        <input required class="input input-bordered" type="text" placeholder="name" [(ngModel)]="stakeholder.name"
-          name="name" #stakename="ngModel">
-      </div>
-      <div class="form-control">
-        <div class="label">
-          <span class="label-text">Email</span>
-        </div>
-        <input required class="input input-bordered" type="email" placeholder="email" [(ngModel)]="stakeholder.email"
-          name="email" #stakeEmail="ngModel" />
-      </div>
-      <div class="form-control gap-2">
-        <button type="submit" (click)="add_stakeholder_modal.close()" [disabled]="stakeholderForm.invalid"
-          class="btn btn-primary">Add</button>
-      </div>
-    </form>
-  </div>
-</modal>
 
 <!-- Need analysis Consult  -->
 <modal #need_analysis_consult>
-  <need-analysis-consult [code]="programme?.preProgComponent.devCode"></need-analysis-consult>
+  <need-analysis-consult [pid]="pid"></need-analysis-consult>
 </modal>
 
 <!--End  Consult  -->
 <modal #end_consult>
-  <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
+  <end-consult [pid]="pid"></end-consult>
 </modal>
 
 }
@@ -191,7 +155,6 @@
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="bos_submit.open()">
         Submit to BOS
       </button>
-
     </div>
   </div>
 
@@ -212,18 +175,17 @@
 
 
 <modal #pdqa_recommend>
-  <need-analysis-conclude [code]="programme?.preProgComponent.devCode"></need-analysis-conclude>
+  <need-analysis-conclude [pid]="pid"></need-analysis-conclude>
 </modal>
 
 <modal #end_consult>
-  <end-consult [code]="programme?.preProgComponent.devCode"></end-consult>
+  <end-consult [pid]="pid"></end-consult>
 </modal>
 
 <modal #bos_submit>
-  <bos-submit [programmeCode]="programme?.preProgComponent.devCode"></bos-submit>
+  <bos-submit [pid]="pid"></bos-submit>
 </modal>
 }
-
 
 @if(selectedStep ===4){
 <div class="space-y-4 my-6">
@@ -251,17 +213,16 @@
     </div>
 
     <action-buttons></action-buttons>
-
   </div>
 </div>
 
 <!-- modals -->
 <modal #bos_ammendments>
-  <bos-amendment [code]="programme?.preProgComponent.devCode"></bos-amendment>
+  <bos-amendment [pid]="pid"></bos-amendment>
 </modal>
 
-<modal #apc_start>
-  <senate-submit [code]="programme?.preProgComponent.devCode"></senate-submit>
+<modal #apc_start size="sm">
+  <senate-submit [pid]="pid"></senate-submit>
 </modal>
 }
 
@@ -287,15 +248,13 @@
       <span class="text-xs text-gray-500">Decision: Deferred</span>
       <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
     </div>
-
     <action-buttons></action-buttons>
-
   </div>
 
 </div>
 
 <modal #apc_submit>
-  <apc-recommend [code]="programme?.preProgComponent.devCode"></apc-recommend>
+  <apc-recommend [pid]="pid"></apc-recommend>
 </modal>
 }
 
@@ -315,7 +274,6 @@
     Department submit programme document to Senate and Senate makes a decision.
   </p>
 
-
   <div class="border-2 border-primary p-4 rounded-lg w-full relative">
     <div class="flex flex-col -gap-2">
       <span class="text-base">Recommendations</span>
@@ -328,6 +286,6 @@
 </div>
 
 <modal #senate_submit>
-  <senate-recommend [code]="programme?.preProgComponent.devCode"></senate-recommend>
+  <senate-recommend [pid]="pid"></senate-recommend>
 </modal>
 }

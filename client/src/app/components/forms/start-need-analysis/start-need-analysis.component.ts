@@ -1,6 +1,6 @@
 
 //import files from the angular framework
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
 import { Faculty } from '../../../models/faculty';
@@ -9,6 +9,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Programme } from '../../../types';
 import { ToastService } from '../../../services/toast.service';
+import { LoadingService } from '../../../services/loading.service';
 // import {RouteConfig,  ROUTER_DIRECTIVES, ROUTER_PROVIDERS,
 //          LocationStrategy, HashLocationStrategy,} from '@angular/router';
 
@@ -23,8 +24,9 @@ import { ToastService } from '../../../services/toast.service';
 
 export class StartNeedAnalysisComponent implements OnInit {
   levels: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  programme: Programme = { code: "", name: "", faculty: "", department: "", initiator: "", level: 0 };
+  programme: Programme = { code: "", title: "", faculty: "", department: "", initiator: "", level: 0 };
   postMyDataToServer: string;
+  _loading = inject(LoadingService);
 
   constructor(private _dataService: StartNeedAnalysisService, private router: Router, private toast: ToastService) { }
 

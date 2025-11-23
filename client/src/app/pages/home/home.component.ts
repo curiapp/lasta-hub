@@ -1,23 +1,24 @@
 import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ProgrammeTableComponent } from '../../programme/components/programme-table/programme-table.component';
-import { upComingEvents } from '../../static';
-import { Programme } from '../../types';
+import { Apollo, gql } from 'apollo-angular';
+import { StartNeedAnalysisComponent } from "../../components/forms/start-need-analysis/start-need-analysis.component";
+import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
+import { ModalComponent } from "../../components/modal/modal.component";
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
 import { generateNext7Days, getGreeting } from '../../functions';
 import { ClientService } from '../../services/client.service';
-import { Observable } from 'rxjs';
-import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
-import { ProgrammeTamplateComponent } from "../../components/loaders/programme-tamplate/programme-tamplate.component";
 import { LoadingService } from '../../services/loading.service';
-import { ModalComponent } from "../../components/modal/modal.component";
-import { StartNeedAnalysisComponent } from "../../components/forms/start-need-analysis/start-need-analysis.component";
+import { upComingEvents } from '../../static';
+import { Programme } from '../../types';
+import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
+
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [RouterModule, FormsModule, ProgrammeTamplateComponent, ModalComponent, StartNeedAnalysisComponent]
+  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent]
 })
 export class HomeComponent implements OnInit {
   username: string;
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit {
   upComingEvents = upComingEvents;
   programmes: Programme[] = [];
   _loading = inject(LoadingService);
+  apollo = inject(Apollo);
   // isLoadig: boolean = this._loading.isLoading;
 
   constructor(private client: ClientService, private viewContainer: ViewContainerRef) { }
@@ -52,19 +54,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.greetingMessage = getGreeting();
-    this.dates = generateNext7Days()
-    this.updateDisplayedPrograms();
-    this.loggedIn();
-
-
-    this.client.getAll<Programme>("programmes").subscribe((data) => {
-      this.programmes = data;
-      // console.log("Hello World ", data);
-    })
-  }
-
   onApprove(code: string) {
     const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
     componentRef.instance.action = "accept"
@@ -74,6 +63,7 @@ export class HomeComponent implements OnInit {
   changed(event) {
     this.programme = event;
   }
+
   loggedIn() {
     let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
@@ -84,5 +74,28 @@ export class HomeComponent implements OnInit {
       this.currentUser = null;
     }
   }
+
+  ngOnInit() {
+    this.greetingMessage = getGreeting();
+    this.dates = generateNext7Days()
+    this.updateDisplayedPrograms();
+    this.loggedIn();
+
+    // this.client.getAll<Programme>("programmes").subscribe((data) => {
+    //   this.programmes = data;
+    //   // console.log("Hello World ", data);
+    // });
+
+    this.apollo.watchQuery({
+      query: GET_PROGRAMMES
+    })
+      .valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        this.programmes = result?.data?.programmes;
+      });
+
+  }
+
+
 
 }

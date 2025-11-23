@@ -36,7 +36,7 @@
 </div>
 
 <modal #bos_submit>
-  <final-draft [code]="code" />
+  <final-draft [pid]="pid" />
 </modal>
 }
 
@@ -92,11 +92,11 @@
 </div>
 
 <modal #bos_recommend>
-  <consultation-faculty-bos-final [code]="code" />
+  <consultation-faculty-bos-final [pid]="pid" />
 </modal>
 
 <modal #other_recommend>
-  <consultations-other-faculty-bos [code]="code" />
+  <consultations-other-faculty-bos [pid]="pid" />
 </modal>
 }
 
@@ -126,7 +126,7 @@
 </div>
 
 <modal #apc_recommend>
-  <consultation-apc-recommend [code]="code"></consultation-apc-recommend>
+  <consultation-apc-recommend [pid]="pid"></consultation-apc-recommend>
 </modal>
 }
 
@@ -156,6 +156,6 @@
 </div>
 
 <modal #apc_recommend>
-  <consultation-final-senate-recommend [code]="code"></consultation-final-senate-recommend>
+  <consultation-final-senate-recommend [pid]="pid"></consultation-final-senate-recommend>
 </modal>
 }

@@ -1,22 +1,30 @@
 <div class="container">
   <h3 class="text-xl mb-4">Submission to BOS</h3>
   <form #bossubmitForm="ngForm" (ngSubmit)="submitBOS(bossubmitForm)" class="space-y-6">
-    <div class="form-control">
-      <label for="ProgrammeCode" class="label-text">Programme Code</label>
-      <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programmeCode"
-        name="devCode" #procode="ngModel" readonly>
-      @if(procode.invalid && procode.touched){<div class="label-text-alt text-red-700">Proposed Programme Code is
-        required*</div>}
-    </div>
-    <div class="form-group">
-      <label for="date" class="label-text">Start Date:</label>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Start Date:</legend>
       <input id="date" type="Date" class="input w-full input-bordered" required [(ngModel)]="startDate"
         ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-      @if(cdate.invalid && cdate.touched){<div class="label-text-alt text-red-700">Submission Date is required*
-      </div>}
-    </div>
-    <div class="form-group">
-      <!-- <button type="submit" class="btn btn-default" (click)="clear()">Cancel</button> -->
+      @if(cdate.invalid && cdate.touched){
+      <div class="label text-error">Submission Date is required*</div>
+      }
+    </fieldset>
+
+
+    <!-- <div class="relative max-w-sm">
+      <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+        <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z" />
+        </svg>
+      </div>
+      <input id="datepicker-actions" datepicker datepicker-buttons datepicker-autoselect-today type="text"
+        class="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body"
+        placeholder="Select date">
+    </div> -->
+
+    <div class="">
       <button type="submit" class="btn btn-primary btn-sm w-full" [disabled]="!bossubmitForm.form.valid">
         @if (!loading.isLoading()) {
         <span class="flex items-center gap-2">
