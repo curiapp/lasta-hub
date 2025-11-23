@@ -1,16 +1,21 @@
 import Joi from "joi";
-import { programmeIdSchema } from "./base";
+import { programmeBaseSchema, programmeIdSchema } from "./base";
 
-const reviewRecommendSchema = programmeIdSchema.append({
-  reviewUnit: Joi.string()
-    .valid("TLA", "CE", "QA", "COLL", "PDU")
-    .required()
-    .messages({
-      "any.only": "Review unit must be one of: TLA, CE, QA, COLL, PDU",
+const reviewStartSchema = programmeBaseSchema.append({
+    date: Joi.date().required(),
+    includesWilComponent: Joi.boolean().required(),
+    recommendedTo: Joi.string().valid("CEU", "COLL", "TLP").required().messages({
+        "any.only": "Review unit must be one of: CEU, COLL, TLP",
     }),
-  decision: Joi.string().valid("recommend", "defer").required().messages({
-    "any.only": "Status must be one of: recommend, defer",
-  }),
 });
 
-export { reviewRecommendSchema };
+const reviewRecommendSchema = programmeIdSchema.append({
+    entity: Joi.string().valid("adstlt", "ceu", "pdqa").required().messages({
+        "any.only": "Review unit must be one of: adstlt, ceu, pdqa",
+    }),
+    decision: Joi.string().valid("endorse", "defer").required().messages({
+        "any.only": "Status must be one of: endorse, defer",
+    }),
+});
+
+export { reviewRecommendSchema, reviewStartSchema };
