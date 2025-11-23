@@ -33,7 +33,7 @@ export default async (app: Express, upload: Multer) => {
             };
 
             await db.execute(
-                sql`SELECT fn_step_array_append(
+                sql`SELECT fn_update_step_data(
                     ${programmeId},
                     ${"cdc-and-pac-appointment"},
                     ${JSON.stringify(stepData)}::jsonb
@@ -64,7 +64,7 @@ export default async (app: Express, upload: Multer) => {
             };
 
             await db.execute(
-                sql`SELECT fn_step_array_append(
+                sql`SELECT fn_update_step_data(
                     ${programmeId},
                     ${"cdc-and-pac-appointment"},
                     ${JSON.stringify(stepData)}::jsonb
@@ -94,13 +94,13 @@ export default async (app: Express, upload: Multer) => {
                 .then((result) => (result.rows[0] as any).fn_get_or_create_step as string);
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
-                
+
             const stepData = {
                 draftFile: attachmentId,
             };
 
             await db.execute(
-                sql`SELECT fn_step_array_append(
+                sql`SELECT fn_update_step_data(
                     ${programmeId},
                     ${"curriculum-drafting"},
                     ${JSON.stringify(stepData)}::jsonb
@@ -132,21 +132,23 @@ export default async (app: Express, upload: Multer) => {
             return res.status(400).send(error.details[0].message);
         }
 
-                try {
+        try {
             const programmeId = value.programmeId;
             const ppsId = await db
-                .execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"draft-curriculum-and-pdqa-recommendation"})`)
+                .execute(
+                    sql`SELECT fn_get_or_create_step(${programmeId}, ${"draft-curriculum-and-pdqa-recommendation"})`
+                )
                 .then((result) => (result.rows[0] as any).fn_get_or_create_step as string);
 
             const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
-                
+
             const stepData = {
                 draftFile: attachmentId,
                 decision: value.decision,
             };
 
             await db.execute(
-                sql`SELECT fn_step_array_append(
+                sql`SELECT fn_update_step_data(
                     ${programmeId},
                     ${"draft-curriculum-and-pdqa-recommendation"},
                     ${JSON.stringify(stepData)}::jsonb
