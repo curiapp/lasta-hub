@@ -34,31 +34,101 @@
     <div class="navbar-end items-center">
 
       @if(currentUser){
-      <details class="dropdown dropdown-bottom dropdown-left">
+      <details class="dropdown dropdown-bottom dropdown-left ml-4">
         <summary class="btn btn-ghost btn-circle">
-          <div class="avatar avatar-placeholder">
-            <div class="bg-white text-primary size-10 p-0 flex items-center justify-center rounded-full">
-              <span class="uppercase text-xl">
-                {{currentUser?.firstname?.slice(0,1)}}{{currentUser?.lastname?.slice(0,1)}}
+          <div class="avatar avatar-placeholder !hover:bg-transparent">
+            <div class="bg-transparent text-white size-10 p-0 flex items-center justify-center rounded-full">
+              <span class="material-symbols-rounded">
+                notifications
               </span>
             </div>
           </div>
         </summary>
 
-        <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-56  mt-3 p-4 shadow">
+        <ul class="bg-white text-black rounded-box dropdown-content z-1 w-96 mt-3 p-4 shadow">
+          <li class="max-h-[55vh] overflow-y-auto">
+            <div class="space-y-2">
 
+              <div class="sticky space-y-2 top-0 z-50 backdrop-blur-lg">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-lg">Notifications</h3>
+                  <button class="btn btn-sm btn-ghost">Mark all as read</button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div role="tablist" class="tabs tabs-border tabs-xs">
+                    <a role="tab" class="tab tab-active">All</a>
+                    <a role="tab" class="tab">Planning</a>
+                    <a role="tab" class="tab">Development</a>
+                    <a role="tab" class="tab">Consultations</a>
+                    <!-- <a role="tab" class="tab">Governance & Approvals</a>
+                  <a role="tab" class="tab">Accreditation</a> -->
+                  </div>
+                  <a role="tab" class="tab">
+                    <span class="material-symbols-rounded transition-all hover:rotate-45">
+                      settings
+                    </span>
+                  </a>
+                </div>
+
+              </div>
+
+              <div class="">
+                @for(notification of notifications; track notification.id){
+                <details class="collapse !rounded-none">
+                  <summary class="collapse-title !p-2">
+                    <div class="flex gap-4 items-center w-full">
+                      <div class="avatar avatar-placeholder">
+                        <div class="bg-gray-100 text-primary w-8 mask mask-squircle">
+                          <span class="text-xs">{{notification.code}}</span>
+                        </div>
+                      </div>
+                      <div class="flex flex-col flex-auto">
+                        <span class="font-semibold text-primary/95 text-sm">{{notification.name}}</span>
+                        <span class="text-xs text-gray-500">{{notification.date}}</span>
+                      </div>
+                    </div>
+                  </summary>
+                  <div class="collapse-content text-xs">
+                    {{notification.description}}
+                  </div>
+                </details>
+                }
+                @empty {
+                <div class="flex justify-center items-center">
+                  No notifications
+                </div>
+                }
+              </div>
+            </div>
+          </li>
+        </ul>
+
+      </details>
+      <details class="dropdown dropdown-bottom dropdown-left">
+        <summary class="btn btn-ghost btn-circle">
+          <div class="avatar avatar-placeholder">
+            <div class="bg-white text-primary size-10 p-0 flex items-center justify-center rounded-full">
+              <span class="uppercase text-xl">
+                {{currentUser?.firstName?.slice(0,1)}}{{currentUser?.lastName?.slice(0,1)}}
+              </span>
+            </div>
+          </div>
+        </summary>
+
+        <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-64  mt-3 p-4 shadow">
           <li>
             <div class="flex items-center flex-col gap-1 justify-center">
               <div class="avatar avatar-online avatar-placeholder">
                 <div class="bg-neutral text-neutral-content w-16 rounded-full">
                   <span
-                    class="text-xl">{{currentUser?.firstname?.slice(0,1)}}{{currentUser?.lastname?.slice(0,1)}}</span>
+                    class="text-xl">{{currentUser?.firstName?.slice(0,1)}}{{currentUser?.lastName?.slice(0,1)}}</span>
                 </div>
               </div>
-              <span class="text-lg">{{currentUser?.firstname}} {{currentUser?.lastname}}</span>
-              <span class="text-xs">{{currentUser?.emailAddress}}</span>
-              <span class="text-sm">{{currentUser?.usrUnit?.faculty}}</span>
-              <span class="text-xs">{{currentUser?.usrUnit?.department}}</span>
+              <span class="text-lg">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
+              <span class="text-xs">{{currentUser?.email}}</span>
+              <span class="text-sm">{{currentUser?.role}}</span>
+              <span class="text-xs">{{currentUser?.role}}</span>
             </div>
           </li>
           <!-- <hr> -->
@@ -71,7 +141,7 @@
 
       </details>
       }@else {
-      <a routerLink='/login' routerLinkActive="active" class="btn btn-sm bg-secondary border-none px-5">Login</a>
+      <a routerLink='/login' routerLinkActive="active" class="btn btn-secondary btn-sm btn-outline px-5">Login</a>
       }
     </div>
 

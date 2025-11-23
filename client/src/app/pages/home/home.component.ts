@@ -13,7 +13,13 @@ import { upComingEvents } from '../../static';
 import { Programme } from '../../types';
 import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 
-
+type User = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  id: string;
+}
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
@@ -21,7 +27,7 @@ import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
   imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent]
 })
 export class HomeComponent implements OnInit {
-  username: string;
+  currentUser: User;
   faculty: string;
   department: string;
   dates: { day: string, date: string, dayOfMonth: string }[] = [];
@@ -30,9 +36,7 @@ export class HomeComponent implements OnInit {
   programme: string;
   greetingMessage: string = '';
   programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
-  user: string;
   showAll = false;
-  currentUser: any
   upComingEvents = upComingEvents;
   programmes: Programme[] = [];
   _loading = inject(LoadingService);
@@ -66,8 +70,6 @@ export class HomeComponent implements OnInit {
 
   loggedIn() {
     let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-
-    // console.log(currentUser);
     if (currentUser) {
       this.currentUser = currentUser;
     } else {
@@ -80,11 +82,6 @@ export class HomeComponent implements OnInit {
     this.dates = generateNext7Days()
     this.updateDisplayedPrograms();
     this.loggedIn();
-
-    // this.client.getAll<Programme>("programmes").subscribe((data) => {
-    //   this.programmes = data;
-    //   // console.log("Hello World ", data);
-    // });
 
     this.apollo.watchQuery({
       query: GET_PROGRAMMES

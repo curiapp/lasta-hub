@@ -792,3 +792,50 @@ export const programme_steps = {
     }
   ]
 }
+
+
+export const programmeNotifications = [
+  {
+    id: 1,
+    name: 'Need Analysis',
+    code: 'NA',
+    date: '2025-01-12',
+    description: 'Initial need analysis conducted to justify the development of the programme.'
+  },
+  {
+    id: 2,
+    name: 'Programme Development',
+    code: 'PD',
+    date: '2025-02-03',
+    description: 'Programme structure, modules, outcomes and assessment plans drafted.'
+  },
+  {
+    id: 3,
+    name: 'External Stakeholders Consultations',
+    code: 'EC',
+    date: '2025-02-25',
+    description: 'Consultations held with industry experts and external reviewers for programme relevance.'
+  },
+  {
+    id: 4,
+    name: 'Internal Stakeholders Consultations',
+    code: 'IC',
+    date: '2025-03-10',
+    description: 'Feedback gathered from internal faculty, departments and academic offices.'
+  },
+  {
+    id: 5,
+    name: 'BOS, APC, Senate Consultations',
+    code: 'BS',
+    date: '2025-04-02',
+    description: 'Programme submitted and reviewed through BOS, APC and Senate committees.'
+  },
+  {
+    id: 6,
+    name: 'NQF Registration',
+    code: 'NR',
+    date: '2025-05-16',
+    description: 'Programme registered with NQF and approved for national accreditation.'
+  }
+];
+

@@ -23,7 +23,7 @@ export class OtherFacultyBosComponent implements OnInit {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     // this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     // this.uploader.onBuildItemForm = (item: any, form: any) => {
-    //   form.append('devCode', this.model.programmeCode);
+    //   form.append('id', this.model.programmeCode);
     //   form.append('date', this.model.consultationDate);
     //   form.append('OtherFacultyName', this.model.OtherFacultyName);
     //   form.append('recommendTo', this.model.recommendTo);

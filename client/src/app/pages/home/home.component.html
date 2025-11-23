@@ -60,15 +60,23 @@
   </div>
 </div> -->
 
-<div class="hero bg-base-200 min-h-screen">
+<div class="hero bg-base-200 min-h-[60dvh] lg:min-h-screen">
   <div class="hero-content text-center">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">Hello there</h1>
-      <p class="py-6">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-        quasi. In deleniti eaque aut repudiandae et a id nisi.
-      </p>
-      <button class="btn btn-primary">Get Started</button>
+    <div class="max-w-2xl">
+      <h1 class="text-3xl lg:text-5xl font-bold">Welcome to Programme Development Application</h1>
+      <div class="py-6 text-xs text-center">
+        text-rotate
+        The Programme Development (PD) App is a centralised digitalised solution,
+        encompassing curriculum management, development, maintenance, and modernisation
+        of the curriculum through processes of ideation, reviews and approvals leading
+        to registration of qualifications on the NQF. More so, the app is designed to
+        keep records of the stages through which a programme is subjected to.
+        The app is designed such that it send out reminders on the status quo e.g on
+        the scheduled review date for existing programmes while keeping all the
+        communication between the department and PDU as well as with other
+        stakeholders such industry, professional bodies and other universities.
+      </>
+      <a routerLink='/about-us' class="btn btn-primary btn-outline">Learn about PDQA</a>
     </div>
   </div>
 </div>
@@ -137,12 +145,12 @@
   <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
 </video> -->
 
-@if(!currentUser){
+@if(currentUser){
 <div class="p-4 bg-primary space-y-3 text-base-100">
 
   <h3 class="capitalize">{{greetingMessage}}</h3>
 
-  <h2 class="text-3xl font-bold capitalize">{{currentUser?.firstname}} {{currentUser?.lastname}}</h2>
+  <h2 class="text-3xl font-bold capitalize">{{currentUser?.firstName}} {{currentUser?.lastName}}</h2>
 
   <div class="space-y-1 hidden md:block">
     <span class="text-xs">Overview</span>
@@ -156,7 +164,7 @@
         </div>
         <div class="flex flex-col gap-0.5">
           <span class="text-xs">Faculty</span>
-          <span class="text-lg capitalize">{{currentUser?.usrUnit?.faculty}}</span>
+          <span class="text-lg capitalize">{{currentUser?.role}}</span>
         </div>
       </div>
 
@@ -168,7 +176,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-xs">Department</span>
-          <span class="text-lg capitalize">{{currentUser?.usrUnit?.department}}</span>
+          <span class="text-lg capitalize">{{currentUser?.role}}</span>
         </div>
       </div>
 
@@ -179,7 +187,7 @@
           </span>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs">{{currentUser?.profile==='PDQA'? "Approved Programs": "Programs"}}</span>
+          <span class="text-xs">{{currentUser?.role==='PDQA'? "Approved Programs": "Programs"}}</span>
           <span class="text-lg capitalize">{{programmes?.length}}</span>
         </div>
       </div>
@@ -196,7 +204,7 @@
             account_balance
           </span>
         </div>
-        <span>Faculty: {{currentUser?.usrUnit?.faculty}}</span>
+        <span>Faculty: {{currentUser?.role}}</span>
       </div>
 
       <div class="badge badge-ghost">
@@ -205,7 +213,7 @@
             lan
           </span>
         </div>
-        <span>Department: {{currentUser?.usrUnit?.department}}</span>
+        <span>Department: {{currentUser?.id}}</span>
       </div>
 
       <div class="badge badge-ghost">
@@ -224,7 +232,7 @@
 <div class="p-4 flex items-start gap-8">
 
   <div class="space-y-8 flex-grow">
-    @if(user==='PDQA'){
+    @if(currentUser?.role==='PDQA'){
     <div class="space-y-4">
       <h2 class="text-lg lg:text-3xl font-light">Programme Management Tools</h2>
       <div class="flex items-center gap-2">
@@ -238,7 +246,7 @@
     }
 
     <div class="flex justify-between items-start">
-      <h2 class="text-lg lg:text-3xl font-light">{{user==='PDQA'?'':'Your'}} Programmes</h2>
+      <h2 class="text-lg lg:text-3xl font-light">{{currentUser?.role ==='PDQA'?'':'Your'}} Programmes</h2>
       <div class="flex items-center gap-2">
         <button class="btn btn-sm btn-outline" (click)="toggleView()">
           {{showAll?"Minimize":"View All"}}
@@ -256,13 +264,13 @@
     <programme-template />
     }@else {
     <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-      @for (item of programmes; track item?.preProgComponent?.devCode) {
+      @for (item of programmes; track item?.id) {
       <div class="group relative block h-fit rounded-lg">
         <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
         <div
           class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
           <!-- @if(item.isPreProgramme && user==='PDQA'){
-          <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item?.preProgComponent?.devCode)">
+          <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item?.id)">
             Approve
           </button>
           } -->
@@ -295,7 +303,6 @@
         <span class="text-sm">No Programmes</span>
       </div>
       }
-
     </div>
     }
 
@@ -305,7 +312,6 @@
       <!-- <h2 class="text-lg lg:text-3xl font-light">{{user==="PDQA"?"Recent Updates":"Programmes Due for Review"}}</h2> -->
       <!-- <client-programme-table [programmes]="programmes" /> -->
     </div>
-
   </div>
 
   <!-- Upcoming Events -->
@@ -349,7 +355,6 @@
           <span class="text-xs">{{item.date}}</span>
         </div>
         }
-
       </div>
     </div>
 

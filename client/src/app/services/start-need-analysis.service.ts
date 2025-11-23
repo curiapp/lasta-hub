@@ -19,7 +19,7 @@ export class StartNeedAnalysisService {
   constructor(private _http: HttpClient) { }
 
   startNeedAnalysis({ code, title, faculty, department, initiator, level }: Programme) {
-    let body = { "initiator": initiator, "title": title, "devCode": code, "faculty": faculty, "department": department, "level": level };
+    let body = { initiator, title, code, faculty, department, level };
 
     return this._http.post(this._startNeedAnalysisUrl, body, {
       headers: {

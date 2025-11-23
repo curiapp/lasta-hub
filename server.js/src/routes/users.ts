@@ -66,7 +66,7 @@ export default async (app: Express) => {
                 role: updated.role,
                 token: updated.authToken,
             });
-        } catch (err) {
+        } catch (err) {            
             return res.status(500).send("Internal server error");
         }
     });

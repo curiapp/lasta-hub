@@ -31,9 +31,9 @@
           </span>
         </button>
         @for (item of uploader.queue; track item.file.size) {
-        <div class="rounded-box flex flex-col items-center gap-4 p-3 group transition-all">
+        <div class="rounded-box flex flex-col items-center gap-2 p-3 group transition-all">
           <div
-            class="size-12 rounded-box border-black/20 border-2 border-dashed bg-gray-100 grid place-items-center">
+            class="size-12 rounded-box bg-gray-200 grid place-items-center">
             <file-icon [fileName]="item.file.name"></file-icon>
           </div>
           <div class="flex-grow w-[70%] tooltip text-left mb-2">

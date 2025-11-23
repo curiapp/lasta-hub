@@ -6,7 +6,7 @@ import { handleError } from '../functions';
 import { ToastService } from './toast.service';
 
 type User = {
-  username: string;
+  email: string;
   password: string;
 }
 @Injectable({
@@ -16,14 +16,13 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient, private toast: ToastService) { }
 
-  login({ username, password }: User) {
+  login({ email, password }: User) {
 
-    return this.http.post(`${environment.apiUrl}/users/authenticate`, { username: username, password: password }, {
+    return this.http.post(`${environment.apiUrl}/user/login`, { email, password }, {
       headers: {
         'Content-Type': 'application/json'
       }
     }).pipe(
-      // map((response: any) => response.json()),
       catchError(handleError)
     )
   }

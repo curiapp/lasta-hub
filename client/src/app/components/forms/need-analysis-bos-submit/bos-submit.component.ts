@@ -16,7 +16,7 @@ import { ModalControlService } from '../../../services/modal-control.service';
 })
 export class BosSubmitComponent {
   model: any = {};
-  @Input() pid: String;
+  @Input() pid: string;
   startDate: Date;
   modalControl = inject(ModalControlService);
   _dataService = inject(BoSSubmitService);
@@ -31,10 +31,8 @@ export class BosSubmitComponent {
           console.log("data: " + JSON.stringify(data));
           this.toast.success("Bos session started !");
           this.modalControl.close();
-          // form.reset();
         },
         error: (error) => {
-          // console.log("Error HTTP Post Service");
           this.modalControl.close();
           this.toast.error("An error occurred while starting Bos session.");
         }

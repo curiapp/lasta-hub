@@ -19,7 +19,7 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   @Input() pid: string;
 
   isStakeholderShown = signal(false);
-  isShown = signal(true);
+  isShown = signal(false);
 
   toggleAdd() {
     this.isStakeholderShown.update((isShown) => !isShown);
@@ -70,7 +70,7 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: FileItem, form: any) => {
-      form.append('devCode', this.pid);
+      form.append('id', this.pid);
       form.append('sDate', this.needAnalysis.startDate);
       form.append('eDate', this.needAnalysis.endDate);
       form.append('organizationList', JSON.stringify(this.needAnalysis.organisationList));

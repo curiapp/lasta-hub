@@ -3,13 +3,20 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import cors from "cors";
+import usersRoutes from "./routes/users";
+import reviewsRoutes from "./routes/reviews";
+import curriculaRoutes from "./routes/curricula";
+import consultationRoutes from "./routes/consultations";
 import needAnalysisRoutes from "./routes/need-analysis";
+import qualificationsRoutes from "./routes/qualifications";
+import institutionalBodiesRoutes from "./routes/institutional-bodies";
+import curriculumDevelopmentRoutes from "./routes/curriculum-development";
 import graphqlRoutes from "./routes/graphql";
 import { v7 as uuid } from "uuid";
 import fs from "fs";
 
 if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
+    fs.mkdirSync("uploads");
 }
 
 const upload = multer({
@@ -26,14 +33,21 @@ const upload = multer({
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:4200',
-//   methods: 'GET,POST,PUT,DELETE,OPTIONS',
-//   allowedHeaders: 'Content-Type,Authorization'
+    origin: 'http://localhost:4200',
+    //   methods: 'GET,POST,PUT,DELETE,OPTIONS',
+    //   allowedHeaders: 'Content-Type,Authorization'
 }));
 
 const PORT = process.env.PORT || 3000;
 
+usersRoutes(app);
+reviewsRoutes(app, upload);
+curriculaRoutes(app, upload);
 needAnalysisRoutes(app, upload);
+consultationRoutes(app, upload);
+qualificationsRoutes(app, upload);
+institutionalBodiesRoutes(app, upload);
+curriculumDevelopmentRoutes(app, upload);
 graphqlRoutes(app);
 
 app.use((err, _, res, next) => {

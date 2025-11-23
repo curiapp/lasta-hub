@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { ShortSummaryService } from '../../services/short-summary.service';
+import { programmeNotifications } from '../../static';
 
 @Component({
   selector: 'client-main',
@@ -16,6 +17,7 @@ export class MainComponent {
   title = 'PDU - Home'
   currentYear: number = new Date().getFullYear();
   currentUser: any;
+  notifications = programmeNotifications;
 
   constructor(private _location: Location, private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
   }

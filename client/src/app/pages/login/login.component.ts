@@ -19,8 +19,8 @@ export class LoginComponent {
     private _location: Location
   ) { }
 
-  model: { username: string, password: string } = {
-    username: '',
+  model: { email: string, password: string } = {
+    email: '',
     password: ''
   };
   isLoadig: boolean;
@@ -34,11 +34,11 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.message = "";
     this.authService.login(this.model)
       .subscribe(
         {
           next: (data) => {
-            // console.log('Hi I am here', data);
             sessionStorage.setItem('loggedInUser', JSON.stringify(data));
             this.router.navigate(['/home']);
           },
@@ -50,11 +50,4 @@ export class LoginComponent {
 
   }
 
-  close() {
-    console.log("closing the window...");
-    this.model.username = "username";
-    this.model.password = "password";
-    //this.router.navigate(['/home']);
-    this._location.back();
-  }
 }

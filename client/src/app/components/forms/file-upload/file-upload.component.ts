@@ -19,7 +19,6 @@ import { ModalControlService } from '../../../services/modal-control.service';
   styleUrl: './file-upload.component.css'
 })
 export class FileUploadComponent {
-
   @Input() url: string = "";
   @Input() pid: string;
   @Input() itemAlias: string = "check-list";

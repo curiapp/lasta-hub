@@ -8,7 +8,7 @@ import { ProgrammeComponent } from './programme/programme.component';
 import { TutorialComponent } from './pages/tutorials/tutorials.component';
 import { MainComponent } from './pages/main/main.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
-import { OurTeamComponent } from './pages/our-team/our-team.component';
+import { TeamComponent } from './pages/team/team.component';
 import { ProgrammeDevelopmentComponent } from './programme/programme-development/programme-development.component';
 import { ExternalStakeholdersComponent } from './programme/external-stakeholders/external-stakeholders.component';
 import { InternalStakeholdersComponent } from './programme/internal-stakeholders/internal-stakeholders.component';
@@ -65,7 +65,7 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent, data: { title: 'PDQA - Home' } },
       { path: 'tutorials', component: TutorialComponent, data: { title: 'PDQA - Tutorials' } },
       { path: 'about-us', component: AboutUsComponent, data: { title: 'PDQA - About Us' } },
-      { path: 'our-team', component: OurTeamComponent, data: { title: 'PDQA - Our Team' } },
+      { path: 'our-team', component: TeamComponent, data: { title: 'PDQA - Our Team' } },
       {
         path: 'programme/:id', component: ProgrammeComponent, data: { title: 'PDQA - Programme' },
         children: [

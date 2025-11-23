@@ -1,28 +1,26 @@
-//import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
-//import the file-upload plugin
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 //import the native angular http and respone libraries
 import { HttpClient as Http } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-const URL = '/api/reviews/recommend';
+import { environment } from '../../environments/environment';
 
-//create the component properties
 @Component({
-    //define the element to be selected from the html structure.
-    selector: 'coll-recommend',
-    templateUrl: 'coll-recommend.component.html',
-    imports: [FormsModule, FileUploadModule]
+  //define the element to be selected from the html structure.
+  selector: 'coll-recommend',
+  templateUrl: 'coll-recommend.component.html',
+  imports: [FormsModule, FileUploadModule]
 })
 export class COLLRecommendComponent implements OnInit {
+  url = `${environment.apiUrl}/reviews/recommend`;
   model: any = {};
-  devCode: String;
+  @Input() pid: String;
   decision: String;
   //  form: FormGroup;
 
   //declare a property called fileuploader and assign it to an instance of a new fileUploader.
   //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-  public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'coll-recommend' });
+  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'coll-recommend' });
   //This is the default title property created by the angular cli. Its responsible for the app works
   title = 'app works!';
 
@@ -30,7 +28,7 @@ export class COLLRecommendComponent implements OnInit {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('devCode', this.model.programmeCode);
+      form.append('id', this.model.programmeCode);
       form.append('decision', this.decision);
       form.append('reviewUnit', "COLL");
     };

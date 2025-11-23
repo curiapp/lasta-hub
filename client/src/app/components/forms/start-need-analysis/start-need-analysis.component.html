@@ -15,7 +15,7 @@
     <div class="fieldset">
       <legend class="fieldset-legend">Proposed Programme Code</legend>
       <input id="programmeCode" type="text" class="input input-bordered" required [(ngModel)]="programme.code"
-        name="devCode" #code="ngModel">
+        name="code" #code="ngModel">
       @if (code.invalid && pron.touched) {
       <div class="label">
         Proposed programme code required*

@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-our-team',
   standalone: true,
-  templateUrl: './our-team.component.html',
-  styleUrls: ['./our-team.component.css']
+  templateUrl: './team.component.html',
+  styleUrls: ['./team.component.css']
 })
-export class OurTeamComponent {
+export class TeamComponent {
 
   teamMembers = [
     {

@@ -39,9 +39,9 @@ export class StartNeedAnalysisComponent implements OnInit {
     }
     else {
       let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-      this.programme.initiator = currentUser?.username
-      this.programme.faculty = currentUser?.usrUnit.faculty;
-      this.programme.department = currentUser?.usrUnit.department;
+      this.programme.initiator = currentUser?.id
+      this.programme.faculty = currentUser?.id;
+      this.programme.department = currentUser?.id;
     }
   }
 

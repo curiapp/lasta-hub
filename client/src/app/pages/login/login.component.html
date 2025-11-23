@@ -1,16 +1,18 @@
-<div class="sm:px-6 lg:px-10 min-h-screen bg-gradient-to-b from-[#38485dc4] via-[#38485dde] to-[#284366]">
+<div class="sm:px-6 flex lg:px-12 min-h-dvh bg-gradient-to-b from-[#38485dc4] via-[#38485dde] to-[#284366]">
 
-  <div class="!py-10 mx-auto grid place-items-center h-screen">
+  <div class="py-12 mx-auto grid place-items-center flex-auto">
     <div class="h-full flex flex-col md:flex-row justify-center items-center gap-10 w-full p-8 md:p-0">
 
-      <div class="login-bg rounded-lg md:w-1/2 !h-52 md:!h-full relative">
-
+      <div class="login-bg rounded-lg md:w-1/2 !h-32 md:!h-full relative hover-3d">
         <div
           class="top-0 left-0 w-full h-full flex-grow bg-gradient-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
 
           <div class="flex justify-between items-start flex-grow">
             <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
-            <a routerLink="/home" class="btn btn-sm shadow-none border-none text-white bg-slate-500/20 hover:bg-primary/15 hover:backdrop-blur-lg group"><span class="transition-all group-hover:scale-105">Back to Website</span> <span class="transition-all group-hover:translate-x-1">&rarr;</span></a>
+            <a routerLink="/home"
+              class="btn btn-sm shadow-none border-none text-white bg-slate-500/20 hover:bg-primary/15 hover:backdrop-blur-lg group"><span
+                class="transition-all group-hover:scale-105">Back to Website</span> <span
+                class="transition-all group-hover:translate-x-1">&rarr;</span></a>
           </div>
 
           <div class="my-3">
@@ -36,11 +38,11 @@
             <!-- <div class="label">
               <span class="label-text">Username</span>
             </div> -->
-            <input id="username" type="text" class="input w-full bg-slate-400 text-white placeholder:text-white"
-              placeholder="Enter Username" required [(ngModel)]="model.username" name="username" #username="ngModel">
-            @if(username.invalid && loginForm.submitted){
+            <input id="email" type="text" class="input w-full bg-slate-400 text-white placeholder:text-white"
+              placeholder="Enter Email" required [(ngModel)]="model.email" name="email" #email="ngModel">
+            @if(email.invalid && loginForm.submitted){
             <div class="label">
-              <span class="label-text-alt text-error">Username is required</span>
+              <span class="label-text-alt text-error">Email is required*</span>
             </div>
             }
           </div>
@@ -63,7 +65,7 @@
             </label>
             @if(password.invalid && loginForm.submitted){
             <div class="label">
-              <span class="label-text-alt text-error">Password is required</span>
+              <span class="label-text-alt text-error">Password is required*</span>
             </div>
             }
             <!-- @else{
@@ -75,7 +77,7 @@
           </div>
           <!-- <div  class="alert alert-danger">Password is required</div> -->
 
-          <div class="form-control w-full">
+          <div class="form-control w-full space-y-4">
             <!-- <button (click)="close()" type="button" class="btn btn-ghost">Close</button> -->
             <button type="submit" class="btn btn-primary w-full" [disabled]="!loginForm.form.valid">
               @if(isLoading()){
@@ -84,11 +86,12 @@
               <span>Sign In</span>
               }
             </button>
-          </div>
 
-          @if (message) {
-          <span class="text-error text-xs">{{message}}</span>
-          }
+            @if (message) {
+            <div class="text-error text-sm text-center w-full">{{message}}</div>
+            }
+
+          </div>
         </form>
       </div>
 

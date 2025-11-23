@@ -1,8 +1,8 @@
 export class Model {
-    programmeCode:String;
-    consultationDate: Date;
-    devCode:String;
-    recommendto:String[]=[];
-    wil:boolean = false;
-    distance:boolean = false;
-  }
+  consultationDate: Date;
+  code: string;
+  recommendto: string[] = [];
+  wil: boolean = false;
+  distance: boolean = false;
+  id: string = "";
+}
