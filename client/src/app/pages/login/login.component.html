@@ -3,10 +3,9 @@
   <div class="py-12 mx-auto grid place-items-center flex-auto">
     <div class="h-full flex flex-col md:flex-row justify-center items-center gap-10 w-full p-8 md:p-0">
 
-      <div class="login-bg rounded-lg md:w-1/2 !h-32 md:!h-full relative hover-3d">
-        <div
-          class="top-0 left-0 w-full h-full flex-grow bg-gradient-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
+      <div class="login-bg relative rounded-lg md:w-1/2 !h-32 md:!h-full">
 
+        <div class="top-0 left-0 relative z-20 w-full h-full flex-grow bg-gradient-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
           <div class="flex justify-between items-start flex-grow">
             <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
             <a routerLink="/home"
@@ -23,7 +22,10 @@
             </p>
           </div>
         </div>
+        <img src="assets/images/bg1.jpg" alt="bg-image" class="absolute z-0 top-0 left-0 w-full h-full object-cover rounded-lg pointer-events-none select-none" />
       </div>
+
+
 
       <div class="w-full md:w-1/2 space-y-8 py-2">
         <div class="space-y-1 flex flex-col max-w-sm w-full mx-auto">
@@ -35,9 +37,6 @@
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-6 md:space-y-8 max-w-sm w-full mx-auto">
 
           <div class="form-control w-full">
-            <!-- <div class="label">
-              <span class="label-text">Username</span>
-            </div> -->
             <input id="email" type="text" class="input w-full bg-slate-400 text-white placeholder:text-white"
               placeholder="Enter Email" required [(ngModel)]="model.email" name="email" #email="ngModel">
             @if(email.invalid && loginForm.submitted){

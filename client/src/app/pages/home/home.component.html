@@ -60,12 +60,19 @@
   </div>
 </div> -->
 
-<div class="hero bg-base-200 min-h-[60dvh] lg:min-h-screen">
+<div class="hero relative bg-base-200 min-h-[60dvh] lg:min-h-screen hero-background">
+  <div class="absolute top-0 left-0 bg-white/60 backdrop-blur-xs w-full h-full">
+  </div>
+
   <div class="hero-content text-center">
     <div class="max-w-2xl">
-      <h1 class="text-3xl lg:text-5xl font-bold">Welcome to Programme Development Application</h1>
-      <div class="py-6 text-xs text-center">
-        text-rotate
+      <h1 class="text-3xl lg:text-5xl font-extrabold font-stretch-expanded">
+        Welcome <span class="text-gray-400">to</span>
+        <span class="animated-primary"> Programme</span>
+        <span class="animated-text"> Development</span>
+        <span class="text-secondary"> Application</span>
+      </h1>
+      <p class="py-6 text-xs text-center">
         The Programme Development (PD) App is a centralised digitalised solution,
         encompassing curriculum management, development, maintenance, and modernisation
         of the curriculum through processes of ideation, reviews and approvals leading
@@ -75,12 +82,11 @@
         the scheduled review date for existing programmes while keeping all the
         communication between the department and PDU as well as with other
         stakeholders such industry, professional bodies and other universities.
-      </>
+      </p>
       <a routerLink='/about-us' class="btn btn-primary btn-outline">Learn about PDQA</a>
     </div>
   </div>
 </div>
-
 }
 
 @if (!currentUser){
