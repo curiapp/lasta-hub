@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { CurriculumDevPACStartComponent } from "../../components/forms/exeternal-curriculum-dev-pac-start/curriculum-dev-pac-start.component";
 import { ActivatedRoute } from '@angular/router';
-import { ClientService } from '../../services/client.service';
-import { Programme } from '../../types';
-import { CurriculumDevPACConsultComponent } from "../../components/forms/external-curriculum-dev-pac-consult/curriculum-dev-pac-consult.component";
-import { PacConsultEndorseComponent } from "../../components/forms/external-pac-consult-endorse/pac-consult-endorse.component";
-import { ModalComponent } from "../../components/modal/modal.component";
 import { Apollo } from 'apollo-angular';
-import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
-import { LoadingService } from '../../services/loading.service';
-import { programme_steps } from '../../static';
+import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
+import { CurriculumDevPACStartComponent } from '../../../components/forms/exeternal-curriculum-dev-pac-start/curriculum-dev-pac-start.component';
+import { CurriculumDevPACConsultComponent } from '../../../components/forms/external-curriculum-dev-pac-consult/curriculum-dev-pac-consult.component';
+import { PacConsultEndorseComponent } from '../../../components/forms/external-pac-consult-endorse/pac-consult-endorse.component';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { GET_PROGRAMME_BY_ID } from '../../../graphql/graphql.queries';
+import { ClientService } from '../../../services/client.service';
+import { LoadingService } from '../../../services/loading.service';
+import { programme_steps } from '../../../static';
+import { Programme } from '../../../types';
+
 
 @Component({
   selector: 'client-external-stakeholders',

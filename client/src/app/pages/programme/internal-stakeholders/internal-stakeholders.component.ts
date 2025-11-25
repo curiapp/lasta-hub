@@ -1,17 +1,17 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { CEURecommendComponent } from "../../components/forms/internal-ceu-recommend/ceu-recommend.component";
-import { InternalReviewPduComponent } from "../../components/forms/internal-review-pdqa/internal-review-pdqa.component";
-import { TLUCEUQAStartComponent } from "../../components/forms/internal-tlu-ceu-qa-start/tlu-ceu-qa-start.component";
-import { TLURecommendComponent } from "../../components/forms/internal-tlu-recommend/tlu-recommend.component";
-import { ModalComponent } from "../../components/modal/modal.component";
-import { ClientService } from '../../services/client.service';
-import { Programme } from '../../types';
-import { Apollo } from 'apollo-angular';
-import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
-import { LoadingService } from '../../services/loading.service';
-import { programme_steps } from '../../static';
+import { Component, inject } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { Apollo } from "apollo-angular";
+import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
+import { CEURecommendComponent } from "../../../components/forms/internal-ceu-recommend/ceu-recommend.component";
+import { InternalReviewPduComponent } from "../../../components/forms/internal-review-pdqa/internal-review-pdqa.component";
+import { TLUCEUQAStartComponent } from "../../../components/forms/internal-tlu-ceu-qa-start/tlu-ceu-qa-start.component";
+import { TLURecommendComponent } from "../../../components/forms/internal-tlu-recommend/tlu-recommend.component";
+import { ModalComponent } from "../../../components/modal/modal.component";
+import { GET_PROGRAMME_BY_ID } from "../../../graphql/graphql.queries";
+import { ClientService } from "../../../services/client.service";
+import { LoadingService } from "../../../services/loading.service";
+import { programme_steps } from "../../../static";
+import { Programme } from "../../../types";
 
 @Component({
   selector: 'client-internal-stakeholders',

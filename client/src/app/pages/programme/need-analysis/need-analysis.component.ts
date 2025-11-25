@@ -1,24 +1,23 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { ApcComponent } from "../../components/forms/need-analysis-apc/apc.component";
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { BosSubmitComponent } from '../../components/forms/need-analysis-bos-submit/bos-submit.component';
-import { BosComponent } from "../../components/forms/need-analysis-bos/bos.component";
-import { EndConsultComponent } from "../../components/forms/need-analysis-end-consult/end-consult.component";
-import { NeedAnalysisConcludeComponent } from '../../components/forms/need-analysis-conclude/need-analysis-conclude.component';
-import { NeedAnalysisConsultationComponent } from "../../components/forms/need-analysis-consult/need-analysis-consult.component";
-import { SenateSubmitComponent } from "../../components/forms/need-analysis-apc-submit/senate-submit.component";
-import { NQFLevel, programme_steps, programmes } from '../../static';
-import { Programme } from '../../types';
-import { SenateComponent } from "../../components/forms/need-analysis-senate/senate.component";
-import { ClientService } from '../../services/client.service';
-import { NeedAnalysisEditProgramComponent } from "../../components/forms/need-analysis-edit-programme/need-analysis-edit-program.component";
-import { ModalComponent } from "../../components/modal/modal.component";
-import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
-import { LoadingService } from '../../services/loading.service';
-import { Apollo } from 'apollo-angular';
-
+import { Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { Apollo } from "apollo-angular";
+import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
+import { SenateSubmitComponent } from "../../../components/forms/need-analysis-apc-submit/senate-submit.component";
+import { ApcComponent } from "../../../components/forms/need-analysis-apc/apc.component";
+import { BosSubmitComponent } from "../../../components/forms/need-analysis-bos-submit/bos-submit.component";
+import { BosComponent } from "../../../components/forms/need-analysis-bos/bos.component";
+import { NeedAnalysisConcludeComponent } from "../../../components/forms/need-analysis-conclude/need-analysis-conclude.component";
+import { NeedAnalysisConsultationComponent } from "../../../components/forms/need-analysis-consult/need-analysis-consult.component";
+import { NeedAnalysisEditProgramComponent } from "../../../components/forms/need-analysis-edit-programme/need-analysis-edit-program.component";
+import { EndConsultComponent } from "../../../components/forms/need-analysis-end-consult/end-consult.component";
+import { SenateComponent } from "../../../components/forms/need-analysis-senate/senate.component";
+import { ModalComponent } from "../../../components/modal/modal.component";
+import { GET_PROGRAMME_BY_ID } from "../../../graphql/graphql.queries";
+import { ClientService } from "../../../services/client.service";
+import { LoadingService } from "../../../services/loading.service";
+import { programme_steps, NQFLevel } from "../../../static";
+import { Programme } from "../../../types";
 
 @Component({
   selector: 'client-need-analysis',

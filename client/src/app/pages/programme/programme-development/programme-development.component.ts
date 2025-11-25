@@ -1,17 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ClientService } from '../../services/client.service';
-import { Programme } from '../../types';
-import { CdcComponent } from "../../components/forms/pd-cdc/cdc.component";
-import { PacComponent } from "../../components/forms/pd-pac/pac.component";
-import { CurriculumDevDraftReviseComponent } from "../../components/forms/pd-curriculum-dev-draft-revise/curriculum-dev-draft-revise.component";
-import { CurriculumDevDraftPDUApprovComponent } from "../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component";
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { ModalComponent } from "../../components/modal/modal.component";
-import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
 import { Apollo } from 'apollo-angular';
-import { LoadingService } from '../../services/loading.service';
-import { programme_steps } from '../../static';
+import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
+import { CdcComponent } from '../../../components/forms/pd-cdc/cdc.component';
+import { CurriculumDevDraftPDUApprovComponent } from '../../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component';
+import { CurriculumDevDraftReviseComponent } from '../../../components/forms/pd-curriculum-dev-draft-revise/curriculum-dev-draft-revise.component';
+import { PacComponent } from '../../../components/forms/pd-pac/pac.component';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { GET_PROGRAMME_BY_ID } from '../../../graphql/graphql.queries';
+import { ClientService } from '../../../services/client.service';
+import { LoadingService } from '../../../services/loading.service';
+import { programme_steps } from '../../../static';
+import { Programme } from '../../../types';
 
 @Component({
   selector: 'client-programme-development',

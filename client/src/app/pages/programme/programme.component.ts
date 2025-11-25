@@ -1,11 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
-import { ClientService } from '../services/client.service';
-import { LoadingService } from '../services/loading.service';
-import { Programme } from '../types';
-import { GET_PROGRAMME_BY_ID } from '../graphql/graphql.queries';
-
+import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
+import { ClientService } from '../../services/client.service';
+import { LoadingService } from '../../services/loading.service';
+import { Programme } from '../../types';
 
 @Component({
   selector: 'client-programme',
