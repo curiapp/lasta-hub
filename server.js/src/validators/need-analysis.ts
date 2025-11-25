@@ -34,12 +34,14 @@ const concludeSchema = Joi.object({
 });
 
 const bosRecommendSchema = programmeBaseSchema.append({
+  programmeId: Joi.string().required(),
   status: Joi.string().valid("senate", "bos", "decline").required().messages({
     "any.only": "Status must be one of: senate, bos, decline",
   }),
 });
 
 const apcRecommendSchema = programmeBaseSchema.append({
+  programmeId: Joi.string().required(),
   status: Joi.string()
     .valid("recommend", "decline", "defer")
     .required()

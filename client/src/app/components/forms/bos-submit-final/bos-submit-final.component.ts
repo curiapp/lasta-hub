@@ -1,9 +1,7 @@
-//import component, ElementRef, input and the oninit method from angular core
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FileUploadModule } from 'ng2-file-upload';
+import { Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BoSSubmitService } from '../../../services/bos-submit.service';
+import { FileUploadModule } from 'ng2-file-upload';
+import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -12,25 +10,16 @@ import { ToastService } from '../../../services/toast.service';
   imports: [FormsModule, FileUploadModule]
 })
 
-export class BosSubmitFinalComponent implements OnInit {
+export class BosSubmitFinalComponent {
   model: any = {};
   @Input() pid: string;
   startDate: Date;
-  dataService: BoSSubmitService;
   postMyDataToServer: string | any;
   toast = inject(ToastService);
-
-  constructor(private _dataService: BoSSubmitService, private router: Router) {
-    this.dataService = _dataService;
-  }
-
-  ngOnInit() {
-  }
-
+  _dataService = inject(ClientService);
 
   submit() {
-    this.postMyDataToServer = this._dataService.startBOS(this.pid, this.startDate)
-    this._dataService.startBOS(this.pid, this.startDate)
+    this._dataService.post('need-analysis/bos/start', { programmeId: this.pid, date: this.startDate })
       .subscribe(
         {
           next: (data) => {

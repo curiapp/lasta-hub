@@ -1,12 +1,12 @@
 <div class="space-y-4">
   <h3 class="text-xl mb-4">Submission to APC</h3>
 
-  <form class="space-y-2" #bossubmitForm="ngForm" (ngSubmit)="onSumbit(bossubmitForm)">
+  <form class="space-y-2" #bossubmitForm="ngForm" (ngSubmit)="onSubmit(bossubmitForm)">
     <fieldset class="fieldset">
       <label class="fieldset-legend">Start Date:</label>
-      <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="startDate" ng2-datetime-picker
-        date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-      @if (cdate.invalid && cdate.touched) {
+      <input id="date" type="date" class="input input-bordered" required [(ngModel)]="startDate" ng2-datetime-picker
+        date-only="true" name="date" placeholder="YYYY-MM-DD" #date="ngModel" />
+      @if (date.invalid && date.touched) {
       <div class="label label-text-alt text-red-700">Submission Date is required</div>
       }
     </fieldset>

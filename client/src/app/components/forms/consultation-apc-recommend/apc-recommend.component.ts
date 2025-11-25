@@ -1,10 +1,12 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input, inject } from '@angular/core';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient as Http } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
+import { ModalControlService } from '../../../services/modal-control.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'consultation-apc-recommend',
@@ -20,6 +22,8 @@ export class ApcRecommendComponent implements OnInit {
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
   public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'apc-recommendation' });
   @ViewChild('selectedFile') selectedFile: any;
+  modalControl = inject(ModalControlService);
+  toast = inject(ToastService);
 
   clear() {
     this.model.programmeCode = "";
@@ -56,17 +60,20 @@ export class ApcRecommendComponent implements OnInit {
   ngOnInit() {
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('id', this.pid);
+      form.append('programmeId', this.pid);
       form.append('decision', this.decision);
       form.append('date', this.model.consultationDate);
     };
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      console.log("FileUpload:successfully uploaded:", item, status, response);
-      if (status == 201) {
-        alert("FileUpload: successfully");
-      } else {
-        alert("FileUpload:" + response);
+      if (status === 201 || status === 200) {
+        const res = JSON.parse(response);
+        this.toast?.success(res?.message);
+        this.uploader.clearQueue();
+        this.modalControl.close();
+      } else if (status == 500) {
+        this.toast?.error("Failed upload file");
+        this.modalControl.close();
       }
     };
   }

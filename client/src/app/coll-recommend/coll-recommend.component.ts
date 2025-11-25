@@ -1,9 +1,10 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-//import the native angular http and respone libraries
-import { HttpClient as Http } from '@angular/common/http';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from 'express';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../environments/environment';
+import { ModalControlService } from '../services/modal-control.service';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   //define the element to be selected from the html structure.
@@ -16,42 +17,37 @@ export class COLLRecommendComponent implements OnInit {
   model: any = {};
   @Input() pid: String;
   decision: String;
-  //  form: FormGroup;
+  modalControl = inject(ModalControlService);
 
-  //declare a property called fileuploader and assign it to an instance of a new fileUploader.
-  //pass in the Url to be uploaded to, and pass the itemAlais, which would be the name of the //file input when sending the post request.
-  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'coll-recommend' });
-  //This is the default title property created by the angular cli. Its responsible for the app works
-  title = 'app works!';
+  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'file' });
+
+  constructor(private router: Router, private _location: Location, private toast: ToastService) { }
 
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('id', this.model.programmeCode);
+      form.append('programmeId', this.model.programmeCode);
       form.append('decision', this.decision);
       form.append('reviewUnit', "COLL");
     };
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      console.log("FileUpload:successfully uploaded:", item, status, response);
-      if (status == 201) {
-
-        alert("FileUpload: COLL Recommendations successfully Submitted ");
-
+      if (status === 201 || status === 200) {
+        const res = JSON.parse(response);
+        this.toast?.success(res?.message);
+        this.uploader.clearQueue();
+        this.modalControl.close();
+      } else if (status == 500) {
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
+        this.modalControl.close();
+      } else {
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
-      else {
-        alert("FileUpload:" + response);
-
-      }
-
     };
   }
-  //declare a constroctur, so we can pass in some properties to the class, which can be    //accessed using the this variable
-  constructor(private http: Http, private el: ElementRef) {
 
-  }
   @ViewChild('selectedFile') selectedFile: any;
   clear() {
     this.model.programmeCode = "";

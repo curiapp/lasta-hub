@@ -21,7 +21,7 @@ import { ModalControlService } from '../../../services/modal-control.service';
 export class FileUploadComponent {
   @Input() url: string = "";
   @Input() pid: string;
-  @Input() itemAlias: string = "check-list";
+  @Input() itemAlias: string = "file";
   decision: string = "";
   formData: any = {};
   uploader: FileUploader;
@@ -36,7 +36,7 @@ export class FileUploadComponent {
         { name: 'Authorization', value: 'Bearer YOUR_TOKEN' }, // If using JWT authentication
         { name: 'X-Requested-With', value: 'XMLHttpRequest' },
       ],
-      itemAlias: this.itemAlias,
+      itemAlias: 'file',
       allowedFileType: ['image', 'pdf', 'doc', 'csv', 'txt', 'xls', 'ppt'],
       maxFileSize: 5 * 1024 * 1024, // 5MB
     });
@@ -45,20 +45,21 @@ export class FileUploadComponent {
     this.uploader.onBeforeUploadItem = (file) => { file.withCredentials = false; };
 
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('id', this.pid);
+      form.append('programmeId', this.pid);
       objectToFormData(this.formData, form);
     };
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      if (status == 201) {
-        this.toast?.success("FileUpload: successfully");
-        this.modalControl.close();
+      if (status === 201 || status === 200) {
+        const res = JSON.parse(response);
+        this.toast?.success(res?.message);
         this.uploader.clearQueue();
+        this.modalControl.close();
       } else if (status == 500) {
         this.modalControl.close();
-        this.toast?.error("Failed upload file");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       } else {
-        this.toast?.error("Failed upload");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
     };
 

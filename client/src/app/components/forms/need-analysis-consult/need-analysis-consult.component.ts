@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { FileItem, FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -8,6 +8,7 @@ import { FilePipe } from "../../../pipes/file.pipe";
 import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
+import { ModalControlService } from '../../../services/modal-control.service';
 
 @Component({
   selector: 'need-analysis-consult',
@@ -17,9 +18,12 @@ import { environment } from '../../../../environments/environment';
 export class NeedAnalysisConsultationComponent implements OnInit {
   url = `${environment.apiUrl}/need-analysis/consult`;
   @Input() pid: string;
-
+  toast = inject(ToastService);
+  modalControl = inject(ModalControlService);
   isStakeholderShown = signal(false);
   isShown = signal(false);
+
+  constructor(private router: Router, private _location: Location) { }
 
   toggleAdd() {
     this.isStakeholderShown.update((isShown) => !isShown);
@@ -28,7 +32,6 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   toggle() {
     this.isShown.update((isShown) => !isShown);
   }
-
 
   needAnalysis: {
     startDate: Date;
@@ -45,7 +48,7 @@ export class NeedAnalysisConsultationComponent implements OnInit {
 
   uploader: FileUploader = new FileUploader({
     url: this.url,
-    itemAlias: 'consultation',
+    itemAlias: 'files',
     maxFileSize: 50 * 1024 * 1024,
     method: 'POST',
     headers: [
@@ -64,27 +67,29 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     this.needAnalysis.organisationList = this.needAnalysis.organisationList.filter((item) => item !== value);
   }
 
-  constructor(private router: Router, private _location: Location, private toast: ToastService) { }
 
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: FileItem, form: any) => {
-      form.append('id', this.pid);
-      form.append('sDate', this.needAnalysis.startDate);
-      form.append('eDate', this.needAnalysis.endDate);
-      form.append('organizationList', JSON.stringify(this.needAnalysis.organisationList));
+      form.append('programmeId', this.pid);
+      form.append('startDate', this.needAnalysis.startDate);
+      form.append('endDate', this.needAnalysis.endDate);
+      form.append('organizations', JSON.stringify(this.needAnalysis.organisationList));
     };
 
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      if (status == 201) {
-        this.toast?.success("FileUpload: successfully");
+      if (status === 201 || status === 200) {
+        const res = JSON.parse(response);
+        this.toast?.success(res?.message);
         this.uploader.clearQueue();
+        this.modalControl.close();
       } else if (status == 500) {
-        this.toast?.error("Failed upload file");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
+        this.modalControl.close();
       } else {
-        this.toast?.error("Failed upload");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
     };
   }

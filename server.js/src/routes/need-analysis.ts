@@ -163,7 +163,8 @@ export default async (app: Express, upload: Multer) => {
         );
 
         if (error) {
-            console.log(error);
+            console.error(error);
+
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
@@ -192,7 +193,7 @@ export default async (app: Express, upload: Multer) => {
                 message: "PDQA recommendation submitted successfully",
             });
         } catch (err) {
-            console.error(err);
+            console.error("Test error ",err);
             if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
             res.status(500).send({ message: "Internal server error" });
         }

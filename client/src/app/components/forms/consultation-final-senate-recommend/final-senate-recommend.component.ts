@@ -8,6 +8,7 @@ import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
 import { FileIconComponent } from "../../file-icon/file-icon.component";
+import { ModalControlService } from '../../../services/modal-control.service';
 
 
 //create the component properties
@@ -25,8 +26,9 @@ export class FinalSenateRecommendComponent implements OnInit {
   selectedFiles: string[][] = [];
   fileList: string[];
   toast = inject(ToastService);
+  modalControl = inject(ModalControlService);
 
-  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'final-senate-recommendation' });
+  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'file' });
 
   updateFile() {
     let end = this.uploader.queue.length;
@@ -50,7 +52,7 @@ export class FinalSenateRecommendComponent implements OnInit {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('id', this.pid);
+      form.append('programmeId', this.pid);
       form.append('date', this.model.consultationDate);
       form.append('status', this.model.status);
       form.append('fileList', this.selectedFiles);
@@ -60,15 +62,16 @@ export class FinalSenateRecommendComponent implements OnInit {
     this.fileList = ['Programme Document', 'Submission letters to Senate'];
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      if (status == 201) {
-        this.toast.success("Final draft uploaded successfully");
+      if (status === 201 || status === 200) {
+        const res = JSON.parse(response);
+        this.toast?.success(res?.message);
         this.uploader.clearQueue();
-        this.selectedFiles = [];
+        this.modalControl.close();
       } else if (status == 500) {
-        this.toast.error("Failed to submit final draft");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
+        this.modalControl.close();
       } else {
-        console.log("Final Draft response:", response);
-        this.toast.error("Failed to submit final draft");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
     };
   }

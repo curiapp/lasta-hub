@@ -2,12 +2,11 @@
 //import component, ElementRef, input and the oninit method from angular core
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload';
-import { BoSSubmitService } from '../../../services/bos-submit.service';
-import { ToastService } from '../../../services/toast.service';
+import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'bos-submit',
@@ -19,18 +18,16 @@ export class BosSubmitComponent {
   @Input() pid: string;
   startDate: Date;
   modalControl = inject(ModalControlService);
-  _dataService = inject(BoSSubmitService);
+  _dataService = inject(ClientService);
   toast = inject(ToastService);
   loading = inject(LoadingService);
-
-
   submitBOS(form: NgForm) {
-    this._dataService.startBOS(this.pid, this.startDate)
+    this._dataService.post('need-analysis/bos/start', { programmeId: this.pid, "date": this.startDate })
       .subscribe({
         next: (data) => {
-          console.log("data: " + JSON.stringify(data));
-          this.toast.success("Bos session started !");
+          form.reset();
           this.modalControl.close();
+          this.toast.success(data?.message);
         },
         error: (error) => {
           this.modalControl.close();
@@ -38,10 +35,5 @@ export class BosSubmitComponent {
         }
       }
       );
-  }
-
-  clear() {
-    this.model.programmeCode = "";
-    this.model.bossubmissionDate = null;
   }
 }

@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { ToastService } from '../../../services/toast.service';
 import { FileIconComponent } from "../../file-icon/file-icon.component";
+import { ModalControlService } from '../../../services/modal-control.service';
 
 @Component({
   selector: 'final-draft',
@@ -20,31 +21,28 @@ export class FinalDraftComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'bos-draft' });
   consultationDate: Date;
   @Input() pid: string;
-  // @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
+  modalControl = inject(ModalControlService);
   toast = inject(ToastService);
-
-  // onUpload() {
-  //   this.fileUpload.onUpload({ date: this.model.consultationDate });
-  // }
 
   ngOnInit() {
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('id', this.pid);
+      form.append('programmeId', this.pid);
       form.append('date', this.model.bosSubmissionDate);
       form.append('fileList', this.selectedFiles);
     };
     this.fileList = ['Support Letters', 'PAC Minutes', 'Benchmarking', 'Draft Document', 'Checklist'];
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      if (status == 201) {
-        this.toast.success("Final draft uploaded successfully");
+      if (status === 201 || status === 200) {
+        const res = JSON.parse(response);
+        this.toast?.success(res?.message);
         this.uploader.clearQueue();
-        this.selectedFiles = [];
+        this.modalControl.close();
       } else if (status == 500) {
-        this.toast.error("Failed to submit final draft");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
+        this.modalControl.close();
       } else {
-        console.log("Final Draft response:", response);
-        this.toast.error("Failed to submit final draft");
+        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
     };
   }

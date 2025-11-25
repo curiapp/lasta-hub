@@ -20,7 +20,6 @@ export class ClientService {
         'Content-Type': 'application/json'
       }
     }).pipe(
-      // map((response: any) => response.json()),
       catchError(handleError)
     )
   }
@@ -31,7 +30,6 @@ export class ClientService {
         'Content-Type': 'application/json'
       }
     }).pipe(
-      // map((response: any) => response.json()),
       catchError(handleError)
     )
   }
