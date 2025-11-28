@@ -4,7 +4,7 @@ import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient as Http } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 import { environment } from '../../../../environments/environment';
 
 //create the component properties
@@ -15,12 +15,12 @@ import { environment } from '../../../../environments/environment';
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class CEURecommendComponent {
-  url = `${environment.apiUrl}/reviews/recommend`;
+  url = `${environment.apiUrl}/reviews/submit`;
   @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload(decision: string = "") {
-    this.fileUpload.onUpload({ decision: decision, reviewUnit: "CE" });
+    this.fileUpload.onUpload({ decision: decision, entity: "ceu" });
   }
 
 }

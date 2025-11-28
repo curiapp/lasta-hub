@@ -3,83 +3,18 @@
   <form #concludeForm="ngForm" class="space-y-2">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Date</legend>
-      <input id="date" type="date" class="input input-sm input-bordered w-full" required
-        [(ngModel)]="model.bosSubmissionDate" ng2-datetime-picker date-only="true" name="consultationDate"
-        placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      <input id="date" type="date" class="input input-sm input-bordered w-full" required [(ngModel)]="date"
+        ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if (cdate.invalid && cdate.touched) {
-      <span class="label text-error">Consultation date required*</span>
+      <span class="label text-error">Circulation date required*</span>
       }
     </fieldset>
 
-    <fieldset class="fieldset">
-      <legend class="fieldset-legend">Select Document Type</legend>
-      <select class="select select-sm select-bordered" name="documentName" id="documentName" required
-        [(ngModel)]="model.documentType" #docType="ngModel">
-        <option [ngValue]="undefined" [disabled]="true">Select the Document type</option>
-        @for (filetag of fileList; track $index) {
-        <option value="{{ filetag }}">{{filetag}}</option>
-        }
-      </select>
-      @if (docType.invalid && docType.touched) {
-      <div class="label text-error">Document type required*</div>
-      }
-    </fieldset>
+    <file-upload-multiple [pid]="pid" [url]="url" [fileTypeList]="fileTypeList" />
 
-    @if(docType.valid){
-    <div class="fieldset">
-      <label class="fieldset-legend">Draft Programme</label>
-      <div class="flex items-center justify-center w-full">
-        <label for="dropzone-file"
-          class="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-          ng2FileDrop [uploader]="uploader" (change)="updateFile()">
-          <div class="flex flex-col items-center justify-center pt-4 pb-4 space-y-1">
-            <svg class="size-6 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-              fill="none" viewBox="0 0 20 16">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-            </svg>
-            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
-              or drag and drop</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 50MB)</p>
-          </div>
-          <input [disabled]="fileList.length===0" required name="file" ngModel #doc="ngModel" id="dropzone-file"
-            type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
-        </label>
-      </div>
-      @if (docType.invalid) {
-      <label class="text-primary label"> Please select document type</label>
-      }
-    </div>
-    }
-
-    @if(uploader?.queue.length){
-    <fieldset class="p-1 pb-3 border-2 border-dashed border-gray-300 rounded-lg fieldset">
-      <legend class="fieldset-legend">Selected Files</legend>
-      <div class="space-y-1">
-        @for (item of selectedFiles; track $index) {
-        <div class="rounded-lg p-1 bg-gray-50 flex items-center gap-3">
-          <div class="size-8 rounded-lg bg-gray-100 grid place-items-center">
-            <file-icon [fileName]="item[1]"></file-icon>
-          </div>
-          <div class="flex flex-col flex-grow">
-            <span class="font-normal text-sm break-all">{{item[1]}}</span>
-            <span class="text-xs text-gray-500">{{item[0]}}</span>
-          </div>
-          <div
-            class="size-8 hover:bg-gray-100 hover:scale-105 rounded-full grid place-items-center cursor-pointer transition-all">
-            <span class="material-symbols-rounded text-[24px] cursor-pointer" (click)="removeFile(item[1], item[0])">
-              delete
-            </span>
-          </div>
-        </div>
-        }
-      </div>
-    </fieldset>
-    }
-
-    <div class="form-control">
-      <button type="button" class="btn btn-primary btn-sm w-full" (click)="uploader.uploadAll()"
-        [disabled]="!uploader?.queue.length || cdate.invalid">
+    <div class="mt-3">
+      <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
+        [disabled]="fileUpload?.uploader?.queue?.length < 1 || concludeForm.invalid">
         Submit
         <span class="material-symbols-rounded">cloud_upload</span>
       </button>

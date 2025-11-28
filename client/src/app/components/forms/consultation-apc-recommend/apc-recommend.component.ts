@@ -4,7 +4,7 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient as Http } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
-import { FileUploadComponent } from '../file-upload/file-upload.component';
+import { FileUploadComponent } from '../../files/file-upload/file-upload.component';
 import { ModalControlService } from '../../../services/modal-control.service';
 import { ToastService } from '../../../services/toast.service';
 

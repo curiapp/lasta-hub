@@ -1,14 +1,8 @@
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
-import { ToastService } from '../../../services/toast.service';
+import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
-import { FileIconComponent } from "../../file-icon/file-icon.component";
-import { ModalControlService } from '../../../services/modal-control.service';
+import { FileUploadMultipleComponent } from "../../files/file-upload-multiple/file-upload-multiple.component";
 
 
 //create the component properties
@@ -16,64 +10,16 @@ import { ModalControlService } from '../../../services/modal-control.service';
   //define the element to be selected from the html structure.
   selector: 'consultation-final-senate-recommend',
   templateUrl: 'final-senate-recommend.component.html',
-  imports: [FormsModule, FileUploadModule, FileIconComponent]
+  imports: [FormsModule, FileUploadModule, FileUploadMultipleComponent]
 })
-export class FinalSenateRecommendComponent implements OnInit {
+export class FinalSenateRecommendComponent {
   url = `${environment.apiUrl}/bos-senate/final-senate`;
-  model: any = {};
-  consultationDate: Date;
   @Input() pid: string;
-  selectedFiles: string[][] = [];
-  fileList: string[];
-  toast = inject(ToastService);
-  modalControl = inject(ModalControlService);
+  fileTypeList = ["", "Programme Document", "Submission letters to Senate"];
+  date: Date;
+  @ViewChild(FileUploadMultipleComponent) fileUpload: FileUploadMultipleComponent;
 
-  public uploader: FileUploader = new FileUploader({ url: this.url, itemAlias: 'file' });
-
-  updateFile() {
-    let end = this.uploader.queue.length;
-    this.selectedFiles.push([this.model.documentType, this.uploader.queue[end - 1].file.name]);
-    let removeType = this.fileList.indexOf(this.model.documentType.toString());
-    this.fileList.splice(removeType, 1);
-    this.model.documentType = "";
+  onUpload() {
+    this.fileUpload?.onUpload({ date: this.date, decision: "approve" });
   }
-
-  removeFile(name: any, type: string) {
-    this.fileList.push(type);
-    this.uploader.queue.forEach(element => {
-      if (element.file.name == name) {
-        this.uploader.removeFromQueue(element);
-        this.selectedFiles = this.selectedFiles.filter((item) => item[1] !== name);
-      }
-    });
-  }
-
-  ngOnInit() {
-    //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
-    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
-    this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('programmeId', this.pid);
-      form.append('date', this.model.consultationDate);
-      form.append('status', this.model.status);
-      form.append('fileList', this.selectedFiles);
-      // form.append('madeBy',this.model.madeBy);
-    };
-
-    this.fileList = ['Programme Document', 'Submission letters to Senate'];
-
-    this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      if (status === 201 || status === 200) {
-        const res = JSON.parse(response);
-        this.toast?.success(res?.message);
-        this.uploader.clearQueue();
-        this.modalControl.close();
-      } else if (status == 500) {
-        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
-        this.modalControl.close();
-      } else {
-        this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
-      }
-    };
-  }
-
 }

@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 import { environment } from '../../../../environments/environment';
 
 @Component({

@@ -4,8 +4,8 @@
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Qualification Title</legend>
       <input id="qualificationTitle" type="text" class="input input-bordered" required
-        [(ngModel)]="model.qualificationTitle" name="qtitle" #qtitle="ngModel">
-      @if (qtitle.invalid && qtitle.touched) {
+        [(ngModel)]="model.qualificationTitle" name="title" #qualificationTitle="ngModel">
+      @if (qualificationTitle.invalid && qualificationTitle.touched) {
       <span class="legend text-error">Qualification title required*</span>
       }
     </fieldset>
@@ -30,7 +30,7 @@
 
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Registered Qualification Document</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="course-document"></file-upload>
+      <file-upload [pid]="pid" [url]="url"></file-upload>
     </fieldset>
 
     <div class="flex gap-2 justify-center">

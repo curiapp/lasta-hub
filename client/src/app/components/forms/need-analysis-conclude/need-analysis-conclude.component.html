@@ -4,25 +4,25 @@
 
   <file-upload [pid]="pid" [url]="url" itemAlias="check-list"></file-upload>
 
-  <div class="join join-horizontal lg:join-horizontal w-full justify-center !mt-4">
-    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn join-item btn-primary btn-sm"
-      (click)="onUpload('recomment')">
+  <div class="w-full flex flex-col sm:flex-row justify-center mt-4!">
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn btn-primary btn-sm grow rounded-b-none sm:rounded-r-none sm:rounded-l-lg" (click)="onUpload('recommend')">
       Recommend
     </button>
     <!-- [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid" -->
 
-    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn  btn-success btn-sm join-item"
-      (click)="onUpload('approve')">
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn btn-success btn-sm  rounded-none! grow" (click)="onUpload('approve')">
       Approve
     </button>
 
-    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn  btn-error btn-sm join-item"
-      (click)="onUpload('decline')">
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn  btn-error btn-sm  rounded-none! grow" (click)="onUpload('decline')">
       Decline
     </button>
 
-    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button" class="btn btn-warning btn-sm join-item"
-      (click)="onUpload('defer')">
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn btn-warning btn-sm grow rounded-t-none sm:rounded-l-none sm:rounded-r-lg" (click)="onUpload('defer')">
       Defer
     </button>
   </div>

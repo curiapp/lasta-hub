@@ -1,20 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TluCeuQaStartComponent } from './tlu-ceu-qa-start.component';
+import { TLUCEUQAStartComponent } from './tlu-ceu-qa-start.component';
 
 describe('TluCeuQaStartComponent', () => {
-  let component: TluCeuQaStartComponent;
-  let fixture: ComponentFixture<TluCeuQaStartComponent>;
+  let component: TLUCEUQAStartComponent;
+  let fixture: ComponentFixture<TLUCEUQAStartComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TluCeuQaStartComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TLUCEUQAStartComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TluCeuQaStartComponent);
+    fixture = TestBed.createComponent(TLUCEUQAStartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

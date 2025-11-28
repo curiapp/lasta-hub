@@ -1,19 +1,19 @@
 <div class="container">
   <h3 class="text-xl mb-4">Bos Consultation</h3>
   <form #bosForm="ngForm" class="space-y-2">
-    <div class="form-group">
-      <label for="date">BOS Date</label>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">BOS Date</legend>
       <div class="form-control">
         <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="model.date" date-only="true"
-          name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+          name="date" placeholder="YYYY-MM-DD" #date="ngModel" />
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
       </div>
-      @if(cdate.invalid && cdate.touched){
+      @if(date.invalid && date.touched){
       <div class="label label-text-alt text-red-700">Bos consultation date is required</div>
       }
-    </div>
+    </fieldset>
 
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Recommendations (File)</legend>
@@ -23,7 +23,7 @@
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Status</legend>
       <fieldset class="w-full border-2 border-gray-300 border-dashed rounded-lg p-3">
-        <div style="text-align:left;">
+        <div class="space-y-1">
           <div>
             <label class="radio-inline">
               <input type="radio" class="radio radio-xs" name="status" [(ngModel)]="model.status" value="senate"

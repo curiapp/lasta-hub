@@ -9,7 +9,7 @@
         <input id="sdate" type="date" class="input" required [(ngModel)]="needAnalysis.startDate" date-only="true"
           name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
         @if(sdate.invalid && sdate.touched){
-        <span class="label text-error">Start date is required*</span>
+        <span class="label text-error">Start date required*</span>
         }
       </fieldset>
 
@@ -19,16 +19,16 @@
           date-only="true" name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
         @if(edate.invalid && edate.touched){
         <label class="fieldset-label">
-          <span class="label-text-alt text-error">End date is required*</span>
+          <span class="label-text-alt text-error">End date required*</span>
         </label>
         }
       </fieldset>
 
       <div class="space-y-2">
         <div class="flex justify-between gap-2">
-          <label class="text-lg">Stakeholders List</label>
-          <button class="btn btn-sm btn-primary" (click)="toggleAdd()">
-            <span class="material-symbols-rounded">{{isStakeholderShown()?'remove':'add'}}</span> add stakeholder
+          <label class="text-base font-semibold">Stakeholders List</label>
+          <button class="btn btn-xs btn-outline btn-primary" (click)="toggleAdd()">
+            add stakeholder {{isStakeholderShown()?'-':'+'}}
           </button>
         </div>
         @if(isStakeholderShown()) {
@@ -39,7 +39,7 @@
                 <span class="material-symbols-rounded">
                   group
                 </span>
-                <input type="text" placeholder="enter stakeholder" id="organisation" name="organisation" required
+                <input type="text" placeholder="Enter stakeholder" id="organisation" name="organisation" required
                   class="flex-auto" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
               </label>
               <!-- <div class="validator-hint hidden">Enter Stakeholder Name</div> -->
@@ -50,11 +50,12 @@
         </fieldset>
         }
 
-        <div class="flex gap-2 flex-wrap">
+        <div class="flex gap-2 flex-wrap p-2 rounded-xl border-dashed border-2 border-gray-300">
           @for (item of needAnalysis?.organisationList; track item) {
           <div class="group px-2 py-2 rounded-md bg-gray-200 flex gap-4 items-center justify-between transition-all">
             <p class="line-clamp-2 text-sm capitalize">{{item}}</p>
-            <button class="btn btn-ghost btn-circle transition btn-xs hidden group-hover:block" (click)="removeOrganisation(item)">
+            <button class="btn btn-ghost btn-circle transition btn-xs hidden group-hover:block"
+              (click)="removeOrganisation(item)">
               <span class="material-symbols-rounded text-xs">
                 close
               </span>
@@ -74,12 +75,11 @@
 
     @if (isShown()) {
     <div class="next-page space-y-2" animate.enter="enter-animation">
-      <fieldset class="fieldset space-y-4">
+      <fieldset class="fieldset">
         <legend class="fieldset-legend">Upload Questionnaires from Respondents</legend>
-
         <div class="flex items-center justify-center w-full">
           <label for="dropzone-file"
-            class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+            class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-box cursor-pointer bg-gray-50 hover:bg-gray-100"
             ng2FileDrop [uploader]="uploader">
             <div class="flex flex-col items-center justify-center pt-5 pb-6">
               <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -97,14 +97,14 @@
           </label>
         </div>
 
-        <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-lg p-2 space-y-2">
+        <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-box p-2 space-y-2">
           @for (item of uploader.queue; track item.file.size) {
           <div class="flex items-center gap-4 p-1 border-b border-b-gray-500/5 group transition-all">
             <div class="icon size-8 rounded-md bg-gray-200 grid place-items-center">
               @switch (item.file.name | Extension) {
               @case ('pdf') {
               <span class="material-symbols-rounded text-[24px]">
-                picture_as_pdf
+                draft
               </span>
               }
               @case ('docs') {
@@ -134,16 +134,16 @@
               }
               }
             </div>
-            <div class="flex-grow w-[70%] tooltip text-left">
+            <div class="grow w-[70%] tooltip text-left">
               <p class="line-clamp-1 w-full text-xs">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
             </div>
             @if(uploader.isUploading){
             <span class="loading loading-spinner loading-1xl"></span>
             }
             <button
-              class="w-12 hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle btn-sm"
+              class="size-8 hidden group-hover:grid hover:rotate-90  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle btn-sm"
               (click)="removeFile(item)">
-              <span class="material-symbols-rounded">
+              <span class=" text-[20px]! material-symbols-rounded">
                 close
               </span>
             </button>

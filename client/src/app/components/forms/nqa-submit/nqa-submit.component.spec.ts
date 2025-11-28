@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NqaSubmitComponent } from './nqa-submit.component';
 
@@ -6,12 +6,12 @@ describe('NqaSubmitComponent', () => {
   let component: NqaSubmitComponent;
   let fixture: ComponentFixture<NqaSubmitComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NqaSubmitComponent ]
+  beforeEach(async() => {
+    await TestBed.configureTestingModule({
+      imports: [ NqaSubmitComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NqaSubmitComponent);

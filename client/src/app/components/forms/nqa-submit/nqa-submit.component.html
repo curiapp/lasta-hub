@@ -17,12 +17,9 @@
       </div>
     </fieldset>
 
-    <fieldset class="fieldset">
-      <legend class="fieldset-legend">Qualification Document:</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="pdu-recommendation"></file-upload>
-    </fieldset>
+    <file-upload-multiple [pid]="pid" [url]="url" [fileTypeList]="fileTypeList" />
 
-    <div class="flex">
+    <div class="flex mt-3">
       <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
         [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
         Save

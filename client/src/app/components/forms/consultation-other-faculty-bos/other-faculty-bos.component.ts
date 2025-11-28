@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 
 @Component({
   selector: 'consultations-other-faculty-bos',
@@ -13,15 +13,14 @@ export class OtherFacultyBosComponent {
   model: any = {};
   consultationDate: Date;
   @Input() pid: string;
-  OtherFacultyName: string;
   recommendTo: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload() {
     this.fileUpload.onUpload({
-      date: this.model.consultationDate,
-      OtherFacultyName: this.model.OtherFacultyName,
-      recommendTo: this.model.recommend
+      date: this.model.date,
+      facultyName: this.model.facultyName,
+      recommendedTo: this.model.recommendedTo
     });
   }
 

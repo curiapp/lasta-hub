@@ -5,6 +5,7 @@ import { StartNeedAnalysisService } from '../../../services/start-need-analysis.
 import { ToastService } from '../../../services/toast.service';
 import { Programme } from '../../../types';
 import { NQFLevel } from '../../../static';
+import { ModalControlService } from '../../../services/modal-control.service';
 
 @Component({
   selector: 'need-analysis-edit-program',
@@ -15,18 +16,21 @@ import { NQFLevel } from '../../../static';
 export class NeedAnalysisEditProgramComponent {
   public _loading = inject(LoadingService);
   needAnalysisService = inject(StartNeedAnalysisService);
-  toastService = inject(ToastService);
+  toast = inject(ToastService);
+  modalControl = inject(ModalControlService);
   levels = NQFLevel;
   @Input() programme: Programme;
 
   updateProgramme(form: NgForm) {
     if (form.valid) {
       this.needAnalysisService.updateNeedAnalysis({ ...form.value, id: this.programme.id }).subscribe({
-        next: (response) => {
-          this.toastService.success("Programme updated successfully!");
+        next: (response: any) => {
+          this.toast.success(response?.message);
+          this.modalControl.close();
         },
         error: (error) => {
-          this.toastService.error("Error updating programme: " + error?.message);
+          this.toast.error("Error updating programme: " + error?.message);
+          this.modalControl.close();
         }
       }
       );

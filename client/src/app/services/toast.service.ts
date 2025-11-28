@@ -11,10 +11,11 @@ export class ToastService {
   messages = signal<ToastMessage[]>([]);
   type: string;
   classes = "";
+
   add(message: string, type: string = 'info') {
     const id = uuidv4();
-    this.messages.update((currentMessages) => [...currentMessages, { id, message, type }]);
-    // this.removeAfterTimeout(id);
+    this.messages.update((currentMessages) => [{ id, message, type }, ...currentMessages]);
+    this.removeAfterTimeout(id);
   }
 
   remove(id: string): void {

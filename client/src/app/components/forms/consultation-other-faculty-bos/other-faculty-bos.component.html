@@ -3,16 +3,16 @@
   <form #bosForm="ngForm" class="space-y-2">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Other Faculty Name</legend>
-      <input id="OtherFacultyName" type="text" class="input input-bordered w-full" required
-        [(ngModel)]="model.OtherFacultyName" name="OtherFacultyName" #othercode="ngModel">
-      @if (othercode.invalid && othercode.touched) {
+      <input id="OtherFacultyName" placeholder="Enter Other Faculty Name" type="text" class="input input-bordered w-full" required
+        [(ngModel)]="model.facultyName" name="facultyName" #facultyName="ngModel">
+      @if (facultyName.invalid && facultyName.touched) {
       <span class="label text-error">Other Faculty Name is required</span>
       }
     </fieldset>
 
     <fieldset class="fieldset">
       <legend class="fieldset-legend">BOS Date</legend>
-      <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.consultationDate"
+      <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.date"
         ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if (cdate.invalid && cdate.touched) {
       <span class="label text-error">Consultation Date is required</span>
@@ -20,27 +20,27 @@
     </fieldset>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Programme Draft</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="other-faculty-recommendation"></file-upload>
-    </fieldset>
-
-    <fieldset class="fieldset">
       <legend class="fieldset-legend">Recommended to</legend>
       <fieldset class="rounded-lg flex gap-4 border-2 border-dashed border-gray-300 p-2">
         <div class="flex items-center gap-2">
           <input class="radio radio-xs" type="radio" id="defaultInline1" name="recommendTo"
-            [(ngModel)]="model.recommendTo" value="apc" required #recommendTo="ngModel" mdbInput>
+            [(ngModel)]="model.recommendedTo" value="apc" required #recommendedTo="ngModel" mdbInput>
           <label class="label" for="defaultInline1">APC</label>
         </div>
         <div class="flex items-center gap-2">
           <input class="radio radio-xs" type="radio" id="defaultInline2" name="recommendTo"
-            [(ngModel)]="model.recommendTo" value="BOSEC" required #recommendTo="ngModel" mdbInput>
+            [(ngModel)]="model.recommendedTo" value="bosec" required #recommendedTo="ngModel" mdbInput>
           <label class="label" for="defaultInline2">BOSEC</label>
         </div>
       </fieldset>
-      @if (recommendTo.invalid && recommendTo.touched) {
+      @if (recommendedTo.invalid && recommendedTo.touched) {
       <div class="label text-error">Recommendation required*</div>
       }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Programme Draft</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="other-faculty-recommendation"></file-upload>
     </fieldset>
 
     <div class="form-control">

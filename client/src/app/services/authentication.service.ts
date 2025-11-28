@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { handleError } from '../functions';
@@ -13,11 +13,9 @@ type User = {
   providedIn: 'root'
 })
 export class AuthenticationService {
-
-  constructor(private http: HttpClient, private toast: ToastService) { }
+  http = inject(HttpClient);
 
   login({ email, password }: User) {
-
     return this.http.post(`${environment.apiUrl}/user/login`, { email, password }, {
       headers: {
         'Content-Type': 'application/json'
@@ -25,6 +23,11 @@ export class AuthenticationService {
     }).pipe(
       catchError(handleError)
     )
+  }
+
+  isLoggedIn() {
+    const user = sessionStorage.getItem("loggedInUser");
+    return user ? true : false;
   }
 
   logout() {

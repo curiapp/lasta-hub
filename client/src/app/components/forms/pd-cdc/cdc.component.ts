@@ -4,6 +4,7 @@ import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validator
 import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
+import { ModalControlService } from '../../../services/modal-control.service';
 
 @Component({
   selector: 'pd-cdc',
@@ -13,19 +14,21 @@ import { LoadingService } from '../../../services/loading.service';
 
 export class CdcComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private pacAppointUrl: string = "curriculum-development/appoint/cdc";
-  @Input() pid: string = "";
+  private url = "curriculum-development/appoint/cdc";
+  @Input() pid = "";
   ld = inject(LoadingService);
   http = inject(ClientService);
   toast = inject(ToastService);
+  modalControl = inject(ModalControlService);
 
   cdcForm = this.fb.group({
-    id: [this.pid, [Validators.required, Validators.minLength(3)]],
-    cdc: this.fb.array([
+    programmeId: [this.pid, [Validators.required, Validators.minLength(3)]],
+    members: this.fb.array([
       this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         organization: ['', Validators.required],
+        occupation: ['', Validators.required],
         qualification: ['', Validators.required],
         emailAddress: ['', [Validators.required, Validators.email]],
         cellphone: ['', [Validators.minLength(10)]],
@@ -35,7 +38,7 @@ export class CdcComponent implements OnInit {
   })
 
   addItem() {
-    const itemArray = this.cdcForm.get('cdc') as FormArray;
+    const itemArray = this.cdcForm.get('members') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -49,17 +52,17 @@ export class CdcComponent implements OnInit {
   }
 
   removeItem(index: number): void {
-    const itemsArray = this.cdcForm.get('cdc') as FormArray;
+    const itemsArray = this.cdcForm.get('members') as FormArray;
     itemsArray.removeAt(index);
   }
 
 
   get items(): FormArray {
-    return this.cdcForm.get('cdc') as FormArray;
+    return this.cdcForm.get('members') as FormArray;
   }
 
   ngOnInit() {
-    this.cdcForm.get('id').setValue(this.pid);
+    this.cdcForm.get('programmeId').setValue(this.pid);
   }
 
   onCellPhoneValueChanged(value: any, controlAtX: AbstractControl) {
@@ -74,14 +77,16 @@ export class CdcComponent implements OnInit {
   }
 
   onSubmit() {
-    this.http.post<any>(this.pacAppointUrl, this.cdcForm.value)
+    this.http.post<any>(this.url, this.cdcForm.value)
       .subscribe({
         next: data => {
-          console.log("data", data);
-          this.toast.success("CDC successfully submitted!");
+          // console.log("data", data);
+          this.modalControl.close();
+          this.toast.success(data.message);
         },
         error: error => {
-          console.log("Error HTTP Post Service", error)
+          this.modalControl.close();
+          // console.log("Error HTTP Post Service", error)
           this.toast.error(`Error HTTP Post Service`);
         }
       });

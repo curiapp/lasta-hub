@@ -9,8 +9,8 @@ import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.com
 })
 export class ActionButtonsComponent {
   // @ViewChild('container', { read: ViewContainerRef, static: true }) container: ViewContainerRef;
-
   constructor(private viewContainer: ViewContainerRef) { }
+
   onDelete() {
     console.log("onDelete");
     const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);

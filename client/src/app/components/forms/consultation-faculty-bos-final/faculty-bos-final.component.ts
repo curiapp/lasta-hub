@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../services/toast.service';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 
 @Component({
   selector: 'consultation-faculty-bos-final',
@@ -20,9 +20,9 @@ export class FacultyBosFinalComponent {
 
   onUpload() {
     this.fileUpload.onUpload({
-      date: this.model.consultationDate,
-      status: this.model.status,
-      recommend: this.model.recommend
+      date: this.model.date,
+      deferTo: this.model.deferTo,
+      recommendedTo: this.model.recommend
     });
   }
 

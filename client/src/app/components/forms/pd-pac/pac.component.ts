@@ -4,6 +4,7 @@ import { AbstractControl, FormArray, FormBuilder, FormsModule, ReactiveFormsModu
 import { ClientService } from '../../../services/client.service';
 import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
+import { ModalControlService } from '../../../services/modal-control.service';
 
 @Component({
   selector: 'pd-pac',
@@ -16,10 +17,13 @@ export class PacComponent implements OnInit {
   @Input() pid: string = "defaultDevCode";
   pacAppointUrl: string = "curriculum-development/appoint/pac";
   ld = inject(LoadingService);
+  http = inject(ClientService);
+  toast = inject(ToastService);
+  modalControl = inject(ModalControlService);
 
   pacForm = this.fb.group({
-    id: [this.pid, [Validators.required, Validators.minLength(3)]],
-    pac: this.fb.array([
+    programmeId: [this.pid, [Validators.required, Validators.minLength(3)]],
+    members: this.fb.array([
       this.fb.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
@@ -33,15 +37,13 @@ export class PacComponent implements OnInit {
     ])
   })
 
-  constructor(public http: ClientService, private toast: ToastService) { }
-
   removeItem(index: number): void {
-    const itemsArray = this.pacForm.get('pac') as FormArray;
+    const itemsArray = this.pacForm.get('members') as FormArray;
     itemsArray.removeAt(index);
   }
 
   addItem() {
-    const itemArray = this.pacForm.get('pac') as FormArray;
+    const itemArray = this.pacForm.get('members') as FormArray;
     const newItem = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -56,11 +58,11 @@ export class PacComponent implements OnInit {
   }
 
   get items(): FormArray {
-    return this.pacForm.get('pac') as FormArray;
+    return this.pacForm.get('members') as FormArray;
   }
 
   ngOnInit() {
-    this.pacForm.get('id').setValue(this.pid);
+    this.pacForm.get('programmeId').setValue(this.pid);
   }
 
   onCellPhoneValueChanged(value: any, controlAtX: AbstractControl) {
@@ -78,11 +80,13 @@ export class PacComponent implements OnInit {
     this.http.post<any>(this.pacAppointUrl, this.pacForm.value)
       .subscribe({
         next: data => {
-          console.log("data", data);
-          this.toast.success("PAC successfully submitted!");
+          // console.log("data", data);
+          this.modalControl.close();
+          this.toast.success(data.message);
         },
         error: error => {
-          console.log("Error HTTP Post Service", error)
+          this.modalControl.close();
+          // console.log("Error HTTP Post Service", error);
           this.toast.error(`Error HTTP Post Service`);
         }
       });

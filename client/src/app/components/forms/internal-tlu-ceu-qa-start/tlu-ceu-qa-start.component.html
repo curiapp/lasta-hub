@@ -3,26 +3,22 @@
   <form #consultForm="ngForm" class="space-y-2">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Date</legend>
-      <input id="date" type="Date" class="input input-bordered w-full" required [(ngModel)]="model.consultationDate"
-        ng2-datetime-picker date-only="true" name="consultationDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
-      @if(cdate.invalid && cdate.touched){
+      <input id="date" type="date" class="input input-bordered w-full" required [(ngModel)]="model.date"
+        ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #date="ngModel" />
+      @if(date.invalid && date.touched){
       <div class="label text-error">Consultation date required*</div>
       }
-    </fieldset>
-
-    <fieldset class="fieldset">
-      <legend class="fieldset-legend">Drafted Programme</legend>
-      <file-upload [pid]="pid" itemAlias="review-start" [url]="url"></file-upload>
     </fieldset>
 
     <fieldset class="fieldset">
       <legend class="fieldset-legend" for="doc">WIL Component (optional)</legend>
       <div class="rounded-lg border-2 border-dashed border-gray-300 p-2">
         <div class="flex gap-2 items-center">
-          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline1" name="isWil" [(ngModel)]="model.wil"
-            #wil="ngModel">
+          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline1" name="isWil"
+            [(ngModel)]="model.includesWilComponent" #wil="ngModel">
 
-          <label class="custom-control-label" for="defaultInline1"> {{model.wil?'Includes':'Excludes'}} WIL
+          <label class="custom-control-label" for="defaultInline1"> {{model.includesWilComponent?'Includes':'Excludes'}}
+            WIL
             Component
           </label>
         </div>
@@ -34,30 +30,36 @@
       <legend class="fieldset-legend">Recommend to</legend>
       <div class="rounded-lg flex items-center gap-2 border-2 border-dashed border-gray-300 p-2">
         <div class="flex gap-2 items-center">
-          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline3" name="status" ngModel value="ceu"
-            required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
+          <input type="checkbox" class="checkbox checkbox-sm" name="status" ngModel value="CEU" required
+            #recommendedTo="ngModel" (change)="onChecked($event)">
           <label class="label" for="defaultInline3">CEU</label>
         </div>
         <div class="flex gap-2 items-center">
-          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline4" name="status" ngModel value="coll"
-            required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
+          <input type="checkbox" class="checkbox checkbox-sm" name="status" ngModel value="COLL" required
+            #recommendedTo="ngModel" (change)="onChecked($event)">
           <label class="label" for="defaultInline4">COLL</label>
         </div>
         <div class="flex gap-2 items-center">
-          <input type="checkbox" class="checkbox checkbox-sm" id="defaultInline5" name="status" ngModel value="tlp"
-            required #recommendto="ngModel" mdbInput (change)="onChecked($event)">
+          <input type="checkbox" class="checkbox checkbox-sm" name="status" ngModel value="TLP" required
+            #recommendedTo="ngModel" (change)="onChecked($event)">
           <label class="label" for="defaultInline5">TLP</label>
         </div>
       </div>
-      @if (this.model.recommendto.length<0) { <span class="label label-text-alt text-red-600">
+      @if (this.model.recommendedTo.length<1 && recommendedTo.invalid && recommendedTo.touched) { <span
+        class="label label-text-alt text-error">
         Recommend to at least one body required*
         </span>
         }
     </fieldset>
 
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Drafted Programme</legend>
+      <file-upload [pid]="pid" itemAlias="review-start" [url]="url"></file-upload>
+    </fieldset>
+
     <div class="form-control mt-4">
       <button type="button" class="btn btn-sm btn-primary w-full" (click)="onUpload()"
-        [disabled]="!fileUpload?.uploader.queue.length || !consultForm.form.valid">
+        [disabled]="!fileUpload?.uploader.queue.length || consultForm.invalid">
         Submit
       </button>
     </div>

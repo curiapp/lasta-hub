@@ -1,15 +1,14 @@
-import { Router } from '@angular/router';
-//import component, ElementRef, input and the oninit method from angular core
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-//import the file-upload plugin
-import { FileUploadModule } from 'ng2-file-upload';
-//import the native angular http and respone libraries
-import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
-import { Model } from './model';
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
+
+type Form = {
+  date: Date;
+  recommendedTo: string[];
+  includesWilComponent: boolean;
+}
 
 @Component({
   selector: 'tlu-ceu-qa-start',
@@ -18,9 +17,13 @@ import { Model } from './model';
 })
 export class TLUCEUQAStartComponent {
   url = `${environment.apiUrl}/reviews/start`;
-  model: Model = new Model();
   @Input() pid: string;
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
+  model: Form = {
+    date: new Date(),
+    recommendedTo: [],
+    includesWilComponent: false
+  };
 
   onUpload() {
     this.fileUpload.onUpload({ ...this.model });
@@ -28,10 +31,10 @@ export class TLUCEUQAStartComponent {
 
   onChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).value
-    if (this.model.recommendto.includes(isChecked)) {
-      var index = this.model.recommendto.indexOf(isChecked);
-      this.model.recommendto.splice(index, 1)
+    if (this.model.recommendedTo.includes(isChecked)) {
+      var index = this.model.recommendedTo.indexOf(isChecked);
+      this.model.recommendedTo.splice(index, 1)
     } else
-      this.model.recommendto.push(isChecked)
+      this.model.recommendedTo.push(isChecked)
   }
 }

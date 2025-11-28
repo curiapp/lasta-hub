@@ -1,6 +1,6 @@
 <div class="space-y-4">
   <h3 class="text-xl">Draft Curriculum - PDQA Recomendation </h3>
-  <form #concludeForm="ngForm" class="space-y-2">
+  <div class="space-y-2">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Draft Curriculum</legend>
       <file-upload [pid]="pid" [url]="url" itemAlias="check-list"></file-upload>
@@ -8,16 +8,16 @@
 
     <div class="flex items-center justify-center gap-2">
       <button type="button" class="btn btn-sm btn-primary btn-s flex-auto" (click)="onUpload('approve')"
-        [disabled]="!fileUpload?.uploader?.queue.length || concludeForm.form.invalid">
+        [disabled]="!fileUpload?.uploader?.queue.length">
         Recommended for consultation
       </button>
-      <button type="button" class="btn btn-sm btn-secondary btn-s" (click)="onUpload('decline')"
-        [disabled]="!fileUpload?.uploader?.queue.length || concludeForm.form.invalid">
+      <button type="button" class="btn btn-sm btn-accent" (click)="onUpload('decline')"
+        [disabled]="!fileUpload?.uploader?.queue.length">
         Request Resubmission
         <span class="material-symbols-rounded">
           undo
         </span>
       </button>
     </div>
-  </form>
+  </div>
 </div>

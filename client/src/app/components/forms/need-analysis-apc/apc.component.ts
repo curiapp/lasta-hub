@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 import { SharedModule } from '../../../shared.module';
 
 @Component({

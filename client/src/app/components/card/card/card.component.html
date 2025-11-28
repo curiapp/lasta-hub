@@ -1,0 +1,13 @@
+@if (loading) {
+<card-loader />
+}@else {
+<div class="border-2 border-primary p-4 rounded-lg w-full relative">
+  <div class="flex flex-col gap-2">
+    <span class="text-base capitalize">{{title}}</span>
+    <span class="text-xs text-gray-500">{{description}}</span>
+    @if(other){<span class="text-xs text-gray-500">{{other}}</span>}
+    @if(other2){<span class="text-xs text-gray-500">{{other}}</span>}
+  </div>
+  <action-buttons></action-buttons>
+</div>
+}

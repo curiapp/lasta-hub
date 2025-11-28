@@ -18,9 +18,9 @@
     <div class="flex gap-2 justify-start">
       <button type="button" class="btn btn-primary btn-sm flex-auto" (click)="onUpload('approve')"
         [disabled]="!fileUpload?.uploader?.queue.length || !pacForm.form.valid">
-        Recommended to Bos
+        Recommended to BOS
       </button>
-      <button type="button" class="btn btn-secondary btn-sm w-24" (click)="onUpload('decline')"
+      <button type="button" class="btn btn-accent btn-sm w-24" (click)="onUpload('decline')"
         [disabled]="!fileUpload?.uploader?.queue.length || !pacForm.form.valid">
         Defer
       </button>

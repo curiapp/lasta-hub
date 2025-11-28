@@ -3,7 +3,7 @@
   <form #bosForm="ngForm" class="space-y-2">
     <div class="fieldset">
       <legend class="fieldset-legend">BOS Date</legend>
-      <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.consultationDate"
+      <input id="date" type="date" class="input w-full input-bordered" required [(ngModel)]="model.date"
         ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
       @if (cdate.invalid && cdate.touched) {
       <span class="label text-error">Consultation date required*</span>
@@ -11,16 +11,11 @@
     </div>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Programme Draft</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="faculty-bos"></file-upload>
-    </fieldset>
-
-    <fieldset class="fieldset">
       <legend class="fieldset-legend">Recommended to</legend>
       <fieldset class="border-2 border-dashed border-gray-300 p-2 rounded-xl">
         <label class="flex gap-2 items-center">
           <input class="radio radio-xs" type="radio" name="recommend" [(ngModel)]="model.recommend"
-            value="recommend-apc" required #recommend="ngModel"> APC &nbsp;
+            value="apc" required #recommend="ngModel"> APC &nbsp;
         </label>
       </fieldset>
       @if (recommend.invalid && recommend.touched) {
@@ -33,22 +28,27 @@
       <fieldset class="border-2 border-dashed border-gray-300 p-2 rounded-xl">
         <div class="flex gap-4">
           <label class="flex items-center gap-2">
-            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="recommend-bosec"
-              required #status="ngModel"> BOSEC &nbsp;
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.deferTo" value="bosec" required
+              #status="ngModel"> BOSEC &nbsp;
           </label>
           <label class="flex items-center gap-2">
-            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="resubmit"
-              required #status="ngModel"> BOS &nbsp;
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.deferTo" value="bos" required
+              #status="ngModel"> BOS &nbsp;
           </label>
           <label class="flex items-center gap-2">
-            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.status" value="defer" required
-              #status="ngModel"> Other Faculty BOS
+            <input class="radio radio-xs" type="radio" name="status" [(ngModel)]="model.deferTo"
+              value="other-faculty-bos" required #status="ngModel"> Other Faculty BOS
           </label>
         </div>
       </fieldset>
       @if(status.invalid && status.touched) {
       <div class="label label-text-alt text-error">Defer to status needed*</div>
       }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Programme Draft</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="faculty-bos"></file-upload>
     </fieldset>
 
     <div class="form-control">

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FinalSenateRecommendComponent } from './final-senate-recommend.component';
 
@@ -6,12 +6,12 @@ describe('FinalSenateRecommendComponent', () => {
   let component: FinalSenateRecommendComponent;
   let fixture: ComponentFixture<FinalSenateRecommendComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FinalSenateRecommendComponent ]
+  beforeEach(async() => {
+    await TestBed.configureTestingModule({
+      imports: [ FinalSenateRecommendComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FinalSenateRecommendComponent);

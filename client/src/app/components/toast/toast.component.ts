@@ -9,6 +9,7 @@ import { ToastService } from '../../services/toast.service';
 })
 export class ToastComponent {
   toastService = inject(ToastService);
+
   url = {
     success:"/assets/face.svg",
     info:"/assets/exclamation-point.svg",
@@ -17,7 +18,7 @@ export class ToastComponent {
   }
 
   close = (id: string) => {
-    this.toastService.remove(id)
+    this.toastService.remove(id);
   };
 
 }

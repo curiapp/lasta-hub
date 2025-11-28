@@ -1,5 +1,5 @@
 <span class="inline-flex overflow-hidden rounded-md border bg-white shadow-xs absolute right-1 top-1">
-  <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
+  <button class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative transition-all hover:scale-105"
     onclick="stakeholder_modal.showModal()">
     <svg class="size-3" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
       color="#000000">
@@ -10,7 +10,7 @@
     </svg>
   </button>
 
-  <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative"
+  <button class="inline-block p-1 border-e text-gray-700 hover:bg-gray-50 focus:relative transition-all hover:scale-105"
     onclick="stakeholder_modal.showModal()">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
       class="size-3">
@@ -19,7 +19,8 @@
     </svg>
   </button>
 
-  <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative" (click)="onDelete()">
+  <button class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative transition-all hover:scale-105"
+  (click)="onDelete()">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
       class="size-3">
       <path stroke-linecap="round" stroke-linejoin="round"

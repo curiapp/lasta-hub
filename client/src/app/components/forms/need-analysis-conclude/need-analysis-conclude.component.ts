@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../../../services/toast.service';
-import { FileUploadComponent } from '../file-upload/file-upload.component';
+import { FileUploadComponent } from '../../files/file-upload/file-upload.component';
 
 @Component({
   selector: 'need-analysis-conclude',
@@ -17,14 +17,13 @@ import { FileUploadComponent } from '../file-upload/file-upload.component';
   ]
 })
 export class NeedAnalysisConcludeComponent {
-  decision: String;
   url = `${environment.apiUrl}/need-analysis/conclude`;
   @Input() pid?: string;
   @Output() completed = new EventEmitter<void>();
   @ViewChild(FileUploadComponent) fileUpload: FileUploadComponent;
 
   onUpload(decision: string = "") {
-    this.fileUpload.onUpload({ "decission": decision });
+    this.fileUpload.onUpload({ "decision": decision });
   }
 
 }

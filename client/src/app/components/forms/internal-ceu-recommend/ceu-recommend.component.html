@@ -1,19 +1,19 @@
 <div class="space-y-4">
   <h3 class="text-xl">CE Review </h3>
-  <form #concludeForm="ngForm" class="space-y-2">
+  <div class="space-y-2">
     <div class="fieldset">
       <legend class="fieldset-legend">Support Letter/Recommendations: </legend>
       <file-upload [pid]="pid" itemAlias="review-recommend" [url]="url"></file-upload>
     </div>
     <div class="flex items-center gap-2">
-      <button type="button" class="btn btn-primary btn-sm flex-auto" (click)="onUpload('approve')"
-        [disabled]="!fileUpload?.uploader.queue.length || !concludeForm.form.valid">
+      <button type="button" class="btn btn-primary btn-sm flex-auto" (click)="onUpload('endorse')"
+        [disabled]="!fileUpload?.uploader.queue.length">
         Endorse
       </button>
-      <button type="button" class="btn btn-secondary btn-sm w-6/12" (click)="onUpload('decline')"
-        [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+      <button type="button" class="btn btn-accent btn-sm w-6/12" (click)="onUpload('defer')"
+        [disabled]="!fileUpload?.uploader?.queue.length">
         Defer
       </button>
     </div>
-  </form>
+  </div>
 </div>

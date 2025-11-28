@@ -18,10 +18,10 @@
     <fieldset class="fieldset">
       <legend class="fieldset-legend">APC Decision</legend>
       <div class="flex gap-2">
-        <button type="button" class="btn btn-primary btn-sm flex-auto" (click)="onUpload('approve')"
+        <button type="button" class="btn btn-primary btn-sm flex-auto" (click)="onUpload('recommend')"
           [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
           Recommend (Senate) &nbsp; </button>
-        <button type="button" class="btn btn-secondary btn-sm w-4/12" (click)="onUpload('decline')"
+        <button type="button" class="btn btn-secondary btn-sm w-4/12" (click)="onUpload('defer')"
           [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
           Defer (Faculty) &nbsp; </button>
       </div>

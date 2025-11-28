@@ -1,6 +1,6 @@
 <div class="space-y-4">
   <h3 class="text-xl">Curriculum - Drafting</h3>
-  <form #endconsultForm="ngForm" class="space-y-2">
+  <div class="space-y-2">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Draft Curriculum</legend>
       <file-upload [pid]="pid" [url]="url" itemAlias="survey"></file-upload>
@@ -8,12 +8,12 @@
 
     <div class="flex justify-center">
       <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
-        [disabled]="!fileUpload?.uploader?.queue.length || endconsultForm.form.invalid">
+        [disabled]="!fileUpload?.uploader?.queue.length">
         Submit to PDU
         <span class="material-symbols-rounded">
           cloud_upload
         </span>
       </button>
     </div>
-  </form>
+  </div>
 </div>

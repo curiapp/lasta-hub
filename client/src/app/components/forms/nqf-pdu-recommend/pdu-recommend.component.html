@@ -18,14 +18,14 @@
     </fieldset>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Documentation:</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="pdu-recommendation"></file-upload>
+      <legend class="fieldset-legend">Documentation</legend>
+      <file-upload [pid]="pid" [url]="url"></file-upload>
     </fieldset>
 
     <div class="flex gap-2 justify-center">
       <button type="button" class="btn btn-primary btn-sm w-6/12" (click)="onUpload('approve')"
         [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
-        Save
+        Approve
       </button>
       <button type="button" class="btn btn-secondary btn-sm flex-auto" (click)="onUpload('defer')"
         [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">

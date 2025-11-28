@@ -2,13 +2,13 @@
   <h3 class="text-xl">Appointment - Curriculum Development Coordinators</h3>
   <form [formGroup]="cdcForm" novalidate (ngSubmit)="onSubmit()">
     <h2 class="text-xl font-bold">CDC - Members</h2>
-    <div formArrayName="cdc">
+    <div formArrayName="members">
       @for(item of items.controls; track $index){
       <div class="space-y-2 bg-gray-100 p-4 my-2 rounded-box">
         <div class="flex justify-between items-center">
           <span class="font-semibold">CDC Member: {{$index + 1}}</span>
-          @if(cdcForm.controls.cdc.controls.length > 1){
-          <button class="btn btn-sm btn-secondary" (click)="removeItem($index)">Remove</button>
+          @if(cdcForm.controls.members){
+          <button type="button" class="btn btn-sm btn-secondary" (click)="removeItem($index)">Remove</button>
           }
         </div>
 
@@ -17,8 +17,8 @@
             <fieldset class="fieldset">
               <legend class="fieldset-legend">First Name</legend>
               <input type="text" class="input input-bordered input-sm" formControlName="firstName">
-              @if (cdcForm.controls.cdc.controls[$index].controls.firstName.invalid &&
-              cdcForm.controls.cdc.controls[$index].controls.firstName.touched) {
+              @if (cdcForm.controls.members.controls[$index].controls.firstName.invalid &&
+              cdcForm.controls.members.controls[$index].controls.firstName.touched) {
               <span class="label text-error">
                 First name required*
               </span>
@@ -28,8 +28,8 @@
             <fieldset class="fieldset">
               <legend class="fieldset-legend">Last Name</legend>
               <input type="text" class="input input-bordered input-sm" formControlName="lastName">
-              @if (cdcForm.controls.cdc.controls[$index].controls.lastName.invalid &&
-              cdcForm.controls.cdc.controls[$index].controls.lastName.touched) {
+              @if (cdcForm.controls.members.controls[$index].controls.lastName.invalid &&
+              cdcForm.controls.members.controls[$index].controls.lastName.touched) {
               <span class="label text-error">
                 Last name required*
               </span>
@@ -40,8 +40,8 @@
           <fieldset class="fieldset">
             <legend class="fieldset-legend">Email address</legend>
             <input type="email" class="input input-bordered input-sm" formControlName="emailAddress">
-            @if (cdcForm.controls.cdc.controls[$index].controls.emailAddress.invalid &&
-            cdcForm.controls.cdc.controls[$index].controls.emailAddress.touched){
+            @if (cdcForm.controls.members.controls[$index].controls.emailAddress.invalid &&
+            cdcForm.controls.members.controls[$index].controls.emailAddress.touched){
             <span class="label text-error">
               Email address required*
             </span>
@@ -52,10 +52,10 @@
             <fieldset class="fieldset">
               <legend class="fieldset-legend">Work Telephone Number: </legend>
               <input type="text" class="input input-bordered input-sm" formControlName="workNumber">
-              @if (cdcForm.controls.cdc.controls[$index].controls.workNumber.invalid &&
-              cdcForm.controls.cdc.controls[$index].controls.workNumber.touched){
+              @if (cdcForm.controls.members.controls[$index].controls.workNumber.invalid &&
+              cdcForm.controls.members.controls[$index].controls.workNumber.touched){
               <span class="label text-error">
-                Work Telephone Number is required*
+                Work telephone number required*
               </span>
               }
             </fieldset>
@@ -63,12 +63,36 @@
             <fieldset class="fieldset">
               <legend class="fieldset-legend">Cell Number(Optional): </legend>
               <input type="text" class="input input-bordered input-sm" formControlName="cellphone"
-                (change)=onCellPhoneValueChanged(cdcForm.controls.cdc.controls[$index].controls.cellphone.value,cdcForm.controls.cdc.controls[$index].controls.workNumber)>
-              @if (cdcForm.controls.cdc.controls[$index].controls.cellphone.invalid &&
-              cdcForm.controls.cdc.controls[$index].controls.cellphone.touched){
+                (change)=onCellPhoneValueChanged(cdcForm.controls.members.controls[$index].controls.cellphone.value,cdcForm.controls.members.controls[$index].controls.workNumber)>
+              @if (cdcForm.controls.members.controls[$index].controls.cellphone.invalid &&
+              cdcForm.controls.members.controls[$index].controls.cellphone.touched){
               <span class="label text-error">
-                Cell Phone Number is required(minimum 10 numbers)*
+                Cell phone number must be(minimum 10 numbers)*
               </span>
+              }
+            </fieldset>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 items-start">
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Qualification</legend>
+              <input type="text" class="input input-bordered input-sm" formControlName="qualification">
+              @if (cdcForm.controls.members.controls[$index].controls.qualification.invalid &&
+              cdcForm.controls.members.controls[$index].controls.qualification.touched){
+              <div class="label text-error">
+                Qualification required*
+              </div>
+              }
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Occupation</legend>
+              <input type="text" class="input input-bordered input-sm" formControlName="occupation">
+              @if (cdcForm.controls.members.controls[$index].controls.occupation.invalid &&
+              cdcForm.controls.members.controls[$index].controls.occupation.touched){
+              <div class="label text-error">
+                Occupation required*
+              </div>
               }
             </fieldset>
           </div>
@@ -76,30 +100,21 @@
           <fieldset class="fieldset">
             <legend class="fieldset-legend">Organisation</legend>
             <input type="text" class="input input-bordered input-sm" formControlName="organization">
-            @if (cdcForm.controls.cdc.controls[$index].controls.organization.invalid &&
-            cdcForm.controls.cdc.controls[$index].controls.organization.touched){
+            @if (cdcForm.controls.members.controls[$index].controls.organization.invalid &&
+            cdcForm.controls.members.controls[$index].controls.organization.touched){
             <span class="label text-error">
-              Organisation is required*
+              Organisation required*
             </span>
             }
           </fieldset>
 
-          <fieldset class="fieldset">
-            <label class="fieldset-legend">Qualification</label>
-            <input type="text" class="input input-bordered input-sm" formControlName="qualification">
-            @if (cdcForm.controls.cdc.controls[$index].controls.qualification.invalid &&
-            cdcForm.controls.cdc.controls[$index].controls.qualification.touched){
-            <span class="label text-error">
-              Qualification is required*
-            </span>
-            }
-          </fieldset>
         </div>
       </div>
       }
     </div>
     <div class="flex gap-2 mb-8">
-      <button (click)="addItem()" [disabled]="ld.isLoading()" class="btn btn-sm btn-warning cursor-pointer">
+      <button type="button" (click)="addItem()" [disabled]="ld.isLoading()"
+        class="btn btn-sm btn-warning cursor-pointer">
         Add CDC Member +
       </button>
 

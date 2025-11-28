@@ -18,6 +18,7 @@ import { ClientService } from "../../../services/client.service";
 import { LoadingService } from "../../../services/loading.service";
 import { programme_steps, NQFLevel } from "../../../static";
 import { Programme } from "../../../types";
+import { CardComponent } from "../../../components/card/card/card.component";
 
 @Component({
   selector: 'client-need-analysis',
@@ -33,8 +34,9 @@ import { Programme } from "../../../types";
     ApcComponent,
     SenateComponent,
     NeedAnalysisEditProgramComponent,
-    ModalComponent
-  ],
+    ModalComponent,
+    CardComponent
+],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.css'
 })
