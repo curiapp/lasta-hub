@@ -86,7 +86,7 @@ export default async (app: Express, upload: Multer) => {
     });
 
     app.post("/consultations/pac/final-draft", upload.single("file"), async (req, res) => {
-        const { error, value } = programmeIdSchema.validate(req.body);
+        const { error, value } = pacEndorse.validate(req.body);
         if (error) {
             return res.status(400).send(error.details[0].message);
         }

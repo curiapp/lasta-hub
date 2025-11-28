@@ -6,10 +6,10 @@ const memberDetailsSchema = Joi.object({
   lastName: Joi.string().required(),
   emailAddress: Joi.string().required(),
   qualification: Joi.string().required(),
-  cellphone: Joi.string().required(),
+  cellphone: Joi.string().optional().allow(''),
   workNumber: Joi.string().required(),
   occupation: Joi.string().required(),
-  Organization: Joi.string().required(),
+  organization: Joi.string().required(),
 });
 
 const appointPacSchema = programmeIdSchema.append({

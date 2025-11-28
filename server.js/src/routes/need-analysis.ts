@@ -52,7 +52,7 @@ export default async (app: Express, upload: Multer) => {
                 .set(value).where(eq(programmes.id, req.params.id))
                 .returning({ id: programmes.id });
 
-            res.send({ message: "Programme updated!" });
+            res.send({ message: "Programme updated" });
         } catch (err) {
             console.error(err);
             if (isDbKnownError(err)) return res.status(400).send({ message: err.message });

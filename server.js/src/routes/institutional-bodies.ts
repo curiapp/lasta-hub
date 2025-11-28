@@ -15,9 +15,16 @@ import { db } from "@/db";
 import { isDbKnownError } from "@/helpers/db-errors";
 
 const PHASE = "bos-apc-and-senate-consultation";
+
+
 export default async (app: Express, upload: Multer) => {
-    app.post("/bos-senate/draft", upload.single("file"), async (req, res) => {
+
+    app.post("/bos-senate/draft", upload.array('files'), async (req, res) => {
+        if (req.body.documentType) {
+            req.body.documentType = JSON.parse(req.body.documentType);
+        }
         const { error, value } = draftSchema.validate(req.body);
+
         if (error) {
             return res.status(400).send(error.details[0].message);
         }
@@ -28,10 +35,22 @@ export default async (app: Express, upload: Multer) => {
                 .execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"final-draft-to-bos-submission"})`)
                 .then((result) => (result.rows[0] as any).fn_get_or_create_step as string);
 
-            const attachmentId = await saveFile(req.file as Express.Multer.File, PHASE, ppsId);
+            const attachmentIds = {};
+            if (req.files && Array.isArray(req.files)) {
+                for (const file of req.files) {
+                    const documentType = value.documentType;
+                    const matchedKey = Object.keys(documentType).find(
+                        key => documentType[key] === file.originalname
+                    );
+                    if (matchedKey) {
+                        const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
+                        attachmentIds[matchedKey] = attId;
+                    }
+                }
+            }
 
             const stepData = {
-                file: attachmentId,
+                ...attachmentIds,
                 date: value.date,
             };
 
@@ -173,11 +192,14 @@ export default async (app: Express, upload: Multer) => {
         }
     });
 
-    const uploadFiles = upload.fields([
-        { name: "programmeDocument", maxCount: 1 },
-        { name: "submissionLetterToSenate", maxCount: 1 },
-    ]);
-    app.post("/bos-senate/final-senate", uploadFiles, async (req, res) => {
+    // const uploadFiles = upload.fields([
+    //     { name: "programmeDocument", maxCount: 1 },
+    //     { name: "submissionLetterToSenate", maxCount: 1 },
+    // ]);
+    app.post("/bos-senate/final-senate", upload.array("files"), async (req, res) => {
+        if (req.body.documentType) {
+            req.body.documentType = JSON.parse(req.body.documentType);
+        }
         const { error, value } = finalSenateSchema.validate(req.body);
         if (error) {
             return res.status(400).send(error.details[0].message);
@@ -191,25 +213,40 @@ export default async (app: Express, upload: Multer) => {
 
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
-            const submissionLetterToSenateAttachmentId = await saveFile(
-                req.files && (req.files as any)["submissionLetterToSenate"]
-                    ? (req.files as any)["submissionLetterToSenate"][0]
-                    : null,
-                PHASE,
-                ppsId
-            );
+            // const submissionLetterToSenateAttachmentId = await saveFile(
+            //     req.files && (req.files as any)["submissionLetterToSenate"]
+            //         ? (req.files as any)["submissionLetterToSenate"][0]
+            //         : null,
+            //     PHASE,
+            //     ppsId
+            // );
 
-            const programmeDocumentAttachmentId = await saveFile(
-                req.files && (req.files as any)["programmeDocument"]
-                    ? (req.files as any)["programmeDocument"][0]
-                    : null,
-                PHASE,
-                ppsId
-            );
+            // const programmeDocumentAttachmentId = await saveFile(
+            //     req.files && (req.files as any)["programmeDocument"]
+            //         ? (req.files as any)["programmeDocument"][0]
+            //         : null,
+            //     PHASE,
+            //     ppsId
+            // );
+
+            const attachmentIds = {};
+            if (req.files && Array.isArray(req.files)) {
+                for (const file of req.files) {
+                    const documentType = value.documentType;
+                    const matchedKey = Object.keys(documentType).find(
+                        key => documentType[key] === file.originalname
+                    );
+                    if (matchedKey) {
+                        const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
+                        attachmentIds[matchedKey] = attId;
+                    }
+                }
+            }
 
             const stepData = {
-                programmeDocument: programmeDocumentAttachmentId,
-                submissionLetterToSenate: submissionLetterToSenateAttachmentId,
+                // programmeDocument: programmeDocumentAttachmentId,
+                // submissionLetterToSenate: submissionLetterToSenateAttachmentId,
+                ...attachmentIds,
                 decision: value.decision,
                 date: value.date,
             };

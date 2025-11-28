@@ -5,7 +5,6 @@ import path from "path";
 import cors from "cors";
 import usersRoutes from "./routes/users";
 import reviewsRoutes from "./routes/reviews";
-import curriculaRoutes from "./routes/curricula";
 import consultationRoutes from "./routes/consultations";
 import needAnalysisRoutes from "./routes/need-analysis";
 import qualificationsRoutes from "./routes/qualifications";
@@ -42,7 +41,6 @@ const PORT = process.env.PORT || 3000;
 
 usersRoutes(app);
 reviewsRoutes(app, upload);
-curriculaRoutes(app, upload);
 needAnalysisRoutes(app, upload);
 consultationRoutes(app, upload);
 qualificationsRoutes(app, upload);

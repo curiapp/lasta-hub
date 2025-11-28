@@ -4,9 +4,15 @@ import { programmeBaseSchema, programmeIdSchema } from "./base";
 const reviewStartSchema = programmeBaseSchema.append({
     date: Joi.date().required(),
     includesWilComponent: Joi.boolean().required(),
-    recommendedTo: Joi.string().valid("CEU", "COLL", "TLP").required().messages({
-        "any.only": "Review unit must be one of: CEU, COLL, TLP",
-    }),
+    recommendedTo: Joi.array()
+        .items(Joi.string().valid("CEU", "COLL", "TLP"))
+        .min(1)
+        .required()
+        .messages({
+            "any.only": "Review unit must include only: CEU, COLL, TLP",
+            "array.includes": "Review unit must include only: CEU, COLL, TLP",
+            "array.min": "Review unit must have at least one value",
+        })
 });
 
 const reviewRecommendSchema = programmeIdSchema.append({

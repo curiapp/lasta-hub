@@ -1,26 +1,28 @@
 import { Express } from "express";
 import { Multer } from "multer";
-
-import { programmeIdSchema } from "@/validators/base";
+import { db } from "@/db";
+import { isDbKnownError } from "@/helpers/db-errors";
+import { saveFile } from "@/helpers/save-file";
 import {
     nqaPduRecommendSchema,
+    nqaPreparationSchema,
     nqaRecommendSchema,
     nqaRegisterSchema,
     nqaSubmitSchema,
 } from "@/validators/qualifications";
-import { isDbKnownError } from "@/helpers/db-errors";
 import { sql } from "drizzle-orm";
-import { db } from "@/db";
-import { saveFile } from "@/helpers/save-file";
 
 const PHASE = "nqf-registration";
 export default async (app: Express, upload: Multer) => {
-    const preparationUploadFiles = upload.fields([
-        { name: "qualificationDocument", maxCount: 1 },
-        { name: "supportFile", maxCount: 1 },
-    ]);
-    app.post("/nqa/preparation", preparationUploadFiles, async (req, res) => {
-        const { error, value } = programmeIdSchema.validate(req.body);
+    // const preparationUploadFiles = upload.fields([
+    //     { name: "qualificationDocument", maxCount: 1 },
+    //     { name: "supportFile", maxCount: 1 },
+    // ]);
+    app.post("/nqa/preparation", upload.array("files"), async (req, res) => {
+        if (req.body.documentType) {
+            req.body.documentType = JSON.parse(req.body.documentType);
+        }
+        const { error, value } = nqaPreparationSchema.validate(req.body);
         if (error) {
             return res.status(400).send(error.details[0].message);
         }
@@ -28,20 +30,33 @@ export default async (app: Express, upload: Multer) => {
         try {
             const programmeId = value.programmeId;
             const result = await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"nqf-documentation"})`);
-
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
-            const qualificationDocumentAttachmentId = await saveFile(
-                (req.files as any)["qualificationDocument"][0],
-                PHASE,
-                ppsId
-            );
+            // const qualificationDocumentAttachmentId = await saveFile(
+            //     (req.files as any)["qualificationDocument"][0],
+            //     PHASE,
+            //     ppsId
+            // );
+            // const supportFileAttachmentId = await saveFile((req.files as any)["supportFile"][0], PHASE, ppsId);
+            const attachmentIds = {};
+            if (req.files && Array.isArray(req.files)) {
+                for (const file of req.files) {
+                    const documentType = value.documentType;
+                    const matchedKey = Object.keys(documentType).find(
+                        key => documentType[key] === file.originalname
+                    );
+                    if (matchedKey) {
+                        const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
+                        attachmentIds[matchedKey] = attId;
+                    }
+                }
+            }
 
-            const supportFileAttachmentId = await saveFile((req.files as any)["supportFile"][0], PHASE, ppsId);
-            const stepData = {
-                qualificationDocument: qualificationDocumentAttachmentId,
-                supportFile: supportFileAttachmentId,
-            };
+            // const stepData = {
+            //     qualificationDocument: qualificationDocumentAttachmentId,
+            //     supportFile: supportFileAttachmentId,
+            // };
+            const stepData = attachmentIds;
 
             await db.execute(
                 sql`SELECT fn_update_step_data(
@@ -61,7 +76,7 @@ export default async (app: Express, upload: Multer) => {
         }
     });
 
-    app.post("/nqa/pdu-recommend", upload.single("file"), async (req, res) => {
+    app.post("/nqa/recommend", upload.single("file"), async (req, res) => {
         const { error, value } = nqaPduRecommendSchema.validate(req.body);
         if (error) {
             return res.status(400).send(error.details[0].message);
@@ -99,11 +114,14 @@ export default async (app: Express, upload: Multer) => {
         }
     });
 
-    const uploadFiles = upload.fields([
-        { name: "qualificationDocument", maxCount: 1 },
-        { name: "response", maxCount: 1 },
-    ]);
-    app.post("/nqa/submit", uploadFiles, async (req, res) => {
+    // const uploadFiles = upload.fields([
+    //     { name: "qualificationDocument", maxCount: 1 },
+    //     { name: "response", maxCount: 1 },
+    // ]);
+    app.post("/nqa/submit", upload.array("files"), async (req, res) => {
+        if (req.body.documentType) {
+            req.body.documentType = JSON.parse(req.body.documentType);
+        }
         const { error, value } = nqaSubmitSchema.validate(req.body);
         if (error) {
             return res.status(400).send(error.details[0].message);
@@ -115,18 +133,34 @@ export default async (app: Express, upload: Multer) => {
 
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
-            const qualificationDocumentAttachmentId = await saveFile(
-                (req.files as any)["qualificationDocument"][0],
-                PHASE,
-                ppsId
-            );
+            // const qualificationDocumentAttachmentId = await saveFile(
+            //     (req.files as any)["qualificationDocument"][0],
+            //     PHASE,
+            //     ppsId
+            // );
 
-            const responseAttachmentId = await saveFile((req.files as any)["response"][0], PHASE, ppsId);
-            const stepData = {
-                qualificationDocument: qualificationDocumentAttachmentId,
-                responseFile: responseAttachmentId,
-                submissionType: value.submissionType,
-            };
+            // const responseAttachmentId = await saveFile((req.files as any)["response"][0], PHASE, ppsId);
+            // const stepData = {
+            //     qualificationDocument: qualificationDocumentAttachmentId,
+            //     responseFile: responseAttachmentId,
+            //     submissionType: value.submissionType,
+            // };
+
+            const attachmentIds = {};
+            if (req.files && Array.isArray(req.files)) {
+                for (const file of req.files) {
+                    const documentType = value.documentType;
+                    const matchedKey = Object.keys(documentType).find(
+                        key => documentType[key] === file.originalname
+                    );
+                    if (matchedKey) {
+                        const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
+                        attachmentIds[matchedKey] = attId;
+                    }
+                }
+            }
+
+            const stepData = attachmentIds;
 
             await db.execute(
                 sql`SELECT fn_update_step_data(

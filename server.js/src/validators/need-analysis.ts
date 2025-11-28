@@ -29,7 +29,7 @@ const concludeSchema = Joi.object({
     .valid("approve", "decline", "defer", "recommend")
     .required()
     .messages({
-      "any.only": "Status must be one of: approve, decline, defer, recommend",
+      "any.only": "Decision must be one of: approve, decline, defer, recommend",
     }),
 });
 
