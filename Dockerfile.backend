@@ -1,31 +1,28 @@
 FROM node:20-slim
 
-ARG KAFKA_BROKER_HOST
-ENV KAFKA_BROKER_HOST=${KAFKA_BROKER_HOST}
-
 ARG DB_URL
 ENV DB_URL=${DB_URL}
 
-ARG MULTER_UPLOAD_DIR: "/app/uploads"
-ENV MULTER_UPLOAD_DIR="/app/uploads"
+# ARG MULTER_UPLOAD_DIR: "/app/uploads"
+# ENV MULTER_UPLOAD_DIR="/app/uploads"
 
-ARG FILE_STORAGE_DIR: "/app/documents"
-ENV FILE_STORAGE_DIR="/app/documents"
+# ARG FILE_STORAGE_DIR: "/app/files"
+# ENV FILE_STORAGE_DIR="/app/files"
 
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-RUN git config --global user.email "temp@example.com" && git config --global user.name "Temp User"
+# RUN git config --global user.email "temp@example.com" && git config --global user.name "Temp User"
 
 WORKDIR /app
 
-COPY ./server/package*.json ./
+COPY ./server.js/package*.json ./
 
-RUN npm install
+RUN npm install -g yarn
 
-RUN npm install -g coffeescript
+RUN yarn install
 
-COPY ./server ./
+COPY ./server.js ./
 
 EXPOSE 4931
 
-CMD ["coffee", "pdu.coffee"]
+CMD ["yarn", "start"]
