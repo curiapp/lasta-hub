@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -24,7 +24,7 @@ export class LoginComponent {
     password: ''
   };
   isLoadig: boolean;
-  message: string;
+  message = signal("");
   private _loading = inject(LoadingService);
   isLoading = this?._loading.isLoading;
   showPassword: boolean = false;
@@ -34,7 +34,8 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.message = "";
+    this.message.set("");
+
     this.authService.login(this.model)
       .subscribe(
         {
@@ -43,7 +44,8 @@ export class LoginComponent {
             this.router.navigate(['/home']);
           },
           error: (error: any) => {
-            this.message = "Invalid username or password";
+            console.error("Error ", error);
+            this.message.set("Invalid username or password");
           }
         }
       );

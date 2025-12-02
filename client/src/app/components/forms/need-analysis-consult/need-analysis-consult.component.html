@@ -33,36 +33,46 @@
         </div>
         @if(isStakeholderShown()) {
         <fieldset class="stakeholder-input-container" [class.open]="isStakeholderShown()">
-          <div class="join w-full border-inherit items-center">
-            <div class="w-full">
-              <label class="join-item input input-sm flex flex-auto gap-2 items-center ">
+          <div class="flex h-fit items-center gap-1 border-2 border-dashed border-gray-300 rounded-box p-2">
+            <div class="w-auto flex-auto">
+              <label class="input input-sm rounded-b-none flex flex-auto gap-2 items-center ">
                 <span class="material-symbols-rounded">
-                  group
+                  contact_page
                 </span>
-                <input type="text" placeholder="Enter stakeholder" id="organisation" name="organisation" required
-                  class="flex-auto" [(ngModel)]="needAnalysis.organisation" #org="ngModel" />
+                <input type="text" placeholder="Enter stakeholder name" id="organisation" name="organisation" required
+                  class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.name" #stakename="ngModel" />
               </label>
-              <!-- <div class="validator-hint hidden">Enter Stakeholder Name</div> -->
+
+              <label class="input input-sm  rounded-t-none flex flex-auto gap-2 items-center ">
+                <span class="material-symbols-rounded">
+                  graph_5
+                </span>
+                <input type="text" placeholder="Enter stakeholder organisation" id="organisation" name="organisation"
+                  required class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.organisation" #stakeorg="ngModel" />
+              </label>
             </div>
-            <button [disabled]="org.invalid" [dir]="org.valid" (click)="addOrganisation()"
-              class="btn btn-sm btn-primary join-item">Add</button>
+            <button [disabled]="stakeorg.invalid || stakeorg.invalid" (click)="addOrganisation()"
+              class="btn btn-primary h-16!">Add +</button>
           </div>
         </fieldset>
         }
 
         <div class="flex gap-2 flex-wrap p-2 rounded-xl border-dashed border-2 border-gray-300">
-          @for (item of needAnalysis?.organisationList; track item) {
+          @for (item of stakeholders; track item) {
           <div class="group px-2 py-2 rounded-md bg-gray-200 flex gap-4 items-center justify-between transition-all">
-            <p class="line-clamp-2 text-sm capitalize">{{item}}</p>
+            <div class="space-y-1">
+              <p class="line-clamp-2 text-sm capitalize">{{item.name}}</p>
+              <p class="line-clamp-2 text-xs capitalize">{{item.organisation}}</p>
+            </div>
             <button class="btn btn-ghost btn-circle transition btn-xs hidden group-hover:block"
-              (click)="removeOrganisation(item)">
+              (click)="removeOrganisation(item.organisation)">
               <span class="material-symbols-rounded text-xs">
                 close
               </span>
             </button>
           </div>
           }@empty {
-          <span class="text-xs pl-2">No Stakeholders</span>
+          <span class="text-xs pl-2 font-semibold">No Stakeholders</span>
           }
         </div>
       </div>
@@ -98,7 +108,7 @@
         </div>
 
         <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-box p-2 space-y-2">
-          @for (item of uploader.queue; track item.file.size) {
+          @for (item of uploader.queue; track $index) {
           <div class="flex items-center gap-4 p-1 border-b border-b-gray-500/5 group transition-all">
             <div class="icon size-8 rounded-md bg-gray-200 grid place-items-center">
               @switch (item.file.name | Extension) {
@@ -156,7 +166,7 @@
 
       <div class="flex justify-start gap-2">
         <button class="btn btn-secondary btn-sm w-4/12" (click)="toggle()">Prev</button>
-        <button type="button" class="btn btn-primary btn-sm join-item flex-auto" (click)="submitInfo(consultForm)"
+        <button type="button" class="btn btn-primary btn-sm join-item flex-auto" (click)="uploadAll(consultForm)"
           [disabled]="!uploader.queue.length">
           submit
           <span class="material-symbols-rounded">

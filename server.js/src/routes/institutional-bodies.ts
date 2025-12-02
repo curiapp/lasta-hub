@@ -35,7 +35,7 @@ export default async (app: Express, upload: Multer) => {
                 .execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"final-draft-to-bos-submission"})`)
                 .then((result) => (result.rows[0] as any).fn_get_or_create_step as string);
 
-            const attachmentIds = {};
+            const attachments = [];
             if (req.files && Array.isArray(req.files)) {
                 for (const file of req.files) {
                     const documentType = value.documentType;
@@ -44,21 +44,21 @@ export default async (app: Express, upload: Multer) => {
                     );
                     if (matchedKey) {
                         const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                        attachmentIds[matchedKey] = attId;
+                        attachments.push({ name: matchedKey.replace("-", " "), file: attId })
                     }
                 }
             }
 
             const stepData = {
-                ...attachmentIds,
+                attachments,
                 date: value.date,
+                documentsType: value.documentType
             };
 
             await db.execute(
-                sql`SELECT fn_step_array_append(
+                sql`SELECT fn_update_step_data(
                     ${programmeId},
                     ${"final-draft-to-bos-submission"},
-                    ${value.documentType},
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
@@ -162,7 +162,7 @@ export default async (app: Express, upload: Multer) => {
 
         try {
             const programmeId = value.programmeId;
-            const result = await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"apc-recommendation"})`);
+            const result = await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"apc-consultation-recommendation"})`);
 
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
@@ -177,13 +177,13 @@ export default async (app: Express, upload: Multer) => {
             await db.execute(
                 sql`SELECT fn_update_step_data(
                     ${programmeId},
-                    ${"apc-recommendation"},
+                    ${"apc-consultation-recommendation"},
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
 
             return res.send({
-                message: "Document submitted successfully",
+                message: "APC Recommendation document submitted successfully",
             });
         } catch (err) {
             console.error(err);
@@ -229,7 +229,7 @@ export default async (app: Express, upload: Multer) => {
             //     ppsId
             // );
 
-            const attachmentIds = {};
+            const attachments = [];
             if (req.files && Array.isArray(req.files)) {
                 for (const file of req.files) {
                     const documentType = value.documentType;
@@ -238,7 +238,7 @@ export default async (app: Express, upload: Multer) => {
                     );
                     if (matchedKey) {
                         const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                        attachmentIds[matchedKey] = attId;
+                        attachments.push({ name: matchedKey.replace("-", " "), file: attId })
                     }
                 }
             }
@@ -246,9 +246,10 @@ export default async (app: Express, upload: Multer) => {
             const stepData = {
                 // programmeDocument: programmeDocumentAttachmentId,
                 // submissionLetterToSenate: submissionLetterToSenateAttachmentId,
-                ...attachmentIds,
+                attachments,
                 decision: value.decision,
                 date: value.date,
+                documentsType: value.documentType
             };
 
             await db.execute(

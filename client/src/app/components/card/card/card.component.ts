@@ -10,8 +10,7 @@ import { CardLoaderComponent } from "../../loaders/card-loader/card-loader.compo
 })
 export class CardComponent {
   @Input() title;
-  @Input() description;
-  @Input() other;
-  @Input() other2;
+  @Input() descriptions = [];
+  @Input() documents = [];
   @Input() loading = false;
 }

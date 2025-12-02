@@ -8,15 +8,17 @@ import { FinalDraftComponent } from '../../../components/forms/consultation-fina
 import { FinalSenateRecommendComponent } from '../../../components/forms/consultation-final-senate-recommend/final-senate-recommend.component';
 import { OtherFacultyBosComponent } from '../../../components/forms/consultation-other-faculty-bos/other-faculty-bos.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
-import { GET_PROGRAMME_BY_ID } from '../../../graphql/graphql.queries';
+import { GET_PROGRAMME_BY_ID, GET_PROGRAMME_PHASE_BY_ID } from '../../../graphql/graphql.queries';
 import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
-import { Programme } from '../../../types';
+import { PhaseStep, Programme } from '../../../types';
+import { CardComponent } from "../../../components/card/card/card.component";
+import { DatePipe } from "../../../pipes/date.pipe";
 
 @Component({
   selector: 'consultations',
-  imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent],
+  imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent, CardComponent, DatePipe],
   templateUrl: './consultations.component.html',
   styleUrl: './consultations.component.css'
 })
@@ -28,6 +30,11 @@ export class SenateConsultationsComponent {
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
 
+  draftToBOS: PhaseStep;
+  bosConsult: PhaseStep;
+  apcRecommend: PhaseStep;
+  senateRecommend: PhaseStep;
+
   constructor(private route: ActivatedRoute, private client: ClientService) { }
 
   onSelectStep = (step: number) => {
@@ -38,13 +45,18 @@ export class SenateConsultationsComponent {
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
       this.apollo.watchQuery({
-        query: GET_PROGRAMME_BY_ID,
+        query: GET_PROGRAMME_PHASE_BY_ID,
         variables: {
-          id: params.get('id')
+          programmeId: params.get('id'),
+          phaseSlug: 'bos-apc-and-senate-consultation',
         }
       }).valueChanges.subscribe((result: any) => {
         this._loading.isLoading.set(result.loading);
-        this.programme = result?.data?.programmes[0];
+        const data = result?.data?.programme_phase_step;
+        this.draftToBOS = data?.steps?.find((item) => item.slug === 'final-draft-to-bos-submission');
+        this.bosConsult = data?.steps?.find((item) => item.slug === 'faculty-bos-consultation');
+        this.apcRecommend = data?.steps?.find((item) => item.slug === 'apc-consultation-recommendation');
+        this.senateRecommend = data?.steps?.find((item) => item.slug === 'final-senate-recommendation');
       });
     });
   }

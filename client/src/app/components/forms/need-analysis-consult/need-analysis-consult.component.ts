@@ -36,15 +36,14 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   needAnalysis: {
     startDate: Date;
     endDate: Date;
-    organisationList: string[];
-    organisation;
+    stakeholder: { name: string, organisation: string };
   } = {
       startDate: new Date(),
       endDate: new Date(),
-      organisationList: [],
-      organisation: ""
+      stakeholder: { name: '', organisation: '' },
     }
 
+  stakeholders: { name: string, organisation: string }[] = []
 
   uploader: FileUploader = new FileUploader({
     url: this.url,
@@ -58,15 +57,13 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   });
 
   addOrganisation() {
-    this.needAnalysis.organisationList.push(this.needAnalysis.organisation);
-    // console.log(this.organisationList);
-    this.needAnalysis.organisation = '';
+    this.stakeholders.push(this.needAnalysis.stakeholder);
+    this.needAnalysis.stakeholder = { name: '', organisation: '' };
   }
 
   removeOrganisation(value: string) {
-    this.needAnalysis.organisationList = this.needAnalysis.organisationList.filter((item) => item !== value);
+    this.stakeholders = this.stakeholders.filter((item) => item.organisation !== value);
   }
-
 
   ngOnInit() {
     //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
@@ -75,9 +72,8 @@ export class NeedAnalysisConsultationComponent implements OnInit {
       form.append('programmeId', this.pid);
       form.append('startDate', this.needAnalysis.startDate);
       form.append('endDate', this.needAnalysis.endDate);
-      form.append('organizations', JSON.stringify(this.needAnalysis.organisationList));
+      form.append('organizations', JSON.stringify(this.stakeholders));
     };
-
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       if (status === 201 || status === 200) {
@@ -89,22 +85,17 @@ export class NeedAnalysisConsultationComponent implements OnInit {
         this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
         this.modalControl.close();
       } else {
+        this.modalControl.close();
         this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
     };
   }
 
-  close() {
-    this.router.navigate(['/home']);
-  }
   removeFile(item: any) {
     this.uploader.removeFromQueue(item);
   }
-  backClicked() {
-    this._location.back();
-  }
 
-  submitInfo(item: any) {
+  uploadAll(item: any) {
     this.uploader.uploadAll();
   }
 

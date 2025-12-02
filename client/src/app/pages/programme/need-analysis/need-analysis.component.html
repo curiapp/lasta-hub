@@ -62,15 +62,20 @@
     CDC provides relevant information related to stakeholders consultation on the need of the proposed programme
   </p>
 
+  @if (stakeConsult?.extraData?.startDate) {
+  <span class="text-secondary text-lg font-semibold">Started on {{stakeConsult?.extraData?.startDate | date}} - Ended on
+    {{stakeConsult?.extraData?.endDate | date}}</span>
+  }
+
   <div class="flex justify-between">
     <h2 class="text-xl">Stakeholders</h2>
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(stake of stakeholders; track stake.email){
-    <card [title]="stake.name" [description]="stake.email" />
+    @for(stake of stakeConsult?.extraData?.organizations; track $index){
+    <card [title]="stake?.name" [descriptions]="[stake.organisation]" />
     }@empty {
-    <p class="text-sm text-primary">No Stakeholders</p>
+    <p class="text-sm text-primary font-semibold">No Stakeholders</p>
     }
   </div>
 
@@ -79,10 +84,11 @@
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(submission of submissions; track submission.id){
-    <card [title]="submission.title" [description]="submission.submissionDate" />
+    @for(questionnaires of stakeConsult?.extraData?.questionnaires; track $index){
+    <card [title]="'Questionnaire '+($index+1)"
+      [descriptions]="[questionnaires?.name,(stakeConsult.extraData?.startDate | date)  +' - '+ (stakeConsult.extraData?.startDate | date)]" />
     }@empty {
-    <p class="text-sm text-primary">No Submission</p>
+    <p class="text-sm text-primary font-semibold">No Submission</p>
     }
 
   </div>
@@ -94,12 +100,12 @@
     </button>
   </div>
 
-  <div class="flex md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    <!-- @if(submission of submissions; track submission.id){ -->
-    <card title="Final Survey Report" description="2025-11-26" />
-    <!-- }@empty {
-    <p class="text-sm text-primary">No Submission</p>
-    } -->
+  <div class="grid gap-4">
+    @if(stakeConsult?.extraData?.surveyQuestions){
+    <card title="Final Survey Report" [descriptions]="[(stakeConsult?.date | date)]" />
+    }@else {
+    <p class="text-sm text-primary font-bold">No Submission</p>
+    }
   </div>
 </div>
 
@@ -138,17 +144,13 @@
     The Programme Development Quality Assurance (PDQA) reviews and make recommendation on the Need Analysis (NA) report.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Final NA Report</span>
-      <span class="text-xs text-gray-500">Decision: Deferred</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-    <action-buttons></action-buttons>
-  </div>
-
+  @if(pdqaRecommend?.stepName){
+  <card title="Final PDQA Recommendation"
+    [descriptions]="['Decision: '+pdqaRecommend?.extraData?.decision, 'Submitted: '+(pdqaRecommend?.date | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">No PDQA Recommendations</p>
+  }
 </div>
-
 
 <modal #pdqa_recommend>
   <need-analysis-conclude [pid]="pid"></need-analysis-conclude>
@@ -181,15 +183,18 @@
     Boards of Studies (BOS) review the NA report and provides recommendation
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Recommendations</span>
-      <span class="text-xs text-gray-500">Decision: Deferred</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
+  @if (bosConsult?.extraData?.startDate) {
+  <span class="text-secondary text-lg font-semibold mb-4!">Started on {{stakeConsult?.extraData?.startDate |
+    date}}</span>
+  }
 
-    <action-buttons></action-buttons>
-  </div>
+  @if(bosConsult?.stepName){
+  <card title="Recommendations"
+    [descriptions]="['Status: ' + bosConsult?.extraData?.status, 'Submitted: '+(bosConsult?.extraData?.recommendationDate | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">No Recommendations</p>
+  }
+
 </div>
 
 <!-- modals -->
@@ -218,14 +223,18 @@
     Department submit programme document to APC for review and APC make recommendations.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Recommendations</span>
-      <span class="text-xs text-gray-500">Decision: Deferred</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-    <action-buttons></action-buttons>
-  </div>
+  @if (apcRecommend?.extraData?.recommendationDate) {
+  <span class="text-secondary text-lg font-semibold mb-4!">
+    Started on {{stakeConsult?.extraData?.startDate | date}}
+  </span>
+  }
+
+  @if(apcRecommend?.extraData?.recommendationFile){
+  <card title="Recommendations"
+    [descriptions]="['Decision: ' + apcRecommend?.extraData?.status, 'Consultation Date: '+(apcRecommend?.extraData['consultationDate'] | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">No recommendations submitted</p>
+  }
 
 </div>
 
@@ -250,15 +259,13 @@
     Department submit programme document to Senate and Senate makes a decision.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Recommendations</span>
-      <span class="text-xs text-gray-500">Decision: Deferred</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
+  @if(senateApproval?.extraData?.recommendationFile){
+  <card title="Recommendations"
+    [descriptions]="['Decision: ' + senateApproval?.extraData?.status, 'Consultation Date: '+(senateApproval?.extraData['recommendationDate'] | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">No recommendations submitted</p>
+  }
 
-    <action-buttons></action-buttons>
-  </div>
 </div>
 
 <modal #senate_submit>

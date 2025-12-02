@@ -17,7 +17,8 @@
         </ul>
       </div>
       <img alt="NUST logo" src="/logo.png" class="h-6 ml-4" />
-      <a routerLink="/home" class="btn btn-ghost hover:bg-transparent hover:border-primary hover:text-gray-300 hover:scale-75 transition-all text-xl ml-2">PDQA</a>
+      <a routerLink="/home"
+        class="btn btn-ghost hover:bg-transparent hover:border-primary hover:text-gray-300 hover:scale-75 transition-all text-xl ml-2">PDQA</a>
       <span class="hidden lg:block">|</span>
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
@@ -133,9 +134,19 @@
           </li>
           <!-- <hr> -->
 
-          <div class="join join-horizontal my-2 justify-center">
-            <button class="btn join-item">Settings</button>
-            <button class="btn join-item" (click)="logout()">Logout</button>
+          <div class="flex my-2 w-ful">
+            <button class="btn btn-ghost rounded-r-none w-1/2">
+              <span class="material-symbols-rounded">
+                settings
+              </span>
+              Settings
+            </button>
+            <button class="btn btn-ghost rounded-l-none w-1/2" (click)="logout()">
+              <span class="material-symbols-rounded">
+                exit_to_app
+              </span>
+              Logout
+            </button>
           </div>
         </ul>
 

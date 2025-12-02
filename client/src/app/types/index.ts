@@ -39,7 +39,6 @@ export type User = {
   expires?: number
 }
 
-
 export type ToastMessage = {
   id: string;
   message: string;
@@ -49,3 +48,40 @@ export type ToastMessage = {
   show?: boolean;
   removeAfterTimeout?: boolean;
 }
+
+export type PhaseStepExtraData = {
+  decision?: string;
+  recommendationDoc?: string;
+  endDate?: string; // ISO string
+  startDate?: string; // ISO string
+  organizations?: any[];
+  questionnaires?: { id: string; name: string }[];
+  surveyQuestions?: string[];
+  status?: string;
+  recommendationDate?: string; // ISO string
+  recommendationFile?: string;
+  apcFile?: string;
+  attachments: { name: string, file: string }[]
+  [key: string]: any; // allow additional dynamic properties
+};
+
+export type PhaseStep = {
+  id: string;
+  date: string; // ISO string
+  slug: string;
+  step_id: string;
+  stepName: string;
+  description: string;
+  extraData: PhaseStepExtraData;
+};
+
+export type ProgrammePhase = {
+  id: string;
+  name: string;
+  slug: string;
+  status: string;
+  description: string;
+  programmeId: string;
+  programmePhaseId: string;
+  steps: PhaseStep[];
+};

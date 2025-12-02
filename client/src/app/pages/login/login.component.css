@@ -5,3 +5,12 @@
     background-repeat: no-repeat;
     height: 100%;
 } */
+
+.message-container {
+  visibility: hidden;
+  transition: visibility .5s;
+}
+
+.open {
+  visibility: visible;
+}

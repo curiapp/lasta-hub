@@ -27,3 +27,9 @@ export const GET_PROGRAMME_BY_ID = gql`
     }
   }
 `;
+
+export const GET_PROGRAMME_PHASE_BY_ID = gql`
+  query GetProgrammePhase($programmeId: String!, $phaseSlug: String!) {
+    programme_phase_step(phaseSlug: $phaseSlug, programmeId: $programmeId)
+  }
+`;

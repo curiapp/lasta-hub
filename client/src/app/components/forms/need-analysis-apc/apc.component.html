@@ -11,11 +11,6 @@
     </fieldset>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">APC Recommendation File</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="apc"></file-upload>
-    </fieldset>
-
-    <fieldset class="fieldset">
       <legend class="fieldset-legend">Decision</legend>
       <fieldset class="w-full border-2 border-gray-300 border-dashed rounded-lg p-3 space-y-1">
         <div class="custom-control custom-radio custom-control-inline">
@@ -37,6 +32,11 @@
       @if(status.invalid && status.touched){
       <div class="label label-text-alt text-red-700">APC Decision is required</div>
       }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">APC Recommendation File</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="apc"></file-upload>
     </fieldset>
 
     <div class="form-control">

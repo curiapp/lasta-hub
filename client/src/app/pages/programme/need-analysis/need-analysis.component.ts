@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
-import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
+import { CardComponent } from "../../../components/card/card/card.component";
 import { SenateSubmitComponent } from "../../../components/forms/need-analysis-apc-submit/senate-submit.component";
 import { ApcComponent } from "../../../components/forms/need-analysis-apc/apc.component";
 import { BosSubmitComponent } from "../../../components/forms/need-analysis-bos-submit/bos-submit.component";
@@ -13,18 +13,16 @@ import { NeedAnalysisEditProgramComponent } from "../../../components/forms/need
 import { EndConsultComponent } from "../../../components/forms/need-analysis-end-consult/end-consult.component";
 import { SenateComponent } from "../../../components/forms/need-analysis-senate/senate.component";
 import { ModalComponent } from "../../../components/modal/modal.component";
-import { GET_PROGRAMME_BY_ID } from "../../../graphql/graphql.queries";
-import { ClientService } from "../../../services/client.service";
+import { GET_PROGRAMME_BY_ID, GET_PROGRAMME_PHASE_BY_ID } from "../../../graphql/graphql.queries";
+import { DatePipe } from "../../../pipes/date.pipe";
 import { LoadingService } from "../../../services/loading.service";
-import { programme_steps, NQFLevel } from "../../../static";
-import { Programme } from "../../../types";
-import { CardComponent } from "../../../components/card/card/card.component";
+import { NQFLevel, programme_steps } from "../../../static";
+import { PhaseStep, Programme } from "../../../types";
 
 @Component({
-  selector: 'client-need-analysis',
+  selector: 'need-analysis',
   imports: [
     FormsModule,
-    ActionButtonsComponent,
     NeedAnalysisConcludeComponent,
     EndConsultComponent,
     NeedAnalysisConsultationComponent,
@@ -35,8 +33,9 @@ import { CardComponent } from "../../../components/card/card/card.component";
     SenateComponent,
     NeedAnalysisEditProgramComponent,
     ModalComponent,
-    CardComponent
-],
+    CardComponent,
+    DatePipe
+  ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.css'
 })
@@ -50,71 +49,22 @@ export class NeedAnalysisComponent {
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
 
-  stakeholders = [
-    {
-      "name": "Stellaris Tech",
-      "email": "contact@stellaristech.com"
-    },
-    {
-      "name": "Green Harvest Farms",
-      "email": "info@greenharvestfarms.com"
-    },
-    {
-      "name": "Sunrise Renewable Energy",
-      "email": "inquiries@sunriserenewable.com"
-    },
-    {
-      "name": "Global Logistics Solutions",
-      "email": "logistics@globalsolutions.com"
-    },
-    {
-      "name": "Oceanic Fisheries",
-      "email": "sales@oceanicfisheries.com"
-    }
-  ];
-
-  submissions = [
-    {
-      "id": "a1b2c3d4-e5f6-4789-8123-567890abcdef",
-      "title": "Research Paper on Renewable Energy",
-      "submissionDate": "2025-03-21"
-    },
-    {
-      "id": "b2c3d4e5-f6a7-4890-9234-67890abcdef1",
-      "title": "Final Project - E-commerce Website",
-      "submissionDate": "2025-04-05"
-    },
-    {
-      "id": "c3d4e5f6-a7b8-4901-0345-7890abcdef12",
-      "title": "Essay on the Impact of Social Media",
-      "submissionDate": "2025-03-18"
-    },
-    {
-      "id": "d4e5f6a7-b8c9-4012-1456-890abcdef123",
-      "title": "Presentation on Business Strategy",
-      "submissionDate": "2025-04-12"
-    },
-    {
-      "id": "e5f6a7b8-c9d0-4123-2567-90abcdef1234",
-      "title": "Lab Report - Chemical Analysis",
-      "submissionDate": "2025-03-25"
-    }
-  ];
-
-  addStakeholder() {
-    this.stakeholders.push(this.stakeholder);
-    this.stakeholder = { name: '', email: '' };
-  }
+  stakeConsult: PhaseStep;
+  pdqaRecommend: PhaseStep;
+  bosConsult: PhaseStep;
+  apcRecommend: PhaseStep;
+  senateApproval: PhaseStep;
 
   onSelectStep = (step: number) => {
     this.selectedStep = step;
   }
 
-  constructor(private route: ActivatedRoute, private client: ClientService) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
+
       this.apollo.watchQuery({
         query: GET_PROGRAMME_BY_ID,
         variables: {
@@ -124,6 +74,23 @@ export class NeedAnalysisComponent {
         this._loading.isLoading.set(result.loading);
         this.programme = result?.data?.programmes[0];
       });
+
+      this.apollo.watchQuery({
+        query: GET_PROGRAMME_PHASE_BY_ID,
+        variables: {
+          programmeId: params.get('id'),
+          phaseSlug: 'needs-analysis',
+        }
+      }).valueChanges.subscribe((result: any) => {
+        this._loading.isLoading.set(result.loading);
+        const data = result?.data?.programme_phase_step;
+        this.stakeConsult = data?.steps?.find((item) => item.slug === 'stakeholders-consultation');
+        this.pdqaRecommend = data?.steps?.find((item) => item.slug === 'pdqa-recommendation');
+        this.bosConsult = data?.steps?.find((item) => item.slug === 'bos-consultation');
+        this.apcRecommend = data?.steps?.find((item) => item.slug === 'apc-recommendation');
+        this.senateApproval = data?.steps?.find((item) => item.slug === 'senate-approval');
+      });
+
     });
   }
 

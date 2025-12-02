@@ -38,7 +38,7 @@ export default async (app: Express, upload: Multer) => {
             //     ppsId
             // );
             // const supportFileAttachmentId = await saveFile((req.files as any)["supportFile"][0], PHASE, ppsId);
-            const attachmentIds = {};
+            const attachments = [];
             if (req.files && Array.isArray(req.files)) {
                 for (const file of req.files) {
                     const documentType = value.documentType;
@@ -47,7 +47,7 @@ export default async (app: Express, upload: Multer) => {
                     );
                     if (matchedKey) {
                         const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                        attachmentIds[matchedKey] = attId;
+                        attachments.push({ name: matchedKey.replace("-", " "), file: attId })
                     }
                 }
             }
@@ -56,7 +56,10 @@ export default async (app: Express, upload: Multer) => {
             //     qualificationDocument: qualificationDocumentAttachmentId,
             //     supportFile: supportFileAttachmentId,
             // };
-            const stepData = attachmentIds;
+            const stepData = {
+                attachments,
+                documentsType: value.documentType
+            };
 
             await db.execute(
                 sql`SELECT fn_update_step_data(
@@ -146,7 +149,7 @@ export default async (app: Express, upload: Multer) => {
             //     submissionType: value.submissionType,
             // };
 
-            const attachmentIds = {};
+            const attachments = [];
             if (req.files && Array.isArray(req.files)) {
                 for (const file of req.files) {
                     const documentType = value.documentType;
@@ -155,12 +158,16 @@ export default async (app: Express, upload: Multer) => {
                     );
                     if (matchedKey) {
                         const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                        attachmentIds[matchedKey] = attId;
+                        attachments.push({ name: matchedKey.replace("-", " "), file: attId })
                     }
                 }
             }
 
-            const stepData = attachmentIds;
+            const stepData = {
+                attachments,
+                submissionType: value.submissionType,
+                documentsType: value.documentType
+            };
 
             await db.execute(
                 sql`SELECT fn_update_step_data(

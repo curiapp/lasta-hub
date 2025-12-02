@@ -11,13 +11,8 @@
     </fieldset>
 
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Recommendation</legend>
-      <file-upload [pid]="pid" [url]="url" itemAlias="recommendation"></file-upload>
-    </fieldset>
-
-    <fieldset class="fieldset">
       <legend class="fieldset-legend">Decision</legend>
-      <fieldset class="w-full border-2 border-gray-300 border-dashed rounded-lg p-3">
+      <fieldset class="w-full border-2 space-y-1 border-gray-300 border-dashed rounded-lg p-3">
         <div class="custom-control custom-radio custom-control-inline">
           <input class="radio radio-xs" type="radio" id="status1" name="status" [(ngModel)]="model.status"
             value="approve" required #status="ngModel" mdbInput>
@@ -37,6 +32,11 @@
       @if(status.invalid && status.touched){
       <div class="label label-text-alt text-red-700">APC Decision is required</div>
       }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Recommendation</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="recommendation"></file-upload>
     </fieldset>
 
     <div class="form-control">

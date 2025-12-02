@@ -38,11 +38,6 @@ export class ProgrammeComponent {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      // this.programme = programmes.find(programme => programme.id === params.get('id'))
-      // this.client.getAll<Programme>(`programmes?devCode=${params.get('id')}`).subscribe((data) => {
-      //   // console.log("Programs ", data);
-      //   this.programme = data[0];
-      // })
 
       this.apollo.watchQuery({
         query: GET_PROGRAMME_BY_ID,

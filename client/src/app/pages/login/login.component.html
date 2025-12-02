@@ -1,12 +1,12 @@
-<div class="sm:px-6 flex lg:px-12 min-h-dvh bg-gradient-to-b from-[#38485dc4] via-[#38485dde] to-[#284366]">
+<div class="sm:px-6 flex lg:px-12 min-h-dvh bg-linear-to-b from-[#38485dc4] via-[#38485dde] to-[#284366]">
 
   <div class="py-12 mx-auto grid place-items-center flex-auto">
     <div class="h-full flex flex-col md:flex-row justify-center items-center gap-10 w-full p-8 md:p-0">
 
-      <div class="login-bg relative rounded-lg md:w-1/2 !h-32 md:!h-full">
+      <div class="login-bg relative rounded-lg md:w-1/2 h-32! md:h-full!">
 
-        <div class="top-0 left-0 relative z-20 w-full h-full flex-grow bg-gradient-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
-          <div class="flex justify-between items-start flex-grow">
+        <div class="top-0 left-0 relative z-20 w-full h-full grow bg-linear-to-t  from-gray-900/85 via-gray-900/15 to-transparent p-4 rounded-lg flex flex-col">
+          <div class="flex justify-between items-start grow">
             <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
             <a routerLink="/home"
               class="btn btn-sm shadow-none border-none text-white bg-slate-500/20 hover:bg-primary/15 hover:backdrop-blur-lg group"><span
@@ -86,8 +86,8 @@
               }
             </button>
 
-            @if (message) {
-            <div class="text-error text-sm text-center w-full">{{message}}</div>
+            @if (message()) {
+            <div class="text-error transition-all text-sm text-center w-full message-container" [class.open]="message()">{{message()}}</div>
             }
 
           </div>

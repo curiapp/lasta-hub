@@ -1,13 +1,35 @@
 @if (loading) {
 <card-loader />
 }@else {
-<div class="border-2 border-primary p-4 rounded-lg w-full relative">
-  <div class="flex flex-col gap-2">
+<div class="border-2 border-primary p-4 rounded-lg w-full relative grow">
+  <div class="flex flex-col gap-1">
     <span class="text-base capitalize">{{title}}</span>
-    <span class="text-xs text-gray-500">{{description}}</span>
-    @if(other){<span class="text-xs text-gray-500">{{other}}</span>}
-    @if(other2){<span class="text-xs text-gray-500">{{other}}</span>}
+    @for (description of descriptions; track $index) {
+    <span class="text-xs text-gray-500 capitalize">{{description}}</span>
+    }
   </div>
+
+  @if (documents.length) {
+  <div class="divider my-1"></div>
+
+  <div class="space-y-1">
+    <h4 class="font-semibold text-primary">Attachments</h4>
+
+    @for (item of documents; track $index) {
+    <div class="flex gap-3 items-center group cursor-pointer">
+      <span class="material-symbols-rounded">
+        file_present
+      </span>
+      <span class="capitalize transition group-hover:underline grow text-sm">{{item?.name}}</span>
+      <button class="size-8 rounded-full hover:bg-gray-300">
+        <span class="material-symbols-rounded">
+          download
+        </span>
+      </button>
+    </div>
+    }
+  </div>
+  }
   <action-buttons></action-buttons>
 </div>
 }

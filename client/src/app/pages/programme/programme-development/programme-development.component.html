@@ -34,18 +34,21 @@
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(stake of coordinators; track stake.email){
+    @for(item of pacCdcApp?.extraData['cdcMembers']; track $index){
     <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
-      <div class="flex flex-col -gap-2">
-        <span class="text-base">{{stake.name}}</span>
-        <span class="text-xs text-gray-500">{{stake.email}}</span>
-        <span class="text-xs text-gray-500">Faculty: {{stake.faculty}}</span>
-        <span class="text-xs text-gray-500">Department: {{stake.department}}</span>
+      <div class="flex flex-col -gap-1">
+        <span class="text-base capitalize">{{item?.firstName}} {{item?.lastName}}</span>
+        <span class="text-xs text-gray-500">Email: {{item?.emailAddress}}</span>
+        <span class="text-xs text-gray-500">Work Number: {{item?.workNumber}}</span>
+        @if(item?.cellphone){<span class="text-xs text-gray-500">Cellphone Number: {{item?.cellphone}}</span>}
+        <span class="text-xs text-gray-500">Organisation: {{item?.organization}}</span>
+        <span class="text-xs text-gray-500">Qualification: {{item?.qualification}}</span>
+        <span class="text-xs text-gray-500">Occupation: {{item?.occupation}}</span>
       </div>
       <action-buttons></action-buttons>
     </div>
     }@empty {
-    <p class="text-sm text-primary">No Coordinator</p>
+    <p class="text-sm text-primary">No Curriculum Development Coordinators</p>
     }
 
   </div>
@@ -58,20 +61,23 @@
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(stake of advisory_committee; track stake.email){
+    @for(item of pacCdcApp?.extraData['pacMembers']; track $index){
     <div class="border-2 border-primary py-2 px-2 rounded-lg w-full relative">
       <div class="flex flex-col -gap-2">
-        <span class="text-base">{{stake.name}}</span>
-        <span class="text-xs text-gray-500">{{stake.email}}</span>
+        <span class="text-base capitalize">{{item?.firstName}} {{item?.lastName}}</span>
+        <span class="text-xs text-gray-500">Email: {{item?.emailAddress}}</span>
+        <span class="text-xs text-gray-500">Work Number: {{item?.workNumber}}</span>
+        @if(item?.cellphone){<span class="text-xs text-gray-500">Cellphone Number: {{item?.cellphone}}</span>}
+        <span class="text-xs text-gray-500">Organisation: {{item?.organization}}</span>
+        <span class="text-xs text-gray-500">Qualification: {{item?.qualification}}</span>
+        <span class="text-xs text-gray-500">Occupation: {{item?.occupation}}</span>
       </div>
       <action-buttons></action-buttons>
     </div>
     }@empty {
-    <p class="text-sm text-primary">Programme Advisory Committee (PAC) members</p>
+    <p class="text-sm text-primary">No Programme Advisory Committee (PAC) members</p>
     }
-
   </div>
-
 </div>
 
 <modal #appoint_cdc>
@@ -97,17 +103,11 @@
     CDC develop the draft programme and submits to PDQA for review.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Recommendations</span>
-      <span class="text-xs text-gray-500">Decision: Deferred</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-
-    <div class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </div>
-  </div>
+  @if(currDraft?.extraData['draftFile']){
+  <card title="Curriculum Draft" [descriptions]="['Submitted : ' + (currDraft?.date | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">Curriculum Draft not submitted</p>
+  }
 </div>
 
 
@@ -129,16 +129,13 @@
     PDQA review and provide recommendation on the draft programme.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Recommendations</span>
-      <span class="text-xs text-gray-500">Decision: Deferred</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-    <div class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </div>
-  </div>
+  @if(pdqaRecommend?.extraData['draftFile']){
+  <card title="Recommendation"
+    [descriptions]="['Decision : '+pdqaRecommend?.extraData?.decision  ,'Submitted : ' + (pdqaRecommend?.date | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">Curriculum Draft not submitted</p>
+  }
+
 </div>
 
 <modal #pdqa_approval>

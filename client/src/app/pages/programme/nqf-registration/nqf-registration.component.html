@@ -25,16 +25,14 @@
     approval
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Submission</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
+  @if(nqfDocuments?.stepName){
+  <card title="NQF qualification documentation" [descriptions]="
+    [
+      'Date : ' + (nqfDocuments.extraData['date'] | date),
+    ]" [documents]="nqfDocuments?.extraData?.attachments??[]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">NQF qualification documents not submitted</p>
+  }
 </div>
 
 <modal #nqf_start>
@@ -55,16 +53,16 @@
     ADS review the NQF submission from the department and prepare NQF application documentation for submission.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Submission</span>
-      <span class="text-xs text-gray-500">Submitted: 29 April 2025</span>
-    </div>
-
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
+  @if(nqfSubmission?.stepName){
+  <card title="NQF Submission documentation" [descriptions]="
+    [
+      'Decision : ' + (nqfSubmission.extraData['decision']),
+      'Submission Type : ' + (nqfSubmission.extraData['submissionType']),
+      'Date : ' + (nqfSubmission['date'] | date),
+    ]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">NQF Submission document not submitted</p>
+  }
 </div>
 
 <modal #nqf_submit>
@@ -86,16 +84,15 @@
     NQF Feedback information
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Feedback</span>
-      <span class="text-xs text-gray-500">Submitted: 01 May 2025</span>
-    </div>
-
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
+  @if(nqfFeedback?.stepName){
+  <card title="NQF Feedback documentation" [descriptions]="
+    [
+      'Submission Type : ' + (nqfFeedback.extraData['submissionType']),
+      'Date : ' + (nqfFeedback['date'] | date),
+    ]" [documents]="nqfFeedback?.extraData?.attachments??[]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">NQF Feedback documents not submitted</p>
+  }
 </div>
 
 <modal #nqf_feedback>
@@ -117,16 +114,16 @@
     Qualification Framework(NQF)
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">NQF Registration</span>
-      <span class="text-xs text-gray-500">Submitted: 01 May 2025</span>
-    </div>
-
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
+  @if(nqfRegistration?.stepName){
+  <card title="NQF qualification documentation" [descriptions]="
+    [
+      'Qualification Title : ' + (nqfRegistration.extraData['qualificationTitle']),
+      'NQF ID : ' + (nqfRegistration.extraData['nqfId']),
+      'Registration Date : ' + (nqfRegistration.extraData['date'] | date),
+    ]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">NQF Registration document not submitted</p>
+  }
 </div>
 
 <modal #nqf_reg>

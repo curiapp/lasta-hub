@@ -24,16 +24,12 @@
     CDC is required to upload the draft programme document for circulation to PAC members as identified in Stage 2.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Draft Version 1</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
+  @if(circulationDraft?.stepName){
+  <card title="Draft Programme Document " [descriptions]="['Date : ' + (circulationDraft?.extraData['date'] | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">Draft programme document not submitted</p>
+  }
 
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
 </div>
 
 <modal #draft_programme>
@@ -57,15 +53,13 @@
     on the draft programme.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Draft Version1</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
+  @if(pacConsultation?.stepName){
+  <card title="PAC Consultation and Benchmarking Document "
+    [descriptions]="['Date : ' + (pacConsultation?.extraData['date'] | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">PAC Consultation and Benchmarking document not submitted</p>
+  }
+
 </div>
 
 <modal #consult_pac>
@@ -77,7 +71,7 @@
 @if(selectedStep===3){
 <div class="space-y-4 my-6">
   <div class="flex justify-between gap-2 flex-wrap">
-    <h2 class="text-xl md:text-2xl capitalize">Final Draft Programme -PDQA Recommendations</h2>
+    <h2 class="text-xl md:text-2xl capitalize">Final Draft Programme - PDQA Recommendations</h2>
     <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="final_draft.open()">
       Recommendations
     </button>
@@ -87,15 +81,12 @@
     CDC circulate the final draft programme document to PDQA for recommendation to BOS.
   </p>
 
-  <div class="border-2 border-primary p-4 rounded-lg w-full relative">
-    <div class="flex flex-col -gap-2">
-      <span class="text-base">Final</span>
-      <span class="text-xs text-gray-500">Submitted: 28 Feb 2025</span>
-    </div>
-    <span class="absolute right-1 top-1">
-      <action-buttons></action-buttons>
-    </span>
-  </div>
+  @if(finalDraft?.stepName){
+  <card title=" final draft programme document "
+    [descriptions]="['Date : ' + (finalDraft?.extraData['date'] | date)]" />
+  }@else{
+  <p class="text-sm text-primary font-semibold">Final Draft Programme document not submitted</p>
+  }
 </div>
 
 <modal #final_draft>

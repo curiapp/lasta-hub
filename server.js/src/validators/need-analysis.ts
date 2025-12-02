@@ -18,7 +18,14 @@ const updateSchema = Joi.object({
 
 const consultSchema = Joi.object({
   programmeId: Joi.string().required(),
-  organizations: Joi.array().items(Joi.string()).min(1).required(),
+  organizations: Joi.array().items(
+    Joi.object(
+      {
+        name: Joi.string().required().trim().required(),
+        organisation: Joi.string().trim().required()
+      }
+    )
+  ),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
 });

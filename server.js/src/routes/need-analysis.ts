@@ -80,15 +80,15 @@ export default async (app: Express, upload: Multer) => {
             const result = await db.execute(
                 sql`SELECT fn_get_or_create_step(${programmeId}, ${"stakeholders-consultation"})`
             );
-
+            
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             // then save files referencing ppsId
-            const attachmentIds: string[] = [];
+            const attachmentIds: any[] = [];
             if (req.files && Array.isArray(req.files)) {
                 for (const file of req.files) {
                     const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                    attachmentIds.push(attId);
+                    attachmentIds.push({ id: attId, name: file.originalname });
                 }
             }
 
@@ -193,7 +193,7 @@ export default async (app: Express, upload: Multer) => {
                 message: "PDQA recommendation submitted successfully",
             });
         } catch (err) {
-            console.error("Test error ",err);
+            console.error("Test error ", err);
             if (isDbKnownError(err)) return res.status(400).send({ message: err.message });
             res.status(500).send({ message: "Internal server error" });
         }
