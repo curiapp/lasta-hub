@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
 import { CardComponent } from "../../../components/card/card/card.component";
 import { NQARegComponent } from '../../../components/forms/nqa-reg/nqa-reg.component';
 import { NqaSubmitComponent } from '../../../components/forms/nqa-submit/nqa-submit.component';
@@ -17,7 +16,7 @@ import { PhaseStep, Programme } from '../../../types';
 
 @Component({
   selector: 'client-nqf-registration',
-  imports: [ActionButtonsComponent, NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe],
+  imports: [NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe],
   templateUrl: './nqf-registration.component.html',
   styleUrl: './nqf-registration.component.css'
 })

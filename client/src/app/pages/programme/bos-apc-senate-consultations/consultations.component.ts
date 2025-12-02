@@ -1,24 +1,23 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
+import { CardComponent } from "../../../components/card/card/card.component";
 import { ApcRecommendComponent } from '../../../components/forms/consultation-apc-recommend/apc-recommend.component';
 import { FacultyBosFinalComponent } from '../../../components/forms/consultation-faculty-bos-final/faculty-bos-final.component';
 import { FinalDraftComponent } from '../../../components/forms/consultation-final-draft/final-draft.component';
 import { FinalSenateRecommendComponent } from '../../../components/forms/consultation-final-senate-recommend/final-senate-recommend.component';
 import { OtherFacultyBosComponent } from '../../../components/forms/consultation-other-faculty-bos/other-faculty-bos.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
-import { GET_PROGRAMME_BY_ID, GET_PROGRAMME_PHASE_BY_ID } from '../../../graphql/graphql.queries';
+import { GET_PROGRAMME_PHASE_BY_ID } from '../../../graphql/graphql.queries';
+import { DatePipe } from "../../../pipes/date.pipe";
 import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
 import { PhaseStep, Programme } from '../../../types';
-import { CardComponent } from "../../../components/card/card/card.component";
-import { DatePipe } from "../../../pipes/date.pipe";
 
 @Component({
   selector: 'consultations',
-  imports: [ActionButtonsComponent, FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent, CardComponent, DatePipe],
+  imports: [FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent, CardComponent, DatePipe],
   templateUrl: './consultations.component.html',
   styleUrl: './consultations.component.css'
 })
