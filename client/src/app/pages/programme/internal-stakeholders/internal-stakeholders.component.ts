@@ -9,7 +9,6 @@ import { TLURecommendComponent } from "../../../components/forms/internal-tlu-re
 import { ModalComponent } from "../../../components/modal/modal.component";
 import { GET_PROGRAMME_PHASE_BY_ID } from "../../../graphql/graphql.queries";
 import { DatePipe } from "../../../pipes/date.pipe";
-import { ClientService } from "../../../services/client.service";
 import { LoadingService } from "../../../services/loading.service";
 import { programme_steps } from "../../../static";
 import { PhaseStep, Programme } from "../../../types";
@@ -34,7 +33,7 @@ export class InternalStakeholdersComponent {
   pdqaRecommend: PhaseStep;
 
 
-  constructor(private route: ActivatedRoute, private client: ClientService) { }
+  constructor(private route: ActivatedRoute) { }
 
   onSelectStep = (step: number) => {
     this.selectedStep = step;

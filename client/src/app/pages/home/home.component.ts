@@ -1,17 +1,16 @@
 import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import { StartNeedAnalysisComponent } from "../../components/forms/start-need-analysis/start-need-analysis.component";
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
 import { generateNext7Days, getGreeting } from '../../functions';
-import { ClientService } from '../../services/client.service';
+import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 import { LoadingService } from '../../services/loading.service';
 import { upComingEvents } from '../../static';
 import { Programme } from '../../types';
-import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 
 type User = {
   email: string;
@@ -41,9 +40,8 @@ export class HomeComponent implements OnInit {
   programmes: Programme[] = [];
   _loading = inject(LoadingService);
   apollo = inject(Apollo);
-  // isLoadig: boolean = this._loading.isLoading;
 
-  constructor(private client: ClientService, private viewContainer: ViewContainerRef) { }
+  constructor(private viewContainer: ViewContainerRef) { }
 
   toggleView() {
     this.showAll = !this.showAll;

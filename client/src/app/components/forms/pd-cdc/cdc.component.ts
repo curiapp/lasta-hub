@@ -1,10 +1,11 @@
 //import files from the angular framework
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Apollo } from 'apollo-angular';
 import { ClientService } from '../../../services/client.service';
-import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'pd-cdc',
@@ -19,6 +20,7 @@ export class CdcComponent implements OnInit {
   ld = inject(LoadingService);
   http = inject(ClientService);
   toast = inject(ToastService);
+  apollo = inject(Apollo);
   modalControl = inject(ModalControlService);
 
   cdcForm = this.fb.group({
@@ -83,6 +85,9 @@ export class CdcComponent implements OnInit {
           // console.log("data", data);
           this.modalControl.close();
           this.toast.success(data.message);
+          this.apollo.client.refetchQueries({
+            include: ['GetProgrammePhase']
+          });
         },
         error: error => {
           this.modalControl.close();
