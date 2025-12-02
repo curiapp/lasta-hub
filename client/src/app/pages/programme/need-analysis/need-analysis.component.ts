@@ -89,6 +89,9 @@ export class NeedAnalysisComponent {
         this.bosConsult = data?.steps?.find((item) => item.slug === 'bos-consultation');
         this.apcRecommend = data?.steps?.find((item) => item.slug === 'apc-recommendation');
         this.senateApproval = data?.steps?.find((item) => item.slug === 'senate-approval');
+
+        console.log("Data ", data);
+
       });
 
     });

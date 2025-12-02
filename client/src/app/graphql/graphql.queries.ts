@@ -37,3 +37,13 @@ export const GET_PROGRAMME_PHASE_BY_ID = gql`
     programme_phase_step(phaseSlug: $phaseSlug, programmeId: $programmeId)
   }
 `;
+
+export const GET_EVENTS_BY_DATE = gql`
+  query GetEventsByDate($date: String!) {
+    events(date: $date) {
+      id
+      date
+      title
+    }
+  }
+`;

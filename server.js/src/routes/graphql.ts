@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { programmes, users, departments, faculty } from "@/db/schema";
+import { departments, events, faculty, programmes, users } from "@/db/schema";
 import cors from "cors";
 import { eq, sql } from "drizzle-orm";
 import { Express } from "express";
@@ -20,11 +20,19 @@ const schema = buildSchema(`
 		initiatorFirstName: String
 		initiatorLastName: String
 	}
+	
+	type Events{
+		id:ID
+		title:String
+		date:String
+	}
 
 	type Query { 
+		events(date: String!): [Events]
 		programmes(id: String): [Programme]
 		programme_phase_step(programmeId:String, phaseSlug:String): JSON 
-	} 
+	}
+	
 `);
 
 const root = {
@@ -32,8 +40,12 @@ const root = {
 		if (id) {
 			return db.select(
 				{
-					...programmes,
-					initiatorFirstName: users?.firstName,
+					id: programmes.id,
+					code: programmes.code,
+					title: programmes.title,
+					level: programmes.level,
+					initiator: programmes.initiator,
+					initiatorFirstName: users.firstName,
 					initiatorLastName: users.lastName,
 					department: departments.name,
 					faculty: faculty.name
@@ -45,8 +57,12 @@ const root = {
 		} else {
 			return db.select(
 				{
-					...programmes,
-					initiatorFirstName: users?.firstName,
+					id: programmes.id,
+					code: programmes.code,
+					title: programmes.title,
+					level: programmes.level,
+					initiator: programmes.initiator,
+					initiatorFirstName: users.firstName,
 					initiatorLastName: users.lastName,
 					department: departments.name,
 					faculty: faculty.name
@@ -58,13 +74,23 @@ const root = {
 		}
 	},
 	async programme_phase_step({ programmeId, phaseSlug }) {
+
+		console.log("ID ", programmeId);
+
 		const data = await db.execute(
 			sql`SELECT fn_get_programme_phase_step(
 				${programmeId},
 				${phaseSlug}
 				) AS data`
 		);
+
+		console.log("Data ", data);
+
+
 		return data.rows[0]?.data
+	},
+	events({ date }) {
+		return db.select().from(events).where(eq(events.date, date))
 	}
 };
 

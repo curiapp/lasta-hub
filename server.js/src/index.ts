@@ -4,6 +4,7 @@ import multer from "multer";
 import path from "path";
 import cors from "cors";
 import usersRoutes from "./routes/users";
+import eventsRoutes from "./routes/events";
 import reviewsRoutes from "./routes/reviews";
 import consultationRoutes from "./routes/consultations";
 import needAnalysisRoutes from "./routes/need-analysis";
@@ -32,14 +33,13 @@ const upload = multer({
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:4200',
-    //   methods: 'GET,POST,PUT,DELETE,OPTIONS',
-    //   allowedHeaders: 'Content-Type,Authorization'
+    origin: 'http://localhost:4200'
 }));
 
 const PORT = process.env.PORT || 3000;
 
 usersRoutes(app);
+eventsRoutes(app);
 reviewsRoutes(app, upload);
 needAnalysisRoutes(app, upload);
 consultationRoutes(app, upload);

@@ -54,13 +54,6 @@ export class NqfRegistrationComponent {
         this.nqfSubmission = data?.steps?.find((item) => item.slug === 'nqf-submission');
         this.nqfFeedback = data?.steps?.find((item) => item.slug === 'nqf-feedback');
         this.nqfRegistration = data?.steps?.find((item) => item.slug === 'nqf-registration');
-
-        // console.log("Data ", data);
-        // console.log(" Final Draft to BOS Submission ", this.nqfDocuments?.extraData?.attachments);
-        // console.log(" Final Senate Rec ", this.nqfRegistration?.extraData);
-        // console.log("Faculty BOS Consultation ", this.nqfSubmission);
-        // console.log("APC Recommendation ", this.nqfFeedback);
-        console.log("Final Senate Recommendation ", this.nqfRegistration);
       });
     });
   }

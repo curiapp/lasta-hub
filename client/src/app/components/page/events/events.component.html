@@ -1,0 +1,96 @@
+<div class="w-96 hidden lg:block space-y-4">
+
+  <div class="space-y-4">
+
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg">{{currentMonth}}</h3>
+      <div class="flex items-center">
+        <span class="material-symbols-rounded cursor-pointer hover:scale-105 hover:translate-x-1 transition-all">
+          chevron_backward
+        </span>
+        <span class="material-symbols-rounded cursor-pointer hover:scale-110 hover:translate-x-1 transition-all">
+          chevron_forward
+        </span>
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      @for(item of dates; track item.date){
+      <div (click)="onChangeDate(item.date)"
+        class="w-10 h-10 cursor-pointer flex flex-col justify-center items-center rounded-md border-2!"
+        [class]="`${item.date === today?'bg-primary! outline-2! outline-primary text-white':'bg-transparent text-primary'}`">
+        <span class="text-[.5rem]">{{item.day}}</span>
+        <span class="text-base">{{item.dayOfMonth}}</span>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div class="flex justify-between items-center">
+      <h3 class="text-lg">Upcoming Events</h3>
+      <div class="flex items-center gap-1">
+        <button class="btn btn-xs btm-nav-label">View All</button>
+        <button class="btn btn-xs btm-nav-label" (click)="create_event.open()">Create +</button>
+      </div>
+    </div>
+
+    <div class="bg-gray-50 rounded-lg h-full max-h-lvh p-2 space-y-2">
+
+      @if (_loading.isLoading()) {
+      @for (item of [1,2,3,4,5,6]; track $index){
+      <div
+        class="bg-gray-100 rounded-lg space-y-2 p-2 border-2 border-transparent transition-all">
+        <h5 class="skeleton rounded-lg w-10/12 h-6"></h5>
+        <div class="skeleton rounded-md w-4/12 h-4"></div>
+      </div>
+      }
+      }@else {
+      @for (item of events; track item.id){
+      <div
+        class="bg-gray-100 rounded-lg p-2 hover:border-primary border-2 border-transparent cursor-pointer transition-all">
+        <h5 class="text-sm">{{item.title}}</h5>
+        <span class="text-xs">{{item.date}}</span>
+      </div>
+      }@empty {
+      <div class="h-52 grid place-items-center">
+        No Upcoming Events on {{selectedDate | date}}
+      </div>
+      }
+      }
+    </div>
+  </div>
+
+  <modal #create_event>
+    <h2 class="text-xl mb-2">Create An Upcoming Event</h2>
+    <form action="" class="space-y-2" (ngSubmit)="onSubmit(eventForm)" #eventForm="ngForm">
+      <fieldset class="fieldset">
+        <input type="date" required placeholder="Enter event date" class="input" ngModel name="date" #date="ngModel" />
+        @if(date.invalid && date.touched){
+        <p class="label text-error">Event date required*</p>
+        }
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Message</legend>
+        <textarea required class="textarea h-36 w-full" placeholder="Event" ngModel name="title"
+          #title="ngModel"></textarea>
+        @if(title.invalid && title.touched){
+        <div class="label text-error">Event Message required*</div>
+        }
+      </fieldset>
+
+      <div class="flex">
+        <button class="btn btn-sm btn-primary w-full" [disabled]="eventForm.invalid">
+          @if(_loading.isLoading()){
+          <span class="loading loading-spinner loading-md"></span>
+          }@else {
+          <span>Create +</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  </modal>
+
+</div>
