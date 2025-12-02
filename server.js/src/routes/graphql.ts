@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { programmes } from "@/db/schema";
+import { programmes, users, departments, faculty } from "@/db/schema";
 import cors from "cors";
 import { eq, sql } from "drizzle-orm";
 import { Express } from "express";
@@ -14,9 +14,11 @@ const schema = buildSchema(`
 		code: String
 		title: String
 		level: Int
-		faculty: ID
-		department: ID
+		faculty: String
+		department: String
 		initiator: ID
+		initiatorFirstName: String
+		initiatorLastName: String
 	}
 
 	type Query { 
@@ -28,9 +30,31 @@ const schema = buildSchema(`
 const root = {
 	programmes({ id }) {
 		if (id) {
-			return db.select().from(programmes).where(eq(programmes.id, id));
+			return db.select(
+				{
+					...programmes,
+					initiatorFirstName: users?.firstName,
+					initiatorLastName: users.lastName,
+					department: departments.name,
+					faculty: faculty.name
+				}
+			).from(programmes).where(eq(programmes.id, id))
+				.innerJoin(users, eq(users.id, programmes.initiator))
+				.innerJoin(departments, eq(programmes.department, departments.id))
+				.innerJoin(faculty, eq(programmes.faculty, faculty.id));
 		} else {
-			return db.select().from(programmes);
+			return db.select(
+				{
+					...programmes,
+					initiatorFirstName: users?.firstName,
+					initiatorLastName: users.lastName,
+					department: departments.name,
+					faculty: faculty.name
+				}
+			).from(programmes)
+				.innerJoin(users, eq(users.id, programmes.initiator))
+				.innerJoin(departments, eq(programmes.department, departments.id))
+				.innerJoin(faculty, eq(programmes.faculty, faculty.id));
 		}
 	},
 	async programme_phase_step({ programmeId, phaseSlug }) {

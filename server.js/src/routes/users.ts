@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, departments, faculty } from "@/db/schema";
 import { createUserSchema, loginSchema } from "@/validators/user";
 import { Express } from "express";
 import bcrypt from "bcrypt";
@@ -56,7 +56,13 @@ export default async (app: Express) => {
 
             const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-            const [updated] = await db.update(users).set({ authToken: token }).where(eq(users.id, user.id)).returning();
+            const [updated] = await db.update(users).set({ authToken: token })
+                .where(eq(users.id, user.id)).returning()
+
+            const [data] = await db.select().from(users)
+                .where(eq(users.id, user.id))
+                .leftJoin(departments, eq(users.department, departments.id))
+                .leftJoin(faculty, eq(departments.facultyId, faculty.id));
 
             return res.status(200).json({
                 id: updated.id,
@@ -65,8 +71,17 @@ export default async (app: Express) => {
                 lastName: updated.lastName,
                 role: updated.role,
                 token: updated.authToken,
+                department: {
+                    id: data.departments.id,
+                    name: data.departments.name
+                },
+                faculty: {
+                    id: data.faculty.id,
+                    name: data.faculty.name
+                },
+
             });
-        } catch (err) {            
+        } catch (err) {
             return res.status(500).send("Internal server error");
         }
     });

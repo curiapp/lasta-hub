@@ -10,15 +10,8 @@ import { generateNext7Days, getGreeting } from '../../functions';
 import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 import { LoadingService } from '../../services/loading.service';
 import { upComingEvents } from '../../static';
-import { Programme } from '../../types';
+import { Programme, User } from '../../types';
 
-type User = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  id: string;
-}
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
@@ -90,7 +83,5 @@ export class HomeComponent implements OnInit {
       });
 
   }
-
-
 
 }

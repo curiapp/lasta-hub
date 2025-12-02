@@ -32,6 +32,34 @@ export const programmes = pgTable("programmes", {
 	check("programmes_created_at_not_null", sql`NOT NULL created_at`),
 ]);
 
+export const faculty = pgTable("faculty", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	name: varchar({ length: 150 }).notNull(),
+	description: text(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	check("faculty_id_not_null", sql`NOT NULL id`),
+	check("faculty_name_not_null", sql`NOT NULL name`),
+]);
+
+export const departments = pgTable("departments", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	facultyId: uuid("faculty_id"),
+	name: varchar({ length: 150 }).notNull(),
+	description: text(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+			columns: [table.facultyId],
+			foreignColumns: [faculty.id],
+			name: "fk_department_faculty"
+		}).onDelete("set null"),
+	check("departments_id_not_null", sql`NOT NULL id`),
+	check("departments_name_not_null", sql`NOT NULL name`),
+]);
+
 export const users = pgTable("users", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
 	adUserId: uuid("ad_user_id"),
@@ -44,6 +72,7 @@ export const users = pgTable("users", {
 	firstName: text("first_name"),
 	lastName: text("last_name"),
 	authToken: text(),
+	department: uuid(),
 }, (table) => [
 	unique("users_ad_user_id_key").on(table.adUserId),
 	unique("users_email_key").on(table.email),
@@ -91,7 +120,6 @@ export const phaseSteps = pgTable("phase_steps", {
 			foreignColumns: [phases.id],
 			name: "phase_steps_phase_id_fkey"
 		}),
-	unique("phase_steps_order_index_phase_id_key").on(table.phaseId, table.orderIndex),
 	unique("phase_steps_slug_unique").on(table.slug),
 	check("phases_id_not_null", sql`NOT NULL id`),
 	check("phases_name_not_null", sql`NOT NULL name`),

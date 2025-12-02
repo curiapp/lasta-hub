@@ -1,19 +1,15 @@
 
 //import files from the angular framework
 import { Component, inject, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
-import { Faculty } from '../../../models/faculty';
-import { Department } from '../../../models/department';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Programme } from '../../../types';
-import { ToastService } from '../../../services/toast.service';
-import { LoadingService } from '../../../services/loading.service';
-import { ClientService } from '../../../services/client.service';
 import { Apollo } from 'apollo-angular';
-import { environment } from '../../../../environments/environment';
+import { ClientService } from '../../../services/client.service';
+import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
+import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
+import { ToastService } from '../../../services/toast.service';
+import { Programme, User } from '../../../types';
 // import {RouteConfig,  ROUTER_DIRECTIVES, ROUTER_PROVIDERS,
 //          LocationStrategy, HashLocationStrategy,} from '@angular/router';
 
@@ -39,10 +35,10 @@ export class StartNeedAnalysisComponent implements OnInit {
   ngOnInit(): void {
     let user = sessionStorage.getItem("loggedInUser");
     if (user) {
-      let currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+      let currentUser: User = JSON.parse(sessionStorage.getItem('loggedInUser'));
       this.programme.initiator = currentUser?.id
-      this.programme.faculty = currentUser?.id;
-      this.programme.department = currentUser?.id;
+      this.programme.faculty = currentUser?.faculty?.id;
+      this.programme.department = currentUser?.department?.id;
     }
   }
 
