@@ -7,11 +7,11 @@ WORKDIR /app
 
 COPY ./client/package*.json ./
 
-RUN npm install
+RUN yarn install
 
 COPY ./client ./
 
-RUN npm run build --prod
+RUN yarn build
 
 EXPOSE 4000
 
