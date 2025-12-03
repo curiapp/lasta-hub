@@ -1,55 +1,52 @@
 {
-  "name": "pdu-server",
+  "name": "server",
   "version": "0.0.1",
+  "description": "PDQA Server",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec coffee pdu.coffee",
-    "start": "coffee dist/server/pdu.coffee",
-    "deploy": "grunt release"
-  },
-  "dependencies": {
-    "async": "^2.0.0-rc.6",
-    "bcrypt": "^5.0.0",
-    "body-parser": "^1.15.1",
-    "compression": "^1.6.2",
-    "cors": "^2.7.1",
-    "couchbase": "^4.4.5",
-    "crypto-js": "^3.1.6",
-    "dotenv": "^16.4.7",
-    "ejs": "^2.4.2",
-    "express": "^4.14.0",
-    "fs-extra": "^2.0.0",
-    "helmet": "^8.0.0",
-    "http": "0.0.0",
-    "jwt-simple": "^0.5.0",
-    "kafka-node": "^5.0.0",
-    "liftup": "^3.0.1",
-    "method-override": "^2.3.6",
-    "moment": "^2.13.0",
-    "morgan": "^1.7.0",
-    "multer": "^1.4.1",
-    "package-config": "^0.1.0",
-    "rxjs": "^5.0.0-beta.12",
-    "simple-git": "^1.67.0",
-    "uuid": "^2.0.2",
-    "validator": "^13.5.2",
-    "zone.js": "^0.6.26"
-  },
-  "devDependencies": {
-    "coffeescript": "^2.6.1",
-    "nodemon": "^3.1.9"
-  },
-  "config": {
-    "development": {
-      "serverPort": 4931,
-      "tokenSecret": "abdsgfdeweqsdsfasdfgdfs"
-    },
-    "production": {
-      "serverPort": 4931,
-      "tokenSecret": "abdsgfdeweqsdsfasdfgdfs"
-    }
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "yarn tsx watch ./src/index.ts",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.6",
+    "drizzle-seed": "^0.3.1",
+    "express": "^5.1.0",
+    "graphql": "^16.11.0",
+    "graphql-http": "^1.22.4",
+    "joi": "^18.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "pg": "^8.16.3",
+    "ruru": "^2.0.0-beta.30",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
+    "drizzle-kit": "^0.31.5",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.9"
+  }
 }
