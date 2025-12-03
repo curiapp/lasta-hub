@@ -50,7 +50,7 @@
       <div
         class="bg-gray-100 rounded-lg p-2 hover:border-primary border-2 border-transparent cursor-pointer transition-all">
         <h5 class="text-sm">{{item.title}}</h5>
-        <span class="text-xs">{{item.date}}</span>
+        <span class="text-xs">{{item.date | date}}</span>
       </div>
       }@empty {
       <div class="h-52 grid place-items-center">

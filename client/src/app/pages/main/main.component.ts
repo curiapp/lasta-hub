@@ -5,6 +5,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, Ro
 import { filter, map } from 'rxjs/operators';
 import { ShortSummaryService } from '../../services/short-summary.service';
 import { programmeNotifications } from '../../static';
+import { User } from '../../types';
 
 @Component({
   selector: 'client-main',
@@ -16,7 +17,7 @@ import { programmeNotifications } from '../../static';
 export class MainComponent {
   title = 'PDU - Home'
   currentYear: number = new Date().getFullYear();
-  currentUser: any;
+  currentUser: User;
   notifications = programmeNotifications;
 
   constructor(private _location: Location, private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
