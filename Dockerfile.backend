@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:20-slim AS build
 
 ARG DB_URL
 ENV DB_URL=${DB_URL}
@@ -12,17 +12,18 @@ ENV DB_URL=${DB_URL}
 # RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
 # RUN git config --global user.email "temp@example.com" && git config --global user.name "Temp User"
+# Build stage
 
 WORKDIR /app
+COPY ./server/package.json ./
+RUN npm install
+COPY ./server ./server
+RUN npm build
 
-COPY ./server.js/package*.json ./
-
-RUN npm install -g yarn
-
-RUN yarn install
-
-COPY ./server ./
-
+# Production stage
+FROM node:20-slim
+WORKDIR /app
+COPY --from=build /app/dist ./
+COPY --from=build /app/node_modules ./node_modules
 EXPOSE 4931
-
-CMD ["yarn", "start"]
+CMD ["node", "index.js"]
