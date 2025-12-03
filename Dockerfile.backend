@@ -15,10 +15,10 @@ ENV DB_URL=${DB_URL}
 # Build stage
 
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json ./
+RUN npm install
 COPY ./server.js ./server.js
-RUN yarn build
+RUN npm build
 
 # Production stage
 FROM node:20-slim
