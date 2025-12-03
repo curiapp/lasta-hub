@@ -1,19 +1,11 @@
-import { Router } from '@angular/router';
-//import component, ElementRef, input and the oninit method from angular core
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-//import the file-upload plugin
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-//import the native angular http and respone libraries
-import { HttpClient } from '@angular/common/http';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
+import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 
-//create the component properties
 @Component({
-  //define the element to be selected from the html structure.
   selector: 'external-curriculum-dev-pac-consult',
-  //location of our template rather than writing inline templates.
   templateUrl: 'curriculum-dev-pac-consult.component.html',
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NeedAnalysisConcludeComponent } from './need-analysis-conclude.component';
 
@@ -6,12 +6,12 @@ describe('NeedAnalysisConcludeComponent', () => {
   let component: NeedAnalysisConcludeComponent;
   let fixture: ComponentFixture<NeedAnalysisConcludeComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NeedAnalysisConcludeComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [NeedAnalysisConcludeComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NeedAnalysisConcludeComponent);

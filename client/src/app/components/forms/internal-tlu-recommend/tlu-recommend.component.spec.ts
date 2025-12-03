@@ -1,20 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TluRecommendComponent } from './tlu-recommend.component';
+import { TLURecommendComponent } from './tlu-recommend.component';
 
 describe('TluRecommendComponent', () => {
-  let component: TluRecommendComponent;
-  let fixture: ComponentFixture<TluRecommendComponent>;
+  let component: TLURecommendComponent;
+  let fixture: ComponentFixture<TLURecommendComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TluRecommendComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TLURecommendComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TluRecommendComponent);
+    fixture = TestBed.createComponent(TLURecommendComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

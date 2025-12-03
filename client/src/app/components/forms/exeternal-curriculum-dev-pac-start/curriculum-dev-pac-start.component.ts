@@ -1,10 +1,8 @@
-import { Router } from '@angular/router';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-import { HttpClient } from '@angular/common/http';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
+import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
+import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 
 @Component({
   selector: 'external-curriculum-dev-pac-start',

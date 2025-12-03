@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PduRecommendComponent } from './pdu-recommend.component';
 
@@ -6,12 +6,12 @@ describe('PduRecommendComponent', () => {
   let component: PduRecommendComponent;
   let fixture: ComponentFixture<PduRecommendComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PduRecommendComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [PduRecommendComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PduRecommendComponent);

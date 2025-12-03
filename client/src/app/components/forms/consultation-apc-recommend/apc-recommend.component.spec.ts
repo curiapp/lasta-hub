@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApcRecommendComponent } from './apc-recommend.component';
 
@@ -6,12 +6,12 @@ describe('ApcRecommendComponent', () => {
   let component: ApcRecommendComponent;
   let fixture: ComponentFixture<ApcRecommendComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ApcRecommendComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ApcRecommendComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ApcRecommendComponent);

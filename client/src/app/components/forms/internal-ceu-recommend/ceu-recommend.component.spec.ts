@@ -1,20 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CeuRecommendComponent } from './ceu-recommend.component';
+import { CEURecommendComponent } from './ceu-recommend.component';
 
 describe('CeuRecommendComponent', () => {
-  let component: CeuRecommendComponent;
-  let fixture: ComponentFixture<CeuRecommendComponent>;
+  let component: CEURecommendComponent;
+  let fixture: ComponentFixture<CEURecommendComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CeuRecommendComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [CEURecommendComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CeuRecommendComponent);
+    fixture = TestBed.createComponent(CEURecommendComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

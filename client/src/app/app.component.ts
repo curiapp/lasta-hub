@@ -9,6 +9,6 @@ import { ToastComponent } from './components/toast/toast.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
-  constructor() {}
+  title = "pdqa-client"
+  constructor() { }
 }

@@ -8,7 +8,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: 'curriculum-dev-draft-pdu-approval.component.html',
   imports: [FormsModule, FileUploadComponent]
 })
-export class CurriculumDevDraftPDUApprovComponent {
+export class CurriculumDevDraftPduApprovalComponent {
   url = `${environment.apiUrl}/curriculum-development/draft/validate`;
   model: any = {};
   devCode: String;

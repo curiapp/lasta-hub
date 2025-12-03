@@ -6,11 +6,11 @@ describe('NqaPreparationComponent', () => {
   let component: NqaPreparationComponent;
   let fixture: ComponentFixture<NqaPreparationComponent>;
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ NqaPreparationComponent ]
+      imports: [NqaPreparationComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

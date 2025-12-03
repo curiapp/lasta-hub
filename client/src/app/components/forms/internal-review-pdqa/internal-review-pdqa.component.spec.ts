@@ -8,7 +8,7 @@ describe('InternalReviewPduComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InternalReviewPduComponent]
+      imports: [InternalReviewPduComponent]
     })
       .compileComponents();
 

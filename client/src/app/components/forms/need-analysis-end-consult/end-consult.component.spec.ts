@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EndConsultComponent } from './end-consult.component';
 
@@ -6,12 +6,12 @@ describe('EndConsultComponent', () => {
   let component: EndConsultComponent;
   let fixture: ComponentFixture<EndConsultComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EndConsultComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [EndConsultComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EndConsultComponent);

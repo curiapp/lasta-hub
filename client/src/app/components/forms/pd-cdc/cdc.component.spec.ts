@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CdcComponent } from './cdc.component';
 
@@ -6,12 +6,12 @@ describe('CdcComponent', () => {
   let component: CdcComponent;
   let fixture: ComponentFixture<CdcComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CdcComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [CdcComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CdcComponent);

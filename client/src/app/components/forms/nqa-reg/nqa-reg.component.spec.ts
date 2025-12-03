@@ -1,20 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NqaRegComponent } from './nqa-reg.component';
+import { NQARegComponent } from './nqa-reg.component';
 
 describe('NqaRegComponent', () => {
-  let component: NqaRegComponent;
-  let fixture: ComponentFixture<NqaRegComponent>;
+  let component: NQARegComponent;
+  let fixture: ComponentFixture<NQARegComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NqaRegComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [NQARegComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NqaRegComponent);
+    fixture = TestBed.createComponent(NQARegComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

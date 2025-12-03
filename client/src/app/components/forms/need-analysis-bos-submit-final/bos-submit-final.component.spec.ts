@@ -1,17 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BosSubmitFinalComponent } from './bos-submit-final.component';
 
 describe('BosSubmitFinalComponent', () => {
   let component: BosSubmitFinalComponent;
   let fixture: ComponentFixture<BosSubmitFinalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ BosSubmitFinalComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [BosSubmitFinalComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BosSubmitFinalComponent);

@@ -4,7 +4,7 @@ import { Apollo } from 'apollo-angular';
 import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
 import { CardComponent } from "../../../components/card/card/card.component";
 import { CdcComponent } from '../../../components/forms/pd-cdc/cdc.component';
-import { CurriculumDevDraftPDUApprovComponent } from '../../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component';
+import { CurriculumDevDraftPduApprovalComponent } from '../../../components/forms/pd-curriculum-dev-draft-pdu-approval/curriculum-dev-draft-pdu-approval.component';
 import { CurriculumDevDraftReviseComponent } from '../../../components/forms/pd-curriculum-dev-draft-revise/curriculum-dev-draft-revise.component';
 import { PacComponent } from '../../../components/forms/pd-pac/pac.component';
 import { ModalComponent } from '../../../components/modal/modal.component';
@@ -17,7 +17,7 @@ import { CanEditDirective } from '../../../directives/can-edit.directive';
 
 @Component({
   selector: 'client-programme-development',
-  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
+  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPduApprovalComponent, ActionButtonsComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.css'
 })
