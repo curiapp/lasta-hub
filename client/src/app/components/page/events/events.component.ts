@@ -1,16 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule, NgForm } from "@angular/forms";
 import { Apollo } from 'apollo-angular';
+import moment from 'moment';
 import { generateNext7Days } from '../../../functions';
 import { GET_EVENTS_BY_DATE } from '../../../graphql/graphql.queries';
+import { DatePipe } from "../../../pipes/date.pipe";
 import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
 import { ToastService } from '../../../services/toast.service';
 import { upComingEvents } from '../../../static';
 import { ModalComponent } from "../../modal/modal.component";
-import moment from 'moment';
-import { DatePipe } from "../../../pipes/date.pipe";
 
 @Component({
   selector: 'events',
