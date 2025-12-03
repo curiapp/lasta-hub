@@ -15,7 +15,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl">Programme Details</h2>
-    <button class="btn btn-sm btn-secondary text-primary" (click)="edit_program.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm btn-secondary text-primary" (click)="edit_program.open()">
       <span class="material-symbols-rounded text-[20px]">
         edit
       </span>
@@ -52,7 +52,8 @@
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl">Stakeholders' Consultation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="need_analysis_consult.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="need_analysis_consult.open()">
       Consultations
     </button>
   </div>
@@ -94,7 +95,8 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Survey/Questionnaire</h2>
-    <button (click)="end_consult.open()" class="btn btn-sm font-normal btn-secondary text-primary">
+    <button *canEdit="programme?.initiator" (click)="end_consult.open()"
+      class="btn btn-sm font-normal btn-secondary text-primary">
       Submit Survey/Questionnaire
     </button>
   </div>
@@ -124,7 +126,7 @@
 <div class="space-y-4 my-6">
   <div class="flex flex-wrap gap-2 justify-between">
     <h2 class="text-xl md:text-2xl capitalize">PDQA Recommendation</h2>
-    <div class="join">
+    <div class="join" *canEdit="programme?.initiator">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="pdqa_recommend.open()">
         PDQA Decision
       </button>
@@ -168,7 +170,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">BOS Consultation</h2>
-    <div class="join">
+    <div class="join" *canEdit="programme?.initiator">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="bos_ammendments.open()">
         Amendments
       </button>
@@ -183,8 +185,9 @@
   </p>
 
   @if (bosConsult?.extraData?.startDate) {
-  <span class="text-secondary text-lg font-semibold mb-4!">Started on {{stakeConsult?.extraData?.startDate |
-    date}}</span>
+  <span class="text-secondary text-lg font-semibold mb-4!">
+    Started on {{stakeConsult?.extraData?.startDate |date}}
+  </span>
   }
 
   @if(bosConsult?.stepName){
@@ -211,7 +214,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">APC Recommendation</h2>
-    <div class="join">
+    <div class="join" *canEdit="programme?.initiator">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="apc_submit.open()">
         Recommendation
       </button>
@@ -247,7 +250,7 @@
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">Senate Approval</h2>
 
-    <div class="join">
+    <div class="join" *canEdit="programme?.initiator">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="senate_submit.open()">
         Recommendation
       </button>

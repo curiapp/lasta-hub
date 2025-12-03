@@ -13,19 +13,19 @@ import { DatePipe } from "../../../pipes/date.pipe";
 import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
 import { PhaseStep, Programme } from '../../../types';
+import { CanEditDirective } from '../../../directives/can-edit.directive';
 
 @Component({
   selector: 'client-programme-development',
-  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent, ModalComponent, CardComponent, DatePipe],
+  imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPDUApprovComponent, ActionButtonsComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
   templateUrl: './programme-development.component.html',
   styleUrl: './programme-development.component.css'
 })
 export class ProgrammeDevelopmentComponent {
-  programme: Programme;
-  pid: string = "defaultDevCode";
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
-
+  pid: string = "defaultDevCode";
+  programme: Programme;
   steps = programme_steps['programme_development'];
   selectedStep = 1;
 
@@ -40,6 +40,7 @@ export class ProgrammeDevelopmentComponent {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.programme = this.route.snapshot.parent.data['programme']?.programmes[0];
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
 

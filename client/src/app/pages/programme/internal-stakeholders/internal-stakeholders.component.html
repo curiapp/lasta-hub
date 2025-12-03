@@ -15,7 +15,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Internal Consultations</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="internal_consult.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="internal_consult.open()">
       Start Internal Consultations
     </button>
   </div>
@@ -48,7 +49,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">ADSTLT Review</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="adstlt_review.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="adstlt_review.open()">
       ADSTLT Review
     </button>
   </div>
@@ -78,7 +80,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center">
     <h2 class="text-xl md:text-2xl capitalize">CE Review</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="ce_review.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="ce_review.open()">
       CE Review
     </button>
   </div>
@@ -107,7 +110,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">PDQA Recommendation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="pdqa_review.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="pdqa_review.open()">
       PDQA Recommendation
     </button>
   </div>

@@ -15,7 +15,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Final Draft to BOS Submission</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_submit.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_submit.open()">
       BOS Submit
     </button>
   </div>
@@ -43,7 +43,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Faculty BOS-Consultation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -69,7 +69,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Other Faculty BOS Consultation (Optional)</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="other_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="other_recommend.open()">
       Other Recommendations
     </button>
   </div>
@@ -106,7 +106,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Academic Planning Committee (APC) Recommedation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -135,7 +135,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Senate Recommedation</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
       Recommendations
     </button>
   </div>

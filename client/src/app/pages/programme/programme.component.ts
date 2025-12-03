@@ -37,7 +37,6 @@ export class ProgrammeComponent {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-
       this.apollo.watchQuery({
         query: GET_PROGRAMME_BY_ID,
         variables: {

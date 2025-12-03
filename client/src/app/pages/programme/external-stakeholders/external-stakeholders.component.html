@@ -15,7 +15,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Circulation of Draft Programme</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="draft_programme.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="draft_programme.open()">
       Upload draft Programme to start PAC Consultation
     </button>
   </div>
@@ -42,7 +42,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">PAC Consultation and Benchmarking</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="consult_pac.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="consult_pac.open()">
       Consultations
     </button>
   </div>
@@ -72,7 +72,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Final Draft Programme - PDQA Recommendations</h2>
-    <button class="btn btn-sm font-normal btn-secondary text-primary" (click)="final_draft.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="final_draft.open()">
       Recommendations
     </button>
   </div>

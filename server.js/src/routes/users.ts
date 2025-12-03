@@ -72,7 +72,7 @@ export default async (app: Express) => {
                 role: updated.role,
                 token: updated.authToken,
                 department: {
-                    id: data.departments.id,
+                    id: data.departments?.id,
                     name: data.departments.name
                 },
                 faculty: {
@@ -82,6 +82,9 @@ export default async (app: Express) => {
 
             });
         } catch (err) {
+
+            console.log("Errr ", err);
+            
             return res.status(500).send("Internal server error");
         }
     });

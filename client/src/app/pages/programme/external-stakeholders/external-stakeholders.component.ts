@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
 import { CardComponent } from "../../../components/card/card/card.component";
 import { CurriculumDevPACStartComponent } from '../../../components/forms/exeternal-curriculum-dev-pac-start/curriculum-dev-pac-start.component';
 import { CurriculumDevPACConsultComponent } from '../../../components/forms/external-curriculum-dev-pac-consult/curriculum-dev-pac-consult.component';
@@ -11,21 +10,22 @@ import { GET_PROGRAMME_PHASE_BY_ID } from '../../../graphql/graphql.queries';
 import { DatePipe } from "../../../pipes/date.pipe";
 import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
-import { PhaseStep } from '../../../types';
-
+import { PhaseStep, Programme } from '../../../types';
+import { CanEditDirective } from '../../../directives/can-edit.directive';
 
 @Component({
   selector: 'client-external-stakeholders',
-  imports: [CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent, ModalComponent, DatePipe, CardComponent],
+  imports: [CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective],
   templateUrl: './external-stakeholders.component.html',
   styleUrl: './external-stakeholders.component.css'
 })
 export class ExternalStakeholdersComponent {
-  steps = programme_steps['external_stakeholders_consultations'];
-  selectedStep = 1;
-  pid: string;
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
+  pid: string;
+  programme: Programme;
+  steps = programme_steps['external_stakeholders_consultations'];
+  selectedStep = 1;
 
   circulationDraft: PhaseStep;
   pacConsultation: PhaseStep;
@@ -38,6 +38,9 @@ export class ExternalStakeholdersComponent {
   }
 
   ngOnInit() {
+
+    this.programme = this.route.snapshot.parent.data['programme']?.programmes[0];
+
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
 

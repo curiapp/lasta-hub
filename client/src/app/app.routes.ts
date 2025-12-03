@@ -16,6 +16,7 @@ import { ResumeProgrammeComponent } from './pages/resume-programme/resume-progra
 import { TeamComponent } from './pages/team/team.component';
 import { TutorialComponent } from './pages/tutorials/tutorials.component';
 import { authGuard } from './guards/auth.guard';
+import { programmeResolver } from './resolvers/programme.resolver';
 // import { SenateComponent } from './programme/senate/senate.component';
 // import { NeedAnalysisConcludeComponent } from './need-analysis-conclude/need-analysis-conclude.component';
 // import { EndConsultComponent } from './end-consult/end-consult.component';
@@ -68,7 +69,8 @@ export const routes: Routes = [
       { path: 'about-us', component: AboutUsComponent, data: { title: 'PDQA - About Us' } },
       { path: 'our-team', component: TeamComponent, data: { title: 'PDQA - Our Team' } },
       {
-        path: 'programme/:id', component: ProgrammeComponent, canActivate: [authGuard], data: { title: 'PDQA - Programme' },
+        path: 'programme/:id', component: ProgrammeComponent, canActivate: [authGuard], data: { title: 'PDQA - Programme'},
+        resolve: { programme: programmeResolver },
         children: [
           { path: 'n-a', component: NeedAnalysisComponent, data: { title: 'PDQA - Need Analysis' } },
           { path: 'p-d', component: ProgrammeDevelopmentComponent, data: { title: 'PDQA - Programme development' } },
