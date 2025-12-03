@@ -1,7 +1,10 @@
 FROM node:20-slim AS build
 
-ARG DB_URL
-ENV DB_URL=${DB_URL}
+# ARG DATABASE_URL
+# ENV DATABASE_URL=${DATABASE_URL}
+
+# ARG JWT_SECRET
+# ENV JWT_SECRET = ${JWT_SECRET}
 
 # ARG MULTER_UPLOAD_DIR: "/app/uploads"
 # ENV MULTER_UPLOAD_DIR="/app/uploads"
@@ -16,14 +19,15 @@ ENV DB_URL=${DB_URL}
 
 WORKDIR /app
 COPY ./server/package.json ./
-RUN npm install
-COPY ./server ./server
-RUN npm run build
+RUN yarn install
+COPY ./server ./
+
+RUN yarn build
 
 # Production stage
-FROM node:20-slim
-WORKDIR /app
-COPY --from=build /app/dist ./
-COPY --from=build /app/node_modules ./node_modules
-EXPOSE 4931
-CMD ["node", "index.js"]
+# FROM node:20-slim
+# WORKDIR /app
+# COPY --from=build /app/dist ./
+# COPY --from=build /app/node_modules ./node_modules
+# EXPOSE 4931
+# CMD ["node", "index.js"]
