@@ -80,7 +80,7 @@
   </p>
 
   <div class="flex flex-wrap items-center gap-4">
-    @for (item of bosConsult.extraData['otherFacultyRecommendations']; track $index) {
+    @for (item of bosConsult?.extraData['otherFacultyRecommendations']; track $index) {
     <card class="grow" [title]="item['faculty']" [descriptions]="
     [
       `${item['recommendedTo']?'Recommended To : '+ item['recommendedTo']?.toUpperCase() :''}`,
@@ -119,7 +119,7 @@
   <card title=" APC Recommendations document" [descriptions]="
     [
       'Decision : '+ apcRecommend?.extraData['decision'],
-      'Date : ' + (apcRecommend.extraData['date'] | date)
+      'Date : ' + (apcRecommend?.extraData['date'] | date)
     ]" />
   }@else{
   <p class="text-sm text-primary font-semibold">APC Recommendations document not submitted</p>
@@ -147,8 +147,8 @@
   @if(senateRecommend?.stepName){
   <card title=" Final Senate Recommendation documents" [descriptions]="
     [
-      'Decision : ' + (senateRecommend.extraData['decision']),
-      'Date : ' + (senateRecommend.extraData['date'] | date),
+      'Decision : ' + (senateRecommend?.extraData['decision']),
+      'Date : ' + (senateRecommend?.extraData['date'] | date),
     ]" [documents]="senateRecommend?.extraData?.attachments??[]" />
   }@else{
   <p class="text-sm text-primary font-semibold">Senate Recommendations documents not submitted</p>

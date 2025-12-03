@@ -1,6 +1,5 @@
 import { Express } from "express";
 import { Multer } from "multer";
-
 import { programmes } from "@/db/schema";
 import { db } from "@/db/index";
 import {
@@ -31,7 +30,6 @@ export default async (app: Express, upload: Multer) => {
             const [programmeRecord] = await db.insert(programmes).values(value).returning({ id: programmes.id });
             const programmeId = programmeRecord.id;
             await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"programme-resume"})`);
-
             res.send({ message: "Need analysis started" });
         } catch (err) {
             console.error(err);

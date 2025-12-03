@@ -74,19 +74,13 @@ const root = {
 		}
 	},
 	async programme_phase_step({ programmeId, phaseSlug }) {
-
-		console.log("ID ", programmeId);
-
 		const data = await db.execute(
 			sql`SELECT fn_get_programme_phase_step(
 				${programmeId},
 				${phaseSlug}
 				) AS data`
 		);
-
-		console.log("Data ", data);
-
-
+		
 		return data.rows[0]?.data
 	},
 	events({ date }) {
