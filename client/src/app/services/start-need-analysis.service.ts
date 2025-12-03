@@ -13,22 +13,9 @@ import { handleError } from '../functions';
   }
 )
 export class StartNeedAnalysisService {
-  private _startNeedAnalysisUrl: string = `${environment.apiUrl}/need-analysis/start`;
   private _updateNeedAnalysisUrl: string = `${environment.apiUrl}/need-analysis/start`;
 
   constructor(private _http: HttpClient) { }
-
-  startNeedAnalysis({ code, title, faculty, department, initiator, level }: Programme) {
-    let body = { initiator, title, code, faculty, department, level };
-
-    return this._http.post(this._startNeedAnalysisUrl, body, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).pipe(
-      catchError(handleError)
-    );
-  }
 
   updateNeedAnalysis({ code, title, level, id }: Programme) {
     let body = { "title": title, "code": code, "level": level };

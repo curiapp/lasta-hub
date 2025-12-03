@@ -69,4 +69,32 @@ ALTER TABLE "program_phase_steps" ADD CONSTRAINT "programme_phase_steps_phase_st
 ALTER TABLE "program_phase_steps" ADD CONSTRAINT "programme_phase_steps_programme_phase_id_fkey" FOREIGN KEY ("programme_phase_id") REFERENCES "public"."programme_phases"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "programme_phases" ADD CONSTRAINT "program_phases_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "programme_phases" ADD CONSTRAINT "program_phases_phase_id_fkey" FOREIGN KEY ("phase_id") REFERENCES "public"."phase_steps"("id") ON DELETE no action ON UPDATE no action;
-*/
+
+-->
+CREATE TABLE faculty (
+    id UUID PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+drop table department;
+
+CREATE TABLE departments (
+    id UUID PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+    faculty_id UUID NULL,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+
+    CONSTRAINT fk_department_faculty
+        FOREIGN KEY (faculty_id)
+        REFERENCES faculty(id)
+        ON DELETE SET NULL
+);
+
+ALTER TABLE users
+ADD COLUMN department UUID;
+/*

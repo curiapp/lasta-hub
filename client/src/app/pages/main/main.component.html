@@ -1,6 +1,6 @@
 <div class="min-h-screen flex flex-col">
   <!--Navbar-->
-  <div class="navbar !bg-primary text-white h-fit">
+  <div class="navbar bg-primary! text-white h-fit">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -8,7 +8,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
           </svg>
         </div>
-        <ul tabindex="0" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-[1] mt-3 w-52 p-2 shadow">
+        <ul tabindex="0" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-1 mt-3 w-52 p-2 shadow">
           <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
           <!-- <li><a routerLink='/resume'>Getting Started</a></li> -->
           <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
@@ -76,8 +76,8 @@
 
               <div class="">
                 @for(notification of notifications; track notification.id){
-                <details class="collapse !rounded-none">
-                  <summary class="collapse-title !p-2">
+                <details class="collapse rounded-none!">
+                  <summary class="collapse-title p-2!">
                     <div class="flex gap-4 items-center w-full">
                       <div class="avatar avatar-placeholder">
                         <div class="bg-gray-100 text-primary w-8 mask mask-squircle">
@@ -118,7 +118,7 @@
         </summary>
 
         <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content z-1 w-64  mt-3 p-4 shadow">
-          <li>
+          <li class="bg-gray-50 rounded-lg">
             <div class="flex items-center flex-col gap-1 justify-center">
               <div class="avatar avatar-online avatar-placeholder">
                 <div class="bg-neutral text-neutral-content w-16 rounded-full">
@@ -128,13 +128,14 @@
               </div>
               <span class="text-lg">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
               <span class="text-xs">{{currentUser?.email}}</span>
-              <span class="text-sm">{{currentUser?.role}}</span>
-              <span class="text-xs">{{currentUser?.role}}</span>
+              <span class="text-sm">{{currentUser?.department?.name}}</span>
+              <span class="text-sm text-center">{{currentUser?.faculty.name}}</span>
+              <span class="text-sm capitalize font-semibold">{{currentUser?.role}}</span>
             </div>
           </li>
           <!-- <hr> -->
 
-          <div class="flex my-2 w-ful">
+          <div class="flex my-2 w-full bg-gray-50 rounded-lg">
             <button class="btn btn-ghost rounded-r-none w-1/2">
               <span class="material-symbols-rounded">
                 settings
@@ -160,7 +161,7 @@
   <!--/.Navbar-->
 
   <!--Main layout-->
-  <div class="flex-grow">
+  <div class="grow">
     <router-outlet></router-outlet>
   </div>
   <!--Main layout-->

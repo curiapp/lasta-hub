@@ -6,6 +6,7 @@ import { ToastService } from '../../../services/toast.service';
 import { Programme } from '../../../types';
 import { NQFLevel } from '../../../static';
 import { ModalControlService } from '../../../services/modal-control.service';
+import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'need-analysis-edit-program',
@@ -14,12 +15,13 @@ import { ModalControlService } from '../../../services/modal-control.service';
   styleUrl: './need-analysis-edit-programme.component.css'
 })
 export class NeedAnalysisEditProgramComponent {
-  public _loading = inject(LoadingService);
+  @Input() programme: Programme;
+  levels = NQFLevel;
+  _loading = inject(LoadingService);
   needAnalysisService = inject(StartNeedAnalysisService);
   toast = inject(ToastService);
   modalControl = inject(ModalControlService);
-  levels = NQFLevel;
-  @Input() programme: Programme;
+  apollo = inject(Apollo);
 
   updateProgramme(form: NgForm) {
     if (form.valid) {
@@ -27,6 +29,9 @@ export class NeedAnalysisEditProgramComponent {
         next: (response: any) => {
           this.toast.success(response?.message);
           this.modalControl.close();
+          this.apollo.client.refetchQueries({
+            include: ['GetProgramme']
+          });
         },
         error: (error) => {
           this.toast.error("Error updating programme: " + error?.message);

@@ -9,6 +9,7 @@ import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
 import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
 import { ModalControlService } from '../../../services/modal-control.service';
+import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'need-analysis-consult',
@@ -22,6 +23,8 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   modalControl = inject(ModalControlService);
   isStakeholderShown = signal(false);
   isShown = signal(false);
+  apollo = inject(Apollo);
+
 
   constructor(private router: Router, private _location: Location) { }
 
@@ -78,9 +81,14 @@ export class NeedAnalysisConsultationComponent implements OnInit {
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       if (status === 201 || status === 200) {
         const res = JSON.parse(response);
-        this.toast?.success(res?.message);
-        this.uploader.clearQueue();
         this.modalControl.close();
+        this.uploader.clearQueue();
+        this.toast?.success(res?.message);
+
+        this.apollo.client.refetchQueries({
+          include: ['GetProgrammePhase']
+        });
+
       } else if (status == 500) {
         this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
         this.modalControl.close();

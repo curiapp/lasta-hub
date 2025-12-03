@@ -1,54 +1,57 @@
-<form (ngSubmit)="updateProgramme(updateProgrammeForm)" #updateProgrammeForm="ngForm" class="space-y-3">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Proposed Programme Title</legend>
-    <input id="title" type="text" class="input input-bordered" required [ngModel]="programme.title" name="title"
-      #ptitle="ngModel">
-    @if (ptitle.invalid && ptitle.touched) {
-    <span class="label label-text-alt text-error">
-      Programme title required*
-    </span>
-    }
-  </fieldset>
-
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Proposed Programme Code</legend>
-    <input id="programmeCode" type="text" class="input input-bordered" required [ngModel]="programme.code" name="code"
-      #code="ngModel">
-    @if (code.invalid && code.touched) {
-    <span class="label-text label-text-alt text-error">
-      Programme code required*
-    </span>
-    }
-  </fieldset>
-
-
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">NQF Level</legend>
-    <select class="select select-bordered w-full" title="Select level" required [ngModel]="programme.level" name="level"
-      #level="ngModel">
-      <option disabled>Select NQF Level</option>
-      @for (level of levels;track level){
-      <option [value]="level">{{level}}</option>
-      }
-    </select>
-    @if (level.invalid && level.touched) {
-    <div class="label">
-      <span class="label label-text-alt text-error">NQF Level required*</span>
-    </div>
-    }
-  </fieldset>
-
-  <div class="form-control gap-2">
-    <button type="submit" class="btn btn-sm btn-primary w-full flex gap-1 items-center"
-      [disabled]="updateProgrammeForm.form.invalid">
-      @if (!_loading?.isLoading()) {
-      <span class="flex items-center gap-2">
-        <span class="material-symbols-rounded">edit</span>
-        <span>Update</span>
+<div class="space-y-1">
+  <h3 class="text-2xl">Edit Programme</h3>
+  <form (ngSubmit)="updateProgramme(updateProgrammeForm)" #updateProgrammeForm="ngForm" class="space-y-3">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Proposed Programme Title</legend>
+      <input id="title" type="text" class="input input-bordered" required [ngModel]="programme.title" name="title"
+        #ptitle="ngModel">
+      @if (ptitle.invalid && ptitle.touched) {
+      <span class="label label-text-alt text-error">
+        Programme title required*
       </span>
-      } @else {
-      <span class="loading loading-spinner loading-sm"></span>
       }
-    </button>
-  </div>
-</form>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Proposed Programme Code</legend>
+      <input id="programmeCode" type="text" class="input input-bordered" required [ngModel]="programme.code" name="code"
+        #code="ngModel">
+      @if (code.invalid && code.touched) {
+      <span class="label-text label-text-alt text-error">
+        Programme code required*
+      </span>
+      }
+    </fieldset>
+
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">NQF Level</legend>
+      <select class="select select-bordered w-full" title="Select level" required [ngModel]="programme.level"
+        name="level" #level="ngModel">
+        <option disabled>Select NQF Level</option>
+        @for (level of levels;track level){
+        <option [value]="level">{{level}}</option>
+        }
+      </select>
+      @if (level.invalid && level.touched) {
+      <div class="label">
+        <span class="label label-text-alt text-error">NQF Level required*</span>
+      </div>
+      }
+    </fieldset>
+
+    <div class="form-control gap-2">
+      <button type="submit" class="btn btn-sm btn-primary w-full flex gap-1 items-center"
+        [disabled]="updateProgrammeForm.form.invalid">
+        @if (!_loading?.isLoading()) {
+        <span class="flex items-center gap-2">
+          <span class="material-symbols-rounded">edit</span>
+          <span>Update</span>
+        </span>
+        } @else {
+        <span class="loading loading-spinner loading-sm"></span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

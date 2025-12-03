@@ -1,8 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
-import { ClientService } from '../../services/client.service';
 import { LoadingService } from '../../services/loading.service';
 import { Programme } from '../../types';
 
@@ -26,7 +25,7 @@ export class ProgrammeComponent {
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
 
-  constructor(private route: ActivatedRoute, private router: Router, private client: ClientService) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     const path = this.router.url.split("/")
     this.currentPath.set(path[path.length - 1])
   }
@@ -38,7 +37,6 @@ export class ProgrammeComponent {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-
       this.apollo.watchQuery({
         query: GET_PROGRAMME_BY_ID,
         variables: {

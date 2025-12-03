@@ -9,39 +9,39 @@ import { NqaPreparationComponent } from '../../../components/forms/nqf-preparati
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { GET_PROGRAMME_PHASE_BY_ID } from '../../../graphql/graphql.queries';
 import { DatePipe } from "../../../pipes/date.pipe";
-import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
 import { PhaseStep, Programme } from '../../../types';
+import { CanEditDirective } from '../../../directives/can-edit.directive';
 
 @Component({
   selector: 'client-nqf-registration',
-  imports: [NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe],
+  imports: [NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
   templateUrl: './nqf-registration.component.html',
   styleUrl: './nqf-registration.component.css'
 })
 export class NqfRegistrationComponent {
-  steps = programme_steps['nqf_registration'];
-  programme: Programme;
-  pid: string;
-  selectedStep = 1;
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
+  pid: string;
+  programme: Programme;
+  steps = programme_steps['nqf_registration'];
+  selectedStep = 1;
 
   nqfDocuments: PhaseStep;
   nqfSubmission: PhaseStep;
   nqfFeedback: PhaseStep;
   nqfRegistration: PhaseStep;
 
-  constructor(private route: ActivatedRoute, private client: ClientService) { }
+  constructor(private route: ActivatedRoute) { }
 
   onSelectStep = (step: number) => {
     this.selectedStep = step;
   }
 
-
-
   ngOnInit() {
+    this.programme = this.route.snapshot.parent.data['programme']?.programmes[0];
+
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
       this.apollo.watchQuery({
@@ -57,13 +57,6 @@ export class NqfRegistrationComponent {
         this.nqfSubmission = data?.steps?.find((item) => item.slug === 'nqf-submission');
         this.nqfFeedback = data?.steps?.find((item) => item.slug === 'nqf-feedback');
         this.nqfRegistration = data?.steps?.find((item) => item.slug === 'nqf-registration');
-
-        // console.log("Data ", data);
-        // console.log(" Final Draft to BOS Submission ", this.nqfDocuments?.extraData?.attachments);
-        // console.log(" Final Senate Rec ", this.nqfRegistration?.extraData);
-        // console.log("Faculty BOS Consultation ", this.nqfSubmission);
-        // console.log("APC Recommendation ", this.nqfFeedback);
-        console.log("Final Senate Recommendation ", this.nqfRegistration);
       });
     });
   }

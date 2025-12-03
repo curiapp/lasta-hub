@@ -9,24 +9,24 @@ import { TLURecommendComponent } from "../../../components/forms/internal-tlu-re
 import { ModalComponent } from "../../../components/modal/modal.component";
 import { GET_PROGRAMME_PHASE_BY_ID } from "../../../graphql/graphql.queries";
 import { DatePipe } from "../../../pipes/date.pipe";
-import { ClientService } from "../../../services/client.service";
 import { LoadingService } from "../../../services/loading.service";
 import { programme_steps } from "../../../static";
 import { PhaseStep, Programme } from "../../../types";
+import { CanEditDirective } from "../../../directives/can-edit.directive";
 
 @Component({
   selector: 'client-internal-stakeholders',
-  imports: [TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent, ModalComponent, DatePipe, CardComponent],
+  imports: [TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective],
   templateUrl: './internal-stakeholders.component.html',
   styleUrl: './internal-stakeholders.component.css'
 })
 export class InternalStakeholdersComponent {
-  steps = programme_steps['internal_stakeholders_consultations'];
-  programme: Programme;
-  pid: string;
-  selectedStep = 1;
   apollo = inject(Apollo);
   _loading = inject(LoadingService);
+  pid: string;
+  programme: Programme;
+  steps = programme_steps['internal_stakeholders_consultations'];
+  selectedStep = 1;
 
   internalConsultations: PhaseStep;
   adstltReview: PhaseStep;
@@ -34,13 +34,15 @@ export class InternalStakeholdersComponent {
   pdqaRecommend: PhaseStep;
 
 
-  constructor(private route: ActivatedRoute, private client: ClientService) { }
+  constructor(private route: ActivatedRoute) { }
 
   onSelectStep = (step: number) => {
     this.selectedStep = step;
   }
 
   ngOnInit() {
+    this.programme = this.route.snapshot.parent.data['programme']?.programmes[0];
+
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
       this.apollo.watchQuery({

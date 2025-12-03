@@ -18,6 +18,7 @@ import { DatePipe } from "../../../pipes/date.pipe";
 import { LoadingService } from "../../../services/loading.service";
 import { NQFLevel, programme_steps } from "../../../static";
 import { PhaseStep, Programme } from "../../../types";
+import { CanEditDirective } from "../../../directives/can-edit.directive";
 
 @Component({
   selector: 'need-analysis',
@@ -34,7 +35,8 @@ import { PhaseStep, Programme } from "../../../types";
     NeedAnalysisEditProgramComponent,
     ModalComponent,
     CardComponent,
-    DatePipe
+    DatePipe,
+    CanEditDirective
   ],
   templateUrl: './need-analysis.component.html',
   styleUrl: './need-analysis.component.css'

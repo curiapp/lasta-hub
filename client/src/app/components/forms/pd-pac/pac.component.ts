@@ -1,10 +1,11 @@
 //import files from the angular framework
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Apollo } from 'apollo-angular';
 import { ClientService } from '../../../services/client.service';
-import { ToastService } from '../../../services/toast.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'pd-pac',
@@ -18,6 +19,7 @@ export class PacComponent implements OnInit {
   pacAppointUrl: string = "curriculum-development/appoint/pac";
   ld = inject(LoadingService);
   http = inject(ClientService);
+  apollo = inject(Apollo);
   toast = inject(ToastService);
   modalControl = inject(ModalControlService);
 
@@ -83,6 +85,9 @@ export class PacComponent implements OnInit {
           // console.log("data", data);
           this.modalControl.close();
           this.toast.success(data.message);
+          this.apollo.client.refetchQueries({
+            include: ['GetProgrammePhase']
+          });
         },
         error: error => {
           this.modalControl.close();

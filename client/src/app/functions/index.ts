@@ -51,13 +51,30 @@ export function generateNext7Days() {
   const dates = [];
   const today = new Date();
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 3; i++) {
+    const nextDay = new Date(today);
+    nextDay.setDate(today.getDate() - i);
+
+    const dayOfWeek = nextDay.toLocaleDateString('en-GB', { weekday: 'short' });
+    const dayOfMonth = nextDay.getDate();
+    const formattedDate = nextDay.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+    if (today.toLocaleDateString('en-GB', { month: '2-digit', year: 'numeric', day: '2-digit' }) !== formattedDate) {
+      dates.push({
+        day: dayOfWeek,
+        dayOfMonth: dayOfMonth,
+        date: formattedDate
+      });
+    }
+  }
+
+  for (let i = 0; i < 6; i++) {
     const nextDay = new Date(today);
     nextDay.setDate(today.getDate() + i);
 
-    const dayOfWeek = nextDay.toLocaleDateString('en-US', { weekday: 'short' });
+    const dayOfWeek = nextDay.toLocaleDateString('en-GB', { weekday: 'short' });
     const dayOfMonth = nextDay.getDate();
-    const formattedDate = nextDay.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    const formattedDate = nextDay.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
     dates.push({
       day: dayOfWeek,
@@ -66,7 +83,16 @@ export function generateNext7Days() {
     });
   }
 
-  return dates;
+  const sorted = dates.sort((a, b) => {
+    const [da, ma, ya] = a.date.split("/").map(Number);
+    const [db, mb, yb] = b.date.split("/").map(Number);
+    const dateA = new Date(ya, ma - 1, da);
+    const dateB = new Date(yb, mb - 1, db);
+    return dateA.getTime() - dateB.getTime();
+  });
+
+
+  return sorted;
 }
 
 

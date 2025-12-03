@@ -35,3 +35,90 @@ to be determined...
 
 ## Acknowledgment 
 coming soon...
+
+# Development Environment
+### Prerequisites
+- Node.js ≥ 18
+- PostgreSQL ≥ 13
+- npm or yarn
+- Angular CLI (for frontend)
+
+
+### Clone the Repository
+`git clone https://github.com/curiapp/lasta-hub.git`
+
+## Backend Setup
+```cd server.js
+npm install
+```
+
+### Configure environment variables
+Create a .env file:
+``` DATABASE_URL=postgres://username:password@localhost:5432/universitydb
+PORT=3000
+```
+
+
+### Drizzle ORM Setup
+
+Install Drizzle and Drizzle Kit:
+```
+npm install drizzle-orm drizzle-kit pg
+```
+
+Create drizzle.config.ts:
+```
+import type { Config } from "drizzle-kit";
+
+export default {
+  schema: "./db/schema.ts",       // Path to Drizzle schema file
+  out: "./db/migrations",         // Folder for migrations
+  driver: "pg",
+  dbCredentials: {
+    connectionString: process.env.DATABASE_URL,
+  },
+} satisfies Config;
+```
+npx drizzle-kit introspect
+
+Generate schema from the existing database:
+
+```
+npx drizzle-kit introspect
+```
+
+This will generate `db/schema.ts` with all your tables (`faculty`, `department`, `users`, `programme_phases`, `phase_steps`, `programme_phase_steps`).
+
+Run backend server
+```
+npm run dev
+```
+- The backend runs on http://localhost:3000
+- GraphQL endpoint: http://localhost:3000/graphql
+
+
+## Frontend Setup (Angular)
+
+### Install dependencies
+```
+cd client
+npm install
+```
+
+Configure environment
+Edit `src/environments/environment.ts`:
+
+```
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000'
+};
+```
+
+Run Angular app
+
+```
+ng serve /
+yarn dev
+```
+

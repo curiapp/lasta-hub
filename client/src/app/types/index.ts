@@ -1,20 +1,34 @@
+export type User = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  token: string;
+  department: {
+    id: string;
+    name: string;
+  },
+  faculty: {
+    id: string;
+    name: string;
+  },
+}
+
 export interface Programme {
   id?: string;
   code: string;
   level: number;
   title: string;
-  faculty: string;
-  members?: string[];
+  faculty?: string;
+  department?: string;
   initiator?: string;
-  createdDate?: string;
+  initiatorFirstName?: string;
+  initiatorLastName?: string
+  created_at?: string;
   description?: string;
   lastReviewDate?: string;
   actions?: string[];
-  department?: string;
-  preProgComponent?: {
-    devCode: string;
-    initiator: string;
-  };
   isPreProgramme?: boolean;
   stage?: "Active" | "Pending Review" | "Inactive" | "Completed" | string;
 }
@@ -22,22 +36,6 @@ export interface Programme {
 export type ProgrammeList = Programme[];
 
 export type NQFLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-
-export type User = {
-  id?: string;
-  username: string;
-  profile: string;
-  firstname: string,
-  lastname: string,
-  usrUnit?: {
-    faculty: string,
-    department: string,
-    type: string
-  },
-  emailAddress: string,
-  token?: string,
-  expires?: number
-}
 
 export type ToastMessage = {
   id: string;

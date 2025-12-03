@@ -7,6 +7,7 @@ import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
 import { ToastService } from '../../../services/toast.service';
+import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'bos-submit',
@@ -19,6 +20,7 @@ export class BosSubmitComponent {
   startDate: Date;
   modalControl = inject(ModalControlService);
   _dataService = inject(ClientService);
+  apollo = inject(Apollo);
   toast = inject(ToastService);
   loading = inject(LoadingService);
   submitBOS(form: NgForm) {
@@ -28,6 +30,10 @@ export class BosSubmitComponent {
           form.reset();
           this.modalControl.close();
           this.toast.success(data?.message);
+
+          this.apollo.client.refetchQueries({
+            include: ['GetProgrammePhase']
+          });
         },
         error: (error) => {
           this.modalControl.close();

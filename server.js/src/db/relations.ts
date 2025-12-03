@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, programmes, phaseSteps, programmePhaseSteps, programmePhases, phases, attachments } from "./schema";
+import { users, programmes, faculty, departments, phaseSteps, programmePhaseSteps, programmePhases, phases, attachments } from "./schema";
 
 export const programmesRelations = relations(programmes, ({one, many}) => ({
 	user: one(users, {
@@ -12,6 +12,17 @@ export const programmesRelations = relations(programmes, ({one, many}) => ({
 export const usersRelations = relations(users, ({many}) => ({
 	programmes: many(programmes),
 	attachments: many(attachments),
+}));
+
+export const departmentsRelations = relations(departments, ({one}) => ({
+	faculty: one(faculty, {
+		fields: [departments.facultyId],
+		references: [faculty.id]
+	}),
+}));
+
+export const facultyRelations = relations(faculty, ({many}) => ({
+	departments: many(departments),
 }));
 
 export const programmePhaseStepsRelations = relations(programmePhaseSteps, ({one, many}) => ({
