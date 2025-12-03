@@ -1,10 +1,10 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { GET_PROGRAMME_BY_ID } from '../graphql/graphql.queries';
-import { Programme } from '../types';
 import { map, Observable } from 'rxjs';
+import { GET_PROGRAMME_BY_ID } from '../graphql/graphql.queries';
 import { LoadingService } from '../services/loading.service';
+import { Programme } from '../types';
 
 export const programmeResolver: ResolveFn<any> = (route, state): Observable<Programme> => {
   const apollo = inject(Apollo);

@@ -1,12 +1,10 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { FileUploadModule } from 'ng2-file-upload';
-import { ToastService } from '../../../services/toast.service';
-import { LoadingService } from '../../../services/loading.service';
-import { ClientService } from '../../../services/client.service';
-import { ModalControlService } from '../../../services/modal-control.service';
 import { Apollo } from 'apollo-angular';
+import { ClientService } from '../../../services/client.service';
+import { LoadingService } from '../../../services/loading.service';
+import { ModalControlService } from '../../../services/modal-control.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'senate-submit',

@@ -1,15 +1,14 @@
-import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
-import { FileItem, FileUploader, FileUploadModule } from 'ng2-file-upload';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule, NgForm } from '@angular/forms';
-import { FilePipe } from "../../../pipes/file.pipe";
-import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
-import { ToastService } from '../../../services/toast.service';
-import { environment } from '../../../../environments/environment';
-import { ModalControlService } from '../../../services/modal-control.service';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
+import { FileItem, FileUploader, FileUploadModule } from 'ng2-file-upload';
+import { environment } from '../../../../environments/environment';
+import { FileExtensionPipe } from "../../../pipes/file-extension.pipe";
+import { FilePipe } from "../../../pipes/file.pipe";
+import { ModalControlService } from '../../../services/modal-control.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'need-analysis-consult',

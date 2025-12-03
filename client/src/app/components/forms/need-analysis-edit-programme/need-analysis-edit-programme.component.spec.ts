@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NeedAnalysisEditProgramComponent } from './need-analysis-edit-program.component';
+import { NeedAnalysisEditProgramComponent } from './need-analysis-edit-programme.component';
 
 describe('NeedAnalysisEditProgramComponent', () => {
   let component: NeedAnalysisEditProgramComponent;

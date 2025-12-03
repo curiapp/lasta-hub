@@ -1,5 +1,4 @@
 
-//import files from the angular framework
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,8 +9,6 @@ import { ModalControlService } from '../../../services/modal-control.service';
 import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
 import { ToastService } from '../../../services/toast.service';
 import { Programme, User } from '../../../types';
-// import {RouteConfig,  ROUTER_DIRECTIVES, ROUTER_PROVIDERS,
-//          LocationStrategy, HashLocationStrategy,} from '@angular/router';
 
 @Component({
   selector: 'start-need-analysis',

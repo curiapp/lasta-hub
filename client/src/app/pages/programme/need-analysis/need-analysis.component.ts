@@ -9,7 +9,7 @@ import { BosSubmitComponent } from "../../../components/forms/need-analysis-bos-
 import { BosComponent } from "../../../components/forms/need-analysis-bos/bos.component";
 import { NeedAnalysisConcludeComponent } from "../../../components/forms/need-analysis-conclude/need-analysis-conclude.component";
 import { NeedAnalysisConsultationComponent } from "../../../components/forms/need-analysis-consult/need-analysis-consult.component";
-import { NeedAnalysisEditProgramComponent } from "../../../components/forms/need-analysis-edit-programme/need-analysis-edit-program.component";
+import { NeedAnalysisEditProgramComponent } from "../../../components/forms/need-analysis-edit-programme/need-analysis-edit-programme.component";
 import { EndConsultComponent } from "../../../components/forms/need-analysis-end-consult/end-consult.component";
 import { SenateComponent } from "../../../components/forms/need-analysis-senate/senate.component";
 import { ModalComponent } from "../../../components/modal/modal.component";

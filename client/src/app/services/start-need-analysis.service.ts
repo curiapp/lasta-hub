@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-//import {Observable} from 'rxjs/Observable';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Programme } from '../types';
 import { handleError } from '../functions';
-
+import { Programme } from '../types';
 
 @Injectable(
   {

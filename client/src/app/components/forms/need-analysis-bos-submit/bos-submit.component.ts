@@ -1,13 +1,11 @@
-//import files from the angular framework
-//import component, ElementRef, input and the oninit method from angular core
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Apollo } from 'apollo-angular';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
 import { ToastService } from '../../../services/toast.service';
-import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'bos-submit',

@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { handleError } from '../functions';
-import { ToastService } from './toast.service';
 
 type User = {
   email: string;

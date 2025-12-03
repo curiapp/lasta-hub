@@ -1,12 +1,12 @@
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Apollo } from 'apollo-angular';
 import { LoadingService } from '../../../services/loading.service';
+import { ModalControlService } from '../../../services/modal-control.service';
 import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
 import { ToastService } from '../../../services/toast.service';
-import { Programme } from '../../../types';
 import { NQFLevel } from '../../../static';
-import { ModalControlService } from '../../../services/modal-control.service';
-import { Apollo } from 'apollo-angular';
+import { Programme } from '../../../types';
 
 @Component({
   selector: 'need-analysis-edit-program',

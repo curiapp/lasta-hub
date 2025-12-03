@@ -10,5 +10,4 @@ import { ToastComponent } from './components/toast/toast.component';
 })
 export class AppComponent {
   title = "pdqa-client"
-  constructor() { }
 }

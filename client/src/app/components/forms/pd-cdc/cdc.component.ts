@@ -1,4 +1,3 @@
-//import files from the angular framework
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Apollo } from 'apollo-angular';

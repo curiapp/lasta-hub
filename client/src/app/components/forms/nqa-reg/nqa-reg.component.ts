@@ -1,8 +1,8 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { FileUploadComponent } from '../../files/file-upload/file-upload.component';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
+import { environment } from '../../../../environments/environment';
+import { FileUploadComponent } from '../../files/file-upload/file-upload.component';
 
 @Component({
   selector: 'nqa-registration',

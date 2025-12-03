@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
-import { handleError } from '../functions';
-import { environment } from '../../environments/environment';
-import { ToastService } from './toast.service';
-import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { handleError } from '../functions';
 
 @Injectable({
   providedIn: 'root'

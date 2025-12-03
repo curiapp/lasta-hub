@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FileUploadComponent } from '../../files/file-upload/file-upload.component';
 import { environment } from '../../../../environments/environment';
+import { FileUploadComponent } from '../../files/file-upload/file-upload.component';
 
 @Component({
   selector: 'pd-curriculum-dev-draft-pdu-approval',
