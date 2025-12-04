@@ -5,7 +5,6 @@ import { PermissionService } from '../services/permission.service';
   selector: '[canEdit]'
 })
 export class CanEditDirective {
-  private initiatorId!: string;
 
   constructor(
     private tpl: TemplateRef<any>,
@@ -13,8 +12,7 @@ export class CanEditDirective {
     private permissions: PermissionService
   ) { }
 
-  @Input() set canEdit(initiatorId: string) {
-    this.initiatorId = initiatorId;
+  @Input() set canEdit(initiatorId: string | null) {
 
     const allowed = this.permissions.canEdit(initiatorId);
 

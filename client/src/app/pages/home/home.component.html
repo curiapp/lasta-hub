@@ -63,19 +63,38 @@
 <div class="hero relative bg-base-200 min-h-[60dvh] lg:min-h-[94dvh] hero-background">
   <div class="absolute top-0 left-0 bg-white/60 backdrop-blur-xs w-full h-full">
   </div>
-  <div class="absolute bottom-0 left-0">
-    <div class="hover-3d m-8 rounded-lg px-4 py-2 bg-linear-60 from-primary to-primary/60">
-      <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+
+  <div class="absolute bottom-0 left-0 w-full h-full">
+    @for (item of programmeDevIcons ; track $index) {
+    <div class="absolute animate-float" [style]="{
+        top: randomPositions[$index].top + 'px',
+        left: randomPositions[$index].left + 'px',
+        animationDelay: randomDelays[$index] + 's',
+        animationDuration: randomDurations[$index] + 's'
+    }
+    ">
+      <span class="material-symbols-rounded text-[20px]! opacity-80">
+        {{item}}
+      </span>
     </div>
+    }
   </div>
+
+  <div class="absolute bottom-10 right-10">
+    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="65" viewBox="0 0 121 124" fill="none">
+      <path id="myPath" #myPath
+        d="M24.5399 8.66549V52.5874C24.5399 52.8289 24.8036 52.9777 25.0103 52.853L39.0945 44.3566C39.3864 44.1805 39.5648 43.8645 39.5648 43.5235V18.1932C39.5648 17.7428 39.866 17.3479 40.3004 17.2288L42.5698 16.6065L48.2793 15.7825L54.5898 15.2332H60.5997H66.9102L73.2207 15.7825L78.0287 16.6065L80.8011 17.2976C81.1144 17.3757 81.3342 17.657 81.3342 17.9798L81.9295 74.5753C81.9331 74.9093 82.1031 75.2195 82.3828 75.4021L88.2456 79.2298C88.2456 79.2298 94.0067 83.1541 94.8566 83.0751C95.3079 83.0332 95.8729 82.8809 96.3037 82.7473C96.7018 82.6239 96.9601 82.2497 96.9601 81.8329V76.7579V58.0807V33.0863L96.6638 8.4429C96.6611 8.21571 96.5811 7.99623 96.437 7.82059L95.9281 7.20045C95.8167 7.06473 95.6716 6.96072 95.5073 6.89887L90.7269 5.09973C90.6755 5.08036 90.6225 5.06527 90.5686 5.05461L79.5312 2.87332L65.4077 1.5L47.6783 2.04933L36.8603 3.42265L27.7153 5.57975C27.6026 5.60635 27.4953 5.65235 27.3982 5.7157L25.6162 6.87918C25.5009 6.95443 25.4024 7.05267 25.3269 7.16775L24.7039 8.11672C24.5969 8.27974 24.5399 8.47049 24.5399 8.66549Z"
+        stroke="#1b2c5d" stroke-width="4" />
+      <path id="myPath1" #myPath
+        d="M24.5399 81.9765V80.0538V53.6919C24.5399 53.3466 24.718 53.0258 25.011 52.8432L70.6742 24.3859C70.7686 24.3271 70.872 24.2844 70.9804 24.2597L71.9087 24.0475C71.9818 24.0308 72.0565 24.0224 72.1315 24.0224H73.003C73.1465 24.0224 73.2882 24.0533 73.4187 24.1129L74.2121 24.4755C74.3507 24.5388 74.4729 24.633 74.5695 24.7507L75.229 25.5544C75.2921 25.6313 75.3434 25.7172 75.3811 25.8092L76.1485 27.6796C76.1994 27.8037 76.2249 27.9369 76.2233 28.071L75.9318 52.5804C75.9277 52.9264 75.7563 53.2388 75.4602 53.4177C70.639 56.3302 29.9299 80.9216 29.0474 81.4271C28.1093 81.9645 26.6434 82.8005 26.6434 82.8005C26.6434 82.8005 25.7419 83.1587 25.1409 82.8005C24.5399 82.4422 24.5399 81.9765 24.5399 81.9765Z"
+        stroke="#DA2128" stroke-width="4" />
+      <path id="myPath" #myPath
+        d="M113.216 20.4654L119.5 23.0972V79.0845L118.646 83.5064L117.202 87.733L115.463 91.441L113.158 95.3892L109.113 100.142L104.15 104.412L97.6562 109L89.6992 113.58L80.8359 117.09L71.9355 119.801L66.2754 121.165L60.6143 122.458L43.3037 118.167L34.4775 114.939L19.7422 106.858L8.33594 95.3648L7.17285 93.1177C7.11716 93.0103 7.05914 92.9167 7.02637 92.8638C6.98514 92.7973 6.97545 92.7822 6.96582 92.7652C6.9446 92.7276 6.85923 92.5649 6.7168 92.1744C6.40205 91.3114 5.86205 90.5059 5.69238 90.2613L4.38574 87.7408L3.11621 85.2925L2.57324 83.0562L2 79.3863V23.4869L13.7246 18.3511V29.8003L14.0254 74.2964V74.3453L14.0293 74.3951L14.3291 78.5152L14.335 78.5953L14.3496 78.6753V78.6763L14.3506 78.6783C14.351 78.6803 14.3509 78.6835 14.3516 78.6871C14.3529 78.6943 14.355 78.7051 14.3574 78.7183C14.3623 78.7447 14.3697 78.7825 14.3789 78.8306C14.3973 78.9272 14.424 79.0654 14.458 79.2339C14.5259 79.5706 14.623 80.0336 14.7402 80.5337C14.9557 81.4528 15.296 82.7597 15.7119 83.5201C16.2675 84.5357 18.1407 88.2484 20.3535 90.8667H20.3545C21.8009 92.7127 22.5272 93.7568 24.7441 95.731C26.8154 97.5754 32.3113 101.164 32.9619 101.587C33.0924 101.672 33.2263 101.742 33.3633 101.799L46.502 107.257L46.5977 107.297L46.6982 107.324L53.0088 108.971L53.1064 108.997L53.2061 109.009L57.7139 109.558L57.8037 109.57H61.8672L61.9316 109.564L68.1641 109.021C68.2947 109.01 68.4244 108.988 68.5518 108.957L75.0859 107.328L75.1484 107.312L75.21 107.292L82.4219 104.819L82.5176 104.786L82.6094 104.741L88.6191 101.719L88.71 101.673L88.793 101.616L94.8037 97.4966L94.8672 97.4527L94.9258 97.4029L99.0605 93.8931C99.1803 93.7914 99.2909 93.6787 99.3896 93.5562L103.464 88.5015C103.585 88.3509 103.689 88.1868 103.772 88.0123L105.825 83.7232L105.9 83.566L105.938 83.396L107.094 78.1138C107.148 77.8681 107.175 77.6173 107.175 77.3658V18.2164L113.216 20.4654Z"
+        stroke="#FCAF17" stroke-width="4" />
+    </svg>
+  </div>
+
+
 
 
   <div class="hero-content text-center">
@@ -87,17 +106,23 @@
         <span class="text-secondary"> Application</span>
       </h1>
       <p class="py-6 text-xs text-center">
-        The Programme Development (PD) App is a centralised digitalised solution,
-        encompassing curriculum management, development, maintenance, and modernisation
-        of the curriculum through processes of ideation, reviews and approvals leading
-        to registration of qualifications on the NQF. More so, the app is designed to
+        The <span class="font-semibold">Programme Development (PD) App</span> is a centralised
+        digitalised solution,
+        encompassing <b>curriculum management, development, maintenance, and modernisation</b>
+        of the curriculum through processes of <b class="opacity-70">ideation, reviews and approvals</b> leading
+        to registration of <b>qualifications</b> on the <span class="skeleton skeleton-text font-bold">NQF</span>. More
+        so, the
+        app is designed to
         keep records of the stages through which a programme is subjected to.
         The app is designed such that it send out reminders on the status quo e.g on
         the scheduled review date for existing programmes while keeping all the
-        communication between the department and PDU as well as with other
-        stakeholders such industry, professional bodies and other universities.
+        communication between the department and <b>PDQA</b> as well as with other
+        stakeholders such <b class="opacity-95">industry</b>, <b class="opacity-65">professional bodies</b> and <b
+          class="opacity-80">other universities</b>.
       </p>
-      <a routerLink='/about-us' class="btn btn-primary btn-outline">Learn about PDQA</a>
+      <a routerLink='/about-us' class="btn btn-primary btn-outline skeleton-text">
+        <span class="skeleton skeleton-text font-normal!">Learn about PDQA</span>
+      </a>
     </div>
   </div>
 </div>
@@ -132,12 +157,10 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm text-gray-500">In Progress</p>
-
           <p class="text-2xl font-medium text-gray-900">0</p>
         </div>
 
         <span class="rounded-full bg-primary/10 p-3 text-blue-600">
-
           <svg class="size-8" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <path d="M21.1679 8C19.6247 4.46819 16.1006 2 11.9999 2C6.81459 2 2.55104 5.94668 2.04932 11"
@@ -157,13 +180,6 @@
 </div>
 }
 
-<!-- <video class="video-fluid" autoplay loop>
-  <source src="https://mdbootstrap.com/img/video/animation-intro.mp4" type="video/mp4" />
-</video>
-
-<video class="video-fluid" autoplay loop>
-  <source src="https://mdbootstrap.com/img/video/Tropical.mp4" type="video/mp4" />
-</video> -->
 
 @if(currentUser){
 <div class="p-4 bg-primary space-y-3 text-base-100">
@@ -256,23 +272,23 @@
 <div class="p-4 flex items-start gap-8">
 
   <div class="space-y-8 grow">
-    @if(currentUser?.role==='PDQA'){
-    <div class="space-y-4">
+    <!-- @if(currentUser?.role==='pdqa'){ -->
+    <div class="space-y-4" *canEdit>
       <h2 class="text-lg lg:text-3xl font-light">Programme Management Tools</h2>
-      <div class="flex items-center gap-2">
-        @for (programTool of programmeTools;track programme; let i= $index;){
+      <div class="flex items-center gap-1">
+        @for (programTool of programmeTools;track $index;){
         <div class="bg-secondary text-gray-800 py-1 px-2 text-sm rounded-md">
           {{ programTool}}
         </div>
         }
       </div>
     </div>
-    }
+    <!-- } -->
 
     <div class="flex justify-between items-start">
       <h2 class="text-lg lg:text-3xl font-light">{{currentUser?.role ==='PDQA'?'':'Your'}} Programmes</h2>
       <div class="flex items-center gap-2">
-        <button class="btn btn-sm border-2 btn-outline" (click)="toggleView()">
+        <button class="btn btn-sm btn-outline" (click)="toggleView()">
           {{showAll?"Minimize":"View All"}}
         </button>
         <!-- @if(user==='LECTURER'){ -->
@@ -287,9 +303,9 @@
     @if(_loading.isLoading()){
     <programme-template />
     }@else {
-    <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+    <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 items-stretch">
       @for (item of programmes; track item?.id) {
-      <div class="group relative block h-fit rounded-lg">
+      <div class="group relative block rounded-lg">
         <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
         <div
           class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
@@ -299,7 +315,7 @@
           </button>
           } -->
 
-          <a [routerLink]="['/programme/', item?.id]" class="p-4 !pt-0 transition-opacity sm:p-6">
+          <a [routerLink]="['/programme/', item?.id]" class="p-4 pt-0! transition-opacity sm:p-6">
             <!-- <a [routerLink]="['/programme/', item.id]" class="p-4 !pt-0 transition-opacity sm:p-6"> -->
             <h3 class=" mt-4 font-medium sm:text-lg line-clamp-2 capitalize">{{item?.title}}</h3>
 

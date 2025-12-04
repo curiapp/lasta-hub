@@ -6,18 +6,19 @@ import { StartNeedAnalysisComponent } from "../../components/forms/start-need-an
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
-import { generateNext7Days, getGreeting } from '../../functions';
+import { EventsComponent } from "../../components/page/events/events.component";
+import { CanEditDirective } from '../../directives/can-edit.directive';
+import { getGreeting } from '../../functions';
 import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 import { LoadingService } from '../../services/loading.service';
-import { upComingEvents } from '../../static';
 import { Programme, User } from '../../types';
-import { EventsComponent } from "../../components/page/events/events.component";
+import { programmeDevIcons } from '../../static';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent, EventsComponent]
+  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent, EventsComponent, CanEditDirective]
 })
 export class HomeComponent implements OnInit {
   currentUser: User;
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit {
   programmes: Programme[] = [];
   _loading = inject(LoadingService);
   apollo = inject(Apollo);
+  programmeDevIcons = programmeDevIcons;
 
   constructor(private viewContainer: ViewContainerRef) { }
 
@@ -63,6 +65,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  randomPositions: { top: number; left: number }[] = [];
+  randomDelays: number[] = [];
+  randomDurations: number[] = [];
+
   ngOnInit() {
     this.greetingMessage = getGreeting();
     this.updateDisplayedPrograms();
@@ -70,12 +76,25 @@ export class HomeComponent implements OnInit {
 
     this.apollo.watchQuery({
       query: GET_PROGRAMMES
-    })
-      .valueChanges.subscribe((result: any) => {
-        this._loading.isLoading.set(result.loading);
-        this.programmes = result?.data?.programmes;
-      });
+    }).valueChanges.subscribe((result: any) => {
+      this._loading.isLoading.set(result.loading);
+      this.programmes = result?.data?.programmes;
+    });
+
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this.randomPositions = this.programmeDevIcons.map(() => ({
+      top: Math.random() * (height - 50),
+      left: Math.random() * (width - 50)
+    }));
+
+    this.randomDelays = this.programmeDevIcons.map(() => Math.random() * 5);
+    this.randomDurations = this.programmeDevIcons.map(() => 6 + Math.random() * 4);
 
   }
+
+
 
 }

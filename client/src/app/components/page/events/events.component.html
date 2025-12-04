@@ -72,8 +72,8 @@
       </fieldset>
 
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Message</legend>
-        <textarea required class="textarea h-36 w-full" placeholder="Event" ngModel name="title"
+        <legend class="fieldset-legend">Description</legend>
+        <textarea required class="textarea h-36 w-full" placeholder="Explain event description" ngModel name="title"
           #title="ngModel"></textarea>
         @if(title.invalid && title.touched){
         <div class="label text-error">Event Message required*</div>

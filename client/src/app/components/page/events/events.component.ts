@@ -9,7 +9,6 @@ import { ClientService } from '../../../services/client.service';
 import { LoadingService } from '../../../services/loading.service';
 import { ModalControlService } from '../../../services/modal-control.service';
 import { ToastService } from '../../../services/toast.service';
-import { upComingEvents } from '../../../static';
 import { ModalComponent } from "../../modal/modal.component";
 
 @Component({
@@ -20,7 +19,6 @@ import { ModalComponent } from "../../modal/modal.component";
 })
 export class EventsComponent {
   events = [];
-  upComingEvents = upComingEvents;
   dates: { day: string, date: string, dayOfMonth: string }[] = [];
   today = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
   currentMonth = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
