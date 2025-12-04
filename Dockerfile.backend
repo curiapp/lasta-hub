@@ -7,10 +7,9 @@ COPY ./server ./
 
 RUN yarn build
 
-Production stage
 FROM node:20-slim
 WORKDIR /app
 COPY --from=build /app/dist ./
 COPY --from=build /app/node_modules ./node_modules
 EXPOSE 4931
-CMD ["node", "index.js"]
+CMD ["node", "./src/index.js"]
