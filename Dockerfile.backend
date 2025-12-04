@@ -7,7 +7,6 @@ COPY ./server ./
 
 RUN yarn build
 
-Production stage
 FROM node:20-slim
 WORKDIR /app
 COPY --from=build /app/dist ./
