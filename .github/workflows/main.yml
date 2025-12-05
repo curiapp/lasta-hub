@@ -108,7 +108,26 @@ jobs:
                 git commit -m "version-$SHA"
                 git push https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
  
-    # develop-deploy:
-    #     needs: gitops_develop
-    #     runs-on: ubuntu-latest
+    deploy_develop:
+      name: Apply Kustomize on Server
+      needs: gitops_develop
+      if: github.ref == 'refs/heads/feature/codebase-combine'
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Configure SSH key
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
+
+        - name: Deploy to server
+          run: |
+            ssh root@196.216.167.190 "
+              cd /dev-ops && \
+              git pull && \
+              kubectl apply -k overlays/develop
+            "
+
 
