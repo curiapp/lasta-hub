@@ -2,9 +2,9 @@ import { db } from "@/db";
 import { events } from "@/db/schema";
 import { isDbKnownError } from "@/helpers/db-errors";
 import { eventSchema } from "@/validators/events";
-import { Express } from "express";
+import { Router } from "express";
 
-export default async (app: Express) => {
+export default async (app: Router) => {
     app.post("/events/create", async (req, res) => {
         const { error, value } = eventSchema.validate(req.body);
 

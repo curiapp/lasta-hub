@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { departments, events, faculty, programmes, users } from "@/db/schema";
 import cors from "cors";
 import { eq, sql } from "drizzle-orm";
-import { Express } from "express";
+import { Router } from "express";
 import { buildSchema } from "graphql";
 import { createHandler } from "graphql-http/lib/use/express";
 import { ruruHTML } from "ruru/server";
@@ -94,7 +94,7 @@ const root = {
 //all steps in a phase of a programme
 //programmes a user is involved in
 
-export default (app: Express) => {
+export default (app: Router) => {
 	app.all(
 		"/graphql",
 		cors({

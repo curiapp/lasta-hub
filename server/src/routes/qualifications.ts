@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Router } from "express";
 import { Multer } from "multer";
 import { db } from "@/db";
 import { isDbKnownError } from "@/helpers/db-errors";
@@ -13,7 +13,7 @@ import {
 import { sql } from "drizzle-orm";
 
 const PHASE = "nqf-registration";
-export default async (app: Express, upload: Multer) => {
+export default async (app: Router, upload: Multer) => {
     // const preparationUploadFiles = upload.fields([
     //     { name: "qualificationDocument", maxCount: 1 },
     //     { name: "supportFile", maxCount: 1 },

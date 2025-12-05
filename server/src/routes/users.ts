@@ -1,12 +1,12 @@
 import { db } from "@/db";
 import { users, departments, faculty } from "@/db/schema";
 import { createUserSchema, loginSchema } from "@/validators/user";
-import { Express } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { eq } from "drizzle-orm";
+import { Router } from "express";
 
-export default async (app: Express) => {
+export default async (app: Router) => {
     app.post("/user/create", async (req, res) => {
         const { error, value } = createUserSchema.validate(req.body);
         if (error) {

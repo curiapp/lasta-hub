@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Router } from "express";
 import { Multer } from "multer";
 
 import { programmeBaseSchema } from "@/validators/base";
@@ -17,7 +17,7 @@ import { isDbKnownError } from "@/helpers/db-errors";
 const PHASE = "bos-apc-and-senate-consultation";
 
 
-export default async (app: Express, upload: Multer) => {
+export default async (app: Router, upload: Multer) => {
 
     app.post("/bos-senate/draft", upload.array('files'), async (req, res) => {
         if (req.body.documentType) {

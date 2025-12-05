@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Router } from "express";
 import { Multer } from "multer";
 import { programmes } from "@/db/schema";
 import { db } from "@/db/index";
@@ -18,7 +18,7 @@ import { eq, sql } from "drizzle-orm";
 
 const PHASE = "needs-analysis";
 
-export default async (app: Express, upload: Multer) => {
+export default async (app: Router, upload: Multer) => {
     app.post("/need-analysis/start", async (req, res) => {
         const { error, value } = startSchema.validate(req.body);
         if (error) {

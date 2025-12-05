@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Router } from "express";
 import { Multer } from "multer";
 
 import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
@@ -10,7 +10,7 @@ import { isDbKnownError } from "@/helpers/db-errors";
 
 const PHASE = "external-stakeholder-consultation";
 
-export default async (app: Express, upload: Multer) => {
+export default async (app: Router, upload: Multer) => {
     app.post("/consultations/pac/start", upload.single("file"), async (req, res) => {
         const { error, value } = programmeBaseSchema.validate(req.body);
         if (error) {
