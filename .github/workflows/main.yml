@@ -124,9 +124,15 @@ jobs:
         
         - name: Debug key formatting
           run: |
-            sed -n '1,5p' ~/.ssh/id_ed25519
-            sed -n '$-5,$p' ~/.ssh/id_ed25519
-            od -c ~/.ssh/id_ed25519 | head
+            echo "FIRST 5 LINES:"
+            head -n 5 ~/.ssh/id_ed25519
+
+            echo "LAST 5 LINES:"
+            tail -n 5 ~/.ssh/id_ed25519
+
+            echo "BYTE DUMP:"
+            od -An -t c ~/.ssh/id_ed25519 | head
+
 
         - name: Deploy to server
           run: |
