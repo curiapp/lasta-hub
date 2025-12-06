@@ -135,15 +135,15 @@ jobs:
 
         - name: Deploy to server
           run: |
-            ssh -i ~/.ssh/id_ed25519 root@196.216.167.190 bash << 'EOF'
-            set -e
+            ssh -i ~/.ssh/id_ed25519 root@196.216.167.190 "
+              set -e && \
 
-            export KUBECONFIG=/root/.kube/config
+              export KUBECONFIG=/etc/kubernetes/admin.conf && \
 
-            kubectl cluster-info
+              kubectl cluster-info && \
 
-            cd ~/dev-ops
-            git pull
+              cd ~/dev-ops && \
+              git pull && \
 
-            kubectl apply -k ./overlays/develop
-            EOF
+              kubectl apply -k ./overlays/develop
+            "
