@@ -118,13 +118,13 @@ jobs:
         - name: Configure SSH key
           run: |
             mkdir -p ~/.ssh
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
             echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
 
         - name: Deploy to server
           run: |
-            ssh root@196.216.167.190 "
+            ssh -i ~/.ssh/id_ed25519 root@196.216.167.190 "
               cd /dev-ops && \
               git pull && \
               kubectl apply -k overlays/develop
