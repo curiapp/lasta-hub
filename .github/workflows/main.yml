@@ -115,18 +115,18 @@ jobs:
       runs-on: ubuntu-latest
 
       steps:
-        - name: Debug key formatting
-          run: |
-            sed -n '1,5p' ~/.ssh/id_ed25519
-            sed -n '$-5,$p' ~/.ssh/id_ed25519
-            od -c ~/.ssh/id_ed25519 | head
-
         - name: Configure SSH key
           run: |
             mkdir -p ~/.ssh
             echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/id_ed25519
             echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
+        
+        - name: Debug key formatting
+          run: |
+            sed -n '1,5p' ~/.ssh/id_ed25519
+            sed -n '$-5,$p' ~/.ssh/id_ed25519
+            od -c ~/.ssh/id_ed25519 | head
 
         - name: Deploy to server
           run: |
