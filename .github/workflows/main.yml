@@ -75,6 +75,7 @@ jobs:
         name: Update GitOps Image Tag
         needs: build_develop
         if: github.ref == 'refs/heads/feature/codebase-combine'
+        environment: develop
         runs-on: ubuntu-latest
         steps:
         -   name: Clone GitOps repository
@@ -112,6 +113,7 @@ jobs:
       name: Apply Kustomize on Server
       needs: gitops_develop
       if: github.ref == 'refs/heads/feature/codebase-combine'
+      environment: develop
       runs-on: ubuntu-latest
 
       steps:
