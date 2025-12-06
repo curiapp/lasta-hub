@@ -118,21 +118,14 @@ jobs:
         - name: Configure SSH key
           run: |
             mkdir -p ~/.ssh
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+            # Write the private key safely
+            printf "%s\n" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/id_ed25519
+            # Disable strict host key checking for this session
             echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
-        
-        - name: Debug key formatting
-          run: |
-            echo "FIRST 5 LINES:"
+            # Verify key file exists and has content
+            ls -l ~/.ssh
             head -n 5 ~/.ssh/id_ed25519
-
-            echo "LAST 5 LINES:"
-            tail -n 5 ~/.ssh/id_ed25519
-
-            echo "BYTE DUMP:"
-            od -An -t c ~/.ssh/id_ed25519 | head
-
 
         - name: Deploy to server
           run: |
@@ -141,5 +134,3 @@ jobs:
               git pull && \
               kubectl apply -k overlays/develop
             "
-
-
