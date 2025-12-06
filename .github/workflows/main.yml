@@ -118,14 +118,18 @@ jobs:
         - name: Configure SSH key
           run: |
             mkdir -p ~/.ssh
-            # Write the private key safely
-            printf "%s\n" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+
+            # Write the private key safely, stripping any Windows CR characters
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/id_ed25519
+
             # Disable strict host key checking for this session
             echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
+
             # Verify key file exists and has content
             ls -l ~/.ssh
             head -n 5 ~/.ssh/id_ed25519
+
 
         - name: Deploy to server
           run: |
