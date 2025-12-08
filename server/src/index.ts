@@ -1,19 +1,20 @@
+import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import fs from "fs";
 import multer from "multer";
 import path from "path";
-import cors from "cors";
-import usersRoutes from "./routes/users";
-import eventsRoutes from "./routes/events";
-import reviewsRoutes from "./routes/reviews";
+import { v7 as uuid } from "uuid";
 import consultationRoutes from "./routes/consultations";
+import curriculumDevelopmentRoutes from "./routes/curriculum-development";
+import eventsRoutes from "./routes/events";
+import fetchRoutes from "./routes/fetch-queries";
+import graphqlRoutes from "./routes/graphql";
+import institutionalBodiesRoutes from "./routes/institutional-bodies";
 import needAnalysisRoutes from "./routes/need-analysis";
 import qualificationsRoutes from "./routes/qualifications";
-import institutionalBodiesRoutes from "./routes/institutional-bodies";
-import curriculumDevelopmentRoutes from "./routes/curriculum-development";
-import graphqlRoutes from "./routes/graphql";
-import { v7 as uuid } from "uuid";
-import fs from "fs";
+import reviewsRoutes from "./routes/reviews";
+import usersRoutes from "./routes/users";
 
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
@@ -47,6 +48,7 @@ qualificationsRoutes(app, upload);
 institutionalBodiesRoutes(app, upload);
 curriculumDevelopmentRoutes(app, upload);
 graphqlRoutes(app);
+fetchRoutes(app, upload);
 
 app.use((err, _, res, next) => {
     console.warn("in error handler ", err);
@@ -68,3 +70,4 @@ app.listen(PORT, () => {
 });
 
 export { app };
+
