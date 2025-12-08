@@ -1,6 +1,4 @@
 .animated-text {
-  font-size: 48px;
-  font-weight: 700;
   background: linear-gradient(90deg, #1b2c5d, #da2127, #1b2c5d);
   background-size: 200%;
   -webkit-background-clip: text;
