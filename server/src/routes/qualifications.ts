@@ -47,7 +47,7 @@ export default async (app: Express, upload: Multer) => {
                     );
                     if (matchedKey) {
                         const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                        attachments.push({ name: matchedKey.replace("-", " "), file: attId })
+                        attachments.push({ name: matchedKey.replace("-", " "), id: attId })
                     }
                 }
             }
@@ -158,7 +158,7 @@ export default async (app: Express, upload: Multer) => {
                     );
                     if (matchedKey) {
                         const attId = await saveFile(file as Express.Multer.File, PHASE, ppsId);
-                        attachments.push({ name: matchedKey.replace("-", " "), file: attId })
+                        attachments.push({ name: matchedKey.replace("-", " "), id: attId })
                     }
                 }
             }
