@@ -5,6 +5,7 @@ const createUserSchema = Joi.object({
 	firstName: Joi.string().required(),
 	lastName: Joi.string().required(),
 	password: Joi.string().required(),
+	department: Joi.string().required(),
 	role: Joi.string().valid("admin", "pdqa", "lecturer", "hod").required().messages({
     "any.only": "Role must be one of: pdqa, lecturer, hod",
   }),
