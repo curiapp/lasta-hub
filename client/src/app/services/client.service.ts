@@ -33,4 +33,17 @@ export class ClientService {
       catchError(handleError)
     )
   }
+
+  downloadFile<T>(path: string): Observable<T[]> {
+    return this.http.get<T[]>(`${environment.apiUrl}/${path}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'blob' as 'json'
+    }).pipe(
+      catchError(handleError)
+    )
+  }
+
+
 }

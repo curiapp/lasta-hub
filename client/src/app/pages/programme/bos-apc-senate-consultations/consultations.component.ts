@@ -14,10 +14,11 @@ import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
 import { PhaseStep, Programme } from '../../../types';
 import { CanEditDirective } from '../../../directives/can-edit.directive';
+import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
 
 @Component({
   selector: 'consultations',
-  imports: [FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
+  imports: [FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective, ActionButtonsComponent],
   templateUrl: './consultations.component.html',
   styleUrl: './consultations.component.css'
 })
@@ -42,7 +43,6 @@ export class SenateConsultationsComponent {
 
   ngOnInit() {
     this.programme = this.route.snapshot.parent.data['programme']?.programmes[0];
-
     this.route.parent?.paramMap.subscribe(params => {
       this.pid = params.get('id');
       this.apollo.watchQuery({

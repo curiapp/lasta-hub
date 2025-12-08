@@ -13,10 +13,11 @@ import { LoadingService } from "../../../services/loading.service";
 import { programme_steps } from "../../../static";
 import { PhaseStep, Programme } from "../../../types";
 import { CanEditDirective } from "../../../directives/can-edit.directive";
+import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
 
 @Component({
   selector: 'client-internal-stakeholders',
-  imports: [TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective],
+  imports: [TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective, ActionButtonsComponent],
   templateUrl: './internal-stakeholders.component.html',
   styleUrl: './internal-stakeholders.component.css'
 })

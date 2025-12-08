@@ -1,5 +1,7 @@
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Component, inject, Input, ViewContainerRef } from '@angular/core';
 import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.component';
+import { ClientService } from '../../services/client.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'action-buttons',
@@ -9,8 +11,11 @@ import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.com
 })
 export class ActionButtonsComponent {
   // @ViewChild('container', { read: ViewContainerRef, static: true }) container: ViewContainerRef;
-  constructor(private viewContainer: ViewContainerRef) { }
-  @Input() fileId = "";
+  @Input() actions = [];
+  @Input() fileId = { name: '', id: '' };
+  viewContainer = inject(ViewContainerRef);
+  http = inject(ClientService);
+  toast = inject(ToastService);
 
   onDelete() {
     console.log("onDelete");
@@ -20,6 +25,20 @@ export class ActionButtonsComponent {
   }
 
   onDownload() {
-
+    this.http.downloadFile<Blob>(`download/${this.fileId.id}`).subscribe({
+      next: data => {
+        const url = window.URL.createObjectURL(data as unknown as Blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.fileId.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: error => {
+        this.toast.error(`Error HTTP Post Service`);
+      }
+    })
   }
 }

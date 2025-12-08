@@ -28,15 +28,18 @@
   </p>
 
   @if(internalConsultations?.stepName){
-  <card title="draft programme document " [descriptions]="
+  <card title="programme draft document " [descriptions]="
   [
     `Wil Component ${internalConsultations?.extraData['includesWilComponent']?'Included':'Excluded'}`,
     `Recommended To: ${internalConsultations?.extraData['recommendedTo']?.join(' ')}`,
     'Date : ' + (internalConsultations?.extraData['date'] | date)
   ]
-  " />
+  ">
+    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders Curriculum Programme Draft document',
+      id: internalConsultations?.extraData['draftedProgrammeFile']}" />
+  </card>
   }@else{
-  <p class="text-sm text-primary font-semibold">Drafted Programme document not submitted</p>
+  <p class="text-sm text-primary font-semibold">Programme Draft document not submitted</p>
   }
 </div>
 
@@ -65,7 +68,10 @@
     [
       'Decision : '+ adstltReview?.extraData['decision'],
       'Date : ' + (adstltReview['date'] | date)
-    ]" />
+    ]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders ADSTLT Support Letter/Recommendations document',
+      id: adstltReview?.extraData['reviewFile']}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">ADSTLT Support Letter/Recommendations document not submitted</p>
   }
@@ -95,7 +101,11 @@
   <card title=" CEU Support Letter/Recommendations document" [descriptions]="[
       'Decision : '+ ceuReview?.extraData['decision'],
       'Date : ' + (ceuReview['date'] | date)
-      ]" />
+      ]">
+
+    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders CEU Support Letter/Recommendations document',
+      id: ceuReview?.extraData['reviewFile']}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">CEU Support Letter/Recommendations document not submitted</p>
   }
@@ -125,7 +135,10 @@
   <card title=" PDQA Support Letter/Recommendations document" [descriptions]="[
       'Decision : '+ pdqaRecommend?.extraData['decision'],
       'Date : ' + (pdqaRecommend['date'] | date)
-      ]" />
+      ]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders PDQA Support Letter/Recommendations document',
+      id: pdqaRecommend?.extraData['reviewFile']}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">PDQA Support Letter/Recommendations document not submitted</p>
   }

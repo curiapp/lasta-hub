@@ -15,7 +15,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Final Draft to BOS Submission</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_submit.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="bos_submit.open()">
       BOS Submit
     </button>
   </div>
@@ -43,7 +44,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Faculty BOS-Consultation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="bos_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="bos_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -58,7 +60,10 @@
       `${bosConsult?.extraData['recommendedTo']?'Recommended To : '+ bosConsult?.extraData['recommendedTo']?.toUpperCase() :''}`,
       `${bosConsult?.extraData['deferTo']?'Defer To : '+ bosConsult?.extraData['deferTo']?.toUpperCase() :''}`,
       'Date : ' + (draftToBOS.extraData['date'] | date)
-    ]" />
+    ]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'BOS Recommendations document',
+      id: bosConsult?.extraData['draftFile']}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">BOS Recommendations document not submitted</p>
   }
@@ -69,7 +74,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Other Faculty BOS Consultation (Optional)</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="other_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="other_recommend.open()">
       Other Recommendations
     </button>
   </div>
@@ -85,7 +91,10 @@
     [
       `${item['recommendedTo']?'Recommended To : '+ item['recommendedTo']?.toUpperCase() :''}`,
       'Date : ' + (item['date'] | date)
-    ]" />
+    ]">
+      <action-buttons [actions]="['download']" [fileId]="{name:`${item.faculty} Recommendations document`,
+      id: item['file']}" />
+    </card>
     }@empty{
     <p class="text-sm text-primary font-semibold">Other Faculty Recommendations N/A</p>
     }
@@ -106,7 +115,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Academic Planning Committee (APC) Recommedation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="apc_recommend.open()">
       Recommendations
     </button>
   </div>
@@ -120,7 +130,11 @@
     [
       'Decision : '+ apcRecommend?.extraData['decision'],
       'Date : ' + (apcRecommend?.extraData['date'] | date)
-    ]" />
+    ]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'APC Recommendations document',
+      id: apcRecommend?.extraData['apcFile']}"
+      />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">APC Recommendations document not submitted</p>
   }
@@ -135,7 +149,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Senate Recommedation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="apc_recommend.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="apc_recommend.open()">
       Recommendations
     </button>
   </div>

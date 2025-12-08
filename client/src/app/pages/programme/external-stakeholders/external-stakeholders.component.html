@@ -25,7 +25,11 @@
   </p>
 
   @if(circulationDraft?.stepName){
-  <card title="Draft Programme Document " [descriptions]="['Date : ' + (circulationDraft?.extraData['date'] | date)]" />
+  <card title="Draft Programme Document " [descriptions]="['Date : ' + (circulationDraft?.extraData['date'] | date)]" >
+    <action-buttons [actions]="['download']"
+    [fileId]="{name:'External Stakeholders Curriculum Programme Draft document',
+      id: circulationDraft?.extraData['draftFile']}" />
+    </card>
   }@else{
   <p class="text-sm text-primary font-semibold">Draft programme document not submitted</p>
   }
@@ -55,7 +59,11 @@
 
   @if(pacConsultation?.stepName){
   <card title="PAC Consultation and Benchmarking Document "
-    [descriptions]="['Date : ' + (pacConsultation?.extraData['date'] | date)]" />
+    [descriptions]="['Date : ' + (pacConsultation?.extraData['date'] | date)]" >
+      <action-buttons [actions]="['download']"
+    [fileId]="{name:'External Stakeholders PAC and Benchmarking document',
+      id: pacConsultation?.extraData['draftFile']}" />
+    </card>
   }@else{
   <p class="text-sm text-primary font-semibold">PAC Consultation and Benchmarking document not submitted</p>
   }
@@ -71,21 +79,25 @@
 @if(selectedStep===3){
 <div class="space-y-4 my-6">
   <div class="flex justify-between gap-2 flex-wrap">
-    <h2 class="text-xl md:text-2xl capitalize">Final Draft Programme - PDQA Recommendations</h2>
+    <h2 class="text-xl md:text-2xl capitalize">Final Programme Draft - PDQA Recommendations</h2>
     <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="final_draft.open()">
       Recommendations
     </button>
   </div>
 
   <p class="text-gray-700 text-sm">
-    CDC circulate the final draft programme document to PDQA for recommendation to BOS.
+    CDC circulate the final programme draft document to PDQA for recommendation to BOS.
   </p>
 
   @if(finalDraft?.stepName){
-  <card title=" final draft programme document "
-    [descriptions]="['Date : ' + (finalDraft?.extraData['date'] | date)]" />
+  <card title="final draft programme document"
+    [descriptions]="['Date : ' + (finalDraft?.extraData['date'] | date)]">
+      <action-buttons [actions]="['download']"
+    [fileId]="{name:'External Stakeholders consultation final programme draft document',
+      id: finalDraft?.extraData['draftFile']}" />
+    </card>
   }@else{
-  <p class="text-sm text-primary font-semibold">Final Draft Programme document not submitted</p>
+  <p class="text-sm text-primary font-semibold">Final Programme Draft document not submitted</p>
   }
 </div>
 

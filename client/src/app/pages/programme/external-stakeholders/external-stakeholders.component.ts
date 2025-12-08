@@ -12,10 +12,11 @@ import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
 import { PhaseStep, Programme } from '../../../types';
 import { CanEditDirective } from '../../../directives/can-edit.directive';
+import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
 
 @Component({
   selector: 'client-external-stakeholders',
-  imports: [CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective],
+  imports: [CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective, ActionButtonsComponent],
   templateUrl: './external-stakeholders.component.html',
   styleUrl: './external-stakeholders.component.css'
 })

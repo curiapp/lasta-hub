@@ -15,7 +15,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">NQF Documentation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="nqf_start.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="nqf_start.open()">
       Preparation for NQA Submission
     </button>
   </div>
@@ -44,7 +45,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">NQF Submission</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="nqf_submit.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="nqf_submit.open()">
       Preparation for NQA Submission
     </button>
   </div>
@@ -59,7 +61,10 @@
       'Decision : ' + (nqfSubmission.extraData['decision']),
       'Submission Type : ' + (nqfSubmission.extraData['submissionType']),
       'Date : ' + (nqfSubmission['date'] | date),
-    ]" />
+    ]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'NQF Submission document',
+      id: nqfSubmission?.extraData['submissionFile']}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">NQF Submission document not submitted</p>
   }
@@ -75,7 +80,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">NQF Feedback</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="nqf_feedback.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="nqf_feedback.open()">
       NQF Feedback
     </button>
   </div>
@@ -104,7 +110,8 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">NQF Registration</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary" (click)="nqf_reg.open()">
+    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+      (click)="nqf_reg.open()">
       NQF Registration
     </button>
   </div>
@@ -120,7 +127,10 @@
       'Qualification Title : ' + (nqfRegistration.extraData['qualificationTitle']),
       'NQF ID : ' + (nqfRegistration.extraData['nqfId']),
       'Registration Date : ' + (nqfRegistration.extraData['date'] | date),
-    ]" />
+    ]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'NQF qualification documentation',
+      id: nqfRegistration?.extraData['nqfRegistrationFile']}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">NQF Registration document not submitted</p>
   }

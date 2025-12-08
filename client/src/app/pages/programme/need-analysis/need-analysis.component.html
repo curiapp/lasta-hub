@@ -73,7 +73,8 @@
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @for(stake of stakeConsult?.extraData?.organizations; track $index){
-    <card [title]="stake?.name" [descriptions]="[stake.organisation]" />
+    <card [title]="stake?.name" [descriptions]="[stake.organisation]">
+    </card>
     }@empty {
     <p class="text-sm text-primary font-semibold">No Stakeholders</p>
     }
@@ -84,9 +85,11 @@
   </div>
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for(questionnaires of stakeConsult?.extraData?.questionnaires; track $index){
+    @for(questionnaire of stakeConsult?.extraData?.questionnaires; track $index){
     <card [title]="'Questionnaire '+($index+1)"
-      [descriptions]="[questionnaires?.name,(stakeConsult.extraData?.startDate | date)  +' - '+ (stakeConsult.extraData?.startDate | date)]" />
+      [descriptions]="[questionnaire?.name,(stakeConsult.extraData?.startDate | date)  +' - '+ (stakeConsult.extraData?.startDate | date)]">
+      <action-buttons [actions]="['download']" [fileId]="{name:questionnaire.name, id: questionnaire.id}" />
+    </card>
     }@empty {
     <p class="text-sm text-primary font-semibold">No Submission</p>
     }
@@ -103,7 +106,10 @@
 
   <div class="grid gap-4">
     @if(stakeConsult?.extraData?.surveyQuestions){
-    <card title="Final Survey Report" [descriptions]="[(stakeConsult?.date | date)]" />
+    <card title="Final Survey Report" [descriptions]="[(stakeConsult?.date | date)]">
+      <action-buttons [actions]="['download']"
+        [fileId]="{name:'Final Survey Report', id: stakeConsult?.extraData?.surveyQuestions[0]}" />
+    </card>
     }@else {
     <p class="text-sm text-primary font-bold">No Submission</p>
     }
@@ -147,7 +153,10 @@
 
   @if(pdqaRecommend?.stepName){
   <card title="Final PDQA Recommendation"
-    [descriptions]="['Decision: '+pdqaRecommend?.extraData?.decision, 'Submitted: '+(pdqaRecommend?.date | date)]" />
+    [descriptions]="['Decision: '+pdqaRecommend?.extraData?.decision, 'Submitted: '+(pdqaRecommend?.date | date)]">
+    <action-buttons [actions]="['download']"
+      [fileId]="{name:'Need Analysis PDQA Recommendation document', id: pdqaRecommend?.extraData?.recommendationDoc}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No PDQA Recommendations</p>
   }
@@ -190,9 +199,13 @@
   </span>
   }
 
-  @if(bosConsult?.stepName){
+  @if(bosConsult?.extraData?.status){
   <card title="Recommendations"
-    [descriptions]="['Status: ' + bosConsult?.extraData?.status, 'Submitted: '+(bosConsult?.extraData?.recommendationDate | date)]" />
+    [descriptions]="['Status: ' + bosConsult?.extraData?.status, 'Submitted: '+(bosConsult?.extraData?.recommendationDate | date)]">
+    <action-buttons [actions]="['download']"
+      [fileId]="{name:'Need Analysis BOS Recommendation document',
+      id: bosConsult?.extraData?.recommendationFile}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No Recommendations</p>
   }
@@ -233,7 +246,10 @@
 
   @if(apcRecommend?.extraData?.recommendationFile){
   <card title="Recommendations"
-    [descriptions]="['Decision: ' + apcRecommend?.extraData?.status, 'Consultation Date: '+(apcRecommend?.extraData['consultationDate'] | date)]" />
+    [descriptions]="['Decision: ' + apcRecommend?.extraData?.status, 'Consultation Date: '+(apcRecommend?.extraData['consultationDate'] | date)]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'Need Analysis APC Recommendation document',
+      id: apcRecommend?.extraData?.recommendationFile}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No recommendations submitted</p>
   }
@@ -263,7 +279,10 @@
 
   @if(senateApproval?.extraData?.recommendationFile){
   <card title="Recommendations"
-    [descriptions]="['Decision: ' + senateApproval?.extraData?.status, 'Consultation Date: '+(senateApproval?.extraData['recommendationDate'] | date)]" />
+    [descriptions]="['Decision: ' + senateApproval?.extraData?.status, 'Consultation Date: '+(senateApproval?.extraData['recommendationDate'] | date)]">
+    <action-buttons [actions]="['download']" [fileId]="{name:'Need Analysis Senate Recommendation document',
+      id: senateApproval?.extraData?.recommendationFile}" />
+  </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No recommendations submitted</p>
   }

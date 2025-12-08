@@ -13,10 +13,11 @@ import { LoadingService } from '../../../services/loading.service';
 import { programme_steps } from '../../../static';
 import { PhaseStep, Programme } from '../../../types';
 import { CanEditDirective } from '../../../directives/can-edit.directive';
+import { ActionButtonsComponent } from "../../../components/action-buttons/action-buttons.component";
 
 @Component({
   selector: 'client-nqf-registration',
-  imports: [NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
+  imports: [NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective, ActionButtonsComponent],
   templateUrl: './nqf-registration.component.html',
   styleUrl: './nqf-registration.component.css'
 })
