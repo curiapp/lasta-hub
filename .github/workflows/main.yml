@@ -75,6 +75,7 @@ jobs:
         name: Update GitOps Image Tag
         needs: build_develop
         if: github.ref == 'refs/heads/feature/codebase-combine'
+        environment: develop
         runs-on: ubuntu-latest
         steps:
         -   name: Clone GitOps repository
@@ -108,7 +109,41 @@ jobs:
                 git commit -m "version-$SHA"
                 git push https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
  
-    # develop-deploy:
-    #     needs: gitops_develop
-    #     runs-on: ubuntu-latest
+    deploy_develop:
+      name: Apply Kustomize on Server
+      needs: gitops_develop
+      if: github.ref == 'refs/heads/feature/codebase-combine'
+      environment: develop
+      runs-on: ubuntu-latest
 
+      steps:
+        - name: Configure SSH key
+          run: |
+            mkdir -p ~/.ssh
+
+            # Write the private key safely, stripping any Windows CR characters
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+
+            # Disable strict host key checking for this session
+            echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
+
+            # Verify key file exists and has content
+            ls -l ~/.ssh
+            head -n 5 ~/.ssh/id_ed25519
+
+
+        - name: Deploy to server
+          run: |
+            ssh -i ~/.ssh/id_ed25519 root@196.216.167.190 "
+              set -e && \
+
+              export KUBECONFIG=/etc/kubernetes/admin.conf && \
+
+              kubectl cluster-info && \
+
+              cd ~/dev-ops && \
+              git pull && \
+
+              kubectl apply -k ./overlays/develop
+            "

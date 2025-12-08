@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Router } from "express";
 import { Multer } from "multer";
 
 import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
@@ -15,7 +15,7 @@ import { saveFile } from "@/helpers/save-file";
 
 const PHASE = "program-development";
 
-export default async (app: Express, upload: Multer) => {
+export default async (app: Router, upload: Multer) => {
     app.post("/curriculum-development/appoint/cdc", async (req, res) => {
         const { error, value } = appointCDCSchema.validate(req.body);
         if (error) {

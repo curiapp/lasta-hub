@@ -100,6 +100,10 @@ npm run dev
 ## Frontend Setup (Angular)
 
 ### Install dependencies
+
+#### install Angular CLI
+npm i -g @angular/cli
+
 ```
 cd client
 npm install

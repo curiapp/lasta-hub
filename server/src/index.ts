@@ -32,24 +32,25 @@ const upload = multer({
 });
 
 const app = express();
+
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:4200'
 }));
 
 const PORT = process.env.PORT || 3000;
+const api = express.Router();
+usersRoutes(api);
+eventsRoutes(api);
+reviewsRoutes(api, upload);
+needAnalysisRoutes(api, upload);
+consultationRoutes(api, upload);
+qualificationsRoutes(api, upload);
+institutionalBodiesRoutes(api, upload);
+curriculumDevelopmentRoutes(api, upload);
+graphqlRoutes(api);
 
-usersRoutes(app);
-eventsRoutes(app);
-reviewsRoutes(app, upload);
-needAnalysisRoutes(app, upload);
-consultationRoutes(app, upload);
-qualificationsRoutes(app, upload);
-institutionalBodiesRoutes(app, upload);
-curriculumDevelopmentRoutes(app, upload);
-graphqlRoutes(app);
-fetchRoutes(app, upload);
-
+app.use("/api", api);
 app.use((err, _, res, next) => {
     console.warn("in error handler ", err);
     if (err instanceof multer.MulterError) {

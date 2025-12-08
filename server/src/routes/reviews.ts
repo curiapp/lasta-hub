@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Router } from "express";
 import { Multer } from "multer";
 
 import { reviewRecommendSchema, reviewStartSchema } from "@/validators/reviews";
@@ -8,7 +8,7 @@ import { saveFile } from "@/helpers/save-file";
 import { isDbKnownError } from "@/helpers/db-errors";
 
 const PHASE = "internal-stakeholder-consultation";
-export default async (app: Express, upload: Multer) => {
+export default async (app: Router, upload: Multer) => {
     app.post("/reviews/start", upload.single("file"), async (req, res) => {
         const { error, value } = reviewStartSchema.validate(req.body);
         if (error) {
