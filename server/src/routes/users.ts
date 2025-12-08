@@ -23,6 +23,7 @@ export default async (app: Express) => {
                     lastName: value.lastName,
                     password: hashedPassword,
                     role: value.role,
+                    department: value.department
                 })
                 .returning();
 
@@ -73,18 +74,15 @@ export default async (app: Express) => {
                 token: updated.authToken,
                 department: {
                     id: data.departments?.id,
-                    name: data.departments.name
+                    name: data.departments?.name
                 },
                 faculty: {
-                    id: data.faculty.id,
-                    name: data.faculty.name
+                    id: data?.faculty?.id,
+                    name: data?.faculty?.name
                 },
 
             });
         } catch (err) {
-
-            console.log("Errr ", err);
-            
             return res.status(500).send("Internal server error");
         }
     });
