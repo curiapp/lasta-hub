@@ -28,8 +28,6 @@ export class MainComponent {
     const appTitle = this.titleService.getTitle();
     this.currentUser = this.auth.user;
 
-    console.log("User");
-
     this.router
       .events.pipe(
         filter(event => event instanceof NavigationEnd),

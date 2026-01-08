@@ -1,8 +1,8 @@
 import { gql } from "apollo-angular";
 
 export const GET_PROGRAMMES = gql`
- query GetProgrammes{
-  programmes{
+ query GetProgrammes($searchText: String!, $offset: Int, $limit: Int){
+  programmes(searchText: $searchText, offset: $offset, limit: $limit){
       code
       department
       faculty

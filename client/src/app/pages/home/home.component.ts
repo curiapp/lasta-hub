@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Apollo } from 'apollo-angular';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { StartNeedAnalysisComponent } from "../../components/forms/start-need-analysis/start-need-analysis.component";
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
 import { ModalComponent } from "../../components/modal/modal.component";
@@ -13,6 +14,7 @@ import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 import { LoadingService } from '../../services/loading.service';
 import { Programme, User } from '../../types';
 import { programmeDevIcons } from '../../static';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
 @Component({
   selector: 'home',
@@ -26,12 +28,55 @@ export class HomeComponent implements OnInit {
   greetingMessage: string = '';
   programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
   showAll = false;
-  programmes: Programme[] = [];
   _loading = inject(LoadingService);
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
+  // programmes: Programme[] = [];
+  programmes = signal<Programme[]>([]);
 
-  constructor(private viewContainer: ViewContainerRef) { }
+  searchText = signal("");
+  limit = 50;
+
+  private queryRef = this.apollo.watchQuery<any>({
+    query: GET_PROGRAMMES,
+    variables: { searchText: '', offset: 0, limit: this.limit },
+  });
+
+  queryResult = toSignal(this.queryRef.valueChanges);
+
+  constructor(private viewContainer: ViewContainerRef) {
+    this.queryRef.valueChanges.subscribe((result: any) => {
+      this._loading.isLoading.set(result.loading);
+      this.programmes.set(result?.data?.programmes || []);
+    });
+
+    toObservable(this.searchText).pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(searchText => {
+      this.queryRef.refetch({ searchText, offset: 0 });
+    });
+
+  }
+
+  onSearch(event: Event) {
+    const val = (event.target as HTMLInputElement).value;
+    this.searchText.set(val);
+  }
+
+  loadMore() {
+    const currentLength = this.programmes().length;
+    this.queryRef.fetchMore({
+      variables: { offset: currentLength },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return {
+          ...prev,
+          programmes: [...prev.programmes, ...fetchMoreResult.programmes]
+        };
+      }
+    });
+  }
 
   toggleView() {
     this.showAll = !this.showAll;
@@ -40,9 +85,9 @@ export class HomeComponent implements OnInit {
 
   updateDisplayedPrograms() {
     if (this.showAll) {
-      this.programmes = [...this.programmes];
+      this.programmes.set(this.programmes());
     } else {
-      this.programmes = this.programmes.slice(0, 10);
+      this.programmes.set(this.programmes().slice(0, 10));
     }
   }
 
@@ -73,14 +118,6 @@ export class HomeComponent implements OnInit {
     this.greetingMessage = getGreeting();
     this.updateDisplayedPrograms();
     this.loggedIn();
-
-    this.apollo.watchQuery({
-      query: GET_PROGRAMMES
-    }).valueChanges.subscribe((result: any) => {
-      this._loading.isLoading.set(result.loading);
-      this.programmes = result?.data?.programmes;
-    });
-
 
     const width = window.innerWidth;
     const height = window.innerHeight;

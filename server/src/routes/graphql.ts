@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { departments, events, faculty, programmes, users } from "@/db/schema";
 import cors from "cors";
-import { eq, sql } from "drizzle-orm";
+import { eq, ilike, sql } from "drizzle-orm";
 import { Router } from "express";
 import { buildSchema } from "graphql";
 import { createHandler } from "graphql-http/lib/use/express";
@@ -29,14 +29,14 @@ const schema = buildSchema(`
 
 	type Query { 
 		events(date: String!): [Events]
-		programmes(id: String): [Programme]
+		programmes(id: String, searchText: String, offset: Int, limit: Int): [Programme]
 		programme_phase_step(programmeId:String, phaseSlug:String): JSON 
 	}
 	
 `);
 
 const root = {
-	programmes({ id }) {
+	programmes({ id, searchText, offset, limit }) {
 		if (id) {
 			return db.select(
 				{
@@ -54,6 +54,25 @@ const root = {
 				.innerJoin(users, eq(users.id, programmes.initiator))
 				.innerJoin(departments, eq(programmes.department, departments.id))
 				.innerJoin(faculty, eq(programmes.faculty, faculty.id));
+		} else if (searchText) {
+			return db.select(
+				{
+					id: programmes.id,
+					code: programmes.code,
+					title: programmes.title,
+					level: programmes.level,
+					initiator: programmes.initiator,
+					initiatorFirstName: users.firstName,
+					initiatorLastName: users.lastName,
+					department: departments.name,
+					faculty: faculty.name
+				}
+			).from(programmes)
+				.innerJoin(users, eq(users.id, programmes.initiator))
+				.innerJoin(departments, eq(programmes.department, departments.id))
+				.innerJoin(faculty, eq(programmes.faculty, faculty.id))
+				.where(ilike(programmes.title, `%${searchText}%`))
+				.orderBy(programmes.title);
 		} else {
 			return db.select(
 				{
@@ -70,7 +89,9 @@ const root = {
 			).from(programmes)
 				.innerJoin(users, eq(users.id, programmes.initiator))
 				.innerJoin(departments, eq(programmes.department, departments.id))
-				.innerJoin(faculty, eq(programmes.faculty, faculty.id));
+				.innerJoin(faculty, eq(programmes.faculty, faculty.id))
+				.offset(offset)
+				.limit(limit);
 		}
 	},
 	async programme_phase_step({ programmeId, phaseSlug }) {
@@ -80,7 +101,7 @@ const root = {
 				${phaseSlug}
 				) AS data`
 		);
-		
+
 		return data.rows[0]?.data
 	},
 	events({ date }) {
