@@ -9,10 +9,12 @@
           </svg>
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-1 mt-3 w-52 p-2 shadow">
-          <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
+          <li><a routerLink='/home' routerLinkActive="active"
+              class="active:btn-secondary">{{currentUser?.firstName?"Programmes":"Home"}}</a></li>
           <!-- <li><a routerLink='/resume'>Getting Started</a></li> -->
-          <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
-          <li><a routerLink='/our-team' routerLinkActive="active">Team</a></li>
+          <li><a routerLink='/' routerLinkActive="active">Reports & Reviews</a></li>
+          <li><a routerLink='/tutorials' routerLinkActive="active">Support</a></li>
+          <!-- <li><a routerLink='/our-team' routerLinkActive="active">Team</a></li> -->
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
       </div>
@@ -22,10 +24,12 @@
       <span class="hidden lg:block">|</span>
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
-          <li><a routerLink='/home' routerLinkActive="active" class="active:btn-secondary">Home</a></li>
+          <li><a routerLink='/home' routerLinkActive="active"
+              class="active:btn-secondary">{{currentUser?.firstName?"Programmes":"Home"}}</a></li>
           <!-- <li [hidden]="!loggedIn()" routerLinkActive="active"><a routerLink='/resume'>Getting Started</a></li> -->
-          <li><a routerLink='/tutorials' routerLinkActive="active">Tutorials</a></li>
-          <li><a routerLink='/our-team' routerLinkActive="active">Team</a></li>
+          <li><a routerLink='/' routerLinkActive="active">Reports & Reviews</a></li>
+          <li><a routerLink='/tutorials' routerLinkActive="active">Support</a></li>
+          <!-- <li><a routerLink='/our-team' routerLinkActive="active">Team</a></li> -->
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
       </div>
