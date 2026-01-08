@@ -161,31 +161,31 @@ export const programmeDevIcons = [
   // Planning & Development
   'assignment',           // Programme planning
   'timeline',             // Roadmap / stages
-  'schema',               // Programme structure
-  'task_alt',             // Task management
-  'build_circle',         // Programme builder
+  // 'schema',               // Programme structure
+  // 'task_alt',             // Task management
+  // 'build_circle',         // Programme builder
   'edit',                 // Edit programme
   'account_tree',         // Academic structure
 
   // Quality Assurance (QA)
   'verified',             // QA checks
   'fact_check',           // Quality review
-  'rule',                 // Validation
+  // 'rule',                 // Validation
   'workspace_premium',    // Compliance
   'approval',             // Accreditation
-  'tune',                 // Moderation
+  // 'tune',                 // Moderation
   'grading',              // Evaluation
 
   // Curriculum & Content
   'menu_book',            // Curriculum design
-  'description',          // Module descriptors
-  'center_focus_strong',  // Outcomes & learning goals
+  // 'description',          // Module descriptors
+  // 'center_focus_strong',  // Outcomes & learning goals
   'assignment_turned_in', // Assessment plan
   'library_books',        // Learning materials
 
   // Workflow & Processes
   'autorenew',            // Workflow steps
-  'trending_up'           // Progress tracking
+  // 'trending_up'           // Progress tracking
 ];
 
 
