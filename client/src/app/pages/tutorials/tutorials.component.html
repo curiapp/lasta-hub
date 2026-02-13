@@ -1,23 +1,83 @@
-<div class="max-w-5xl mx-auto md:p-8 lg:py-16 space-y-8">
+<div class="container mx-auto p-4 md:p-8 lg:py-16 space-y-8">
 
   <div class="space-y-4">
-    <h1 class="text-2xl font-semibold">PDQA Tutorial</h1>
+    <h1 class="text-2xl font-semibold">Programme Development Tutorial</h1>
     <p class="text-sm text-gray-500 max-w-xl ">
       Our tutorials offer practical guidance for lecturers on developing, reviewing, and implementing courses. These
       resources are designed to support academic staff in aligning curricula with university standards and best
       practices.
   </div>
 
-  <iframe width="800" height="555" src="https://www.youtube.com/embed/MNNEYqG0_ao?si=cjbTGDBsU4jFEu3Q"
+
+  <div class="flex min-h-screen">
+    <!-- Left Sidebar -->
+    <nav class="w-1/5 p-4 space-y-3">
+      <h3 class="text-xs font-medium opacity-50">Programme Development Phases</h3>
+      <ul class="space-y-4">
+        @for (stage of stages; track $index) {
+        <li class="text-sm cursor-pointer hover:underline" (click)="scrollToStage(stage)">
+          {{ stage.name }}
+        </li>
+        }
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-4 bg-gray-100 overflow-auto space-y-8">
+      <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" class="mb-4 input">
+
+      @for (stage of stages | searchTutorial:searchQuery; track $index) {
+      <div [attr.id]="'stage-' + stage.id" class="my-4!">
+        <h2 class="text-lg font-bold mb-2 opacity-70">{{ stage.name }}</h2>
+        @for (process of stage.processes; track $index) {
+        <div (click)="selectProcess(stage, process)" [class.bg-blue-100]="selectedProcess === process"
+          class="p-4 my-8! space-y-4 border rounded-lg cursor-pointer">
+          <h4 class="font-semibold">{{ process.name }}</h4>
+          <p class="text-xs">{{ process.description }}</p>
+          <h5 class="font-semibold">Steps</h5>
+          <ol class="list-decimal">
+            @for (step of process.steps; track $index) {
+            <li class="text-sm ml-4 my-4 space-y-3">
+              <h6 class="font-semibold opacity-90">{{ step.name }}</h6>
+              <p class="text-gray-500">{{ step.description }}</p>
+            </li>
+            }
+          </ol>
+        </div>
+        }
+      </div>
+      }
+
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="w-1/4 p-4 bg-gray-50 space-y-3">
+      @if (selectedProcess) {
+      <h3 class="text-xs uppercase font-bold opacity-50">Contents ({{ selectedProcess.name }})</h3>
+      }
+      <ul>
+        @for (step of selectedProcess?.steps; track $index) {
+        <li class="mb-2 text-xs">
+          {{ $index + 1 }}. {{ step.name }}
+        </li>
+        }
+      </ul>
+      @if (!selectedProcess) {
+      <p class="text-xs">Select a process to see steps</p>
+      }
+    </aside>
+  </div>
+
+  <!-- <iframe class="w-full h-52 md:w-200 md:h-138.75" src="https://www.youtube.com/embed/MNNEYqG0_ao?si=cjbTGDBsU4jFEu3Q"
     title="YouTube video player" frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-  </iframe>
+  </iframe> -->
 </div>
 
 <!--Section: FAQ-->
 
-<section class="max-w-5xl mx-auto space-y-8 bg-gray-100 p-6 lg:p-10">
+<section class="max-w-5xl mb-16 mx-auto space-y-8 bg-gray-100 p-6 lg:p-10">
   <h3 class="text-2xl font-semibold">
     FAQ
     <span class="material-symbols-rounded">

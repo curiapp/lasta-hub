@@ -4,11 +4,19 @@ import { Observable, throwError } from "rxjs";
 export function handleError(error: HttpErrorResponse): Observable<never> {
   let errorMessage = 'Unknown error occurred';
   if (error.error instanceof ErrorEvent) {
-    // Client-side or network error
-    errorMessage = `Client-side error: ${error.error.message}`;
+    errorMessage = `Network error: ${error.error.message}`;
   } else {
-    // Server-side error
-    errorMessage = `Server error: ${error.status} - ${error.message}`;
+    if (!navigator.onLine) {
+      errorMessage = 'No internet connection';
+    } else if (error.status === 0) {
+      errorMessage = 'Cannot connect to server. Please try again later.';
+    } else if (error.status === 401) {
+      errorMessage = 'Invalid email or password';
+    } else if (error.status === 500) {
+      errorMessage = 'Server error. Please try again later.';
+    } else {
+      errorMessage = `Error ${error.status}: ${error.message}`;
+    }
   }
   return throwError(() => new Error(errorMessage));
 }
@@ -90,7 +98,6 @@ export function generateNext7Days() {
     const dateB = new Date(yb, mb - 1, db);
     return dateA.getTime() - dateB.getTime();
   });
-
 
   return sorted;
 }

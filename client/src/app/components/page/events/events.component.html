@@ -1,16 +1,37 @@
 <div class="w-96 hidden lg:block space-y-4">
 
-  <div class="space-y-4">
+  <div class="space-y-2">
 
     <div class="flex items-center justify-between">
       <h3 class="text-lg">{{currentMonth}}</h3>
+      <!-- <button popovertarget="cally-popover1" class="input input-border" id="cally1" style="anchor-name:--cally1">
+        Pick a date
+      </button>
+      <div popover id="cally-popover1" class="dropdown bg-base-100 rounded-box shadow-lg"
+        style="position-anchor:--cally1">
+        <calendar-date class="cally" onchange={document.getElementById('cally1').innerText=this.value}>
+          <svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+          </svg>
+          <svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+          </svg>
+          <calendar-month></calendar-month>
+        </calendar-date>
+      </div> -->
       <div class="flex items-center">
-        <span class="material-symbols-rounded cursor-pointer hover:scale-105 hover:translate-x-1 transition-all">
-          chevron_backward
-        </span>
-        <span class="material-symbols-rounded cursor-pointer hover:scale-110 hover:translate-x-1 transition-all">
-          chevron_forward
-        </span>
+        <button (click)="changeDate('prev')" class="bg-gray-100 grid place-items-center rounded-l-lg w-6 h-6">
+          <span class="material-symbols-rounded cursor-pointer hover:scale-105 hover:translate-x-1 transition-all">
+            chevron_backward
+          </span>
+        </button>
+        <button (click)="changeDate('next')" class="bg-gray-100 grid place-items-center rounded-r-lg w-6 h-6">
+          <span class="material-symbols-rounded cursor-pointer hover:scale-110 hover:translate-x-1 transition-all">
+            chevron_forward
+          </span>
+        </button>
       </div>
     </div>
 
@@ -18,7 +39,7 @@
       @for(item of dates; track item.date){
       <div (click)="onChangeDate(item.date)"
         class="w-10 h-10 cursor-pointer flex flex-col justify-center items-center rounded-md border-2!"
-        [class]="`${item.date === today?'bg-primary! outline-2! outline-primary text-white':'bg-transparent text-primary'}`">
+        [class]="`${item.date === selectedDate?'bg-primary! outline-2! outline-primary text-white':'bg-transparent text-primary'}`">
         <span class="text-[.5rem]">{{item.day}}</span>
         <span class="text-base">{{item.dayOfMonth}}</span>
       </div>
@@ -39,8 +60,7 @@
 
       @if (_loading.isLoading()) {
       @for (item of [1,2,3,4,5,6]; track $index){
-      <div
-        class="bg-gray-100 rounded-lg space-y-2 p-2 border-2 border-transparent transition-all">
+      <div class="bg-gray-100 rounded-lg space-y-2 p-2 border-2 border-transparent transition-all">
         <h5 class="skeleton rounded-lg w-10/12 h-6"></h5>
         <div class="skeleton rounded-md w-4/12 h-4"></div>
       </div>
@@ -54,7 +74,7 @@
       </div>
       }@empty {
       <div class="h-52 grid place-items-center">
-        No Upcoming Events on {{selectedDate | date}}
+        <span class="text-sm">No Upcoming Events on <b>{{selectedDate | date}}</b></span>
       </div>
       }
       }

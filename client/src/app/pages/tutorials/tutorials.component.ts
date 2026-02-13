@@ -1,30 +1,42 @@
 //import files from the angular framework
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
+import { TutorialProcess, TutorialStage } from '../../types';
+import { TUTORIAL_DATA } from '../../static';
+import { SearchTutorialPipe } from "../../pipes/search-tutorial.pipe";
+import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'Tutorial',
-    standalone: true,
-    templateUrl: 'tutorials.component.html'
+  selector: 'Tutorial',
+  standalone: true,
+  templateUrl: 'tutorials.component.html',
+  imports: [SearchTutorialPipe, FormsModule]
 })
 
 export class TutorialComponent {
-  currentId:string;
+  currentId: string;
+  stages: TutorialStage[] = TUTORIAL_DATA;
+  searchQuery = '';
+  selectedStage: TutorialStage | null = null;
+  selectedProcess: TutorialProcess | null = null;
 
-  VideoChanges(id:string){
-    if(this.currentId != null){
+  scrollToStage(stage: TutorialStage) {
+    document.getElementById('stage-' + stage.id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  selectProcess(stage: TutorialStage, process: TutorialProcess) {
+    this.selectedStage = stage;
+    this.selectedProcess = process;
+  }
+
+  VideoChanges(id: string) {
+    if (this.currentId != null) {
       (<HTMLVideoElement>document.getElementById(this.currentId)).pause();
       this.currentId = id;
     }
-    else
+    else {
       this.currentId = id;
-
-    //(<HTMLVideoElement>document.getElementById(id)).play();
-
-    console.log(this.currentId);
-    console.log(id);
-    /*var vid = document.getElementBy
-    Id("myVideo");
-    vid.onplaying = function() {*/
-    //alert("The video is now playing");
+    }
+    // console.log(this.currentId);
+    // console.log(id);
   }
 }

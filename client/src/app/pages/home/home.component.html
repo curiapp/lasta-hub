@@ -315,7 +315,7 @@
     @if(_loading.isLoading()){
     <programme-template />
     }@else {
-    <div class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 items-stretch">
+    <div class="grid md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4 items-stretch">
       @for (item of programmes(); track item?.id) {
       <div class="group relative block rounded-lg">
         <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
@@ -367,7 +367,7 @@
   </div>
 
   <!-- Upcoming Events -->
-  <div class="hidden md:block">
+  <div class="hidden xl:block">
     <events />
   </div>
 

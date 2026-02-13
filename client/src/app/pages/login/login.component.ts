@@ -13,11 +13,11 @@ import { LoadingService } from '../../services/loading.service';
 })
 export class LoginComponent {
 
-  constructor(private router: Router,
-    private route: ActivatedRoute,
-    private authService: AuthenticationService,
-    private _location: Location
-  ) { }
+  router = inject(Router);
+  route = inject(ActivatedRoute);
+  authService = inject(AuthenticationService);
+  _location = inject(Location);
+  loadingService = inject(LoadingService);
 
   model: { email: string, password: string } = {
     email: '',
@@ -44,8 +44,7 @@ export class LoginComponent {
             this.router.navigate(['/home']);
           },
           error: (error: any) => {
-            console.error("Error ", error);
-            this.message.set("Invalid username or password");
+            this.message.set(error.message);
           }
         }
       );

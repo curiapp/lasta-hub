@@ -31,15 +31,24 @@ export class EventsComponent {
 
   onChangeDate(date: string) {
     this.selectedDate = date;
-
     this.apollo.client.refetchQueries({
       include: ['GetEventsByDate']
     });
   }
 
+  changeDate(action: 'prev' | 'next') {
+    const currentIndex = this.dates.findIndex(d => d.date === this.selectedDate);
+    if (action === 'prev' && currentIndex > 0) {
+      this.selectedDate = this.dates[currentIndex - 1].date;
+      this.onChangeDate(this.selectedDate);
+    } else if (action === 'next' && currentIndex < this.dates.length - 1) {
+      this.selectedDate = this.dates[currentIndex + 1].date;
+      this.onChangeDate(this.selectedDate);
+    }
+  }
+
 
   onSubmit(form: NgForm) {
-
     this.http.post('events/create', form.value).subscribe(
       {
         next: (data) => {

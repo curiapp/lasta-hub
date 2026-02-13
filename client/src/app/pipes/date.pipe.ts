@@ -7,7 +7,7 @@ import moment from 'moment';
 export class DatePipe implements PipeTransform {
 
   transform(value: string, ...args: unknown[]): unknown {
-    return moment(value).format("DD MMM YYYY");
+    return moment(value, "DD/MM/YYYY", true).format("DD MMM YYYY");
   }
 
 }

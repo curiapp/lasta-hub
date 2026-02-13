@@ -35,7 +35,7 @@
         <fieldset class="stakeholder-input-container" [class.open]="isStakeholderShown()">
           <div class="flex h-fit items-center gap-1 border-2 border-dashed border-gray-300 rounded-box p-2">
             <div class="w-auto flex-auto">
-              <label class="input input-sm rounded-b-none flex flex-auto gap-2 items-center ">
+              <label class="input input-sm rounded-b-none rounded-r-none flex flex-auto gap-2 items-center ">
                 <span class="material-symbols-rounded">
                   contact_page
                 </span>
@@ -43,7 +43,7 @@
                   class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.name" #stakename="ngModel" />
               </label>
 
-              <label class="input input-sm  rounded-t-none flex flex-auto gap-2 items-center ">
+              <label class="input input-sm  rounded-r-none rounded-t-none flex flex-auto gap-2 items-center ">
                 <span class="material-symbols-rounded">
                   graph_5
                 </span>
@@ -51,8 +51,8 @@
                   required class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.organisation" #stakeorg="ngModel" />
               </label>
             </div>
-            <button [disabled]="stakeorg.invalid || stakeorg.invalid" (click)="addOrganisation()"
-              class="btn btn-primary h-16!">Add +</button>
+            <button [disabled]="stakeorg.invalid || stakename.invalid" (click)="addOrganisation()"
+              class="btn rounded-l-none btn-primary h-18!">Add +</button>
           </div>
         </fieldset>
         }

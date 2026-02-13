@@ -83,3 +83,18 @@ export type ProgrammePhase = {
   programmePhaseId: string;
   steps: PhaseStep[];
 };
+
+export type TutorialStage = {
+  id: number;
+  name: string;
+  description: string;
+  processes: TutorialProcess[];
+}
+
+export type TutorialProcess = {
+  id: number;
+  name: string;
+  description: string;
+  steps: {id: number; name: string; description: string }[];
+  resources?: string[];
+}
