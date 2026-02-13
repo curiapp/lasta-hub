@@ -5,7 +5,7 @@ const startSchema = Joi.object({
   code: Joi.string().alphanum().min(3).max(30).required(),
   title: Joi.string().required(),
   initiator: Joi.string().required(),
-  level: Joi.number().integer().min(5).max(9).required(),
+  level: Joi.number().integer().min(4).max(10).required(),
   faculty: Joi.string().required(),
   department: Joi.string().required(),
 }).required();
@@ -13,7 +13,7 @@ const startSchema = Joi.object({
 const updateSchema = Joi.object({
   code: Joi.string().alphanum().min(3).max(30).required(),
   title: Joi.string().required(),
-  level: Joi.number().integer().min(5).max(9).required(),
+  level: Joi.number().integer().min(4).max(10).required(),
 }).required();
 
 const consultSchema = Joi.object({
