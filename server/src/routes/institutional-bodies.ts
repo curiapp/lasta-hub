@@ -12,6 +12,7 @@ import { sql } from "drizzle-orm";
 import { saveFile } from "@/helpers/save-file";
 import { db } from "@/db";
 import { isDbKnownError } from "@/helpers/db-errors";
+import { createNotification } from "@/helpers/db-queries";
 
 const PHASE = "bos-apc-and-senate-consultation";
 
@@ -62,6 +63,14 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "Final Draft to BOS Submission",
+                message: `The final draft for programme ${programmeId} has been submitted to the BOS.`,
+                type: "final_draft_to_bos_submission",
+                referenceId: programmeId,
+            });
+
             return res.send({
                 message: "Draft submitted successfully",
             });
@@ -103,6 +112,14 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "Faculty BOS Consultation Recommendation Submitted",
+                message: `The faculty BOS consultation recommendation for programme ${programmeId} has been submitted.`,
+                type: "faculty_bos_consultation_recommendation_submitted",
+                referenceId: programmeId,
+            });
+
             return res.send({
                 message: "Document submitted successfully",
             });
@@ -143,6 +160,14 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "Other Faculty BOS Consultation Recommendation Submitted",
+                message: `The other faculty BOS consultation recommendation for programme ${programmeId} has been submitted.`,
+                type: "other_faculty_bos_consultation_recommendation_submitted",
+                referenceId: programmeId,
+            });
+
             return res.send({
                 message: "Document submitted successfully",
             });
@@ -180,6 +205,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "APC Recommendation Submitted",
+                message: `The APC recommendation for programme ${programmeId} has been submitted.`,
+                type: "apc_recommendation_submitted",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "APC Recommendation document submitted successfully",
@@ -258,6 +291,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Final Senate Recommendation Submitted",
+                message: `The final senate recommendation for programme ${programmeId} has been submitted.`,
+                type: "final_senate_recommendation_submitted",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Document submitted successfully",

@@ -12,6 +12,8 @@ import { isDbKnownError } from "@/helpers/db-errors";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import { saveFile } from "@/helpers/save-file";
+import { create } from "domain";
+import { createNotification } from "@/helpers/db-queries";
 
 const PHASE = "program-development";
 
@@ -39,6 +41,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "CDC Appointment",
+                message: `CDC members have been appointed for programme ${programmeId}`,
+                type: "cdc_appointment",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "CDC Members submitted successfully",
@@ -70,6 +80,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "PAC Appointment",
+                message: `PAC members have been appointed for programme ${programmeId}`,
+                type: "pac_appointment",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "PAC Members submitted successfully",
@@ -106,6 +124,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Curriculum Draft Submitted",
+                message: `Curriculum draft has been submitted for programme ${programmeId}`,
+                type: "curriculum_draft_submitted",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Draft submitted successfully",
@@ -154,6 +180,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Curriculum Draft Validated",
+                message: `Curriculum draft has been validated for programme ${programmeId}`,
+                type: "curriculum_draft_validated",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Draft submitted successfully",

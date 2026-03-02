@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { departments, events, faculty, programmes, users } from "@/db/schema";
+import { departments, events, faculty, notifications, programmes, users } from "@/db/schema";
+import { getUserNotifications } from "@/helpers/db-queries";
 import cors from "cors";
 import { eq, ilike, sql } from "drizzle-orm";
 import { Router } from "express";
@@ -27,10 +28,22 @@ const schema = buildSchema(`
 		date:String
 	}
 
+	type Notification {
+		id: ID
+		title: String
+		message: String
+		type: String
+		referenceId: String
+		createdAt: String
+		isRead: Boolean
+		programmeName: String
+	}
+
 	type Query { 
 		events(date: String!): [Events]
 		programmes(id: String, searchText: String, offset: Int, limit: Int): [Programme]
 		programme_phase_step(programmeId:String, phaseSlug:String): JSON 
+		notifications(userId: String): [Notification]
 	}
 	
 `);
@@ -106,6 +119,9 @@ const root = {
 	},
 	events({ date }) {
 		return db.select().from(events).where(eq(events.date, date))
+	},
+	notifications({ userId }) {
+		return getUserNotifications(userId);
 	}
 };
 

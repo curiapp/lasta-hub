@@ -11,6 +11,7 @@ import {
     nqaSubmitSchema,
 } from "@/validators/qualifications";
 import { sql } from "drizzle-orm";
+import { createNotification } from "@/helpers/db-queries";
 
 const PHASE = "nqf-registration";
 export default async (app: Router, upload: Multer) => {
@@ -69,6 +70,22 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "NQF Documentation Preparation Submitted",
+                message: `The NQF documentation preparation for programme ${programmeId} has been submitted.`,
+                type: "nqf_documentation_preparation_submitted",
+                referenceId: programmeId,
+            });
+
+            await createNotification({
+                role: "ads-tlt",
+                title: "NQF Documentation Preparation Submitted",
+                message: `The NQF documentation preparation for programme ${programmeId} has been submitted. Please review the NQF submission from the department and prepare NQF application documentation for submission`,
+                type: "nqf_documentation_preparation_submitted",
+                referenceId: programmeId,
+            });
+
             return res.send({
                 message: "Documents submitted successfully",
             });
@@ -106,6 +123,14 @@ export default async (app: Router, upload: Multer) => {
                             ${JSON.stringify(stepData)}::jsonb
                         )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "NQF Submission Submitted",
+                message: `The NQF submission for programme ${programmeId} has been submitted.`,
+                type: "nqf_submission_submitted",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Document submitted successfully",
@@ -177,6 +202,22 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "NQF Feedback Submitted",
+                message: `The NQF feedback (${value.submissionType}) for programme ${programmeId} has been submitted.`,
+                type: "nqf_feedback_submitted",
+                referenceId: programmeId,
+            });
+
+            await createNotification({
+                role: "ads-tlt",
+                title: "NQF Feedback Submitted",
+                message: `The NQF feedback (${value.submissionType}) for programme ${programmeId} has been submitted.`,
+                type: "nqf_feedback_submitted",
+                referenceId: programmeId,
+            });
+
             return res.send({
                 message: "Documents submitted successfully",
             });
@@ -215,6 +256,22 @@ export default async (app: Router, upload: Multer) => {
                             ${JSON.stringify(stepData)}::jsonb
                         )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "NQF Registration Submitted",
+                message: `The NQF registration for programme ${programmeId} has been submitted.`,
+                type: "nqf_registration_submitted",
+                referenceId: programmeId,
+            });
+
+            await createNotification({
+                role: "ads-tlt",
+                title: "NQF Registration Submitted",
+                message: `The NQF registration for programme ${programmeId} has been submitted.`,
+                type: "nqf_registration_submitted",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Document submitted successfully",

@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, check, uuid, varchar, smallint, text, jsonb, timestamp, unique, boolean, bigint } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, uuid, varchar, smallint, text, jsonb, timestamp, unique, index, boolean, check, bigint } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -21,15 +21,6 @@ export const programmes = pgTable("programmes", {
 			foreignColumns: [users.id],
 			name: "programmes_initiator_fkey"
 		}),
-	check("programmes_id_not_null", sql`NOT NULL id`),
-	check("programmes_title_not_null", sql`NOT NULL title`),
-	check("programmes_code_not_null", sql`NOT NULL code`),
-	check("programmes_department_not_null", sql`NOT NULL department`),
-	check("programmes_faculty_not_null", sql`NOT NULL faculty`),
-	check("programmes_level_not_null", sql`NOT NULL level`),
-	check("programmes_status_not_null", sql`NOT NULL status`),
-	check("programmes_initator_not_null", sql`NOT NULL initiator`),
-	check("programmes_created_at_not_null", sql`NOT NULL created_at`),
 ]);
 
 export const faculty = pgTable("faculty", {
@@ -38,10 +29,7 @@ export const faculty = pgTable("faculty", {
 	description: text(),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-}, (table) => [
-	check("faculty_id_not_null", sql`NOT NULL id`),
-	check("faculty_name_not_null", sql`NOT NULL name`),
-]);
+});
 
 export const departments = pgTable("departments", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
@@ -56,8 +44,6 @@ export const departments = pgTable("departments", {
 			foreignColumns: [faculty.id],
 			name: "fk_department_faculty"
 		}).onDelete("set null"),
-	check("departments_id_not_null", sql`NOT NULL id`),
-	check("departments_name_not_null", sql`NOT NULL name`),
 ]);
 
 export const users = pgTable("users", {
@@ -76,10 +62,38 @@ export const users = pgTable("users", {
 }, (table) => [
 	unique("users_ad_user_id_key").on(table.adUserId),
 	unique("users_email_key").on(table.email),
-	check("users_id_not_null", sql`NOT NULL id`),
-	check("users_email_not_null", sql`NOT NULL email`),
-	check("users_role_not_null", sql`NOT NULL role`),
-	check("users_created_at_not_null1", sql`NOT NULL created_at`),
+]);
+
+export const notifications = pgTable("notifications", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	title: text().notNull(),
+	message: text().notNull(),
+	type: text(),
+	referenceId: uuid("reference_id"),
+	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_notification_created").using("btree", table.createdAt.desc().nullsFirst().op("timestamp_ops")),
+]);
+
+export const notificationRecipients = pgTable("notification_recipients", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	notificationId: uuid("notification_id"),
+	recipientId: uuid("recipient_id"),
+	isRead: boolean("is_read").default(false),
+	readAt: timestamp("read_at", { mode: 'string' }),
+}, (table) => [
+	index("idx_notification_recipient").using("btree", table.recipientId.asc().nullsLast().op("bool_ops"), table.isRead.asc().nullsLast().op("uuid_ops")),
+	foreignKey({
+			columns: [table.notificationId],
+			foreignColumns: [notifications.id],
+			name: "notification_recipients_notification_id_fkey"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.recipientId],
+			foreignColumns: [users.id],
+			name: "notification_recipients_recipient_id_fkey"
+		}).onDelete("cascade"),
+	unique("notification_recipients_notification_id_recipient_id_key").on(table.recipientId, table.notificationId),
 ]);
 
 export const programmePhaseSteps = pgTable("programme_phase_steps", {
@@ -104,7 +118,6 @@ export const programmePhaseSteps = pgTable("programme_phase_steps", {
 			name: "programme_phase_steps_programme_phase_id_fkey"
 		}).onDelete("cascade"),
 	unique("program_phase_steps_program_phase_id_phase_step_id_key").on(table.programmePhaseId, table.phaseStepId),
-	check("program_phase_steps_id_not_null", sql`NOT NULL id`),
 ]);
 
 export const phaseSteps = pgTable("phase_steps", {
@@ -121,19 +134,13 @@ export const phaseSteps = pgTable("phase_steps", {
 			name: "phase_steps_phase_id_fkey"
 		}),
 	unique("phase_steps_slug_unique").on(table.slug),
-	check("phases_id_not_null", sql`NOT NULL id`),
-	check("phases_name_not_null", sql`NOT NULL name`),
-	check("phase_steps_order_index_not_null", sql`NOT NULL order_index`),
-	check("phase_steps_phase_id_not_null", sql`NOT NULL phase_id`),
 ]);
 
 export const events = pgTable("events", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
 	title: text(),
 	date: timestamp({ mode: 'string' }),
-}, (table) => [
-	check("events_id_not_null", sql`NOT NULL id`),
-]);
+});
 
 export const programmePhases = pgTable("programme_phases", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
@@ -155,11 +162,6 @@ export const programmePhases = pgTable("programme_phases", {
 		}),
 	unique("program_phases_program_id_phase_id_key").on(table.programmeId, table.phaseId),
 	check("program_phases_status_check", sql`status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'completed'::text])`),
-	check("program_phases_id_not_null", sql`NOT NULL id`),
-	check("programme_phases_program_id_not_null", sql`NOT NULL programme_id`),
-	check("programme_phases_phase_id_not_null", sql`NOT NULL phase_id`),
-	check("programme_phases_status_not_null", sql`NOT NULL status`),
-	check("programme_phases_started_at_not_null", sql`NOT NULL started_at`),
 ]);
 
 export const phases = pgTable("phases", {
@@ -170,9 +172,6 @@ export const phases = pgTable("phases", {
 	slug: text(),
 }, (table) => [
 	unique("phases_slug_unique").on(table.slug),
-	check("phases_id_not_null1", sql`NOT NULL id`),
-	check("phases_name_not_null1", sql`NOT NULL name`),
-	check("phases_order_index_not_null", sql`NOT NULL order_index`),
 ]);
 
 export const attachments = pgTable("attachments", {
@@ -195,8 +194,4 @@ export const attachments = pgTable("attachments", {
 			foreignColumns: [users.id],
 			name: "attachments_uploaded_by_fkey"
 		}),
-	check("attachments_id_not_null", sql`NOT NULL id`),
-	check("attachments_programme_phase_step_id_not_null", sql`NOT NULL programme_phase_step_id`),
-	check("attachments_file_url_not_null", sql`NOT NULL path`),
-	check("attachments_uploaded_at_not_null", sql`NOT NULL uploaded_at`),
 ]);

@@ -15,6 +15,7 @@ import { programmeBaseSchema, programmeIdSchema } from "@/validators/base";
 import { saveFile } from "@/helpers/save-file";
 import { isDbKnownError } from "@/helpers/db-errors";
 import { eq, sql } from "drizzle-orm";
+import { createNotification } from "@/helpers/db-queries";
 
 const PHASE = "needs-analysis";
 
@@ -30,6 +31,15 @@ export default async (app: Router, upload: Multer) => {
             const [programmeRecord] = await db.insert(programmes).values(value).returning({ id: programmes.id });
             const programmeId = programmeRecord.id;
             await db.execute(sql`SELECT fn_get_or_create_step(${programmeId}, ${"programme-resume"})`);
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis Started",
+                message: `Need analysis has been started for programme ${programmeId}`,
+                type: "need_analysis_started",
+                referenceId: programmeId,
+            });
+
             res.send({ message: "Need analysis started" });
         } catch (err) {
             console.error(err);
@@ -49,6 +59,14 @@ export default async (app: Router, upload: Multer) => {
             const [programmeRecord] = await db.update(programmes)
                 .set(value).where(eq(programmes.id, req.params.id))
                 .returning({ id: programmes.id });
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis Updated",
+                message: `Need analysis has been updated for programme ${programmeRecord.id}`,
+                type: "need_analysis_updated",
+                referenceId: programmeRecord.id,
+            });
 
             res.send({ message: "Programme updated" });
         } catch (err) {
@@ -78,7 +96,7 @@ export default async (app: Router, upload: Multer) => {
             const result = await db.execute(
                 sql`SELECT fn_get_or_create_step(${programmeId}, ${"stakeholders-consultation"})`
             );
-            
+
             const ppsId = (result.rows[0] as any).fn_get_or_create_step as string;
 
             // then save files referencing ppsId
@@ -102,6 +120,14 @@ export default async (app: Router, upload: Multer) => {
                     stepData
                 )}::jsonb)`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis Consultation Recorded",
+                message: `Need analysis consultation has been recorded for programme ${programmeId}`,
+                type: "need_analysis_consultation_recorded",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Stakeholders consultation recorded successfully",
@@ -144,6 +170,14 @@ export default async (app: Router, upload: Multer) => {
                 )}::jsonb)`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis Survey Updated",
+                message: `Need analysis survey has been updated for programme ${programmeId}`,
+                type: "need_analysis_survey_updated",
+                referenceId: programmeId,
+            });
+
             return res.send({ message: "Survey questions saved successfully" });
         } catch (err: any) {
             console.error(err);
@@ -162,7 +196,6 @@ export default async (app: Router, upload: Multer) => {
 
         if (error) {
             console.error(error);
-
             return res.status(400).send(error.details.map(({ message }) => message));
         }
 
@@ -186,6 +219,14 @@ export default async (app: Router, upload: Multer) => {
                 ${JSON.stringify(stepData)}::jsonb
             )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis Concluded",
+                message: `Need analysis has been concluded for programme ${programmeId}`,
+                type: "need_analysis_concluded",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "PDQA recommendation submitted successfully",
@@ -222,6 +263,14 @@ export default async (app: Router, upload: Multer) => {
                   ${JSON.stringify({ startDate: date })}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis BOS Consultation Started",
+                message: `Need analysis BOS consultation has been started for programme ${programmeId}`,
+                type: "need_analysis_bos_consultation_started",
+                referenceId: programmeId,
+            });
 
             return res.send({ message: "BoS consultation started" });
         } catch (err) {
@@ -266,6 +315,15 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis BoS Consultation Concluded",
+                message: `Need analysis has been concluded for programme ${programmeId}`,
+                type: "need_analysis_bos_consultation_concluded",
+                referenceId: programmeId,
+            });
+
             return res.send({ message: "BoS recommendation recorded" });
         } catch (err) {
             console.error(err);
@@ -303,6 +361,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis APC Recommendation Started",
+                message: `Need analysis APC recommendation has been started for programme ${programmeId}`,
+                type: "need_analysis_apc_recommendation_started",
+                referenceId: programmeId,
+            });
 
             return res.send({ message: "APC start recorded successfully" });
         } catch (err) {
@@ -346,6 +412,14 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis APC Recommendation Concluded",
+                message: `Need analysis APC recommendation has been concluded for programme ${programmeId}`,
+                type: "need_analysis_apc_recommendation_concluded",
+                referenceId: programmeId,
+            });
+
             return res.send({ message: "APC recommendation recorded successfully" });
         } catch (err) {
             console.error(err);
@@ -388,6 +462,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Need Analysis Senate Recommendation Concluded",
+                message: `Need analysis senate recommendation has been concluded for programme ${programmeId}`,
+                type: "need_analysis_senate_recommendation_concluded",
+                referenceId: programmeId,
+            });
 
             return res.send({ message: "Senate recommendation recorded successfully" });
         } catch (err: any) {

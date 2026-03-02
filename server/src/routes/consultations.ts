@@ -7,6 +7,7 @@ import { sql } from "drizzle-orm";
 import { saveFile } from "@/helpers/save-file";
 import { db } from "@/db";
 import { isDbKnownError } from "@/helpers/db-errors";
+import { createNotification } from "@/helpers/db-queries";
 
 const PHASE = "external-stakeholder-consultation";
 
@@ -37,6 +38,15 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+
+            await createNotification({
+                role: "pdqa",
+                title: "External Stakeholder Consultation Started",
+                message: `External stakeholder consultation (Circulation of Draft Programme) has been started for programme ${programmeId} and draft programme document has been uploaded`,
+                type: "external_stakeholder_consultation_started",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Draft submitted successfully",
@@ -75,6 +85,14 @@ export default async (app: Router, upload: Multer) => {
                 )`
             );
 
+            await createNotification({
+                role: "pdqa",
+                title: "PAC Consultation Started",
+                message: `PAC Consultation and Benchmarking has been started for programme ${programmeId} and Final Draft/Minutes/Comments/Endorsement Letters have been uploaded`,
+                type: "pac_consultation_started",
+                referenceId: programmeId,
+            });
+
             return res.send({
                 message: "File submitted successfully",
             });
@@ -111,6 +129,14 @@ export default async (app: Router, upload: Multer) => {
                     ${JSON.stringify(stepData)}::jsonb
                 )`
             );
+
+            await createNotification({
+                role: "pdqa",
+                title: "Final Draft and PDQA Recommendations Submitted",
+                message: `Final Draft and PDQA Recommendations have been submitted for programme ${programmeId}`,
+                type: "final_draft_and_pdqa_recommendations_submitted",
+                referenceId: programmeId,
+            });
 
             return res.send({
                 message: "Final Draft submitted successfully",
