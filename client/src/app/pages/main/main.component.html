@@ -10,7 +10,7 @@
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-1 mt-3 w-52 p-2 shadow">
           <li><a routerLink='/home' routerLinkActive="active"
-              class="active:btn-secondary">{{currentUser?.firstName?"Programmes":"Home"}}</a></li>
+              class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           <!-- <li><a routerLink='/resume'>Getting Started</a></li> -->
           <li><a routerLink='/' routerLinkActive="active">Reports & Reviews</a></li>
           <li><a routerLink='/tutorials' routerLinkActive="active">Support</a></li>
@@ -25,7 +25,7 @@
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li><a routerLink='/home' routerLinkActive="active"
-              class="active:btn-secondary">{{currentUser?.firstName?"Programmes":"Home"}}</a></li>
+              class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           <!-- <li [hidden]="!loggedIn()" routerLinkActive="active"><a routerLink='/resume'>Getting Started</a></li> -->
           <li><a routerLink='/' routerLinkActive="active">Reports & Reviews</a></li>
           <li><a routerLink='/tutorials' routerLinkActive="active">Support</a></li>
@@ -38,170 +38,9 @@
 
     <div class="navbar-end items-center">
 
-      @if(currentUser){
-      <details class="dropdown dropdown-bottom dropdown-left ml-4">
-        <summary class="btn btn-ghost btn-circle">
-          <div class="avatar avatar-placeholder !hover:bg-transparent">
-            <div class="bg-transparent text-white size-10 p-0 flex items-center justify-center rounded-full">
-              <span class="material-symbols-rounded">
-                notifications
-              </span>
-            </div>
-          </div>
-        </summary>
-
-        <ul class="bg-white text-black rounded-box dropdown-content w-96 mt-3 p-4 shadow">
-          <li class="max-h-[55vh] overflow-y-auto">
-            <div class="space-y-2">
-
-              <div class="sticky space-y-2 top-0 z-50 backdrop-blur-lg">
-                <div class="flex justify-between items-center">
-                  <h3 class="text-lg">Notifications</h3>
-                  <button class="btn btn-sm btn-ghost">Mark all as read</button>
-                </div>
-
-                <div class="flex items-center justify-between">
-                  <div role="tablist" class="tabs tabs-border tabs-xs">
-                    <a role="tab" class="tab tab-active">All</a>
-                    <a role="tab" class="tab">Planning</a>
-                    <a role="tab" class="tab">Development</a>
-                    <a role="tab" class="tab">Consultations</a>
-                    <!-- <a role="tab" class="tab">Governance & Approvals</a>
-                  <a role="tab" class="tab">Accreditation</a> -->
-                  </div>
-                  <a role="tab" class="tab">
-                    <span class="material-symbols-rounded transition-all hover:rotate-45">
-                      settings
-                    </span>
-                  </a>
-                </div>
-
-              </div>
-
-              <div class="">
-                @for(notification of notifications; track notification.id){
-                <details class="collapse rounded-none!">
-                  <summary class="collapse-title p-2!">
-                    <div class="flex gap-4 items-center w-full">
-                      <div class="avatar avatar-placeholder">
-                        <div class="bg-gray-100 text-primary w-8 mask mask-squircle">
-                          <span class="text-xs">{{notification.code}}</span>
-                        </div>
-                      </div>
-                      <div class="flex flex-col flex-auto">
-                        <span class="font-semibold text-primary/95 text-sm">{{notification.name}}</span>
-                        <span class="text-xs text-gray-500">{{notification.date}}</span>
-                      </div>
-                    </div>
-                  </summary>
-                  <div class="collapse-content text-xs">
-                    {{notification.description}}
-                  </div>
-                </details>
-                }
-                @empty {
-                <div class="flex justify-center items-center">
-                  No notifications
-                </div>
-                }
-              </div>
-            </div>
-          </li>
-        </ul>
-
-      </details>
-      <details class="dropdown dropdown-bottom dropdown-left">
-        <summary class="btn btn-ghost btn-circle">
-          <div class="avatar avatar-placeholder">
-            <div class="bg-white text-primary size-10 p-0 flex items-center justify-center rounded-full">
-              <span class="uppercase text-xl">
-                {{currentUser?.firstName?.slice(0,1)}}{{currentUser?.lastName?.slice(0,1)}}
-              </span>
-            </div>
-          </div>
-        </summary>
-
-        <ul class="menu menu-sm bg-white text-black rounded-box dropdown-content w-80 mt-3 p-4 shadow">
-          <div class="flex flex-col gap-2">
-            <div class="rounded-lg p-4 bg-gray-100 w-full flex items-center gap-4">
-              <div class="avatar avatar-online avatar-placeholder">
-                <div class="bg-primary mask mask-squircle text-neutral-content w-12">
-                  <span
-                    class="text-xl">{{currentUser?.firstName?.slice(0,1)}}{{currentUser?.lastName?.slice(0,1)}}</span>
-                </div>
-              </div>
-
-              <div class="-space-y-1">
-                <div class="text-lg font-bold">{{currentUser?.firstName}} {{currentUser?.lastName}}</div>
-                <div class="text-xs opacity-60">{{currentUser?.email}}</div>
-              </div>
-
-            </div>
-
-            <div class="rounded-lg p-2 bg-gray-100 w-full">
-              <div class="pb-2 text-xs opacity-60 tracking-wide font-semibold">Personal Information</div>
-
-              <div class="flex flex-col gap-1 py-1">
-                <span class="text-xs font-bold opacity-50">Name </span>
-                <div class="grow flex gap-1">
-                  <div
-                    class="rounded-lg p-1.5 capitalize grow border-2 border-gray-300 text-sm font-semibold opacity-70">
-                    {{currentUser?.firstName}} {{currentUser?.lastName}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex flex-col gap-1 py-1">
-                <span class="text-xs font-bold opacity-50">Department</span>
-                <div class="grow flex gap-1">
-                  <div
-                    class="rounded-lg p-1.5 capitalize grow border-2 border-gray-300 text-sm font-semibold opacity-70">
-                    {{currentUser?.department?.name}}
-                  </div>
-                </div>
-              </div>
-
-              @if(currentUser?.faculty.name){
-              <div class="flex flex-col gap-1 py-1">
-                <span class="text-xs font-bold opacity-50">Department</span>
-                <div class="grow flex gap-1">
-                  <div
-                    class="rounded-lg p-1.5 capitalize grow border-2 border-gray-300 text-sm font-semibold opacity-70">
-                    {{currentUser?.faculty.name}}
-                  </div>
-                </div>
-              </div>
-              }
-
-              <div class="flex flex-col gap-1 py-1">
-                <span class="text-xs font-bold opacity-50">Role</span>
-                <div class="grow flex gap-1">
-                  <div
-                    class="rounded-lg p-1.5 capitalize grow border-2 border-gray-300 text-sm font-semibold opacity-70">
-                    {{currentUser?.role}}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex my-2 w-full bg-gray-100 rounded-lg">
-            <button class="btn btn-sm btn-ghost rounded-r-none w-1/2 group">
-              <span class="material-symbols-rounded group-hover:rotate-90 transition-all">
-                settings
-              </span>
-              Settings
-            </button>
-            <button class="btn btn-sm btn-ghost rounded-l-none w-1/2 group" (click)="auth.logout()">
-              <span class="material-symbols-rounded group-hover:-translate-x-2 transition-all">
-                logout
-              </span>
-              Logout
-            </button>
-          </div>
-        </ul>
-
-      </details>
+      @if(user){
+      <notification [user]="user" />
+      <profile [user]="user" />
       }@else {
       <a routerLink='/login' routerLinkActive="active" class="btn btn-secondary btn-sm btn-outline px-5">Login</a>
       }

@@ -1,0 +1,68 @@
+<details class="dropdown dropdown-bottom dropdown-left ml-4">
+  <summary class="btn btn-ghost btn-circle">
+    <div class="avatar avatar-placeholder !hover:bg-transparent">
+      <div class="bg-transparent text-white size-10 p-0 flex items-center justify-center rounded-full">
+        <span class="material-symbols-rounded">
+          notifications
+        </span>
+      </div>
+    </div>
+  </summary>
+
+  <ul class="bg-white text-black rounded-box dropdown-content w-96 mt-3 p-4 shadow">
+    <li class="max-h-[55vh] overflow-y-auto">
+      <div class="space-y-2">
+
+        <div class="sticky space-y-2 top-0 z-50 backdrop-blur-lg">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg">Notifications</h3>
+            <button class="btn btn-sm btn-ghost" (click)="markAllNotificationsAsRead()">Mark all as read</button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div role="tablist" class="tabs tabs-border tabs-xs">
+              <a role="tab" class="tab tab-active">All</a>
+              <a role="tab" class="tab">Planning</a>
+              <a role="tab" class="tab">Development</a>
+              <a role="tab" class="tab">Consultations</a>
+            </div>
+            <a role="tab" class="tab">
+              <span class="material-symbols-rounded transition-all hover:rotate-45">
+                settings
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div class="min-h-80">
+          @for(notification of notifications; track $index){
+          <details class="collapse rounded-none!">
+            <summary class="collapse-title p-2!" (click)="markNotificationAsRead(notification)">
+              <div class="flex gap-4 items-center w-full">
+                <div class="avatar avatar-placeholder" [class]=" notification.isRead?'':'avatar-online'">
+                  <div class="bg-gray-100 text-primary w-8 mask mask-squircle">
+                    <span class="text-xs font-semibold">{{notification.title | initials}}</span>
+                  </div>
+                </div>
+                <div class="flex flex-col flex-auto">
+                  <span [class]="notification.isRead ? 'text-gray-800' : 'text-primary/95 font-semibold'"
+                    class="text-sm">{{notification.title}}</span>
+                  <span class="text-xs text-gray-500">{{notification.createdAt | date}}</span>
+                </div>
+              </div>
+            </summary>
+            <div class="collapse-content text-xs">
+              {{notification?.message.replaceAll(notification.referenceId,notification.programmeName)}}
+            </div>
+          </details>
+          }
+          @empty {
+          <div class="flex justify-center items-center">
+            No notifications
+          </div>
+          }
+        </div>
+      </div>
+    </li>
+  </ul>
+</details>

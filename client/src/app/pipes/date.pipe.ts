@@ -7,7 +7,19 @@ import moment from 'moment';
 export class DatePipe implements PipeTransform {
 
   transform(value: string, ...args: unknown[]): unknown {
-    return moment(value, "DD/MM/YYYY", true).format("DD MMM YYYY");
+    if (!value) return '';
+
+    const parsedDate = moment(
+      value,
+      ["DD/MM/YYYY", "YYYY-MM-DD", moment.ISO_8601],
+      true
+    );
+
+    if (!parsedDate.isValid()) {
+      return '';
+    }
+
+    return parsedDate.format("DD MMM YYYY");
   }
 
 }

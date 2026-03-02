@@ -47,3 +47,18 @@ export const GET_EVENTS_BY_DATE = gql`
     }
   }
 `;
+
+export const GET_NOTIFICATIONS = gql`
+  query GetNotifications($userId: String!) {
+    notifications(userId: $userId) {
+      id
+      title
+      message
+      type
+      referenceId
+      createdAt
+      isRead
+      programmeName
+     }
+  }
+` ;

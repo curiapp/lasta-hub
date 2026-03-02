@@ -95,6 +95,17 @@ export type TutorialProcess = {
   id: number;
   name: string;
   description: string;
-  steps: {id: number; name: string; description: string }[];
+  steps: { id: number; name: string; description: string }[];
   resources?: string[];
+}
+
+export type Notifications = {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  referenceId?: string;
+  createdAt: string;
+  isRead: boolean;
+  programmeName: string;
 }

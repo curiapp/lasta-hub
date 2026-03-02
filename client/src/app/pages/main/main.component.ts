@@ -3,30 +3,33 @@ import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
-import { programmeNotifications } from '../../static';
-import { User } from '../../types';
+import { NotificationComponent } from "../../components/page/notification/notification.component";
+import { ProfileComponent } from "../../components/page/profile/profile.component";
 import { AuthenticationService } from '../../services/authentication.service';
+import { LoadingService } from '../../services/loading.service';
+import { User } from '../../types';
 
 @Component({
   selector: 'client-main',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NotificationComponent, ProfileComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css',
 })
 export class MainComponent {
   title = 'PDU - Home'
   currentYear: number = new Date().getFullYear();
-  currentUser: User;
-  notifications = programmeNotifications;
+  user: User;
   auth = inject(AuthenticationService);
   router = inject(Router);
   _location = inject(Location);
+  _loading = inject(LoadingService);
   activatedRoute = inject(ActivatedRoute);
   titleService = inject(Title);
 
+
   ngOnInit() {
     const appTitle = this.titleService.getTitle();
-    this.currentUser = this.auth.user;
+    this.user = this.auth.user;
 
     this.router
       .events.pipe(
