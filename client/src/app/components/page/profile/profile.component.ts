@@ -11,5 +11,4 @@ import { AuthenticationService } from '../../../services/authentication.service'
 export class ProfileComponent {
   @Input() user: User;
   auth = inject(AuthenticationService);
-
 }
