@@ -20,23 +20,20 @@ export class NotificationComponent {
   @Input() user: User;
   _loading = inject(LoadingService);
   http = inject(ClientService);
+  unreadNotificationsCount = 0;
 
 
   markNotificationAsRead(notification: Notifications) {
     if (notification?.isRead) return;
     this.http.post('notifications/read', { id: notification.id, userId: this.user?.id }).subscribe((res) => {
-
       this.apollo.client.refetchQueries({
         include: ['GetNotifications']
       });
-
-      this.ngOnInit();
     })
   }
 
   markAllNotificationsAsRead() {
     this.http.post('notifications/read-all', { userId: this.user?.id }).subscribe((res) => {
-      console.log("Marked all notifications as read", res);
       this.apollo.client.refetchQueries({
         include: ['GetProgrammes']
       });
@@ -53,6 +50,7 @@ export class NotificationComponent {
     }).valueChanges.subscribe((result: any) => {
       this._loading.isLoading.set(result.loading);
       const data = result?.data?.notifications;
+      this.unreadNotificationsCount = data.filter((notification: Notifications) => !notification.isRead).length;
       this.notifications = data;
     })
   }

@@ -1,7 +1,9 @@
 <details class="dropdown dropdown-bottom dropdown-left ml-4">
   <summary class="btn btn-ghost btn-circle">
     <div class="avatar avatar-placeholder !hover:bg-transparent">
-      <div class="bg-transparent text-white size-10 p-0 flex items-center justify-center rounded-full">
+      <div
+      [class]="unreadNotificationsCount > 0 ? 'avatar-online' : ''"
+        class="bg-transparent avatar  text-white hover:text-black size-10 p-0 flex items-center justify-center">
         <span class="material-symbols-rounded">
           notifications
         </span>
@@ -37,10 +39,11 @@
         <div class="min-h-80">
           @for(notification of notifications; track $index){
           <details class="collapse rounded-none!">
-            <summary class="collapse-title p-2!" (click)="markNotificationAsRead(notification)">
+            <summary class="collapse-title p-2! hover:bg-gray-50 rounded-lg"
+              (click)="markNotificationAsRead(notification)">
               <div class="flex gap-4 items-center w-full">
                 <div class="avatar avatar-placeholder" [class]=" notification.isRead?'':'avatar-online'">
-                  <div class="bg-gray-100 text-primary w-8 mask mask-squircle">
+                  <div class="bg-gray-50 text-primary w-8 mask mask-squircle">
                     <span class="text-xs font-semibold">{{notification.title | initials}}</span>
                   </div>
                 </div>
@@ -51,7 +54,7 @@
                 </div>
               </div>
             </summary>
-            <div class="collapse-content text-xs">
+            <div class="collapse-content text-xs bg-gray-50 rounded-lg my-2 p-4">
               {{notification?.message.replaceAll(notification.referenceId,notification.programmeName)}}
             </div>
           </details>
