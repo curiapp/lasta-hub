@@ -25,7 +25,11 @@ export class NotificationComponent {
   markNotificationAsRead(notification: Notifications) {
     if (notification?.isRead) return;
     this.http.post('notifications/read', { id: notification.id, userId: this.user?.id }).subscribe((res) => {
-      console.log("Read Notification ", res);
+
+      this.apollo.client.refetchQueries({
+        include: ['GetNotifications']
+      });
+
       this.ngOnInit();
     })
   }
@@ -33,7 +37,9 @@ export class NotificationComponent {
   markAllNotificationsAsRead() {
     this.http.post('notifications/read-all', { userId: this.user?.id }).subscribe((res) => {
       console.log("Marked all notifications as read", res);
-      this.ngOnInit();
+      this.apollo.client.refetchQueries({
+        include: ['GetProgrammes']
+      });
     })
   }
 
