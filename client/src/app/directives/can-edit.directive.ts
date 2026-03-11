@@ -23,4 +23,14 @@ export class CanEditDirective {
     }
   }
 
+  @Input() set canDelete(initiatorId: string | null) {
+    const allowed = this.permissions.canDelete(initiatorId);
+
+    this.vcr.clear();
+
+    if (allowed) {
+      this.vcr.createEmbeddedView(this.tpl);
+    }
+  }
+
 }

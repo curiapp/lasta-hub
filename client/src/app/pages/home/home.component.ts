@@ -15,12 +15,13 @@ import { LoadingService } from '../../services/loading.service';
 import { Programme, User } from '../../types';
 import { programmeDevIcons } from '../../static';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent, EventsComponent, CanEditDirective]
+  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent, EventsComponent, CanEditDirective, ActionButtonsComponent]
 })
 export class HomeComponent implements OnInit {
   currentUser: User;
@@ -31,7 +32,6 @@ export class HomeComponent implements OnInit {
   _loading = inject(LoadingService);
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
-  // programmes: Programme[] = [];
   programmes = signal<Programme[]>([]);
 
   searchText = signal("");

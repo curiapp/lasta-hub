@@ -62,7 +62,7 @@
       'Submission Type : ' + (nqfSubmission.extraData['submissionType']),
       'Date : ' + (nqfSubmission['date'] | date),
     ]">
-    <action-buttons [actions]="['download']" [fileId]="{name:'NQF Submission document',
+    <action-buttons [actions]="['download']" [target]="{name:'NQF Submission document',
       id: nqfSubmission?.extraData['submissionFile']}" />
   </card>
   }@else{
@@ -128,7 +128,7 @@
       'NQF ID : ' + (nqfRegistration.extraData['nqfId']),
       'Registration Date : ' + (nqfRegistration.extraData['date'] | date),
     ]">
-    <action-buttons [actions]="['download']" [fileId]="{name:'NQF qualification documentation',
+    <action-buttons [actions]="['download']" [target]="{name:'NQF qualification documentation',
       id: nqfRegistration?.extraData['nqfRegistrationFile']}" />
   </card>
   }@else{

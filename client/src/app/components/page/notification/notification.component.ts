@@ -50,7 +50,7 @@ export class NotificationComponent {
     }).valueChanges.subscribe((result: any) => {
       this._loading.isLoading.set(result.loading);
       const data = result?.data?.notifications;
-      this.unreadNotificationsCount = data.filter((notification: Notifications) => !notification.isRead).length;
+      this.unreadNotificationsCount = data?.filter((notification: Notifications) => !notification.isRead).length;
       this.notifications = data;
     })
   }

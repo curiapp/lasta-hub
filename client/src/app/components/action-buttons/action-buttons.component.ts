@@ -2,6 +2,10 @@ import { Component, inject, Input, ViewContainerRef } from '@angular/core';
 import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.component';
 import { ClientService } from '../../services/client.service';
 import { ToastService } from '../../services/toast.service';
+import { error } from 'console';
+import { Apollo } from 'apollo-angular';
+
+type TargetType = { id: string; name: string; type?: string };
 
 @Component({
   selector: 'action-buttons',
@@ -12,32 +16,48 @@ import { ToastService } from '../../services/toast.service';
 export class ActionButtonsComponent {
   // @ViewChild('container', { read: ViewContainerRef, static: true }) container: ViewContainerRef;
   @Input() actions = [];
-  @Input() fileId = { name: '', id: '' };
+  @Input() target: TargetType = { name: '', id: '' };
   viewContainer = inject(ViewContainerRef);
   http = inject(ClientService);
   toast = inject(ToastService);
+  apollo = inject(Apollo);
 
   onDelete() {
-    console.log("onDelete");
     const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
     componentRef.instance.action = "delete"
     componentRef.instance.message = "Are you sure you want to delete this item?";
+
+    componentRef.instance.onConfirm.subscribe((res) => {
+      if (res === "confirmed" && this.target?.type === "programme") {
+        this.http.delete(`programme/${this.target.id}`).subscribe({
+          next: data => {
+            this.toast.success(data?.message || "Item deleted successfully");
+            this.apollo.client.refetchQueries({
+              include: ['GetProgrammes']
+            });
+          },
+          error: error => {
+            this.toast.error(error?.error?.message || "Deletion failed. Please try again.");
+          }
+        })
+      }
+    });
   }
 
   onDownload() {
-    this.http.downloadFile<Blob>(`download/${this.fileId.id}`).subscribe({
+    this.http.downloadFile<Blob>(`download/${this.target.id}`).subscribe({
       next: data => {
         const url = window.URL.createObjectURL(data as unknown as Blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.fileId.name;
+        a.download = this.target.name;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       },
       error: error => {
-        this.toast.error(`Error HTTP Post Service`);
+        this.toast.error(`Download failed. Please try again.`);
       }
     })
   }

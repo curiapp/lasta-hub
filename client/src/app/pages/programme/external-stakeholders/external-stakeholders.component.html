@@ -27,7 +27,7 @@
   @if(circulationDraft?.stepName){
   <card title="Draft Programme Document " [descriptions]="['Date : ' + (circulationDraft?.extraData['date'] | date)]" >
     <action-buttons [actions]="['download']"
-    [fileId]="{name:'External Stakeholders Curriculum Programme Draft document',
+    [target]="{name:'External Stakeholders Curriculum Programme Draft document',
       id: circulationDraft?.extraData['draftFile']}" />
     </card>
   }@else{
@@ -61,7 +61,7 @@
   <card title="PAC Consultation and Benchmarking Document "
     [descriptions]="['Date : ' + (pacConsultation?.extraData['date'] | date)]" >
       <action-buttons [actions]="['download']"
-    [fileId]="{name:'External Stakeholders PAC and Benchmarking document',
+    [target]="{name:'External Stakeholders PAC and Benchmarking document',
       id: pacConsultation?.extraData['draftFile']}" />
     </card>
   }@else{
@@ -93,7 +93,7 @@
   <card title="final draft programme document"
     [descriptions]="['Date : ' + (finalDraft?.extraData['date'] | date)]">
       <action-buttons [actions]="['download']"
-    [fileId]="{name:'External Stakeholders consultation final programme draft document',
+    [target]="{name:'External Stakeholders consultation final programme draft document',
       id: finalDraft?.extraData['draftFile']}" />
     </card>
   }@else{

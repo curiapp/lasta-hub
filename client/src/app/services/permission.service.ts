@@ -21,4 +21,8 @@ export class PermissionService {
   canEdit(programmeInitiatorId: string): boolean {
     return this.hasRole('pdqa') || this.isInitiator(programmeInitiatorId);
   }
+
+  canDelete(programmeInitiatorId: string): boolean {
+    return this.isInitiator(programmeInitiatorId);
+  }
 }

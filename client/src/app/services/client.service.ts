@@ -45,5 +45,15 @@ export class ClientService {
     )
   }
 
+  delete(path: string): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/${path}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      catchError(handleError)
+    )
+  }
+
 
 }

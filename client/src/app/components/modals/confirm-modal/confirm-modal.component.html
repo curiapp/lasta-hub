@@ -4,20 +4,17 @@
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </form>
 
-    <h3 class="text-xl font-bold">Confirm to {{action}}</h3>
+    <h3 class="text-lg font-semibold">Confirm to {{action}}</h3>
 
     <div class="p">
-      <p class="text-sm">{{message}}</p>
+      <p class="text-xs">{{message}}</p>
     </div>
 
     <div class="modal-action">
       <form method="dialog">
         <button class="btn btn-sm btn-outline">Cancel</button>
       </form>
-      <button class="btn btn-sm btn-outline capitalize">{{action}}</button>
+      <button class="btn btn-sm btn-accent capitalize" (click)="confirm()">{{action}}</button>
     </div>
   </div>
-  <!-- <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form> -->
 </dialog>

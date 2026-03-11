@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'client-confirm-modal',
@@ -10,6 +10,14 @@ export class ConfirmModalComponent {
 
   @Input() action: 'edit' | 'delete' | 'accept' | 'view' = 'edit';
   @Input() message: string = 'confirm';
+
+  @Output() onConfirm = new EventEmitter<string>();
+
+  confirm() {
+    this.onConfirm.emit("confirmed");
+    const dialog: any = document.getElementById('confirm_modal');
+    dialog?.close();
+  }
 
   ngOnInit() {
     console.log("Testing");

@@ -24,7 +24,6 @@ export class CardComponent {
 
     console.log("Test name, ", name, id);
 
-
     this.http.downloadFile<Blob>(`download/${id}`).subscribe({
       next: data => {
         const url = window.URL.createObjectURL(data as unknown as Blob);

@@ -109,7 +109,7 @@
   @if(currDraft?.extraData['draftFile']){
   <card title="Curriculum Draft" [descriptions]="['Submitted : ' + (currDraft?.date | date)]">
     <action-buttons [actions]="['download']"
-    [fileId]="{name:'Curriculum Draft document',
+    [target]="{name:'Curriculum Draft document',
       id: currDraft?.extraData['draftFile']}" />
   </card>
   }@else{
@@ -141,7 +141,7 @@
   <card title="Recommendation"
     [descriptions]="['Decision : '+pdqaRecommend?.extraData?.decision  ,'Submitted : ' + (pdqaRecommend?.date | date)]">
     <action-buttons [actions]="['download']"
-    [fileId]="{name:'Curriculum Draft and PDQA Recommendation document',
+    [target]="{name:'Curriculum Draft and PDQA Recommendation document',
       id: pdqaRecommend?.extraData['draftFile']}" />
     </card>
   }@else{

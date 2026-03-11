@@ -35,7 +35,7 @@
         <fieldset class="stakeholder-input-container" [class.open]="isStakeholderShown()">
           <div class="flex h-fit items-center gap-1 border-2 border-dashed border-gray-300 rounded-box p-2">
             <div class="w-auto flex-auto">
-              <label class="input input-sm rounded-b-none rounded-r-none flex flex-auto gap-2 items-center ">
+              <label class="input input-sm border-b-0 rounded-b-none rounded-r-none flex flex-auto gap-2 items-center ">
                 <span class="material-symbols-rounded">
                   contact_page
                 </span>
@@ -45,7 +45,7 @@
 
               <label class="input input-sm  rounded-r-none rounded-t-none flex flex-auto gap-2 items-center ">
                 <span class="material-symbols-rounded">
-                  graph_5
+                  account_tree
                 </span>
                 <input type="text" placeholder="Enter stakeholder organisation" id="organisation" name="organisation"
                   required class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.organisation" #stakeorg="ngModel" />

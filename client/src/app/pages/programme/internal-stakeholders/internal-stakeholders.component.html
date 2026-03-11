@@ -35,7 +35,7 @@
     'Date : ' + (internalConsultations?.extraData['date'] | date)
   ]
   ">
-    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders Curriculum Programme Draft document',
+    <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders Curriculum Programme Draft document',
       id: internalConsultations?.extraData['draftedProgrammeFile']}" />
   </card>
   }@else{
@@ -69,7 +69,7 @@
       'Decision : '+ adstltReview?.extraData['decision'],
       'Date : ' + (adstltReview['date'] | date)
     ]">
-    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders ADSTLT Support Letter/Recommendations document',
+    <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders ADSTLT Support Letter/Recommendations document',
       id: adstltReview?.extraData['reviewFile']}" />
   </card>
   }@else{
@@ -103,7 +103,7 @@
       'Date : ' + (ceuReview['date'] | date)
       ]">
 
-    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders CEU Support Letter/Recommendations document',
+    <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders CEU Support Letter/Recommendations document',
       id: ceuReview?.extraData['reviewFile']}" />
   </card>
   }@else{
@@ -136,7 +136,7 @@
       'Decision : '+ pdqaRecommend?.extraData['decision'],
       'Date : ' + (pdqaRecommend['date'] | date)
       ]">
-    <action-buttons [actions]="['download']" [fileId]="{name:'Internal Stakeholders PDQA Support Letter/Recommendations document',
+    <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders PDQA Support Letter/Recommendations document',
       id: pdqaRecommend?.extraData['reviewFile']}" />
   </card>
   }@else{

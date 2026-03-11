@@ -61,7 +61,7 @@
       `${bosConsult?.extraData['deferTo']?'Defer To : '+ bosConsult?.extraData['deferTo']?.toUpperCase() :''}`,
       'Date : ' + (draftToBOS.extraData['date'] | date)
     ]">
-    <action-buttons [actions]="['download']" [fileId]="{name:'BOS Recommendations document',
+    <action-buttons [actions]="['download']" [target]="{name:'BOS Recommendations document',
       id: bosConsult?.extraData['draftFile']}" />
   </card>
   }@else{
@@ -92,7 +92,7 @@
       `${item['recommendedTo']?'Recommended To : '+ item['recommendedTo']?.toUpperCase() :''}`,
       'Date : ' + (item['date'] | date)
     ]">
-      <action-buttons [actions]="['download']" [fileId]="{name:`${item.faculty} Recommendations document`,
+      <action-buttons [actions]="['download']" [target]="{name:`${item.faculty} Recommendations document`,
       id: item['file']}" />
     </card>
     }@empty{
@@ -131,7 +131,7 @@
       'Decision : '+ apcRecommend?.extraData['decision'],
       'Date : ' + (apcRecommend?.extraData['date'] | date)
     ]">
-    <action-buttons [actions]="['download']" [fileId]="{name:'APC Recommendations document',
+    <action-buttons [actions]="['download']" [target]="{name:'APC Recommendations document',
       id: apcRecommend?.extraData['apcFile']}"
       />
   </card>
