@@ -16,7 +16,7 @@ export class DatePipe implements PipeTransform {
     );
 
     const format = includeTime
-      ? 'DD MMM YYYY HH:mm'
+      ? 'DD MMM YYYY - HH:mm'
       : 'DD MMM YYYY';
 
     if (!parsedDate.isValid()) {
