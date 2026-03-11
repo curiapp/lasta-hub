@@ -27,16 +27,7 @@ jobs:
               run: |
                 echo "::set-output name=sha::$(echo $GITHUB_SHA)"
                 echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta 
-
-            # - uses: dorny/paths-filter@v3
-            #   id: filter
-            #   with:
-            #     filters: |
-            #       server:
-            #         - 'server/**'
-            #       client:
-            #         - 'client/**'
-
+                
             -   name: Log in to GitHub Container Registry
                 uses: docker/login-action@v2
                 with:
@@ -85,7 +76,7 @@ jobs:
                 token: ${{ secrets.PAT }}
                 ref: master
         
-        -   name: Kustomize CBI-develop Server
+        -   name: Kustomize PDQA-develop Server
             if: github.repository == 'curiapp/lasta-hub'
             run: |
                 cd overlays/develop
@@ -97,7 +88,7 @@ jobs:
                 git commit -m "version-$SHA"
                 git push https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
 
-        -   name: Kustomize CBI-develop Frontend
+        -   name: Kustomize PDQA-develop Frontend
             if: github.repository == 'curiapp/lasta-hub'
             run: |
                 cd overlays/develop
