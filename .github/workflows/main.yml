@@ -5,29 +5,29 @@ on:
       types:
         - closed
       branches:
-        - feature/codebase-combine
+        - develop
     push:
       branches:
-        - feature/codebase-combine
+        - develop
 
 jobs: 
     build_develop:
         name: Build and Push Docker Image
-        if: github.ref == 'refs/heads/feature/codebase-combine'
+        if: github.ref == 'refs/heads/develop'
         environment: develop
         runs-on: ubuntu-latest
         outputs:
           output1: ${{ steps.step1.outputs.sha }}
 
         steps:
-            - name: Checkout feature/codebase-combine
+            - name: Checkout feature/develop
               uses: actions/checkout@v4
 
             - id: step1
               run: |
                 echo "::set-output name=sha::$(echo $GITHUB_SHA)"
                 echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta 
-                
+
             -   name: Log in to GitHub Container Registry
                 uses: docker/login-action@v2
                 with:
@@ -65,7 +65,7 @@ jobs:
     gitops_develop:
         name: Update GitOps Image Tag
         needs: build_develop
-        if: github.ref == 'refs/heads/feature/codebase-combine'
+        if: github.ref == 'refs/heads/feature/develop'
         environment: develop
         runs-on: ubuntu-latest
         steps:
@@ -103,7 +103,7 @@ jobs:
     deploy_develop:
       name: Apply Kustomize on Server
       needs: gitops_develop
-      if: github.ref == 'refs/heads/feature/codebase-combine'
+      if: github.ref == 'refs/heads/feature/develop'
       environment: develop
       runs-on: ubuntu-latest
 
