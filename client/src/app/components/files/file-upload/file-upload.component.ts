@@ -29,6 +29,7 @@ export class FileUploadComponent {
   modalControl = inject(ModalControlService);
   toast = inject(ToastService);
   apollo = inject(Apollo);
+  fileSizeMessage = "";
 
   onUpload(data) {
     this.formData = data;
@@ -45,11 +46,17 @@ export class FileUploadComponent {
         { name: 'X-Requested-With', value: 'XMLHttpRequest' },
       ],
       allowedFileType: ['image', 'pdf', 'doc', 'csv', 'txt', 'xls', 'ppt'],
-      maxFileSize: 5 * 1024 * 1024, // 5MB
+      maxFileSize: 10 * 1024 * 1024, // 10MB
     });
 
-    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
-    this.uploader.onBeforeUploadItem = (file) => { file.withCredentials = false; };
+    this.uploader.onAfterAddingFile = (file) => {
+      file.withCredentials = false;
+      this.fileSizeMessage = "";
+    };
+    this.uploader.onBeforeUploadItem = (file) => {
+      this.fileSizeMessage = "";
+      file.withCredentials = false;
+    };
 
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('programmeId', this.pid);
@@ -73,6 +80,16 @@ export class FileUploadComponent {
       } else {
         this.toast?.error("Oops! We couldn’t upload your file. Please try again.");
       }
+    };
+
+    this.uploader.onWhenAddingFileFailed = (item, filter, options) => {
+
+      if (filter.name === 'fileSize') {
+        // alert('File is too large. Please select a file smaller than 5MB.');
+        this.fileSizeMessage = 'File is too large. Please select a file smaller than 10MB.';
+        this.toast.error('File is too large. Please select a file smaller than 10 MB.');
+      }
+
     };
 
   }

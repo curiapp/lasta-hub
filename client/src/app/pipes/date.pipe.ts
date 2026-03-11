@@ -6,7 +6,7 @@ import moment from 'moment';
 })
 export class DatePipe implements PipeTransform {
 
-  transform(value: string, ...args: unknown[]): unknown {
+  transform(value: string, includeTime: boolean = false): unknown {
     if (!value) return '';
 
     const parsedDate = moment(
@@ -15,11 +15,15 @@ export class DatePipe implements PipeTransform {
       true
     );
 
+    const format = includeTime
+      ? 'DD MMM YYYY HH:mm'
+      : 'DD MMM YYYY';
+
     if (!parsedDate.isValid()) {
       return '';
     }
 
-    return parsedDate.format("DD MMM YYYY");
+    return parsedDate.format(format);
   }
 
 }

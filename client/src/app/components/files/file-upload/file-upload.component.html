@@ -14,7 +14,8 @@
             </svg>
             <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
               or drag and drop</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 5MB)</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 10MB)</p>
+            @if(fileSizeMessage){<p class="text-xs mt-2 text-error">{{ fileSizeMessage }}</p>}
           </div>
           <input id="dropzone-file" type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
         </label>
@@ -22,7 +23,8 @@
       }
 
       @if(uploader.queue.length>0){
-      <div class="h-36 flex flex-col justify-center group border-2 border-dashed border-gray-400 rounded-box bg-gray-50 p-2 relative">
+      <div
+        class="h-36 flex flex-col justify-center group border-2 border-dashed border-gray-400 rounded-box bg-gray-50 p-2 relative">
         <button
           class="size-8 absolute top-2 right-2 hidden group-hover:grid  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle"
           (click)="uploader.clearQueue()">
@@ -30,10 +32,9 @@
             close
           </span>
         </button>
-        @for (item of uploader.queue; track item.file.size) {
+        @for (item of uploader.queue; track $index) {
         <div class="rounded-box flex flex-col items-center gap-2 p-3 group transition-all">
-          <div
-            class="size-10 rounded-xl bg-gray-200 flex items-center justify-center pt-1">
+          <div class="size-10 rounded-xl bg-gray-200 flex items-center justify-center pt-1">
             <file-icon [fileName]="item.file.name"></file-icon>
           </div>
           <div class="grow w-[70%] tooltip text-left mb-2">
