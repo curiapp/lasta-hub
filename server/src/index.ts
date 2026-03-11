@@ -8,10 +8,12 @@ import { v7 as uuid } from "uuid";
 import consultationRoutes from "./routes/consultations";
 import curriculumDevelopmentRoutes from "./routes/curriculum-development";
 import eventsRoutes from "./routes/events";
+import fetchRoutes from "./routes/fetch-queries";
 import graphqlRoutes from "./routes/graphql";
 import institutionalBodiesRoutes from "./routes/institutional-bodies";
 import needAnalysisRoutes from "./routes/need-analysis";
 import notificationsRoutes from "./routes/notifications";
+import programmeRoutes from "./routes/programme";
 import qualificationsRoutes from "./routes/qualifications";
 import reviewsRoutes from "./routes/reviews";
 import usersRoutes from "./routes/users";
@@ -42,7 +44,9 @@ const PORT = process.env.PORT || 3000;
 const api = express.Router();
 usersRoutes(api);
 eventsRoutes(api);
+programmeRoutes(api);
 notificationsRoutes(api);
+fetchRoutes(api, upload);
 reviewsRoutes(api, upload);
 needAnalysisRoutes(api, upload);
 consultationRoutes(api, upload);
@@ -50,6 +54,7 @@ qualificationsRoutes(api, upload);
 institutionalBodiesRoutes(api, upload);
 curriculumDevelopmentRoutes(api, upload);
 graphqlRoutes(api);
+
 
 app.use("/api", api);
 app.use((err, _, res, next) => {
@@ -63,7 +68,6 @@ app.use((err, _, res, next) => {
     } else if (err) {
         return res.status(500).json({ error: "Something went wrong" });
     }
-
     next();
 });
 
