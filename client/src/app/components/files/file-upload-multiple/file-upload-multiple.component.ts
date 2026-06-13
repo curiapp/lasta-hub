@@ -65,7 +65,7 @@ export class FileUploadMultipleComponent {
         { name: 'X-Requested-With', value: 'XMLHttpRequest' },
       ],
       allowedFileType: ['image', 'pdf', 'doc', 'csv', 'txt', 'xls', 'ppt'],
-      maxFileSize: 5 * 1024 * 1024, // 5MB
+      maxFileSize: 5 * 1024 * 1024, // 5MB,
     });
 
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
@@ -74,16 +74,16 @@ export class FileUploadMultipleComponent {
     this.uploader.onBuildItemForm = (item: any, form: any) => {
       form.append('programmeId', this.pid);
       form.append('documentType', JSON.stringify(Object.fromEntries(this.selectedFiles.map(x => [x.documentType.toLowerCase().replace(" ", "-"), x.fileName]))));
+      form.append('files', item._file);
       objectToFormData(this.formData, form);
     };
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       if (status === 201 || status === 200) {
         const res = JSON.parse(response);
-        this.modalControl.close();
         this.uploader.clearQueue();
         this.toast?.success(res?.message);
-
+        this.modalControl.close();
         this.apollo.client.refetchQueries({
           include: ['GetProgrammePhase']
         });

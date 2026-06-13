@@ -137,6 +137,6 @@ ALTER TABLE "programme_phases" ADD CONSTRAINT "program_phases_program_id_fkey" F
 ALTER TABLE "programme_phases" ADD CONSTRAINT "programme_phases_phase_id_fkey" FOREIGN KEY ("phase_id") REFERENCES "public"."phases"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "attachments" ADD CONSTRAINT "attachments_programme_phase_step_id_fkey" FOREIGN KEY ("programme_phase_step_id") REFERENCES "public"."programme_phase_steps"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "attachments" ADD CONSTRAINT "attachments_uploaded_by_fkey" FOREIGN KEY ("uploaded_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "idx_notification_created" ON "notifications" USING btree ("created_at" timestamp_ops);--> statement-breakpoint
-CREATE INDEX "idx_notification_recipient" ON "notification_recipients" USING btree ("recipient_id" bool_ops,"is_read" uuid_ops);
+CREATE INDEX "idx_notification_created" ON "notifications" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "idx_notification_recipient" ON "notification_recipients" USING btree ("recipient_id","is_read");
 */

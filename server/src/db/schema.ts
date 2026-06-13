@@ -82,7 +82,7 @@ export const notificationRecipients = pgTable("notification_recipients", {
 	isRead: boolean("is_read").default(false),
 	readAt: timestamp("read_at", { mode: 'string' }),
 }, (table) => [
-	index("idx_notification_recipient").using("btree", table.recipientId.asc().nullsLast().op("bool_ops"), table.isRead.asc().nullsLast().op("uuid_ops")),
+	index("idx_notification_recipient").using("btree", table.recipientId.asc().nullsLast().op("uuid_ops"), table.isRead.asc().nullsLast().op("bool_ops")),
 	foreignKey({
 			columns: [table.notificationId],
 			foreignColumns: [notifications.id],

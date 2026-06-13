@@ -68,13 +68,13 @@ export class NeedAnalysisConsultationComponent implements OnInit {
   }
 
   ngOnInit() {
-    //override the onAfterAddingfile property of the uploader so it doesn't authenticate with //credentials.
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onBuildItemForm = (item: FileItem, form: any) => {
       form.append('programmeId', this.pid);
       form.append('startDate', this.needAnalysis.startDate);
       form.append('endDate', this.needAnalysis.endDate);
       form.append('organizations', JSON.stringify(this.stakeholders));
+      form.append('files', item._file);
     };
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {

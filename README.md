@@ -86,8 +86,14 @@ Generate schema from the existing database:
 ```
 npx drizzle-kit introspect
 ```
-
 This will generate `db/schema.ts` with all your tables (`faculty`, `department`, `users`, `programme_phases`, `phase_steps`, `programme_phase_steps`).
+
+Create a schema from existing drizzle schema
+
+```
+npx drizzle-kit push
+```
+
 
 Run backend server
 ```
