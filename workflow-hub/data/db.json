@@ -1,0 +1,466 @@
+{
+  "programmes": [
+    {
+      "id": "programme_mrb33y4t_slopcd",
+      "title": "Introduction to Computing",
+      "code": "ICG001",
+      "faculty": "Software Engineering",
+      "department": "Computer Science",
+      "level": "7",
+      "status": "in_progress",
+      "createdAt": "2026-07-07T20:11:24.173Z",
+      "updatedAt": "2026-07-07T20:11:24.173Z"
+    },
+    {
+      "id": "programme_mrb29p54_i4bpfk",
+      "title": "Distributed Systems",
+      "code": "DSA001",
+      "faculty": "Computer Science",
+      "department": "Software Engineering",
+      "level": "7",
+      "status": "in_progress",
+      "createdAt": "2026-07-07T19:47:52.840Z",
+      "updatedAt": "2026-07-07T20:08:01.638Z"
+    }
+  ],
+  "processes": [
+    {
+      "id": "process_mrb33y4t_53k4a6",
+      "programmeId": "programme_mrb33y4t_slopcd",
+      "definitionId": "curriculum-development",
+      "definitionVersion": 1,
+      "status": "running",
+      "currentStageId": "need-analysis",
+      "startedAt": "2026-07-07T20:11:24.173Z",
+      "completedAt": null
+    },
+    {
+      "id": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "curriculum-development",
+      "definitionVersion": 1,
+      "status": "running",
+      "currentStageId": "curriculum-development",
+      "startedAt": "2026-07-07T19:47:52.841Z",
+      "completedAt": null
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task_mrb33y4t_iwmx6s",
+      "processId": "process_mrb33y4t_53k4a6",
+      "programmeId": "programme_mrb33y4t_slopcd",
+      "definitionId": "programme-resume",
+      "name": "Programme Resume",
+      "stageId": "need-analysis",
+      "stageName": "Need Analysis",
+      "ownerRoles": [
+        "hod",
+        "dean"
+      ],
+      "status": "active",
+      "createdAt": "2026-07-07T20:11:24.173Z",
+      "completedAt": null,
+      "causedByTaskId": null,
+      "formData": null
+    },
+    {
+      "id": "task_mrb2zluu_g4n73d",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "cdc-and-pac-appointment",
+      "name": "CDC and PAC Appointment",
+      "stageId": "curriculum-development",
+      "stageName": "Curriculum Development",
+      "ownerRoles": [
+        "pdu",
+        "dean"
+      ],
+      "status": "active",
+      "createdAt": "2026-07-07T20:08:01.638Z",
+      "completedAt": null,
+      "causedByTaskId": "task_mrb2pdkf_cvtusj",
+      "formData": null
+    },
+    {
+      "id": "task_mrb2pdkf_cvtusj",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "senate-need-analysis",
+      "name": "Senate Need Analysis Approval",
+      "stageId": "need-analysis",
+      "stageName": "Need Analysis",
+      "ownerRoles": [
+        "senate"
+      ],
+      "status": "completed",
+      "createdAt": "2026-07-07T20:00:04.335Z",
+      "completedAt": "2026-07-07T20:08:01.637Z",
+      "causedByTaskId": "task_mrb2mktc_aw5kc8",
+      "formData": {
+        "decision": "approved",
+        "meetingDate": "2026-07-10"
+      },
+      "completedBy": {
+        "id": "demo-senate",
+        "role": "senate",
+        "name": "Senate"
+      },
+      "decision": "approved",
+      "transitionLabel": "Approved"
+    },
+    {
+      "id": "task_mrb2mktc_aw5kc8",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "bos-need-analysis",
+      "name": "BOS Need Analysis Recommendation",
+      "stageId": "need-analysis",
+      "stageName": "Need Analysis",
+      "ownerRoles": [
+        "bos"
+      ],
+      "status": "completed",
+      "createdAt": "2026-07-07T19:57:53.760Z",
+      "completedAt": "2026-07-07T20:00:04.335Z",
+      "causedByTaskId": "task_mrb2i9wj_jcjmaq",
+      "formData": {
+        "decision": "recommended",
+        "meetingDate": "2026-07-16"
+      },
+      "completedBy": {
+        "id": "demo-bos",
+        "role": "bos",
+        "name": "Board of Studies"
+      },
+      "decision": "recommended",
+      "transitionLabel": "Recommended"
+    },
+    {
+      "id": "task_mrb2i9wj_jcjmaq",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "pdqa-recommendation",
+      "name": "PDQA Recommendation",
+      "stageId": "need-analysis",
+      "stageName": "Need Analysis",
+      "ownerRoles": [
+        "pdu"
+      ],
+      "status": "completed",
+      "createdAt": "2026-07-07T19:54:32.995Z",
+      "completedAt": "2026-07-07T19:57:53.760Z",
+      "causedByTaskId": "task_mrb2fz6s_etihmd",
+      "formData": {
+        "decision": "proceed",
+        "notes": "Everything looks fine"
+      },
+      "completedBy": {
+        "id": "demo-pdu",
+        "role": "pdu",
+        "name": "PDU / PDQA"
+      },
+      "decision": "proceed",
+      "transitionLabel": "Proceed"
+    },
+    {
+      "id": "task_mrb2fz6s_etihmd",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "stakeholders-consultation",
+      "name": "Stakeholder Consultation",
+      "stageId": "need-analysis",
+      "stageName": "Need Analysis",
+      "ownerRoles": [
+        "pdu",
+        "hod"
+      ],
+      "status": "completed",
+      "createdAt": "2026-07-07T19:52:45.796Z",
+      "completedAt": "2026-07-07T19:54:32.995Z",
+      "causedByTaskId": "task_mrb29p55_lfgp7a",
+      "formData": {
+        "organizations": "GIPF, Sanlam",
+        "startDate": "2026-07-07",
+        "endDate": "2026-07-10"
+      },
+      "completedBy": {
+        "id": "demo-hod",
+        "role": "hod",
+        "name": "Head of Department"
+      },
+      "decision": null,
+      "transitionLabel": "Record Consultation"
+    },
+    {
+      "id": "task_mrb29p55_lfgp7a",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "programme-resume",
+      "name": "Programme Resume",
+      "stageId": "need-analysis",
+      "stageName": "Need Analysis",
+      "ownerRoles": [
+        "hod",
+        "dean"
+      ],
+      "status": "completed",
+      "createdAt": "2026-07-07T19:47:52.841Z",
+      "completedAt": "2026-07-07T19:52:45.796Z",
+      "causedByTaskId": null,
+      "formData": {
+        "rationale": "It's an emerging field, anticipate high demand in market",
+        "targetMarket": "Mining",
+        "expectedLevel": "7"
+      },
+      "completedBy": {
+        "id": "demo-hod",
+        "role": "hod",
+        "name": "Head of Department"
+      },
+      "decision": null,
+      "transitionLabel": "Submit Resume"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact_mrb2zlut_wtjxzy",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2pdkf_cvtusj",
+      "taskDefinitionId": "senate-need-analysis",
+      "type": "senate-extract",
+      "title": "Senate Extract",
+      "reference": "Senate Extract File Url",
+      "createdAt": "2026-07-07T20:08:01.637Z",
+      "createdBy": {
+        "id": "demo-senate",
+        "role": "senate",
+        "name": "Senate"
+      }
+    },
+    {
+      "id": "artifact_mrb2pdkf_7yisv5",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2mktc_aw5kc8",
+      "taskDefinitionId": "bos-need-analysis",
+      "type": "bos-minutes",
+      "title": "BOS Minutes",
+      "reference": "BOS Minutes File Url",
+      "createdAt": "2026-07-07T20:00:04.335Z",
+      "createdBy": {
+        "id": "demo-bos",
+        "role": "bos",
+        "name": "Board of Studies"
+      }
+    },
+    {
+      "id": "artifact_mrb2mktc_eqshvo",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2i9wj_jcjmaq",
+      "taskDefinitionId": "pdqa-recommendation",
+      "type": "recommendation-report",
+      "title": "Recommendation Report",
+      "reference": "Recomendation Report File Url",
+      "createdAt": "2026-07-07T19:57:53.760Z",
+      "createdBy": {
+        "id": "demo-pdu",
+        "role": "pdu",
+        "name": "PDU / PDQA"
+      }
+    },
+    {
+      "id": "artifact_mrb2i9wj_mlx1ov",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2fz6s_etihmd",
+      "taskDefinitionId": "stakeholders-consultation",
+      "type": "survey-results",
+      "title": "Survey Results",
+      "reference": "Survey File Url",
+      "createdAt": "2026-07-07T19:54:32.995Z",
+      "createdBy": {
+        "id": "demo-hod",
+        "role": "hod",
+        "name": "Head of Department"
+      }
+    },
+    {
+      "id": "artifact_mrb2i9wj_yv5ki4",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2fz6s_etihmd",
+      "taskDefinitionId": "stakeholders-consultation",
+      "type": "questionnaire",
+      "title": "Questionnaire",
+      "reference": "Questionaire Url",
+      "createdAt": "2026-07-07T19:54:32.995Z",
+      "createdBy": {
+        "id": "demo-hod",
+        "role": "hod",
+        "name": "Head of Department"
+      }
+    },
+    {
+      "id": "artifact_mrb2fz6s_1dbglg",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb29p55_lfgp7a",
+      "taskDefinitionId": "programme-resume",
+      "type": "concept-note",
+      "title": "Concept Note",
+      "reference": "something url",
+      "createdAt": "2026-07-07T19:52:45.796Z",
+      "createdBy": {
+        "id": "demo-hod",
+        "role": "hod",
+        "name": "Head of Department"
+      }
+    }
+  ],
+  "audit": [
+    {
+      "id": "audit_mrb33y4t_di2wh6",
+      "at": "2026-07-07T20:11:24.173Z",
+      "type": "process.started",
+      "programmeId": "programme_mrb33y4t_slopcd",
+      "processId": "process_mrb33y4t_53k4a6",
+      "message": "Introduction to Computing started"
+    },
+    {
+      "id": "audit_mrb33y4t_6f8jx2",
+      "at": "2026-07-07T20:11:24.173Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb33y4t_slopcd",
+      "processId": "process_mrb33y4t_53k4a6",
+      "taskId": "task_mrb33y4t_iwmx6s",
+      "taskDefinitionId": "programme-resume",
+      "message": "Programme Resume created"
+    },
+    {
+      "id": "audit_mrb2zluu_bc2mao",
+      "at": "2026-07-07T20:08:01.638Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2zluu_g4n73d",
+      "taskDefinitionId": "cdc-and-pac-appointment",
+      "message": "CDC and PAC Appointment created"
+    },
+    {
+      "id": "audit_mrb2zlut_543h3e",
+      "at": "2026-07-07T20:08:01.637Z",
+      "type": "task.completed",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2pdkf_cvtusj",
+      "taskDefinitionId": "senate-need-analysis",
+      "actorRole": "senate",
+      "message": "Senate Need Analysis Approval completed"
+    },
+    {
+      "id": "audit_mrb2pdkf_odxztz",
+      "at": "2026-07-07T20:00:04.335Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2pdkf_cvtusj",
+      "taskDefinitionId": "senate-need-analysis",
+      "message": "Senate Need Analysis Approval created"
+    },
+    {
+      "id": "audit_mrb2pdkf_e19xkv",
+      "at": "2026-07-07T20:00:04.335Z",
+      "type": "task.completed",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2mktc_aw5kc8",
+      "taskDefinitionId": "bos-need-analysis",
+      "actorRole": "bos",
+      "message": "BOS Need Analysis Recommendation completed"
+    },
+    {
+      "id": "audit_mrb2mktc_cwnpj8",
+      "at": "2026-07-07T19:57:53.760Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2mktc_aw5kc8",
+      "taskDefinitionId": "bos-need-analysis",
+      "message": "BOS Need Analysis Recommendation created"
+    },
+    {
+      "id": "audit_mrb2mktc_ovxygz",
+      "at": "2026-07-07T19:57:53.760Z",
+      "type": "task.completed",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2i9wj_jcjmaq",
+      "taskDefinitionId": "pdqa-recommendation",
+      "actorRole": "pdu",
+      "message": "PDQA Recommendation completed"
+    },
+    {
+      "id": "audit_mrb2i9wj_ie0tm1",
+      "at": "2026-07-07T19:54:32.995Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2i9wj_jcjmaq",
+      "taskDefinitionId": "pdqa-recommendation",
+      "message": "PDQA Recommendation created"
+    },
+    {
+      "id": "audit_mrb2i9wj_ldyp1f",
+      "at": "2026-07-07T19:54:32.995Z",
+      "type": "task.completed",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2fz6s_etihmd",
+      "taskDefinitionId": "stakeholders-consultation",
+      "actorRole": "hod",
+      "message": "Stakeholder Consultation completed"
+    },
+    {
+      "id": "audit_mrb2fz6s_gz3t02",
+      "at": "2026-07-07T19:52:45.796Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2fz6s_etihmd",
+      "taskDefinitionId": "stakeholders-consultation",
+      "message": "Stakeholder Consultation created"
+    },
+    {
+      "id": "audit_mrb2fz6s_q2gdhr",
+      "at": "2026-07-07T19:52:45.796Z",
+      "type": "task.completed",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb29p55_lfgp7a",
+      "taskDefinitionId": "programme-resume",
+      "actorRole": "hod",
+      "message": "Programme Resume completed"
+    },
+    {
+      "id": "audit_mrb29p55_2juson",
+      "at": "2026-07-07T19:47:52.841Z",
+      "type": "process.started",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "message": "Distributed Systems started"
+    },
+    {
+      "id": "audit_mrb29p55_lxyefw",
+      "at": "2026-07-07T19:47:52.841Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb29p55_lfgp7a",
+      "taskDefinitionId": "programme-resume",
+      "message": "Programme Resume created"
+    }
+  ]
+}
