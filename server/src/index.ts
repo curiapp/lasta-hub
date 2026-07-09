@@ -17,13 +17,14 @@ import programmeRoutes from "./routes/programme";
 import qualificationsRoutes from "./routes/qualifications";
 import reviewsRoutes from "./routes/reviews";
 import usersRoutes from "./routes/users";
+import createV2Router from "./v2/router";
 
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
 
 const upload = multer({
-    limits: { fieldSize: 1024 * 1024 * 5 },
+    limits: { fieldSize: 1024 * 1024 * 5, fileSize: 1024 * 1024 * 20 },
     storage: multer.diskStorage({
         destination: "uploads/",
         filename: (_, file, cb) => {
@@ -56,6 +57,8 @@ curriculumDevelopmentRoutes(api, upload);
 graphqlRoutes(api);
 
 
+app.use("/api/v2", createV2Router(upload));
+app.use("/api/v2", api);
 app.use("/api", api);
 app.use((err, _, res, next) => {
     console.warn("in error handler ", err);

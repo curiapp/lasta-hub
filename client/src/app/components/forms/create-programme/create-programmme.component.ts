@@ -11,15 +11,14 @@ import { ToastService } from '../../../services/toast.service';
 import { Programme, User } from '../../../types';
 
 @Component({
-  selector: 'start-need-analysis',
-  templateUrl: 'start-need-analysis.component.html',
-  styleUrls: ['start-need-analysis.component.css'],
+  selector: 'create-programme',
+  templateUrl: 'create-programme.component.html',
   providers: [StartNeedAnalysisService],
   imports: [FormsModule]
   //directives: [ ]
 })
 
-export class StartNeedAnalysisComponent implements OnInit {
+export class CreateProgrammeComponent implements OnInit {
   levels: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   programme: Programme = { code: "", title: "", faculty: "", department: "", initiator: "", level: 0 };
   _loading = inject(LoadingService);
@@ -28,27 +27,30 @@ export class StartNeedAnalysisComponent implements OnInit {
   toast = inject(ToastService);
   apollo = inject(Apollo);
   modalControl = inject(ModalControlService);
+  currentUser?: User;
 
   ngOnInit(): void {
     let user = sessionStorage.getItem("loggedInUser");
     if (user) {
-      let currentUser: User = JSON.parse(sessionStorage.getItem('loggedInUser'));
-      this.programme.initiator = currentUser?.id
-      this.programme.faculty = currentUser?.faculty?.id;
-      this.programme.department = currentUser?.department?.id;
+      this.currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+      this.programme.initiator = this.currentUser?.id
+      this.programme.faculty = this.currentUser?.faculty?.id;
+      this.programme.department = this.currentUser?.department?.id;
     }
   }
 
   onSubmit(form: NgForm) {
-    this._http.post('need-analysis/start', this.programme)
+    this._http.post('programmes', {
+      ...this.programme,
+      workflowSlug: 'lasta-programme-development',
+    })
       .subscribe({
         next: (data) => {
           form.reset();
-          this.toast.success(data?.message);
+          this.toast.success(data?.message ?? "Programme created and workflow started");
           this.modalControl.close();
-
           this.apollo.client.refetchQueries({
-            include: ['GetProgrammes']
+            include: ['V2GetProgrammes', 'V2GetBootstrap']
           });
         },
         error: (error) => {

@@ -12,19 +12,18 @@ import { ConfirmModalComponent } from '../../components/modals/confirm-modal/con
 import { EventsComponent } from "../../components/page/events/events.component";
 import { CanEditDirective } from '../../directives/can-edit.directive';
 import { getGreeting } from '../../functions';
-import { V2_GET_BOOTSTRAP, V2_GET_PROGRAMMES } from '../../graphql/graphql.queries.v2';
+import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
 import { LoadingService } from '../../services/loading.service';
 import { programmeDevIcons } from '../../static';
 import { Programme, User } from '../../types';
-import { WorkflowDashboard } from '../../types/programme-workflow';
 
 @Component({
-  selector: 'home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  selector: 'v1-home',
+  templateUrl: './v1-home.component.html',
+  styleUrls: ['./v1-home.component.css'],
   imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, EventsComponent, CanEditDirective, ActionButtonsComponent]
 })
-export class HomeComponent implements OnInit {
+export class V1HomeComponent implements OnInit {
   currentUser: User;
   programme: string;
   greetingMessage: string = '';
@@ -34,25 +33,13 @@ export class HomeComponent implements OnInit {
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
   programmes = signal<Programme[]>([]);
-  dashboard = signal<WorkflowDashboard>({
-    programmeCount: 0,
-    activeTaskCount: 0,
-    completedTaskCount: 0,
-    processCounts: {},
-    stageCount: 0,
-    taskDefinitionCount: 0,
-  });
 
   searchText = signal("");
   limit = 50;
 
   private queryRef = this.apollo.watchQuery<any>({
-    query: V2_GET_PROGRAMMES,
+    query: GET_PROGRAMMES,
     variables: { searchText: '', offset: 0, limit: this.limit },
-  });
-  private dashboardQueryRef = this.apollo.watchQuery<{ bootstrap: { dashboard: WorkflowDashboard } }>({
-    query: V2_GET_BOOTSTRAP,
-    fetchPolicy: 'network-only',
   });
 
   queryResult = toSignal(this.queryRef.valueChanges);
@@ -61,11 +48,6 @@ export class HomeComponent implements OnInit {
     this.queryRef.valueChanges.subscribe((result: any) => {
       this._loading.isLoading.set(result.loading);
       this.programmes.set(result?.data?.programmes || []);
-    });
-    this.dashboardQueryRef.valueChanges.subscribe((result) => {
-      if (result.data?.bootstrap?.dashboard) {
-        this.dashboard.set(result.data.bootstrap.dashboard as WorkflowDashboard);
-      }
     });
 
     toObservable(this.searchText).pipe(
@@ -79,11 +61,6 @@ export class HomeComponent implements OnInit {
   onSearch(event: Event) {
     const val = (event.target as HTMLInputElement).value;
     this.searchText.set(val);
-  }
-
-  clearSearch() {
-    this.searchText.set('');
-    this.queryRef.refetch({ searchText: '', offset: 0 });
   }
 
   loadMore() {

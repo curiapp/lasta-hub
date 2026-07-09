@@ -15,13 +15,16 @@ export type User = {
   },
 }
 
-export interface Programme {
+export type Programme = {
   id?: string;
   code: string;
   level: number;
   title: string;
   faculty?: string;
   department?: string;
+  facultyName?: string;
+  departmentName?: string;
+  status?: string;
   initiator?: string;
   initiatorFirstName?: string;
   initiatorLastName?: string

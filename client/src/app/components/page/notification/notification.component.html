@@ -21,18 +21,11 @@
             <button class="btn btn-sm btn-ghost" (click)="markAllNotificationsAsRead()">Mark all as read</button>
           </div>
 
-          <div class="flex items-center justify-between">
-            <div role="tablist" class="tabs tabs-border tabs-xs">
-              <a role="tab" class="tab tab-active">All</a>
-              <a role="tab" class="tab">Planning</a>
-              <a role="tab" class="tab">Development</a>
-              <a role="tab" class="tab">Consultations</a>
-            </div>
-            <a role="tab" class="tab">
-              <span class="material-symbols-rounded transition-all hover:rotate-45">
-                settings
-              </span>
-            </a>
+          <div class="flex items-center justify-between gap-3 rounded-md bg-base-200 px-3 py-2">
+            <span class="text-xs font-medium">Email notifications</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm"
+              [checked]="emailEnabled" [disabled]="savingPreference"
+              (change)="toggleEmailNotifications($any($event.target).checked)">
           </div>
         </div>
 
@@ -55,13 +48,16 @@
               </div>
             </summary>
             <div class="collapse-content text-xs bg-gray-50 rounded-lg my-2 p-4">
-              {{notification?.message.replaceAll(notification.referenceId,notification.programmeName)}}
+              {{ notification?.message }}
             </div>
           </details>
           }
           @empty {
-          <div class="flex justify-center items-center">
-            No notifications
+          <div class="flex min-h-72 items-end justify-center pb-10 text-center text-gray-400">
+            <div class="flex flex-col items-center gap-1">
+              <span class="material-symbols-rounded text-2xl">notifications_off</span>
+              <span class="text-xs">No notifications</span>
+            </div>
           </div>
           }
         </div>

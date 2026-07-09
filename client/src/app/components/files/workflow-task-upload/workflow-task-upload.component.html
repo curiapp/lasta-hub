@@ -1,0 +1,17 @@
+<div class="grid gap-1">
+  <label class="flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-md border border-dashed border-base-300 bg-base-100 px-3 hover:border-primary"
+    [class.pointer-events-none]="disabled" [class.opacity-50]="disabled">
+    <span class="flex min-w-0 items-center gap-2 text-xs">
+      <span class="material-symbols-rounded text-base-content/55">upload_file</span>
+      <span class="truncate">{{ uploader.isUploading ? 'Uploading...' : 'Choose file' }}</span>
+    </span>
+    <span class="badge badge-ghost badge-sm">Max 20 MB</span>
+    <input class="hidden" type="file" ng2FileSelect [uploader]="uploader" [disabled]="disabled">
+  </label>
+  @if (uploader.isUploading) {
+    <progress class="progress progress-primary w-full" [value]="uploader.progress" max="100"></progress>
+  }
+  @if (error) {
+    <small class="text-error">{{ error }}</small>
+  }
+</div>

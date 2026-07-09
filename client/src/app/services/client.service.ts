@@ -34,6 +34,12 @@ export class ClientService {
     )
   }
 
+  put<T>(path: string, data: T): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/${path}`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(handleError))
+  }
+
   downloadFile<T>(path: string): Observable<T[]> {
     return this.http.get<T[]>(`${environment.apiUrl}/${path}`, {
       headers: {

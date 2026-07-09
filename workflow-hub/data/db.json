@@ -20,7 +20,7 @@
       "level": "7",
       "status": "in_progress",
       "createdAt": "2026-07-07T19:47:52.840Z",
-      "updatedAt": "2026-07-07T20:08:01.638Z"
+      "updatedAt": "2026-07-08T23:06:37.951Z"
     }
   ],
   "processes": [
@@ -46,6 +46,23 @@
     }
   ],
   "tasks": [
+    {
+      "id": "task_mrcot5a7_g0q7jr",
+      "processId": "process_mrb29p55_ov4b30",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "definitionId": "curriculum-drafting",
+      "name": "Curriculum Drafting",
+      "stageId": "curriculum-development",
+      "stageName": "Curriculum Development",
+      "ownerRoles": [
+        "cdc"
+      ],
+      "status": "active",
+      "createdAt": "2026-07-08T23:06:37.951Z",
+      "completedAt": null,
+      "causedByTaskId": "task_mrb2zluu_g4n73d",
+      "formData": null
+    },
     {
       "id": "task_mrb33y4t_iwmx6s",
       "processId": "process_mrb33y4t_53k4a6",
@@ -76,11 +93,22 @@
         "pdu",
         "dean"
       ],
-      "status": "active",
+      "status": "completed",
       "createdAt": "2026-07-07T20:08:01.638Z",
-      "completedAt": null,
+      "completedAt": "2026-07-08T23:06:37.951Z",
       "causedByTaskId": "task_mrb2pdkf_cvtusj",
-      "formData": null
+      "formData": {
+        "cdcMembers": "kjdfhsdjkf \njfjskdfhnksjf  \ndjkfjshkfjdf bkjdjksf bkbsf",
+        "pacMembers": "bjdjkfsjkf jkbfsjbdfjkfkj  fkdjfhsjdf jkfbdskf",
+        "appointmentDate": "2026-07-16"
+      },
+      "completedBy": {
+        "id": "demo-pdu",
+        "role": "pdu",
+        "name": "PDU / PDQA"
+      },
+      "decision": null,
+      "transitionLabel": "Appoint Committees"
     },
     {
       "id": "task_mrb2pdkf_cvtusj",
@@ -224,6 +252,22 @@
   ],
   "artifacts": [
     {
+      "id": "artifact_mrcot5a7_mjcay9",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2zluu_g4n73d",
+      "taskDefinitionId": "cdc-and-pac-appointment",
+      "type": "appointment-letter",
+      "title": "Appointment Letter",
+      "reference": "trryyyuiyiuyiuug",
+      "createdAt": "2026-07-08T23:06:37.951Z",
+      "createdBy": {
+        "id": "demo-pdu",
+        "role": "pdu",
+        "name": "PDU / PDQA"
+      }
+    },
+    {
       "id": "artifact_mrb2zlut_wtjxzy",
       "programmeId": "programme_mrb29p54_i4bpfk",
       "processId": "process_mrb29p55_ov4b30",
@@ -321,6 +365,27 @@
     }
   ],
   "audit": [
+    {
+      "id": "audit_mrcot5a7_pethr7",
+      "at": "2026-07-08T23:06:37.951Z",
+      "type": "task.created",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrcot5a7_g0q7jr",
+      "taskDefinitionId": "curriculum-drafting",
+      "message": "Curriculum Drafting created"
+    },
+    {
+      "id": "audit_mrcot5a7_gdda0l",
+      "at": "2026-07-08T23:06:37.951Z",
+      "type": "task.completed",
+      "programmeId": "programme_mrb29p54_i4bpfk",
+      "processId": "process_mrb29p55_ov4b30",
+      "taskId": "task_mrb2zluu_g4n73d",
+      "taskDefinitionId": "cdc-and-pac-appointment",
+      "actorRole": "pdu",
+      "message": "CDC and PAC Appointment completed"
+    },
     {
       "id": "audit_mrb33y4t_di2wh6",
       "at": "2026-07-07T20:11:24.173Z",

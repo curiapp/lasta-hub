@@ -1,0 +1,95 @@
+<section class="w-full max-w-xl">
+  <header class="border-b border-base-300 pb-3">
+    <p class="text-xs font-bold uppercase text-base-content/50">Programme setup</p>
+    <h2 class="mt-1 text-xl font-bold">Create a new programme</h2>
+    <p class="mt-1 text-sm text-base-content/60">
+      Add the core programme details and start the development workflow.
+    </p>
+  </header>
+
+  @if (currentUser?.faculty || currentUser?.department) {
+    <div class="mt-3 flex flex-wrap gap-2">
+      @if (currentUser?.faculty?.name) {
+        <span class="badge badge-ghost badge-sm">
+          <span class="material-symbols-rounded text-sm">account_balance</span>
+          {{ currentUser?.faculty?.name }}
+        </span>
+      }
+      @if (currentUser?.department?.name) {
+        <span class="badge badge-ghost badge-sm">
+          <span class="material-symbols-rounded text-sm">groups</span>
+          {{ currentUser?.department?.name }}
+        </span>
+      }
+    </div>
+  }
+
+  <form (ngSubmit)="onSubmit(programmeForm)" #programmeForm="ngForm" class="mt-4 grid gap-4">
+    <label class="form-control">
+      <span class="mb-1 text-xs font-semibold">
+        Programme title <b class="text-error">*</b>
+      </span>
+      <label class="input input-bordered flex items-center gap-2"
+        [class.input-error]="title.invalid && title.touched">
+        <span class="material-symbols-rounded text-lg text-base-content/40">school</span>
+        <input id="programmeTitle" type="text" class="grow" required minlength="3"
+          [(ngModel)]="programme.title" name="title" #title="ngModel"
+          placeholder="e.g. Bachelor of Data Science">
+      </label>
+      @if (title.invalid && title.touched) {
+        <span class="mt-1 text-xs text-error">Enter a programme title of at least 3 characters.</span>
+      }
+    </label>
+
+    <div class="grid gap-4 sm:grid-cols-[1fr_0.75fr]">
+      <label class="form-control">
+        <span class="mb-1 text-xs font-semibold">
+          Programme code <b class="text-error">*</b>
+        </span>
+        <label class="input input-bordered flex items-center gap-2"
+          [class.input-error]="code.invalid && code.touched">
+          <span class="material-symbols-rounded text-lg text-base-content/40">tag</span>
+          <input id="programmeCode" type="text" class="grow uppercase" required minlength="2"
+            [(ngModel)]="programme.code" name="code" #code="ngModel" placeholder="e.g. BDS">
+        </label>
+        @if (code.invalid && code.touched) {
+          <span class="mt-1 text-xs text-error">Enter a valid programme code.</span>
+        }
+      </label>
+
+      <label class="form-control">
+        <span class="mb-1 text-xs font-semibold">
+          NQF level <b class="text-error">*</b>
+        </span>
+        <select class="select select-bordered w-full" required [(ngModel)]="programme.level"
+          name="level" #level="ngModel" [class.select-error]="level.invalid && level.touched">
+          <option [ngValue]="0" disabled>Select level</option>
+          @for (singleLevel of levels; track singleLevel) {
+            <option [ngValue]="singleLevel">Level {{ singleLevel }}</option>
+          }
+        </select>
+        @if ((level.invalid || programme.level === 0) && level.touched) {
+          <span class="mt-1 text-xs text-error">Select the programme’s NQF level.</span>
+        }
+      </label>
+    </div>
+
+    <div role="note" class="flex items-start gap-2 rounded-md bg-info/10 p-3 text-xs text-base-content/65">
+      <span class="material-symbols-rounded text-info">account_tree</span>
+      <span>The programme will begin with the <strong>Need Analysis</strong> stage after creation.</span>
+    </div>
+
+    <footer class="flex items-center justify-end gap-2 border-t border-base-300 pt-3">
+      <button type="submit" class="btn btn-primary btn-sm min-w-36"
+        [disabled]="programmeForm.invalid || programme.level === 0 || _loading.isLoading()">
+        @if (_loading.isLoading()) {
+          <span class="loading loading-spinner loading-sm"></span>
+          Creating
+        } @else {
+          <span class="material-symbols-rounded text-lg">add</span>
+          Create programme
+        }
+      </button>
+    </footer>
+  </form>
+</section>

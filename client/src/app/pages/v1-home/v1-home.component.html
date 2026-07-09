@@ -182,59 +182,94 @@
 
 
 @if(currentUser){
-<div class="border-b border-base-300 bg-base-200 px-4 py-5 lg:px-6">
-  <div class="mx-auto max-w-[1800px]">
-    <p class="text-xs font-bold uppercase text-base-content/50">{{ greetingMessage }}</p>
-    <div class="mt-1 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-      <div>
-        <h2 class="text-2xl font-bold capitalize">{{currentUser?.firstName}} {{currentUser?.lastName}}</h2>
-        <p class="text-sm text-base-content/55">{{ currentUser?.role }} workspace overview</p>
+<div class="p-4 bg-primary space-y-3 text-base-100">
+
+  <h3 class="capitalize">{{greetingMessage}}</h3>
+
+  <h2 class="text-3xl font-bold capitalize">{{currentUser?.firstName}} {{currentUser?.lastName}}</h2>
+
+  <div class="space-y-1 hidden md:block">
+    <span class="text-xs">Overview</span>
+    <div class="flex gap-6">
+
+      @if(currentUser?.faculty?.id){
+      <div class="flex items-center gap-3">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded">
+            account_balance
+          </span>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <span class="text-xs">Faculty</span>
+          <span class="text-lg capitalize">{{currentUser?.faculty.name}}</span>
+        </div>
       </div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        @if (currentUser?.faculty?.name) {
-          <span class="badge badge-outline badge-sm">{{ currentUser?.faculty?.name }}</span>
-        }
-        @if (currentUser?.department?.name) {
-          <span class="badge badge-outline badge-sm">{{ currentUser?.department?.name }}</span>
-        }
+      }
+
+      <div class="flex items-center gap-3">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded ">
+            lan
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs">Department</span>
+          <span class="text-lg capitalize">{{currentUser?.department?.name}}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
+          <span class="material-symbols-rounded ">
+            school
+          </span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs">{{currentUser?.role==='PDQA'? "Approved Programs": "Programs"}}</span>
+          <span class="text-lg capitalize">{{programmes()?.length}}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hidden md:hidden">
+    <span class="text-xs">Overview</span>
+    <div class="flex gap-2 flex-wrap">
+      @if(currentUser?.faculty?.id){
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            account_balance
+          </span>
+        </div>
+        <span>Faculty: {{currentUser?.faculty?.name}}</span>
+      </div>
+      }
+
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            lan
+          </span>
+        </div>
+        <span>Department: {{currentUser?.department?.name}}</span>
+      </div>
+
+      <div class="badge badge-ghost">
+        <div class="grid place-items-center size-6 bg-gray-200 rounded-full">
+          <span class="material-symbols-rounded ">
+            school
+          </span>
+        </div>
+        <span>Programmes: {{programmes()?.length}}</span>
       </div>
     </div>
 
-    <div class="mt-4 grid grid-cols-2 border border-base-300 bg-base-100 sm:grid-cols-4">
-      <div class="flex min-h-20 items-center gap-3 border-r border-b border-base-300 p-3 sm:border-b-0">
-        <span class="material-symbols-rounded text-primary">school</span>
-        <div>
-          <span class="block text-xs text-base-content/50">Programmes</span>
-          <strong class="text-xl">{{ dashboard().programmeCount }}</strong>
-        </div>
-      </div>
-      <div class="flex min-h-20 items-center gap-3 border-b border-base-300 p-3 sm:border-r sm:border-b-0">
-        <span class="material-symbols-rounded text-warning">pending_actions</span>
-        <div>
-          <span class="block text-xs text-base-content/50">Active tasks</span>
-          <strong class="text-xl">{{ dashboard().activeTaskCount }}</strong>
-        </div>
-      </div>
-      <div class="flex min-h-20 items-center gap-3 border-r border-base-300 p-3">
-        <span class="material-symbols-rounded text-success">task_alt</span>
-        <div>
-          <span class="block text-xs text-base-content/50">Completed tasks</span>
-          <strong class="text-xl">{{ dashboard().completedTaskCount }}</strong>
-        </div>
-      </div>
-      <div class="flex min-h-20 items-center gap-3 p-3">
-        <span class="material-symbols-rounded text-info">account_tree</span>
-        <div>
-          <span class="block text-xs text-base-content/50">Running workflows</span>
-          <strong class="text-xl">{{ dashboard().processCounts['running'] || 0 }}</strong>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
-<div class="px-4 py-5 lg:px-6">
-<div class="mx-auto flex max-w-[1800px] items-start gap-8">
+<div class="p-4 flex items-start gap-8">
 
   <div class="space-y-8 grow">
     <!-- @if(currentUser?.role==='pdqa'){ -->
@@ -250,39 +285,26 @@
     </div>
     <!-- } -->
 
-    <div class="mb-1 flex flex-col gap-3 border-b border-base-300 pb-3 lg:flex-row lg:items-end lg:justify-between">
-      <div>
-        <p class="text-xs font-bold uppercase text-base-content/50">Programme portfolio</p>
-        <div class="mt-1 flex items-center gap-2">
-          <h2 class="text-xl font-bold tracking-normal lg:text-2xl">
-            {{currentUser?.role ==='PDQA'?'':'Your'}} Programmes
-          </h2>
-          <span class="badge badge-ghost badge-sm">{{ programmes()?.length }}</span>
-        </div>
-      </div>
-      <div class="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
-        <label class="input input-bordered input-sm flex w-full items-center gap-2 bg-base-100 sm:min-w-64 lg:w-80">
-          <span class="material-symbols-rounded text-lg text-base-content/45">search</span>
-          <input type="search" class="grow" [value]="searchText()" (input)="onSearch($event)"
-            placeholder="Search programmes" />
-          @if (searchText()) {
-            <button type="button" class="btn btn-ghost btn-circle btn-xs" title="Clear search" (click)="clearSearch()">
-              <span class="material-symbols-rounded text-base">close</span>
-            </button>
-          }
+    <div class="flex flex-wrap justify-between gap-2 items-start">
+      <h2 class="text-lg lg:text-3xl font-light">{{currentUser?.role ==='PDQA'?'':'Your'}} Programmes</h2>
+      <div class="flex items-center gap-2">
+        <label class="input input-sm input-primary flex-auto lg:w-sm!">
+          <svg class="h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input type="search" class="grow" (input)="onSearch($event)" placeholder="Search" />
           <!-- <kbd class="kbd kbd-sm">⌘</kbd>
           <kbd class="kbd kbd-sm">K</kbd> -->
         </label>
 
-        <button class="btn btn-sm btn-ghost border border-base-300 bg-base-100" type="button" (click)="toggleView()">
-          <span class="material-symbols-rounded text-lg">{{ showAll ? 'unfold_less' : 'unfold_more' }}</span>
-          {{showAll ? "Show less" : "View all"}}
+        <button class="btn btn-sm btn-outline" (click)="toggleView()">
+          {{showAll?"Minimize":"View All"}}
         </button>
         <!-- @if(user==='LECTURER'){ -->
-        <button class="btn btn-sm btn-primary" type="button" (click)="create_programme.open()">
-          <span class="material-symbols-rounded text-lg">add</span>
-          New programme
-        </button>
+        <button class="btn btn-sm btn-primary" (click)="create_programme.open()">Create Programme</button>
         <!-- } -->
         <modal #create_programme>
           <create-programme></create-programme>
@@ -293,32 +315,28 @@
     @if(_loading.isLoading()){
     <programme-template />
     }@else {
-    <div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4">
+    <div class="grid md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-4 items-stretch">
       @for (item of programmes(); track item?.id) {
-      <article
-        class="group relative flex min-h-40 overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm transition-all hover:border-primary/40 hover:shadow-md">
+      <div class="group relative block rounded-lg">
+        <span class="absolute inset-0 border-2 border-dashed border-primary rounded-lg"></span>
+        <div
+          class="relative flex h-full transform items-end border-2 border-primary bg-white transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 rounded-lg">
           <!-- @if(item.isPreProgramme && user==='PDQA'){
           <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item?.id)">
             Approve
           </button>
           } -->
 
-          <action-buttons *canEdit="item?.initiator" [actions]="['delete']"
-            [target]="{name: item?.title, id: item?.id, type: 'programme'}" />
+          <action-buttons *canEdit="item?.initiator"  [actions]="['delete']" [target]="{name: item?.title, id: item?.id, type: 'programme'}" />
 
 
-          <a [routerLink]="['/programme/', item?.id]" class="block h-full w-full p-4 pr-12">
+          <a [routerLink]="['/v1-programme/', item?.id]" class="p-4 pt-0! transition-opacity sm:p-6">
             <!-- <a [routerLink]="['/programme/', item.id]" class="p-4 !pt-0 transition-opacity sm:p-6"> -->
-            <div class="mb-3 flex items-start justify-between gap-2">
-              <h3 class="line-clamp-2 text-sm font-semibold capitalize text-base-content sm:text-base">
-                {{item?.title}}
-              </h3>
-              <span class="badge badge-ghost badge-sm shrink-0 capitalize">{{ item.status || 'draft' }}</span>
-            </div>
+            <h3 class=" mt-4 font-medium sm:text-lg line-clamp-2 capitalize">{{item?.title}}</h3>
 
-            <div class="grid gap-1 text-xs text-base-content/60">
-              <span><b class="text-base-content/75">Code:</b> {{item?.code}} ·
-                <b class="text-base-content/75">Level:</b> {{item.level}}</span>
+            <div class="flex flex-col">
+              <span class="text-xs"><b>Code:</b> {{item?.code}},
+                <b>Level:</b> {{item.level}}</span>
               <!-- <span class="text-xs  line-clamp-2">Required Actions:
                   @for (it of item.actions; track it; let i = $index){
                   <span class="text-xs">{{it}}
@@ -327,14 +345,15 @@
                     </span>
                   }
                 </span> -->
-              <span><b class="text-base-content/75">Department:</b> {{item.departmentName || item.department}}</span>
-              <span><b class="text-base-content/75">Faculty:</b> {{item.facultyName || item.faculty}}</span>
+              <span class="text-xs"><b>Department:</b> {{item.department}}</span>
+              <span class="text-xs"><b>Faculty:</b> {{item.faculty}}</span>
             </div>
           </a>
-      </article>
+        </div>
+      </div>
       } @empty {
       <div
-        class="col-span-full flex h-64 w-full flex-col items-center justify-center gap-3 rounded-md border border-base-300 bg-base-200 text-center">
+        class="text-center w-full rounded-box bg-gray-100 h-64 flex items-center justify-center flex-col gap-3 col-span-full">
         <img src="assets/circled-x.svg" alt="empty image" class="size-8">
         <span class="text-sm">No Programmes</span>
       </div>
@@ -355,7 +374,6 @@
     <events />
   </div>
 
-</div>
 </div>
 
 }

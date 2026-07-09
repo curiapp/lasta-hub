@@ -1,0 +1,380 @@
+<main class="workflow-page">
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Process configuration</p>
+      <h1>Workflow Definition</h1>
+      <p class="subtitle">Design stages, assign task owners, and connect each decision to its next action.</p>
+    </div>
+    <div class="head-actions">
+      <label class="definition-select">
+        <span>Definition</span>
+        <select class="select select-bordered select-sm" [ngModel]="definition.id"
+          (ngModelChange)="loadDefinition($event)">
+          @for (item of definitions; track item.id) {
+            <option [value]="item.slug">{{ item.name }}</option>
+          }
+        </select>
+      </label>
+      <button class="btn btn-sm btn-ghost" type="button" (click)="createWorkflow()">
+        <span class="material-symbols-rounded">add</span>
+        New workflow
+      </button>
+      <button class="btn btn-sm btn-secondary" type="button" [disabled]="publishing || loading" (click)="publish()">
+        <span class="material-symbols-rounded">publish</span>
+        {{ publishing ? 'Publishing' : 'Publish' }}
+      </button>
+    </div>
+  </header>
+
+  @if (message) {
+    <div class="notice" [class.error]="messageType === 'error'">
+      <span class="material-symbols-rounded">{{ messageType === 'error' ? 'error' : 'check_circle' }}</span>
+      <span>{{ message }}</span>
+      <button type="button" title="Dismiss" (click)="message = ''">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+  }
+
+  <div class="mode-tabs" role="tablist" aria-label="Editor mode">
+    <button type="button" [class.active]="mode === 'builder'" (click)="setMode('builder')">
+      <span class="material-symbols-rounded">account_tree</span>
+      Builder
+    </button>
+    <button type="button" [class.active]="mode === 'json'" (click)="setMode('json')">
+      <span class="material-symbols-rounded">data_object</span>
+      JSON
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-state"><span class="loading loading-spinner loading-md"></span> Loading definition</div>
+  } @else if (mode === 'builder') {
+    <section class="builder">
+      <aside class="definition-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Settings</p>
+            <h2>Definition</h2>
+          </div>
+          <span class="version">v{{ definition.version }}</span>
+        </div>
+
+        <label class="field">
+          <span>Name</span>
+          <input class="input input-bordered input-sm" [(ngModel)]="definition.name" (ngModelChange)="builderChanged()">
+        </label>
+        <label class="field">
+          <span>Identifier</span>
+          <input class="input input-bordered input-sm" [(ngModel)]="definition.id" (ngModelChange)="builderChanged()">
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <textarea class="textarea textarea-bordered" rows="3" [(ngModel)]="definition.description"
+            (ngModelChange)="builderChanged()"></textarea>
+        </label>
+        <label class="field">
+          <span>Initial task</span>
+          <select class="select select-bordered select-sm" [(ngModel)]="definition.initialTask"
+            (ngModelChange)="builderChanged()">
+            <option value="">Select a task</option>
+            @for (task of definition.tasks; track task.id) {
+              <option [value]="task.id">{{ task.name }}</option>
+            }
+          </select>
+        </label>
+
+        <div class="section-heading compact">
+          <div><p class="eyebrow">Access</p><h2>Roles</h2></div>
+          <button class="icon-button" type="button" title="Add role" (click)="addRole()">
+            <span class="material-symbols-rounded">add</span>
+          </button>
+        </div>
+        <div class="role-list">
+          @for (role of definition.roles; track role.id; let index = $index) {
+            <div class="role-row">
+              <input class="input input-bordered input-sm" aria-label="Role name" [(ngModel)]="role.name"
+                (ngModelChange)="builderChanged()">
+              <input class="input input-bordered input-sm role-id" aria-label="Role identifier" [ngModel]="role.id"
+                (ngModelChange)="renameRole(index, $event)">
+              <button class="icon-button danger" type="button" title="Remove role" (click)="removeRole(index)">
+                <span class="material-symbols-rounded">delete</span>
+              </button>
+            </div>
+          }
+        </div>
+      </aside>
+
+      <section class="flow-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">Sequence</p><h2>Stages and tasks</h2></div>
+          <div class="inline-actions">
+            <button class="btn btn-xs btn-ghost" type="button" (click)="addStage()">
+              <span class="material-symbols-rounded">add</span> Stage
+            </button>
+            <button class="btn btn-xs btn-primary" type="button" (click)="addTask()">
+              <span class="material-symbols-rounded">add</span> Task
+            </button>
+          </div>
+        </div>
+
+        <div class="stage-list">
+          @for (stage of definition.stages; track stage.id; let stageIndex = $index) {
+            <section class="stage-band">
+              <header>
+                <span class="stage-number">{{ stage.order }}</span>
+                <input aria-label="Stage name" [(ngModel)]="stage.name" (ngModelChange)="builderChanged()">
+                <input class="stage-id" aria-label="Stage identifier" [ngModel]="stage.id"
+                  (ngModelChange)="renameStage(stage, $event)">
+                <button class="icon-button danger" type="button" title="Remove stage" (click)="removeStage(stageIndex)">
+                  <span class="material-symbols-rounded">delete</span>
+                </button>
+              </header>
+              <div class="task-list">
+                @for (task of definition.tasks; track task.id) {
+                  @if (task.stageId === stage.id) {
+                    <button type="button" class="task-item" [class.selected]="task.id === selectedTaskId"
+                      (click)="selectTask(task.id)">
+                      <span class="material-symbols-rounded">task_alt</span>
+                      <span><strong>{{ task.name }}</strong><small>{{ task.id }}</small></span>
+                      <span class="owner-count">{{ task.ownerRoles.length }}</span>
+                    </button>
+                  }
+                }
+                @if (!definition.tasks.length) {
+                  <p class="empty">Add the first task to begin the workflow.</p>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      </section>
+
+      <aside class="task-panel">
+        @if (selectedTask; as task) {
+          <div class="section-heading">
+            <div><p class="eyebrow">Selected task</p><h2>{{ task.name }}</h2></div>
+            <button class="icon-button danger" type="button" title="Remove task" (click)="removeTask(task.id)">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>
+          <label class="field">
+            <span>Task name</span>
+            <input class="input input-bordered input-sm" [(ngModel)]="task.name" (ngModelChange)="builderChanged()">
+          </label>
+          <label class="field">
+            <span>Task identifier</span>
+            <input class="input input-bordered input-sm" [ngModel]="task.id"
+              (ngModelChange)="renameTask(task, $event)">
+          </label>
+          <label class="field">
+            <span>Stage</span>
+            <select class="select select-bordered select-sm" [(ngModel)]="task.stageId"
+              (ngModelChange)="builderChanged()">
+              @for (stage of definition.stages; track stage.id) {
+                <option [value]="stage.id">{{ stage.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span>Owner roles</span>
+            <input class="input input-bordered input-sm" [(ngModel)]="roleEditor" (blur)="applyOwnerRoles()"
+              placeholder="hod, dean">
+            <small>Comma-separated role identifiers</small>
+          </label>
+
+          <div class="section-heading compact">
+            <div><p class="eyebrow">Task form</p><h2>Input fields</h2></div>
+            <div class="field-actions">
+              <button type="button" title="Add text field" (click)="addField('text')">
+                <span class="material-symbols-rounded">text_fields</span> Text
+              </button>
+              <button type="button" title="Add choice field" (click)="addField('select')">
+                <span class="material-symbols-rounded">list</span> Choices
+              </button>
+              <button type="button" title="Add repeatable member group" (click)="addField('repeater')">
+                <span class="material-symbols-rounded">group_add</span> Member group
+              </button>
+            </div>
+          </div>
+          <div class="field-list">
+            @for (inputField of task.form; track $index; let fieldIndex = $index) {
+              <div class="field-row">
+                <div class="field-row-head">
+                  <span class="material-symbols-rounded">input</span>
+                  <input class="input input-bordered input-sm" aria-label="Field label"
+                    [(ngModel)]="inputField.label" (ngModelChange)="builderChanged()">
+                  <button class="icon-button danger" type="button" title="Remove input field"
+                    (click)="removeField(fieldIndex)">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    <span>Key</span>
+                    <input class="input input-bordered input-sm" [(ngModel)]="inputField.key"
+                      (ngModelChange)="builderChanged()">
+                  </label>
+                  <label>
+                    <span>Type</span>
+                    <select class="select select-bordered select-sm" [ngModel]="inputField.type"
+                      (ngModelChange)="setFieldType(inputField, $event)">
+                      @for (fieldType of fieldTypes; track fieldType.value) {
+                        <option [value]="fieldType.value">{{ fieldType.label }}</option>
+                      }
+                    </select>
+                  </label>
+                </div>
+                @if (inputField.type === 'select' || inputField.type === 'radio' || inputField.type === 'checkbox') {
+                  <label class="option-editor">
+                    <span>Choice style</span>
+                    <span class="choice-kind">
+                      <button type="button" [class.active]="inputField.type === 'select'"
+                        (click)="setFieldType(inputField, 'select')">Select</button>
+                      <button type="button" [class.active]="inputField.type === 'radio'"
+                        (click)="setFieldType(inputField, 'radio')">Radio</button>
+                      <button type="button" [class.active]="inputField.type === 'checkbox'"
+                        (click)="setFieldType(inputField, 'checkbox')">Checkboxes</button>
+                    </span>
+                    <span>Options {{ inputField.type === 'checkbox' ? '(blank creates one yes/no checkbox)' : '' }}</span>
+                    <input class="input input-bordered input-sm" [ngModel]="fieldOptions(inputField)"
+                      (blur)="setFieldOptions(inputField, $any($event.target).value)"
+                      placeholder="Approved, Revision required">
+                  </label>
+                }
+                @if (inputField.type === 'repeater') {
+                  <div class="repeater-config">
+                    <div class="repeater-limits">
+                      <label>
+                        <span>Minimum entries</span>
+                        <input type="number" min="0" class="input input-bordered input-sm"
+                          [(ngModel)]="inputField.minItems" (ngModelChange)="builderChanged()">
+                      </label>
+                      <label>
+                        <span>Maximum entries</span>
+                        <input type="number" min="1" class="input input-bordered input-sm"
+                          [(ngModel)]="inputField.maxItems" (ngModelChange)="builderChanged()">
+                      </label>
+                    </div>
+                    <div class="child-heading">
+                      <span>Fields for each entry</span>
+                      <button class="icon-button" type="button" title="Add group field"
+                        (click)="addChildField(inputField)">
+                        <span class="material-symbols-rounded">add</span>
+                      </button>
+                    </div>
+                    <div class="child-fields">
+                      @for (childField of inputField.fields; track $index; let childIndex = $index) {
+                        <div class="child-field">
+                          <input class="input input-bordered input-sm" aria-label="Child field label"
+                            [(ngModel)]="childField.label" (ngModelChange)="builderChanged()">
+                          <input class="input input-bordered input-sm child-key" aria-label="Child field key"
+                            [(ngModel)]="childField.key" (ngModelChange)="builderChanged()">
+                          <select class="select select-bordered select-sm" [ngModel]="childField.type"
+                            (ngModelChange)="setFieldType(childField, $event)">
+                            @for (fieldType of childFieldTypes; track fieldType.value) {
+                              <option [value]="fieldType.value">{{ fieldType.label }}</option>
+                            }
+                          </select>
+                          <label class="child-required">
+                            <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="childField.required"
+                              (ngModelChange)="builderChanged()">
+                            Required
+                          </label>
+                          <button class="icon-button danger" type="button" title="Remove group field"
+                            (click)="removeChildField(inputField, childIndex)">
+                            <span class="material-symbols-rounded">close</span>
+                          </button>
+                          @if (childField.type === 'select' || childField.type === 'radio' || childField.type === 'checkbox') {
+                            <input class="input input-bordered input-sm child-options" aria-label="Child field options"
+                              [ngModel]="fieldOptions(childField)"
+                              (blur)="setFieldOptions(childField, $any($event.target).value)"
+                              placeholder="Options separated by commas">
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <label class="required-toggle">
+                  <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="inputField.required"
+                    (ngModelChange)="builderChanged()">
+                  Required
+                </label>
+              </div>
+            }
+            @if (!task.form?.length) {
+              <p class="empty">No input fields configured for this task.</p>
+            }
+          </div>
+
+          <div class="section-heading compact">
+            <div><p class="eyebrow">Routing</p><h2>Transitions</h2></div>
+            <button class="icon-button" type="button" title="Add transition" (click)="addTransition()">
+              <span class="material-symbols-rounded">add</span>
+            </button>
+          </div>
+          <div class="transition-list">
+            @for (transition of task.transitions; track $index; let index = $index) {
+              <div class="transition-row">
+                <div class="transition-line">
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                  <input class="input input-bordered input-sm" aria-label="Transition label"
+                    [(ngModel)]="transition.label" (ngModelChange)="builderChanged()">
+                  <button class="icon-button danger" type="button" title="Remove transition"
+                    (click)="removeTransition(index)">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <select class="select select-bordered select-sm" aria-label="Next task"
+                  [ngModel]="transitionTarget(transition)"
+                  (ngModelChange)="setTransitionTarget(transition, $event)">
+                  <option value="END">End workflow</option>
+                  @for (option of taskOptions; track option.id) {
+                    <option [value]="option.id" [disabled]="option.id === task.id">{{ option.name }}</option>
+                  }
+                </select>
+                <div class="notification-config">
+                  <span class="notification-label">
+                    <span class="material-symbols-rounded">notifications</span>
+                    Notify after completion
+                  </span>
+                  <div class="role-options">
+                    @for (role of definition.roles; track role.id) {
+                      <label>
+                        <input type="checkbox" class="checkbox checkbox-xs"
+                          [checked]="notifiesRole(transition, role.id)"
+                          (change)="toggleNotificationRole(transition, role.id, $any($event.target).checked)">
+                        {{ role.name }}
+                      </label>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+          <p class="json-hint">Artifacts, conditional branches, and advanced routing remain editable in JSON mode.</p>
+        } @else {
+          <div class="empty task-empty">
+            <span class="material-symbols-rounded">touch_app</span>
+            Select a task to edit its routing.
+          </div>
+        }
+      </aside>
+    </section>
+  } @else {
+    <section class="json-workspace">
+      <header>
+        <div><p class="eyebrow">Source</p><h2>Workflow JSON</h2></div>
+        <button class="btn btn-sm btn-primary" type="button" (click)="applyJson()">
+          <span class="material-symbols-rounded">check</span>
+          Apply JSON
+        </button>
+      </header>
+      <textarea class="json-editor" spellcheck="false" [(ngModel)]="jsonText"></textarea>
+      @if (jsonError) {
+        <p class="json-error"><span class="material-symbols-rounded">error</span>{{ jsonError }}</p>
+      }
+    </section>
+  }
+</main>

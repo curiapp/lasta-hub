@@ -1,5 +1,5 @@
-<span [class]="actions.length?'border-2':''"
-  class="inline-flex overflow-hidden rounded-lg bg-white shadow-xs absolute right-1 top-1">
+<span
+  class="absolute right-2 top-2 inline-flex overflow-hidden rounded-md bg-base-100 shadow-md ring-0 transition-shadow hover:shadow-lg">
   @if(actions.includes('download')){
   <button class="ripple flex cursor-pointer group hover:scale-90 p-1 text-gray-700 hover:bg-gray-50 focus:relative transition-all"
     (click)="onDownload()">
@@ -22,7 +22,8 @@
     </svg>
   </button> -->
   @if(actions.includes('delete')){
-  <button class="inline-block p-2 text-gray-700 hover:bg-gray-50 focus:relative transition-all hover:scale-105"
+  <button class="inline-grid size-8 place-items-center text-base-content/65 transition-colors hover:bg-error/10 hover:text-error focus:relative"
+    title="Delete"
     (click)="onDelete()">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
       class="size-4">

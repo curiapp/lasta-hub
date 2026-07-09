@@ -1,173 +1,420 @@
-<div class="p-4 sm:bg-primary space-y-3 sm:text-base-100">
-
-  <div class="flex gap-3 items-center">
-    <label for="programme_drawer" class="btn btn-ghost btn-circle drawer-button bg-gray-200 sm:bg-gray-100/10 lg:hidden">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"
-        stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-6 my-1.5">
-        <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-        <path d="M9 4v16"></path>
-        <path d="M14 10l2 2l-2 2"></path>
-      </svg>
-    </label>
-    <h2 class="text-2xl md:text-3xl font-bold capitalize">
-      {{programme?.title}}
-    </h2>
-  </div>
-
-  <div class="space-y-1 hidden md:block">
-    <span class="text-xs">Overview</span>
-    <div class="flex gap-3 lg:gap-8 flex-wrap">
-
-      <div class="flex items-center gap-3 min-w-48">
-        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
-          <span class="material-symbols-rounded">
-            workspaces
-          </span>
-        </div>
-        <div class="flex flex-col gap-0.5">
-          <span class="text-xs">Faculty</span>
-          <span class="text-base capitalize">{{programme?.faculty}}</span>
+<main class="min-h-[calc(100vh-7rem)] bg-base-200 p-3 lg:p-5">
+  <div class="mx-auto max-w-[1800px]">
+    <header class="flex min-h-16 flex-col justify-between gap-3 py-2 md:flex-row md:items-center">
+      <div class="flex min-w-0 items-center gap-2">
+        <button type="button" class="btn btn-ghost btn-square btn-sm" title="Back to programmes"
+          (click)="router.navigate(['/home'])">
+          <span class="material-symbols-rounded">arrow_back</span>
+        </button>
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase text-base-content/55">{{ programme?.code || 'Programme' }}</p>
+          <h1 class="truncate text-xl font-bold lg:text-2xl">{{ programme?.title || 'Programme workflow' }}</h1>
         </div>
       </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs text-base-content/60">
+        <span class="badge badge-outline badge-sm">Level {{ programme?.level }}</span>
+        <span [class]="statusClasses(detail?.process?.status || programme?.status)">
+          {{ detail?.process?.status || programme?.status || 'draft' }}
+        </span>
+        @if (detail?.definitionVersion) {
+          <span class="badge badge-outline badge-sm">Workflow v{{ detail?.definitionVersion?.version }}</span>
+        }
+      </div>
+    </header>
 
-      <div class="flex items-center gap-3 min-w-48">
-        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
-          <span class="material-symbols-rounded text-[30px]">
-            groups_3
-          </span>
-        </div>
-        <div class="flex flex-col gap-0.5">
-          <span class="text-xs">Department</span>
-          <span class="text-base capitalize">{{programme?.department}}</span>
+    <section class="mb-3 grid grid-cols-2 border border-base-300 bg-base-100 md:grid-cols-4">
+      <div class="flex min-h-20 items-center gap-3 border-r border-b border-base-300 p-3 md:border-b-0">
+        <span class="material-symbols-rounded text-primary">person</span>
+        <div class="min-w-0">
+          <span class="block text-xs text-base-content/50">Coordinator</span>
+          <strong class="block truncate text-sm">{{ initiatorName }}</strong>
         </div>
       </div>
-
-
-      <div class="flex items-center gap-3 min-w-44">
-        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
-          <span class="material-symbols-rounded ">
-            account_circle
-          </span>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-xs">Coordinator</span>
-          <span class="text-base capitalize">{{programme?.initiatorFirstName}} {{programme?.initiatorLastName}}</span>
+      <div class="flex min-h-20 items-center gap-3 border-r border-b border-base-300 p-3 md:border-b-0">
+        <span class="material-symbols-rounded text-warning">pending_actions</span>
+        <div>
+          <span class="block text-xs text-base-content/50">Active tasks</span>
+          <strong class="text-xl">{{ activeTaskCount }}</strong>
         </div>
       </div>
-
-      <!-- <div class="flex items-center gap-3">
-        <div class="grid place-items-center w-10 h-10 bg-gray-500/30 rounded-lg">
-          <span class="material-symbols-rounded ">
-            clock_loader_10
-          </span>
+      <div class="flex min-h-20 items-center gap-3 border-b border-base-300 p-3 md:border-r md:border-b-0">
+        <span class="material-symbols-rounded text-success">task_alt</span>
+        <div>
+          <span class="block text-xs text-base-content/50">Completed tasks</span>
+          <strong class="text-xl">{{ completedTaskCount }}</strong>
         </div>
-        <div class="flex flex-col">
-          <span class="text-xs">Current Stage</span>
-          <span class="text-base capitalize">Need Analysis</span>
-        </div>
-      </div> -->
-
-    </div>
-  </div>
-
-  <div class="collapse collapse-plus md:hidden border-2 border-primary rounded-lg">
-    <input type="checkbox" />
-    <div class="collapse-title font-semibold">Overview</div>
-    <div class="collapse-content text-sm">
-      <div class="flex flex-col gap-2">
-
-        <div class="flex items-center gap-3 min-w-48">
-          <div class="grid place-items-center w-10 h-10 bg-gray-200 rounded-lg">
-            <span class="material-symbols-rounded">
-              workspaces
-            </span>
-          </div>
-          <div class="flex flex-col gap-0.5">
-            <span class="text-xs">Faculty</span>
-            <span class="text-base capitalize">{{programme?.faculty}}</span>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-3 min-w-48">
-          <div class="grid place-items-center w-10 h-10 bg-gray-200 rounded-lg">
-            <span class="material-symbols-rounded text-[30px]">
-              groups_3
-            </span>
-          </div>
-          <div class="flex flex-col gap-0.5">
-            <span class="text-xs">Department</span>
-            <span class="text-base capitalize">{{programme?.department}}</span>
-          </div>
-        </div>
-
-
-        <div class="flex items-center gap-3 min-w-44">
-          <div class="grid place-items-center w-10 h-10 bg-gray-200 rounded-lg">
-            <span class="material-symbols-rounded ">
-              account_circle
-            </span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs">Coordinator</span>
-            <span class="text-base capitalize">{{programme?.initiatorFirstName}} {{programme?.initiatorLastName}}</span>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div class="grid place-items-center w-10 h-10 bg-gray-200 rounded-lg">
-            <span class="material-symbols-rounded ">
-              clock_loader_10
-            </span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs">Current Stage</span>
-            <span class="text-base capitalize">Need Analysis</span>
-          </div>
-        </div>
-
       </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="flex items-start">
-  <div class="drawer lg:drawer-open">
-    <input id="programme_drawer" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <div class="overflow-x-scroll h-screen p-4 lg:p-8">
-        <router-outlet></router-outlet>
+      <div class="flex min-h-20 items-center gap-3 p-3">
+        <span class="material-symbols-rounded text-info">account_tree</span>
+        <div class="min-w-0">
+          <span class="block text-xs text-base-content/50">Current stage</span>
+          <strong class="block truncate text-sm">{{ currentStageName }}</strong>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="drawer-side">
-      <div class="w-64 flex h-dvh flex-col justify-between bg-primary text-white">
-        <div class="px-4 py-2">
+    @if (message) {
+      <div role="alert" class="alert mb-3 py-2 text-sm" [class.alert-error]="messageType === 'error'"
+        [class.alert-success]="messageType === 'success'">
+        <span class="material-symbols-rounded">{{ messageType === 'error' ? 'error' : 'check_circle' }}</span>
+        <span>{{ message }}</span>
+        <button type="button" class="btn btn-ghost btn-square btn-xs" title="Dismiss" (click)="message = ''">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+    }
 
-          <div class="mx-2 my-4 lg:hidden is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Open">
-            <label for="programme_drawer"
-              class="btn btn-ghost btn-circle drawer-button bg-white/10 is-drawer-open:rotate-y-180">
-              <span class="material-symbols-rounded">
-                left_panel_close
-              </span>
-            </label>
-          </div>
+    @if (loading) {
+      <div class="grid min-h-[34rem] place-items-center border border-base-300 bg-base-100">
+        <div class="flex items-center gap-2 text-sm text-base-content/60">
+          <span class="loading loading-spinner loading-md"></span>
+          Loading programme workflow
+        </div>
+      </div>
+    } @else {
+      <section class="grid min-h-[720px] border border-base-300 bg-base-100 xl:grid-cols-[240px_minmax(520px,1fr)_300px]">
+        <aside class="border-b border-base-300 bg-base-200/40 p-3 xl:border-r xl:border-b-0">
+          <header class="mb-3 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase text-base-content/50">Progress</p>
+              <h2 class="font-bold">Stages</h2>
+            </div>
+            <span class="badge badge-ghost badge-sm">{{ stages.length }}</span>
+          </header>
 
-          <!-- <h4 class="mt-6 ml-4 font-bold text-xs">Programme Process</h4> -->
-
-          <ul class="mt-0 space-y-6">
-            @for (stage of stages; track stage.id){
-            <li>
-              <a [routerLink]=[stage.id] (click)="onSelect(stage.id)"
-                class="block cursor-pointer transition-all ease-in capitalize font-light active:font-medium rounded-lg active:bg-gray-100 active:text-gray-700 px-4 py-2 text-sm"
-                [class]="currentPath()==stage.id?'bg-base-100/20 backdrop-blur-lg text-white':'bg-transparent border-none text-white'">
-                {{stage.title}}
-              </a>
-            </li>
+          <nav class="flex gap-2 overflow-x-auto xl:grid" aria-label="Workflow stages">
+            @for (stage of stages; track stage.id) {
+              <button type="button" [class]="stageClasses(stage)" (click)="selectStage(stage)">
+                <span class="grid size-7 place-items-center rounded bg-base-300 text-xs font-bold">{{ stage.order }}</span>
+                <span class="min-w-0">
+                  <strong class="block truncate text-xs">{{ stage.name }}</strong>
+                  <small class="block capitalize text-base-content/50">{{ stageState(stage.id) }}</small>
+                </span>
+                <span class="size-2 rounded-full"
+                  [class.bg-warning]="stageState(stage.id) === 'active'"
+                  [class.bg-success]="stageState(stage.id) === 'completed'"
+                  [class.bg-base-300]="stageState(stage.id) === 'pending'"></span>
+              </button>
             }
-          </ul>
-        </div>
-      </div>
-    </div>
+          </nav>
+
+          <div class="mt-4 hidden border-t border-base-300 pt-3 text-xs leading-relaxed text-base-content/55 xl:block">
+            <span class="material-symbols-rounded text-primary">account_tree</span>
+            <p class="mt-1">{{ definition?.description }}</p>
+          </div>
+        </aside>
+
+        <section class="min-w-0 p-3 lg:p-4">
+          @if (!detail?.process) {
+            <div class="grid min-h-[32rem] place-items-center text-center">
+              <div>
+                <span class="material-symbols-rounded text-5xl text-primary">play_circle</span>
+                <h2 class="mt-2 text-lg font-bold">Ready to begin</h2>
+                <p class="mx-auto mt-1 max-w-md text-sm text-base-content/60">
+                  Start the Lasta programme development workflow for this programme.
+                </p>
+                <button class="btn btn-primary btn-sm mt-4" type="button" [disabled]="starting"
+                  (click)="startWorkflow()">
+                  <span class="material-symbols-rounded">play_arrow</span>
+                  {{ starting ? 'Starting' : 'Start workflow' }}
+                </button>
+              </div>
+            </div>
+          } @else {
+            <header class="flex min-h-12 items-center justify-between gap-3">
+              <div>
+                <p class="text-xs font-bold uppercase text-base-content/50">Current stage</p>
+                <h2 class="font-bold">{{ selectedStage?.name }}</h2>
+              </div>
+              <span [class]="statusClasses(stageState(selectedStageId))">{{ stageState(selectedStageId) }}</span>
+            </header>
+
+            <div role="tablist" class="tabs tabs-border mb-3 max-w-full flex-nowrap overflow-x-auto">
+              @for (task of stageTaskDefinitions; track task.id) {
+                <button type="button" role="tab" class="tab h-auto min-h-10 flex-none gap-1 px-3 text-xs"
+                  [class.tab-active]="task.id === selectedTaskKey" (click)="selectTask(task.id)">
+                  <span class="material-symbols-rounded text-base"
+                    [class.text-success]="taskInstance(task.id)?.status === 'completed'">
+                    {{ taskInstance(task.id)?.status === 'completed' ? 'check_circle' : 'task_alt' }}
+                  </span>
+                  {{ task.name }}
+                </button>
+              }
+            </div>
+
+            @if (selectedTaskDefinition; as taskDefinition) {
+              <article class="overflow-hidden rounded-md border border-base-300">
+                <header class="flex items-start justify-between gap-3 bg-base-200/50 p-3">
+                  <div>
+                    <p class="font-mono text-xs uppercase text-base-content/45">{{ taskDefinition.id }}</p>
+                    <h2 class="font-bold">{{ taskDefinition.name }}</h2>
+                    <p class="mt-1 text-xs text-base-content/55">Owned by {{ taskDefinition.ownerRoles.join(', ') }}</p>
+                  </div>
+                  <span [class]="statusClasses(selectedTaskInstance?.status || 'pending')">
+                    {{ selectedTaskInstance?.status || 'pending' }}
+                  </span>
+                </header>
+
+                @if (!selectedTaskInstance) {
+                  <div class="grid min-h-48 place-items-center text-center text-sm text-base-content/55">
+                    <div>
+                      <span class="material-symbols-rounded text-3xl">schedule</span>
+                      <p>This task becomes available when the workflow reaches it.</p>
+                    </div>
+                  </div>
+                } @else {
+                  @if (isReadOnly) {
+                    <section class="grid gap-4 p-4">
+                      <div class="flex items-center justify-between gap-3 rounded-md bg-base-200 px-3 py-2">
+                        <span class="text-xs font-semibold">
+                          {{ selectedTaskInstance.status === 'completed' ? 'Completed submission' : 'Programme task information' }}
+                        </span>
+                        <span class="badge badge-outline badge-sm">View only</span>
+                      </div>
+                      <dl class="grid gap-x-6 gap-y-4 md:grid-cols-2">
+                        @for (field of taskDefinition.form ?? []; track field.key) {
+                          <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
+                            <dt class="text-xs font-semibold text-base-content/55">{{ field.label }}</dt>
+                            <dd class="mt-1 whitespace-pre-wrap break-words text-sm font-medium text-base-content">
+                              {{ displayValue(formData[field.key]) }}
+                            </dd>
+                          </div>
+                        }
+                      </dl>
+                    </section>
+                  } @else {
+                  <fieldset class="p-3 lg:p-4" [disabled]="!canCompleteSelectedTask">
+                    <div class="grid gap-4 md:grid-cols-2">
+                      @for (field of taskDefinition.form ?? []; track field.key) {
+                        <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
+                          <label class="mb-1 block text-xs font-semibold" [for]="'field-' + field.key">
+                            {{ field.label }}
+                            @if (field.required) { <span class="text-error">*</span> }
+                          </label>
+
+                          @if (field.type === 'textarea') {
+                            <textarea class="textarea textarea-bordered w-full" [id]="'field-' + field.key"
+                              [(ngModel)]="formData[field.key]" rows="4"></textarea>
+                          } @else if (field.type === 'select') {
+                            <select class="select select-bordered w-full" [id]="'field-' + field.key"
+                              [(ngModel)]="formData[field.key]">
+                              <option value="">Select an option</option>
+                              @for (option of (field['options']) ?? []; track option) {
+                                <option [value]="option">{{ option }}</option>
+                              }
+                            </select>
+                          } @else if (field.type === 'radio') {
+                            <div class="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-base-300 px-3">
+                              @for (option of field.options ?? []; track option) {
+                                <label class="flex items-center gap-2 text-xs">
+                                  <input type="radio" class="radio radio-sm" [name]="field.key"
+                                    [value]="option" [(ngModel)]="formData[field.key]">
+                                  {{ option }}
+                                </label>
+                              }
+                            </div>
+                          } @else if (field.type === 'checkbox' && field.options?.length) {
+                            <div class="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-base-300 px-3">
+                              @for (option of field.options ?? []; track option) {
+                                <label class="flex items-center gap-2 text-xs">
+                                  <input type="checkbox" class="checkbox checkbox-sm"
+                                    [checked]="checkboxSelected(field, option)"
+                                    (change)="toggleCheckboxOption(field, option, $any($event.target).checked)">
+                                  {{ option }}
+                                </label>
+                              }
+                            </div>
+                          } @else if (field.type === 'checkbox') {
+                            <label class="flex min-h-10 items-center gap-2">
+                              <input type="checkbox" class="toggle toggle-sm" [(ngModel)]="formData[field.key]">
+                              <span class="text-xs">Yes</span>
+                            </label>
+                          } @else if (field.type === 'file') {
+                            <input class="file-input file-input-bordered w-full" type="file"
+                              [id]="'field-' + field.key" (change)="setFileField(field, $event)">
+                          } @else if (field.type === 'repeater') {
+                            <div class="grid gap-2">
+                              @for (item of repeaterItems(field); track $index; let itemIndex = $index) {
+                                <section class="overflow-hidden rounded-md border border-base-300">
+                                  <header class="flex min-h-10 items-center justify-between bg-base-200/60 px-3">
+                                    <strong class="text-xs">{{ field.label }} {{ itemIndex + 1 }}</strong>
+                                    <button type="button" class="btn btn-ghost btn-square btn-xs text-error"
+                                      title="Remove entry" (click)="removeRepeaterItem(field, itemIndex)">
+                                      <span class="material-symbols-rounded">delete</span>
+                                    </button>
+                                  </header>
+                                  <div class="grid gap-3 p-3 md:grid-cols-2">
+                                    @for (child of field.fields ?? []; track child.key) {
+                                      <div>
+                                        <label class="mb-1 block text-xs font-semibold">
+                                          {{ child.label }}
+                                          @if (child.required) { <span class="text-error">*</span> }
+                                        </label>
+                                        @if (child.type === 'select') {
+                                          <select class="select select-bordered w-full" [(ngModel)]="item[child.key]">
+                                            <option value="">Select an option</option>
+                                            @for (option of child.options ?? []; track option) {
+                                              <option [value]="option">{{ option }}</option>
+                                            }
+                                          </select>
+                                        } @else if (child.type === 'radio') {
+                                          <div class="flex min-h-10 flex-wrap items-center gap-3 rounded-md border border-base-300 px-3">
+                                            @for (option of child.options ?? []; track option) {
+                                              <label class="flex items-center gap-2 text-xs">
+                                                <input type="radio" class="radio radio-sm"
+                                                  [name]="field.key + '-' + itemIndex + '-' + child.key"
+                                                  [value]="option" [(ngModel)]="item[child.key]">
+                                                {{ option }}
+                                              </label>
+                                            }
+                                          </div>
+                                        } @else if (child.type === 'checkbox' && child.options?.length) {
+                                          <div class="flex min-h-10 flex-wrap items-center gap-3 rounded-md border border-base-300 px-3">
+                                            @for (option of child.options ?? []; track option) {
+                                              <label class="flex items-center gap-2 text-xs">
+                                                <input type="checkbox" class="checkbox checkbox-sm"
+                                                  [checked]="checkboxSelected(child, option, item)"
+                                                  (change)="toggleCheckboxOption(child, option, $any($event.target).checked, item)">
+                                                {{ option }}
+                                              </label>
+                                            }
+                                          </div>
+                                        } @else if (child.type === 'file') {
+                                          <input class="file-input file-input-bordered w-full" type="file"
+                                            (change)="setFileField(child, $event, item)">
+                                        } @else {
+                                          <input class="input input-bordered w-full" [type]="child.type || 'text'"
+                                            [(ngModel)]="item[child.key]">
+                                        }
+                                      </div>
+                                    }
+                                  </div>
+                                </section>
+                              }
+                              <button class="btn btn-outline btn-sm border-dashed" type="button"
+                                (click)="addRepeaterItem(field)">
+                                <span class="material-symbols-rounded">add</span>
+                                Add {{ field.label }}
+                              </button>
+                            </div>
+                          } @else {
+                            <input class="input input-bordered w-full" [id]="'field-' + field.key"
+                              [type]="field.type || 'text'" [(ngModel)]="formData[field.key]">
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    @if (artifacts.length) {
+                      <section class="mt-5 border-t border-base-300 pt-4">
+                        <div class="mb-3 flex items-center gap-2">
+                          <span class="material-symbols-rounded">attachment</span>
+                          <div>
+                            <strong class="block text-xs">Required documents</strong>
+                            <small class="text-base-content/50">Attach or reference each workflow artifact.</small>
+                          </div>
+                        </div>
+                        <div class="grid gap-3">
+                          @for (artifact of artifacts; track artifact.type) {
+                            <div class="grid items-center gap-2 md:grid-cols-[minmax(150px,.8fr)_minmax(220px,1.4fr)]">
+                              <span class="text-xs">
+                                {{ artifact.title }}
+                                @if (artifact.required) { <b class="text-error">*</b> }
+                              </span>
+                              <workflow-task-upload
+                                [taskId]="selectedTaskInstance.id"
+                                [type]="artifact.type"
+                                [title]="artifact.title"
+                                [userId]="currentUserId"
+                                (uploaded)="attachmentUploaded($event)" />
+                            </div>
+                          }
+                        </div>
+                      </section>
+                    }
+                  </fieldset>
+                  }
+
+                  @if (selectedTaskArtifacts.length) {
+                    <section class="border-t border-base-300 p-4">
+                      <h3 class="mb-2 text-xs font-bold uppercase text-base-content/55">Attachments</h3>
+                      <div class="grid gap-2">
+                        @for (attachment of selectedTaskArtifacts; track attachment.id) {
+                          <a class="flex items-center justify-between gap-3 rounded-md border border-base-300 px-3 py-2 hover:border-primary hover:text-primary"
+                            [href]="attachmentUrl(attachment)">
+                            <span class="flex min-w-0 items-center gap-2">
+                              <span class="material-symbols-rounded">description</span>
+                              <span class="truncate text-sm font-medium">{{ attachment.reference || attachment.title }}</span>
+                            </span>
+                            <span class="material-symbols-rounded">download</span>
+                          </a>
+                        }
+                      </div>
+                    </section>
+                  }
+
+                  <footer class="flex min-h-14 items-center justify-between gap-3 border-t border-base-300 bg-base-200/40 px-3">
+                    <span class="text-xs text-base-content/55">
+                      Assigned to <strong>{{ taskDefinition.ownerRoles.join(', ') }}</strong>
+                    </span>
+                    @if (canCompleteSelectedTask) {
+                      <button class="btn btn-primary btn-sm" type="button"
+                        [disabled]="completing" (click)="completeTask()">
+                        <span class="material-symbols-rounded">check</span>
+                        {{ completing ? 'Completing' : 'Complete task' }}
+                      </button>
+                    } @else {
+                      <span class="badge badge-ghost badge-sm">Read only</span>
+                    }
+                  </footer>
+                }
+              </article>
+            }
+          }
+        </section>
+
+        <aside class="border-t border-base-300 bg-base-200/40 p-3 xl:border-l xl:border-t-0">
+          <header class="mb-3 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase text-base-content/50">Assigned work</p>
+              <h2 class="font-bold">Inbox</h2>
+            </div>
+            <span class="badge badge-ghost badge-sm">{{ inbox.length }}</span>
+          </header>
+
+          <div class="mb-3 flex items-center justify-between rounded-md border border-base-300 bg-base-100 px-3 py-2">
+            <span class="text-xs text-base-content/55">Your role</span>
+            <span class="badge badge-outline badge-sm uppercase">{{ currentUserRole || 'viewer' }}</span>
+          </div>
+
+          <div class="grid gap-2 md:grid-cols-3 xl:grid-cols-1">
+            @for (item of inbox; track item.task.id) {
+              <button type="button"
+                class="group relative min-h-20 rounded-md border border-base-300 bg-base-100 p-3 pr-8 text-left hover:border-primary"
+                [class.border-l-4]="item.programme.id === programme?.id"
+                [class.border-l-secondary]="item.programme.id === programme?.id"
+                (click)="openInboxTask(item)">
+                <span class="block text-xs uppercase text-base-content/45">{{ item.task.stageKey }}</span>
+                <strong class="block text-xs">{{ item.task.name }}</strong>
+                <small class="mt-1 block truncate text-base-content/55">
+                  {{ item.programme.title }} · {{ item.programme.code }}
+                </small>
+                <span class="material-symbols-rounded absolute right-2 top-1/2 -translate-y-1/2 text-base-content/45 group-hover:text-primary">
+                  arrow_forward
+                </span>
+              </button>
+            } @empty {
+              <div class="grid min-h-48 place-items-center text-center text-xs text-base-content/50">
+                <div>
+                  <span class="material-symbols-rounded text-3xl">inbox</span>
+                  <p>You have no active tasks.</p>
+                  <p class="mt-2">You can still review programme progress and completed submissions.</p>
+                </div>
+              </div>
+            }
+          </div>
+        </aside>
+      </section>
+    }
   </div>
-</div>
+</main>
