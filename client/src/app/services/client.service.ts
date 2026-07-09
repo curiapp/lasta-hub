@@ -14,6 +14,12 @@ export class ClientService {
   http = inject(HttpClient);
   apollo = inject(Apollo);
 
+  get<T>(path: string): Observable<T> {
+    return this.http.get<T>(`${environment.apiUrl}/${path}`).pipe(
+      catchError(handleError)
+    )
+  }
+
   getAll<T>(path: string): Observable<T[]> {
     return this.http.get<T[]>(`${environment.apiUrl}/${path}`, {
       headers: {

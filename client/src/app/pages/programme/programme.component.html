@@ -12,12 +12,14 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 text-xs text-base-content/60">
-        <span class="badge badge-outline badge-sm">Level {{ programme?.level }}</span>
+        <span class="badge badge-outline badge-sm">NQF Level {{ programme?.level }}</span>
         <span [class]="statusClasses(detail?.process?.status || programme?.status)">
           {{ detail?.process?.status || programme?.status || 'draft' }}
         </span>
         @if (detail?.definitionVersion) {
-          <span class="badge badge-outline badge-sm">Workflow v{{ detail?.definitionVersion?.version }}</span>
+          <span class="badge badge-outline badge-sm">
+            {{ workflowDisplayName }} · v{{ detail?.definitionVersion?.version }}
+          </span>
         }
       </div>
     </header>
@@ -52,6 +54,35 @@
         </div>
       </div>
     </section>
+
+    @if (canManageWorkflow && detail?.process) {
+      <section class="mb-3 flex flex-col gap-3 border border-base-300 bg-base-100 p-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase text-base-content/50">Programme workflow</p>
+          <p class="mt-1 text-sm font-semibold">{{ workflowDisplayName }}</p>
+          <p class="text-xs text-base-content/55">
+            @if (completedTaskCount) {
+              Workflow switching is locked because this programme has completed task history.
+            } @else {
+              PDQA can switch this programme to another published workflow.
+            }
+          </p>
+        </div>
+        <div class="flex w-full gap-2 md:w-auto">
+          <select class="select select-bordered select-sm min-w-64 grow"
+            [(ngModel)]="selectedWorkflowSlug" [disabled]="!canSwitchWorkflow">
+            @for (workflow of workflowDefinitions; track workflow.id) {
+              <option [value]="workflow.slug">{{ workflow.name }}</option>
+            }
+          </select>
+          <button type="button" class="btn btn-primary btn-sm"
+            [disabled]="!canSwitchWorkflow || switchingWorkflow" (click)="switchWorkflow()">
+            <span class="material-symbols-rounded">swap_horiz</span>
+            {{ switchingWorkflow ? 'Updating' : 'Update' }}
+          </button>
+        </div>
+      </section>
+    }
 
     @if (message) {
       <div role="alert" class="alert mb-3 py-2 text-sm" [class.alert-error]="messageType === 'error'"
@@ -376,8 +407,8 @@
         <aside class="border-t border-base-300 bg-base-200/40 p-3 xl:border-l xl:border-t-0">
           <header class="mb-3 flex items-center justify-between">
             <div>
-              <p class="text-xs font-bold uppercase text-base-content/50">Assigned work</p>
-              <h2 class="font-bold">Inbox</h2>
+              <p class="text-xs font-bold uppercase text-base-content/50">Your workflow</p>
+              <h2 class="font-bold">My assigned tasks</h2>
             </div>
             <span class="badge badge-ghost badge-sm">{{ inbox.length }}</span>
           </header>

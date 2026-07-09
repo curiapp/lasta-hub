@@ -12,10 +12,12 @@ import {
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoadingService } from '../../services/loading.service';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
+import { ClientService } from '../../services/client.service';
 import { environment } from '../../../environments/environment';
 import { WorkflowTaskUploadComponent } from '../../components/files/workflow-task-upload/workflow-task-upload.component';
 import {
   WorkflowDefinition,
+  WorkflowDefinitionSummary,
   WorkflowField,
   WorkflowStage,
 } from '../../types/workflow-definition';
@@ -38,6 +40,7 @@ export class ProgrammeComponent implements OnInit {
   private readonly auth = inject(AuthenticationService);
   private readonly loadingService = inject(LoadingService);
   private readonly definitionService = inject(WorkflowDefinitionService);
+  private readonly http = inject(ClientService);
 
   detail?: ProgrammeWorkflowDetail;
   definition?: WorkflowDefinition;
@@ -49,6 +52,9 @@ export class ProgrammeComponent implements OnInit {
   loading = true;
   completing = false;
   starting = false;
+  switchingWorkflow = false;
+  workflowDefinitions: WorkflowDefinitionSummary[] = [];
+  selectedWorkflowSlug = '';
   message = '';
   messageType: 'success' | 'error' = 'success';
   readonly defaultWorkflowSlug = 'lasta-programme-development';
@@ -104,8 +110,12 @@ export class ProgrammeComponent implements OnInit {
 
   get canCompleteSelectedTask() {
     const task = this.selectedTaskInstance;
+    const isCoordinator = this.programme?.initiatorUser?.id === this.currentUserId;
     return task?.status === 'active'
-      && (this.currentUserRole === 'admin' || task.ownerRoles.includes(this.currentUserRole));
+      && (this.currentUserRole === 'admin'
+        || this.currentUserRole === 'pdqa'
+        || isCoordinator
+        || task.ownerRoles.map((role) => role.toLowerCase()).includes(this.currentUserRole));
   }
 
   get currentUserRole() {
@@ -114,6 +124,18 @@ export class ProgrammeComponent implements OnInit {
 
   get currentUserId() {
     return this.auth.user?.id ?? '';
+  }
+
+  get canManageWorkflow() {
+    return this.currentUserRole === 'pdqa';
+  }
+
+  get workflowDisplayName() {
+    return this.definition?.name || 'No workflow assigned';
+  }
+
+  get canSwitchWorkflow() {
+    return this.canManageWorkflow && this.completedTaskCount === 0 && Boolean(this.detail?.process);
   }
 
   get selectedTaskArtifacts(): WorkflowArtifactRecord[] {
@@ -137,6 +159,8 @@ export class ProgrammeComponent implements OnInit {
     }).subscribe({
       next: ({ data }) => {
         this.detail = data.programmeWorkflow;
+        this.selectedWorkflowSlug = this.detail.definition?.id ?? '';
+        if (this.canManageWorkflow) this.loadWorkflowDefinitions();
         if (this.detail.definition) {
           this.applyDefinition(this.detail.definition);
         } else {
@@ -174,6 +198,32 @@ export class ProgrammeComponent implements OnInit {
       error: (error) => {
         this.starting = false;
         this.showMessage(error?.message ?? 'Workflow could not be started.', 'error');
+      },
+    });
+  }
+
+  loadWorkflowDefinitions() {
+    this.definitionService.list().subscribe({
+      next: (definitions) => this.workflowDefinitions = definitions.filter((item) => item.status === 'active'),
+      error: () => this.workflowDefinitions = [],
+    });
+  }
+
+  switchWorkflow() {
+    if (!this.programme || !this.canSwitchWorkflow || !this.selectedWorkflowSlug || this.switchingWorkflow) return;
+    this.switchingWorkflow = true;
+    this.http.put(`programmes/${this.programme.id}/workflow`, {
+      workflowSlug: this.selectedWorkflowSlug,
+      actorId: this.currentUserId,
+    }).subscribe({
+      next: () => {
+        this.switchingWorkflow = false;
+        this.showMessage('Programme workflow updated.', 'success');
+        this.loadProgramme();
+      },
+      error: (error) => {
+        this.switchingWorkflow = false;
+        this.showMessage(error?.message ?? 'Programme workflow could not be updated.', 'error');
       },
     });
   }

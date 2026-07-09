@@ -5,6 +5,8 @@ import {
     workflowAuditEvents,
     workflowDefinitions,
     workflowDefinitionVersions,
+    workflowDepartments,
+    workflowFaculty,
     workflowNotificationRecipients,
     workflowNotifications,
     workflowProcessInstances,
@@ -135,6 +137,170 @@ export async function listWorkflowDefinitions() {
         status: workflowDefinitions.status,
         updatedAt: workflowDefinitions.updatedAt,
     }).from(workflowDefinitions).orderBy(asc(workflowDefinitions.name));
+}
+
+export async function switchProgrammeWorkflow(programmeId: string, workflowSlug: string, actorId: string) {
+    if (!actorId) throw new WorkflowError("An authenticated PDQA user is required", 401);
+    const current = await currentDefinition(workflowSlug);
+
+    return db.transaction(async (tx) => {
+        const [actor] = await tx.select({ id: workflowUsers.id, role: workflowUsers.role })
+            .from(workflowUsers).where(eq(workflowUsers.id, actorId)).limit(1);
+        if (!actor || actor.role.trim().toLowerCase() !== "pdqa") {
+            throw new WorkflowError("Only PDQA users can change a programme workflow", 403);
+        }
+
+        const [programme] = await tx.select().from(workflowProgrammes)
+            .where(eq(workflowProgrammes.id, programmeId)).for("update");
+        if (!programme) throw new WorkflowError("Programme not found", 404);
+
+        const [process] = await tx.select().from(workflowProcessInstances)
+            .where(and(
+                eq(workflowProcessInstances.programmeId, programmeId),
+                eq(workflowProcessInstances.status, "running"),
+            )).orderBy(desc(workflowProcessInstances.startedAt)).limit(1).for("update");
+        if (!process) throw new WorkflowError("Programme has no running workflow", 409);
+
+        const [completed] = await tx.select({ id: workflowTaskInstances.id })
+            .from(workflowTaskInstances).where(and(
+                eq(workflowTaskInstances.processId, process.id),
+                eq(workflowTaskInstances.status, "completed"),
+            )).limit(1);
+        if (completed) {
+            throw new WorkflowError("The workflow cannot be changed after tasks have been completed", 409);
+        }
+
+        await tx.update(workflowTaskInstances).set({ status: "cancelled" })
+            .where(and(
+                eq(workflowTaskInstances.processId, process.id),
+                eq(workflowTaskInstances.status, "active"),
+            ));
+        const firstDefinition = getTaskDefinition(current.definition, current.definition.initialTask);
+        const [updatedProcess] = await tx.update(workflowProcessInstances).set({
+            definitionVersionId: current.version.id,
+            currentStageKey: firstDefinition.stageId,
+        }).where(eq(workflowProcessInstances.id, process.id)).returning();
+        const firstTask = await createTask(tx, updatedProcess, current.definition, current.definition.initialTask, null);
+
+        await tx.insert(workflowAuditEvents).values({
+            programmeId,
+            processId: process.id,
+            actorId: actor.id,
+            actorRole: "pdqa",
+            type: "process.workflow_changed",
+            message: `Workflow changed to ${current.definition.name} version ${current.version.version}`,
+            metadata: {
+                definitionId: current.record.id,
+                definitionVersionId: current.version.id,
+            },
+        });
+        return {
+            process: updatedProcess,
+            firstTask,
+            definition: current.definition.name,
+            version: current.version.version,
+        };
+    });
+}
+
+export async function deleteProgramme(programmeId: string, actorId: string) {
+    if (!actorId) throw new WorkflowError("An authenticated user is required", 401);
+
+    return db.transaction(async (tx) => {
+        const [actor] = await tx.select({ id: workflowUsers.id, role: workflowUsers.role })
+            .from(workflowUsers).where(eq(workflowUsers.id, actorId)).limit(1);
+        if (!actor) throw new WorkflowError("User not found", 401);
+
+        const [programme] = await tx.select({
+            id: workflowProgrammes.id,
+            title: workflowProgrammes.title,
+            initiator: workflowProgrammes.initiator,
+        }).from(workflowProgrammes)
+            .where(eq(workflowProgrammes.id, programmeId))
+            .for("update");
+        if (!programme) throw new WorkflowError("Programme not found", 404);
+
+        const isPdqa = actor.role.trim().toLowerCase() === "pdqa";
+        if (!isPdqa && programme.initiator !== actor.id) {
+            throw new WorkflowError("Only PDQA or the programme coordinator can delete this programme", 403);
+        }
+
+        await tx.delete(workflowProgrammes).where(eq(workflowProgrammes.id, programme.id));
+        return { message: `${programme.title} deleted successfully` };
+    });
+}
+
+export async function getReportsAndReviews() {
+    const [programmes, processes, tasks, artifacts] = await Promise.all([
+        db.select({
+            id: workflowProgrammes.id,
+            title: workflowProgrammes.title,
+            code: workflowProgrammes.code,
+            level: workflowProgrammes.level,
+            status: workflowProgrammes.status,
+            facultyName: workflowFaculty.name,
+            departmentName: workflowDepartments.name,
+            createdAt: workflowProgrammes.createdAt,
+        }).from(workflowProgrammes)
+            .leftJoin(workflowFaculty, eq(workflowProgrammes.faculty, workflowFaculty.id))
+            .leftJoin(workflowDepartments, eq(workflowProgrammes.department, workflowDepartments.id))
+            .orderBy(asc(workflowProgrammes.title)),
+        db.select().from(workflowProcessInstances).orderBy(desc(workflowProcessInstances.startedAt)),
+        db.select({
+            id: workflowTaskInstances.id,
+            programmeId: workflowTaskInstances.programmeId,
+            name: workflowTaskInstances.name,
+            stageKey: workflowTaskInstances.stageKey,
+            status: workflowTaskInstances.status,
+            decision: workflowTaskInstances.decision,
+            transitionLabel: workflowTaskInstances.transitionLabel,
+            completedAt: workflowTaskInstances.completedAt,
+        }).from(workflowTaskInstances).orderBy(desc(workflowTaskInstances.completedAt)),
+        db.select({
+            id: workflowArtifacts.id,
+            programmeId: workflowArtifacts.programmeId,
+        }).from(workflowArtifacts),
+    ]);
+
+    const rows = programmes.map((programme) => {
+        const process = processes.find((item) => item.programmeId === programme.id);
+        const programmeTasks = tasks.filter((item) => item.programmeId === programme.id);
+        return {
+            ...programme,
+            workflowStatus: process?.status ?? "not_started",
+            currentStage: process?.currentStageKey ?? null,
+            activeTasks: programmeTasks.filter((item) => item.status === "active").length,
+            completedTasks: programmeTasks.filter((item) => item.status === "completed").length,
+            evidenceCount: artifacts.filter((item) => item.programmeId === programme.id).length,
+            lastActivity: programmeTasks.find((item) => item.completedAt)?.completedAt
+                ?? process?.startedAt
+                ?? programme.createdAt,
+        };
+    });
+    const reviews = tasks.filter((task) => task.status === "completed").slice(0, 50).map((task) => {
+        const programme = programmes.find((item) => item.id === task.programmeId);
+        return {
+            id: task.id,
+            programmeId: task.programmeId,
+            programmeTitle: programme?.title ?? "Programme",
+            programmeCode: programme?.code ?? "",
+            taskName: task.name,
+            stage: task.stageKey,
+            decision: task.decision || task.transitionLabel || "Completed",
+            completedAt: task.completedAt,
+        };
+    });
+
+    return {
+        summary: {
+            programmeCount: rows.length,
+            runningCount: rows.filter((item) => item.workflowStatus === "running").length,
+            completedCount: rows.filter((item) => item.workflowStatus === "completed").length,
+            reviewCount: reviews.length,
+        },
+        programmes: rows,
+        reviews,
+    };
 }
 
 interface CreateProgrammeInput {
@@ -424,8 +590,15 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
         const definition = await definitionForProcess(tx, process.definitionVersionId);
         const taskDefinition = getTaskDefinition(definition, task.taskKey);
         const actor = await resolveActor(tx, input);
-        const actorRole = actor?.role ?? input.actor?.role;
-        if (!actorRole || (actorRole !== "admin" && !taskDefinition.ownerRoles.includes(actorRole))) {
+        const actorRole = String(actor?.role ?? input.actor?.role ?? "").trim().toLowerCase();
+        const [programme] = await tx.select({ initiator: workflowProgrammes.initiator })
+            .from(workflowProgrammes).where(eq(workflowProgrammes.id, task.programmeId)).limit(1);
+        const isCoordinator = Boolean(actor?.id && programme?.initiator === actor.id);
+        const canComplete = actorRole === "admin"
+            || actorRole === "pdqa"
+            || isCoordinator
+            || taskDefinition.ownerRoles.map((role) => role.toLowerCase()).includes(actorRole);
+        if (!actorRole || !canComplete) {
             throw new WorkflowError(`Role ${actorRole ?? "unknown"} cannot complete ${taskDefinition.name}`, 403);
         }
 

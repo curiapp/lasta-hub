@@ -20,6 +20,7 @@ import { V1ProgrammeComponent } from './pages/v1-programme/v1-programme.componen
 import { authGuard } from './guards/auth.guard';
 import { programmeResolver } from './resolvers/programme.resolver';
 import { CreateProgrammeComponent } from './components/forms/create-programme/create-programmme.component';
+import { ReportsReviewsComponent } from './pages/reports-reviews/reports-reviews.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent, data: { title: 'PDQA - Home' } },
       { path: 'v1-home', component: V1HomeComponent, data: { title: 'PDQA - V1 Home' } },
       { path: 'workflow-definition', component: WorkflowDefinitionComponent, data: { title: 'PDQA - Workflow Definition' } },
+      { path: 'reports-reviews', component: ReportsReviewsComponent, data: { title: 'PDQA - Reports & Reviews' } },
       { path: 'tutorials', component: TutorialComponent, data: { title: 'PDQA - Tutorials' } },
       { path: 'about-us', component: AboutUsComponent, data: { title: 'PDQA - About Us' } },
       { path: 'our-team', component: TeamComponent, data: { title: 'PDQA - Our Team' } },

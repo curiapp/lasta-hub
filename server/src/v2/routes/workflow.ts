@@ -6,10 +6,12 @@ import {
     addTaskAttachment,
     completeTask,
     createProgrammeAndStart,
+    deleteProgramme,
     getBootstrap,
     getNotificationPreference,
     getProgrammeWorkflow,
     getPublishedDefinition,
+    getReportsAndReviews,
     getWorkflowAttachment,
     listActiveTasks,
     listUserNotifications,
@@ -19,6 +21,7 @@ import {
     publishDefinition,
     setNotificationPreference,
     startProcess,
+    switchProgrammeWorkflow,
 } from "../workflow/service";
 
 export default function createWorkflowRouter(upload: Multer) {
@@ -26,6 +29,10 @@ export default function createWorkflowRouter(upload: Multer) {
 
 workflowRouter.get("/bootstrap", async (_, res) => {
     res.json(await getBootstrap());
+});
+
+workflowRouter.get("/reports-reviews", async (_, res) => {
+    res.json(await getReportsAndReviews());
 });
 
 workflowRouter.get("/workflow-definitions", async (_, res) => {
@@ -46,6 +53,11 @@ workflowRouter.post("/programmes", async (req, res) => {
     res.status(201).json(result);
 });
 
+workflowRouter.delete("/programmes/:programmeId", async (req, res) => {
+    const actorId = typeof req.query.actorId === "string" ? req.query.actorId : "";
+    res.json(await deleteProgramme(req.params.programmeId, actorId));
+});
+
 workflowRouter.post("/processes", async (req, res) => {
     const result = await startProcess(req.body?.programmeId, req.body?.actor?.id, req.body?.workflowSlug);
     res.status(201).json(result);
@@ -53,6 +65,14 @@ workflowRouter.post("/processes", async (req, res) => {
 
 workflowRouter.get("/programmes/:programmeId/workflow", async (req, res) => {
     res.json(await getProgrammeWorkflow(req.params.programmeId));
+});
+
+workflowRouter.put("/programmes/:programmeId/workflow", async (req, res) => {
+    res.json(await switchProgrammeWorkflow(
+        req.params.programmeId,
+        req.body?.workflowSlug,
+        req.body?.actorId,
+    ));
 });
 
 workflowRouter.get("/tasks", async (req, res) => {
