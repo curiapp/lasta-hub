@@ -7,12 +7,17 @@ export interface WorkflowField {
     fields?: WorkflowField[];
     minItems?: number;
     maxItems?: number;
+    acceptedFileTypes?: string[];
+    maxFileSizeMb?: number;
 }
 
 export interface WorkflowArtifactRequirement {
     key: string;
     label: string;
     required?: boolean;
+    multiple?: boolean;
+    maxFiles?: number;
+    maxFileSizeMb?: number;
 }
 
 export interface WorkflowCondition {

@@ -192,10 +192,22 @@
       </div>
       <div class="flex flex-wrap gap-2 text-xs">
         @if (currentUser?.faculty?.name) {
-          <span class="badge badge-outline badge-sm">{{ currentUser?.faculty?.name }}</span>
+          <span class="inline-flex min-h-8 items-center gap-2 rounded-md border border-base-300 bg-base-100 px-3 py-1 text-base-content/70 shadow-sm">
+            <span class="material-symbols-rounded text-base text-primary">account_balance</span>
+            <span>
+              <span class="sr-only">Faculty:</span>
+              {{ currentUser?.faculty?.name }}
+            </span>
+          </span>
         }
         @if (currentUser?.department?.name) {
-          <span class="badge badge-outline badge-sm">{{ currentUser?.department?.name }}</span>
+          <span class="inline-flex min-h-8 items-center gap-2 rounded-md border border-base-300 bg-base-100 px-3 py-1 text-base-content/70 shadow-sm">
+            <span class="material-symbols-rounded text-base text-secondary">groups</span>
+            <span>
+              <span class="sr-only">Department:</span>
+              {{ currentUser?.department?.name }}
+            </span>
+          </span>
         }
       </div>
     </div>
@@ -333,10 +345,32 @@
           </a>
       </article>
       } @empty {
-      <div
-        class="col-span-full flex h-64 w-full flex-col items-center justify-center gap-3 rounded-md border border-base-300 bg-base-200 text-center">
-        <img src="assets/circled-x.svg" alt="empty image" class="size-8">
-        <span class="text-sm">No Programmes</span>
+      <div class="col-span-full grid min-h-80 place-items-center rounded-md border border-dashed border-base-300 bg-base-100 p-6 text-center">
+        <div class="max-w-md">
+          <span class="mx-auto grid size-12 place-items-center rounded bg-primary/10 text-primary">
+            <span class="material-symbols-rounded text-3xl">school</span>
+          </span>
+          @if (searchText()) {
+            <h3 class="mt-4 text-base font-bold">No matching programmes</h3>
+            <p class="mt-1 text-sm text-base-content/55">
+              There are no programmes matching “{{ searchText() }}”. Clear the search to return to the portfolio.
+            </p>
+            <button type="button" class="btn btn-ghost btn-sm mt-4 border border-base-300 bg-base-100"
+              (click)="clearSearch()">
+              <span class="material-symbols-rounded text-lg">filter_alt_off</span>
+              Clear search
+            </button>
+          } @else {
+            <h3 class="mt-4 text-base font-bold">No programmes yet</h3>
+            <p class="mt-1 text-sm text-base-content/55">
+              Create the first programme to begin the development process and track stages, tasks, evidence and decisions.
+            </p>
+            <button type="button" class="btn btn-primary btn-sm mt-4" (click)="create_programme.open()">
+              <span class="material-symbols-rounded text-lg">add</span>
+              New programme
+            </button>
+          }
+        </div>
       </div>
       }
     </div>

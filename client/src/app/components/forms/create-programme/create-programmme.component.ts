@@ -21,6 +21,8 @@ import { Programme, User } from '../../../types';
 export class CreateProgrammeComponent implements OnInit {
   levels: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   programme: Programme = { code: "", title: "", faculty: "", department: "", initiator: "", level: 0 };
+  private codeEditedManually = false;
+  private generatedCode = "";
   _loading = inject(LoadingService);
   _http = inject(ClientService);
   router = inject(Router);
@@ -39,6 +41,48 @@ export class CreateProgrammeComponent implements OnInit {
     }
   }
 
+  onTitleChange(title: string) {
+    this.programme.title = title;
+
+    if (!this.codeEditedManually || this.programme.code === this.generatedCode) {
+      this.regenerateCode();
+    }
+  }
+
+  onCodeChange(code: string) {
+    const value = this.formatCode(code);
+    this.programme.code = value;
+    this.codeEditedManually = value.length > 0 && value !== this.generatedCode;
+  }
+
+  regenerateCode() {
+    this.generatedCode = this.generateProgrammeCode(this.programme.title);
+    this.programme.code = this.generatedCode;
+    this.codeEditedManually = false;
+  }
+
+  private generateProgrammeCode(title: string): string {
+    const ignoredWords = new Set(['a', 'an', 'and', 'for', 'in', 'of', 'the', 'to']);
+    const words = title
+      .replace(/[^a-zA-Z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .map((word) => word.trim())
+      .filter(Boolean);
+
+    const meaningfulWords = words.filter((word) => !ignoredWords.has(word.toLowerCase()));
+    const sourceWords = meaningfulWords.length ? meaningfulWords : words;
+
+    if (sourceWords.length <= 1) {
+      return this.formatCode(sourceWords[0]?.slice(0, 4) ?? '');
+    }
+
+    return this.formatCode(sourceWords.map((word) => word[0]).join('').slice(0, 8));
+  }
+
+  private formatCode(code: string): string {
+    return code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
   onSubmit(form: NgForm) {
     this._http.post('programmes', {
       ...this.programme,
@@ -52,6 +96,8 @@ export class CreateProgrammeComponent implements OnInit {
           this.apollo.client.refetchQueries({
             include: ['V2GetProgrammes', 'V2GetBootstrap']
           });
+          this.codeEditedManually = false;
+          this.generatedCode = "";
         },
         error: (error) => {
           this.modalControl.close();

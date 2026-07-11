@@ -59,7 +59,7 @@ export function generateNext7Days() {
   const dates = [];
   const today = new Date();
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
     const nextDay = new Date(today);
     nextDay.setDate(today.getDate() - i);
 

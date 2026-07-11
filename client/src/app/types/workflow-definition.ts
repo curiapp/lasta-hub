@@ -35,6 +35,8 @@ export type WorkflowField = {
   fields?: WorkflowField[];
   minItems?: number;
   maxItems?: number;
+  acceptedFileTypes?: string[];
+  maxFileSizeMb?: number;
 }
 
 export type WorkflowTask = {
@@ -43,8 +45,17 @@ export type WorkflowTask = {
   name: string;
   ownerRoles: string[];
   form?: WorkflowField[];
-  artifacts?: Array<Record<string, unknown>>;
+  artifacts?: WorkflowArtifactRequirement[];
   transitions: WorkflowTransition[];
+}
+
+export type WorkflowArtifactRequirement = {
+  key: string;
+  label: string;
+  required?: boolean;
+  multiple?: boolean;
+  maxFiles?: number;
+  maxFileSizeMb?: number;
 }
 
 export type WorkflowDefinition = {

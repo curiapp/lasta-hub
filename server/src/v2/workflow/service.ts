@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import fs from "fs";
 import { db } from "../../db";
 import {
     workflowArtifacts,
@@ -121,10 +122,10 @@ async function createTask(
 export async function getPublishedDefinition(slug?: string) {
     const current = await currentDefinition(slug);
     return {
+        ...current.definition,
         id: current.record.id,
         slug: current.record.slug,
         versionId: current.version.id,
-        ...current.definition,
     };
 }
 
@@ -231,7 +232,7 @@ export async function deleteProgramme(programmeId: string, actorId: string) {
 }
 
 export async function getReportsAndReviews() {
-    const [programmes, processes, tasks, artifacts] = await Promise.all([
+    const [programmes, processes, tasks, artifacts, users] = await Promise.all([
         db.select({
             id: workflowProgrammes.id,
             title: workflowProgrammes.title,
@@ -240,6 +241,7 @@ export async function getReportsAndReviews() {
             status: workflowProgrammes.status,
             facultyName: workflowFaculty.name,
             departmentName: workflowDepartments.name,
+            coordinatorId: workflowProgrammes.initiator,
             createdAt: workflowProgrammes.createdAt,
         }).from(workflowProgrammes)
             .leftJoin(workflowFaculty, eq(workflowProgrammes.faculty, workflowFaculty.id))
@@ -252,19 +254,74 @@ export async function getReportsAndReviews() {
             name: workflowTaskInstances.name,
             stageKey: workflowTaskInstances.stageKey,
             status: workflowTaskInstances.status,
+            ownerRoles: workflowTaskInstances.ownerRoles,
+            formData: workflowTaskInstances.formData,
             decision: workflowTaskInstances.decision,
             transitionLabel: workflowTaskInstances.transitionLabel,
+            completedBy: workflowTaskInstances.completedBy,
+            createdAt: workflowTaskInstances.createdAt,
             completedAt: workflowTaskInstances.completedAt,
         }).from(workflowTaskInstances).orderBy(desc(workflowTaskInstances.completedAt)),
         db.select({
             id: workflowArtifacts.id,
             programmeId: workflowArtifacts.programmeId,
         }).from(workflowArtifacts),
+        db.select({
+            id: workflowUsers.id,
+            displayName: workflowUsers.displayName,
+            firstName: workflowUsers.firstName,
+            lastName: workflowUsers.lastName,
+            role: workflowUsers.role,
+        }).from(workflowUsers),
     ]);
+    const userName = (id?: string | null) => {
+        const user = users.find((item) => item.id === id);
+        return user?.displayName
+            || [user?.firstName, user?.lastName].filter(Boolean).join(" ")
+            || user?.role
+            || null;
+    };
+    const programmeById = new Map(programmes.map((programme) => [programme.id, programme]));
+    const dateYear = (value?: string | null) => value ? new Date(value).getFullYear() : null;
+    const normalizedDecision = (task: (typeof tasks)[number]) => task.decision || task.transitionLabel || task.status;
+    const isDefermentDecision = (value?: string | null) => {
+        const decision = String(value ?? "").toLowerCase();
+        return ["defer", "deferred", "return", "returned", "revision", "rework", "amend"].some((keyword) => decision.includes(keyword));
+    };
+    const defermentReason = (formData: unknown) => {
+        if (!formData || typeof formData !== "object") return "";
+        const data = formData as Record<string, unknown>;
+        const keys = [
+            "defermentReason",
+            "deferReason",
+            "deferredReason",
+            "returnReason",
+            "revisionReason",
+            "reason",
+            "comments",
+            "comment",
+            "notes",
+        ];
+        const entry = keys.map((key) => data[key]).find((value) => typeof value === "string" && value.trim());
+        return typeof entry === "string" ? entry.trim() : "";
+    };
+    const countBy = <T>(items: T[], keyFor: (item: T) => string | number | null | undefined) => {
+        const counts = new Map<string, number>();
+        for (const item of items) {
+            const key = keyFor(item);
+            const label = String(key || "Not specified");
+            counts.set(label, (counts.get(label) ?? 0) + 1);
+        }
+        return [...counts.entries()].map(([label, count]) => ({ label, count }));
+    };
 
     const rows = programmes.map((programme) => {
         const process = processes.find((item) => item.programmeId === programme.id);
         const programmeTasks = tasks.filter((item) => item.programmeId === programme.id);
+        const lastActivity = programmeTasks.find((item) => item.completedAt)?.completedAt
+            ?? process?.completedAt
+            ?? process?.startedAt
+            ?? programme.createdAt;
         return {
             ...programme,
             workflowStatus: process?.status ?? "not_started",
@@ -272,13 +329,16 @@ export async function getReportsAndReviews() {
             activeTasks: programmeTasks.filter((item) => item.status === "active").length,
             completedTasks: programmeTasks.filter((item) => item.status === "completed").length,
             evidenceCount: artifacts.filter((item) => item.programmeId === programme.id).length,
-            lastActivity: programmeTasks.find((item) => item.completedAt)?.completedAt
-                ?? process?.startedAt
-                ?? programme.createdAt,
+            responsiblePerson: userName(programme.coordinatorId),
+            responsibleUnit: programme.departmentName || programme.facultyName || "Not specified",
+            processedYear: dateYear(lastActivity),
+            lastActivity,
         };
     });
-    const reviews = tasks.filter((task) => task.status === "completed").slice(0, 50).map((task) => {
-        const programme = programmes.find((item) => item.id === task.programmeId);
+    const taskTracking = tasks.map((task) => {
+        const programme = programmeById.get(task.programmeId);
+        const decision = normalizedDecision(task);
+        const reason = isDefermentDecision(decision) ? defermentReason(task.formData) : "";
         return {
             id: task.id,
             programmeId: task.programmeId,
@@ -286,10 +346,45 @@ export async function getReportsAndReviews() {
             programmeCode: programme?.code ?? "",
             taskName: task.name,
             stage: task.stageKey,
-            decision: task.decision || task.transitionLabel || "Completed",
+            status: task.status,
+            decision,
+            responsiblePerson: userName(task.completedBy) || task.ownerRoles.join(", "),
+            responsibleUnit: programme?.departmentName || programme?.facultyName || "Not specified",
+            date: task.completedAt ?? task.createdAt,
             completedAt: task.completedAt,
+            defermentReason: reason,
         };
     });
+    const reviews = taskTracking.filter((task) => task.status === "completed").slice(0, 50).map((task) => ({
+        id: task.id,
+        programmeId: task.programmeId,
+        programmeTitle: task.programmeTitle,
+        programmeCode: task.programmeCode,
+        taskName: task.taskName,
+        stage: task.stage,
+        decision: task.decision,
+        responsiblePerson: task.responsiblePerson,
+        responsibleUnit: task.responsibleUnit,
+        defermentReason: task.defermentReason,
+        completedAt: task.completedAt,
+    }));
+    const deferments = taskTracking.filter((task) => task.defermentReason || isDefermentDecision(task.decision)).map((task) => ({
+        id: task.id,
+        programmeId: task.programmeId,
+        programmeTitle: task.programmeTitle,
+        programmeCode: task.programmeCode,
+        taskName: task.taskName,
+        stage: task.stage,
+        decision: task.decision,
+        reason: task.defermentReason || "Reason not captured",
+        date: task.date,
+        responsiblePerson: task.responsiblePerson,
+        responsibleUnit: task.responsibleUnit,
+    }));
+    const processedByYear = countBy(rows, (programme) => programme.processedYear).sort((a, b) => Number(b.label) - Number(a.label));
+    const statusBreakdown = countBy(rows, (programme) => programme.workflowStatus);
+    const stageBreakdown = countBy(rows, (programme) => programme.currentStage);
+    const decisionBreakdown = countBy(taskTracking.filter((task) => task.status === "completed"), (task) => task.decision);
 
     return {
         summary: {
@@ -297,8 +392,17 @@ export async function getReportsAndReviews() {
             runningCount: rows.filter((item) => item.workflowStatus === "running").length,
             completedCount: rows.filter((item) => item.workflowStatus === "completed").length,
             reviewCount: reviews.length,
+            defermentCount: deferments.length,
+        },
+        processedByYear,
+        breakdowns: {
+            status: statusBreakdown,
+            stage: stageBreakdown,
+            decision: decisionBreakdown,
         },
         programmes: rows,
+        taskTracking,
+        deferments,
         reviews,
     };
 }
@@ -502,8 +606,34 @@ export async function addTaskAttachment(
         mimeType: file.mimetype,
         size: file.size,
         createdBy: user?.id,
+        status: "draft",
     }).returning();
     return artifact;
+}
+
+export async function deleteDraftAttachment(attachmentId: string, userId?: string, taskId?: string) {
+    const [artifact] = await db.select().from(workflowArtifacts)
+        .where(eq(workflowArtifacts.id, attachmentId)).limit(1);
+    if (!artifact) throw new WorkflowError("Attachment not found", 404);
+    if (taskId && artifact.taskId !== taskId) throw new WorkflowError("Attachment does not belong to this task", 404);
+
+    const [task] = await db.select().from(workflowTaskInstances)
+        .where(eq(workflowTaskInstances.id, artifact.taskId)).limit(1);
+    if (!task || task.status !== "active") throw new WorkflowError("Attachment can no longer be removed", 409);
+
+    if (userId && artifact.createdBy && artifact.createdBy !== userId) {
+        const [user] = await db.select({ role: workflowUsers.role }).from(workflowUsers)
+            .where(eq(workflowUsers.id, userId)).limit(1);
+        if (user?.role?.trim().toLowerCase() !== "pdqa") {
+            throw new WorkflowError("Only the uploader or PDQA can remove this attachment", 403);
+        }
+    }
+
+    await db.delete(workflowArtifacts).where(eq(workflowArtifacts.id, attachmentId));
+    if (artifact.path && fs.existsSync(artifact.path)) {
+        fs.unlinkSync(artifact.path);
+    }
+    return { message: "Attachment removed" };
 }
 
 export async function getWorkflowAttachment(attachmentId: string) {
@@ -607,9 +737,15 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
             title: workflowArtifacts.title,
             reference: workflowArtifacts.reference,
         }).from(workflowArtifacts).where(eq(workflowArtifacts.taskId, task.id));
+        // Normalize stored artifact references (DB may return null) to match expected type
+        const combinedArtifacts = [
+            ...storedArtifacts.map((a) => ({ ...a, reference: a.reference ?? undefined })),
+            ...(input.artifacts ?? []),
+        ];
+
         validateCompletion(taskDefinition, {
             ...input,
-            artifacts: [...storedArtifacts, ...(input.artifacts ?? [])],
+            artifacts: combinedArtifacts,
         });
         const transition = selectTransition(taskDefinition, input);
         const completedAt = new Date().toISOString();
@@ -621,6 +757,11 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
             decision: typeof input.formData?.decision === "string" ? input.formData.decision : null,
             transitionLabel: transition.label,
         }).where(eq(workflowTaskInstances.id, task.id)).returning();
+
+        await tx.update(workflowArtifacts).set({
+            status: "submitted",
+            submittedAt: completedAt,
+        }).where(eq(workflowArtifacts.taskId, task.id));
 
         const artifacts = input.artifacts?.length
             ? await tx.insert(workflowArtifacts).values(input.artifacts.map((artifact) => ({
@@ -634,6 +775,8 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
                 mimeType: artifact.mimeType,
                 size: artifact.size,
                 createdBy: actor?.id,
+                status: "submitted",
+                submittedAt: completedAt,
             }))).returning()
             : [];
 
@@ -703,6 +846,84 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
             process: updatedProcess,
             programmeStatus,
         };
+    });
+}
+
+export async function reopenTask(taskId: string, input: Pick<CompleteTaskInput, "actor">) {
+    return db.transaction(async (tx) => {
+        const [task] = await tx
+            .select()
+            .from(workflowTaskInstances)
+            .where(eq(workflowTaskInstances.id, taskId))
+            .for("update");
+        if (!task) throw new WorkflowError("Task not found", 404);
+        if (task.status !== "completed") throw new WorkflowError("Only completed tasks can be reopened", 409);
+
+        const [process] = await tx
+            .select()
+            .from(workflowProcessInstances)
+            .where(eq(workflowProcessInstances.id, task.processId))
+            .for("update");
+        if (!process) throw new WorkflowError("Process not found", 404);
+
+        const [activeTask] = await tx
+            .select({ id: workflowTaskInstances.id })
+            .from(workflowTaskInstances)
+            .where(and(
+                eq(workflowTaskInstances.processId, task.processId),
+                eq(workflowTaskInstances.status, "active"),
+            ))
+            .limit(1);
+        if (activeTask) throw new WorkflowError("This programme already has an active task", 409);
+
+        const definition = await definitionForProcess(tx, process.definitionVersionId);
+        const taskDefinition = getTaskDefinition(definition, task.taskKey);
+        const actor = await resolveActor(tx, input as CompleteTaskInput);
+        const actorRole = String(actor?.role ?? input.actor?.role ?? "").trim().toLowerCase();
+        const [programme] = await tx.select({ initiator: workflowProgrammes.initiator })
+            .from(workflowProgrammes).where(eq(workflowProgrammes.id, task.programmeId)).limit(1);
+        const isCoordinator = Boolean(actor?.id && programme?.initiator === actor.id);
+        const canReopen = actorRole === "admin"
+            || actorRole === "pdqa"
+            || isCoordinator
+            || taskDefinition.ownerRoles.map((role) => role.toLowerCase()).includes(actorRole);
+        if (!actorRole || !canReopen) {
+            throw new WorkflowError(`Role ${actorRole || "unknown"} cannot edit ${taskDefinition.name}`, 403);
+        }
+
+        const [reopenedTask] = await tx.update(workflowTaskInstances).set({
+            status: "active",
+            completedAt: null,
+            completedBy: null,
+        }).where(eq(workflowTaskInstances.id, task.id)).returning();
+
+        const [updatedProcess] = await tx.update(workflowProcessInstances).set({
+            status: "running",
+            currentStageKey: task.stageKey,
+            completedAt: null,
+        }).where(eq(workflowProcessInstances.id, process.id)).returning();
+
+        await tx.update(workflowProgrammes)
+            .set({ status: "in_progress" })
+            .where(eq(workflowProgrammes.id, task.programmeId));
+
+        await tx.update(workflowArtifacts).set({
+            status: "draft",
+            submittedAt: null,
+        }).where(eq(workflowArtifacts.taskId, task.id));
+
+        await tx.insert(workflowAuditEvents).values({
+            programmeId: task.programmeId,
+            processId: task.processId,
+            taskId: task.id,
+            actorId: actor?.id,
+            actorRole,
+            type: "task.reopened",
+            message: `${taskDefinition.name} reopened for amendment`,
+            metadata: { taskKey: task.taskKey },
+        });
+
+        return { task: reopenedTask, process: updatedProcess, message: `${taskDefinition.name} reopened for amendment` };
     });
 }
 

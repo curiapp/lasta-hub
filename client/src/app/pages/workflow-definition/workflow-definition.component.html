@@ -242,6 +242,21 @@
                       placeholder="Approved, Revision required">
                   </label>
                 }
+                @if (inputField.type === 'file') {
+                  <div class="field-grid">
+                    <label>
+                      <span>Accepted file types</span>
+                      <input class="input input-bordered input-sm" [ngModel]="fieldAcceptedTypes(inputField)"
+                        (blur)="setFieldAcceptedTypes(inputField, $any($event.target).value)"
+                        placeholder=".pdf, .docx, image/png">
+                    </label>
+                    <label>
+                      <span>Maximum file size (MB)</span>
+                      <input type="number" min="1" class="input input-bordered input-sm"
+                        [(ngModel)]="inputField.maxFileSizeMb" (ngModelChange)="builderChanged()">
+                    </label>
+                  </div>
+                }
                 @if (inputField.type === 'repeater') {
                   <div class="repeater-config">
                     <div class="repeater-limits">
@@ -291,6 +306,15 @@
                               (blur)="setFieldOptions(childField, $any($event.target).value)"
                               placeholder="Options separated by commas">
                           }
+                          @if (childField.type === 'file') {
+                            <input class="input input-bordered input-sm child-options" aria-label="Accepted file types"
+                              [ngModel]="fieldAcceptedTypes(childField)"
+                              (blur)="setFieldAcceptedTypes(childField, $any($event.target).value)"
+                              placeholder=".pdf, .docx, image/png">
+                            <input type="number" min="1" class="input input-bordered input-sm child-key"
+                              aria-label="Maximum file size in MB"
+                              [(ngModel)]="childField.maxFileSizeMb" (ngModelChange)="builderChanged()">
+                          }
                         </div>
                       }
                     </div>
@@ -305,6 +329,72 @@
             }
             @if (!task.form?.length) {
               <p class="empty">No input fields configured for this task.</p>
+            }
+          </div>
+
+          <div class="section-heading compact">
+            <div><p class="eyebrow">Evidence</p><h2>Required documents</h2></div>
+            <button class="icon-button" type="button" title="Add required document" (click)="addArtifact()">
+              <span class="material-symbols-rounded">add</span>
+            </button>
+          </div>
+          <div class="field-list">
+            @for (artifact of task.artifacts; track $index; let artifactIndex = $index) {
+              <div class="field-row">
+                <div class="field-row-head">
+                  <span class="material-symbols-rounded">attach_file</span>
+                  <input class="input input-bordered input-sm" aria-label="Document label"
+                    [(ngModel)]="artifact.label" (ngModelChange)="builderChanged()">
+                  <button class="icon-button danger" type="button" title="Remove document requirement"
+                    (click)="removeArtifact(artifactIndex)">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    <span>Key</span>
+                    <input class="input input-bordered input-sm" [(ngModel)]="artifact.key"
+                      (ngModelChange)="builderChanged()">
+                  </label>
+                  <label>
+                    <span>File count</span>
+                    <span class="choice-kind">
+                      <button type="button" [class.active]="!artifact.multiple"
+                        (click)="setArtifactMode(artifactIndex, false)">Single</button>
+                      <button type="button" [class.active]="artifact.multiple"
+                        (click)="setArtifactMode(artifactIndex, true)">Multiple</button>
+                    </span>
+                  </label>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    <span>Maximum files</span>
+                    <input type="number" min="1" class="input input-bordered input-sm"
+                      placeholder="Blank for unlimited"
+                      [(ngModel)]="artifact.maxFiles" [disabled]="!artifact.multiple"
+                      (ngModelChange)="updateArtifactMaxFiles(artifactIndex)">
+                    @if (artifact.multiple) {
+                      <small class="text-base-content/50">Leave blank when there is no file limit.</small>
+                    }
+                  </label>
+                  <label>
+                    <span>Maximum file size (MB)</span>
+                    <input type="number" min="1" class="input input-bordered input-sm"
+                      [(ngModel)]="artifact.maxFileSizeMb"
+                      (ngModelChange)="updateArtifactMaxFileSize(artifactIndex)">
+                  </label>
+                </div>
+                <div class="field-grid">
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="artifact.required"
+                      (ngModelChange)="builderChanged()">
+                    Required
+                  </label>
+                </div>
+              </div>
+            }
+            @if (!task.artifacts?.length) {
+              <p class="empty">No required documents configured for this task.</p>
             }
           </div>
 
@@ -353,7 +443,7 @@
               </div>
             }
           </div>
-          <p class="json-hint">Artifacts, conditional branches, and advanced routing remain editable in JSON mode.</p>
+          <p class="json-hint">Conditional branches and advanced routing remain editable in JSON mode.</p>
         } @else {
           <div class="empty task-empty">
             <span class="material-symbols-rounded">touch_app</span>

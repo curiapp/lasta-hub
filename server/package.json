@@ -7,7 +7,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dev": "yarn tsx watch ./src/index.ts",
-    "start": "node index.js",
+    "start": "node dist/index.js",
     "build": "node esbuild.config.js"
   },
   "author": "",

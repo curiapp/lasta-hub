@@ -47,6 +47,13 @@ export class EventsComponent {
     }
   }
 
+  canChangeDate(action: 'prev' | 'next') {
+    const currentIndex = this.dates.findIndex(d => d.date === this.selectedDate);
+    return action === 'prev'
+      ? currentIndex > 0
+      : currentIndex >= 0 && currentIndex < this.dates.length - 1;
+  }
+
 
   onSubmit(form: NgForm) {
     this.http.post('events/create', form.value).subscribe(

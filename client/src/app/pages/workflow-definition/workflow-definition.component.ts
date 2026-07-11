@@ -271,10 +271,23 @@ export class WorkflowDefinitionComponent implements OnInit {
     field.type = type;
     if (type === 'select' || type === 'radio') {
       field.options ??= ['Option 1', 'Option 2'];
+      delete field.acceptedFileTypes;
+      delete field.maxFileSizeMb;
     } else if (type === 'checkbox') {
       field.options ??= [];
+      delete field.acceptedFileTypes;
+      delete field.maxFileSizeMb;
+    } else if (type === 'file') {
+      delete field.options;
+      delete field.fields;
+      delete field.minItems;
+      delete field.maxItems;
+      field.acceptedFileTypes ??= ['.pdf', '.doc', '.docx'];
+      field.maxFileSizeMb ??= 10;
     } else if (type === 'repeater') {
       delete field.options;
+      delete field.acceptedFileTypes;
+      delete field.maxFileSizeMb;
       field.fields ??= [
         { key: 'organisation', label: 'Organisation', type: 'text', required: true },
         { key: 'firstName', label: 'First Name', type: 'text', required: true },
@@ -288,6 +301,8 @@ export class WorkflowDefinitionComponent implements OnInit {
       delete field.fields;
       delete field.minItems;
       delete field.maxItems;
+      delete field.acceptedFileTypes;
+      delete field.maxFileSizeMb;
     }
     this.builderChanged();
   }
@@ -298,6 +313,15 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   setFieldOptions(field: WorkflowField, value: string) {
     field.options = value.split(',').map((option) => option.trim()).filter(Boolean);
+    this.builderChanged();
+  }
+
+  fieldAcceptedTypes(field: WorkflowField) {
+    return field.acceptedFileTypes?.join(', ') ?? '';
+  }
+
+  setFieldAcceptedTypes(field: WorkflowField, value: string) {
+    field.acceptedFileTypes = value.split(',').map((type) => type.trim()).filter(Boolean);
     this.builderChanged();
   }
 
@@ -315,6 +339,60 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   removeChildField(group: WorkflowField, index: number) {
     group.fields?.splice(index, 1);
+    this.builderChanged();
+  }
+
+  addArtifact() {
+    const task = this.selectedTask;
+    if (!task) return;
+    task.artifacts ??= [];
+    const index = task.artifacts.length + 1;
+    task.artifacts.push({
+      key: `document-${index}`,
+      label: `Document ${index}`,
+      required: true,
+      multiple: false,
+      maxFiles: 1,
+      maxFileSizeMb: 20,
+    });
+    this.builderChanged();
+  }
+
+  removeArtifact(index: number) {
+    this.selectedTask?.artifacts?.splice(index, 1);
+    this.builderChanged();
+  }
+
+  setArtifactMode(index: number, multiple: boolean) {
+    const artifact = this.selectedTask?.artifacts?.[index];
+    if (!artifact) return;
+    artifact.multiple = multiple;
+    if (multiple) {
+      if (artifact.maxFiles === 1) delete artifact.maxFiles;
+    } else {
+      artifact.maxFiles = 1;
+    }
+    this.builderChanged();
+  }
+
+  updateArtifactMaxFiles(index: number) {
+    const artifact = this.selectedTask?.artifacts?.[index];
+    if (!artifact) return;
+    if (artifact.multiple && (artifact.maxFiles == null || Number(artifact.maxFiles) <= 0)) {
+      delete artifact.maxFiles;
+      this.builderChanged();
+      return;
+    }
+    const minimum = 1;
+    artifact.maxFiles = Math.max(Number(artifact.maxFiles) || minimum, minimum);
+    if (!artifact.multiple) artifact.maxFiles = 1;
+    this.builderChanged();
+  }
+
+  updateArtifactMaxFileSize(index: number) {
+    const artifact = this.selectedTask?.artifacts?.[index];
+    if (!artifact) return;
+    artifact.maxFileSizeMb = Math.max(Number(artifact.maxFileSizeMb) || 1, 1);
     this.builderChanged();
   }
 
@@ -378,6 +456,10 @@ export class WorkflowDefinitionComponent implements OnInit {
       task.transitions ??= [];
       task.form ??= [];
       task.artifacts ??= [];
+      task.artifacts.forEach((artifact) => {
+        artifact.maxFileSizeMb ??= 20;
+        if (!artifact.multiple) artifact.maxFiles ??= 1;
+      });
     });
   }
 

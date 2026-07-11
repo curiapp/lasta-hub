@@ -523,9 +523,12 @@ export const workflowArtifacts = workflow.table("artifacts", {
 	size: bigint({ mode: "number" }),
 	createdBy: uuid("created_by"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	status: text().default('submitted').notNull(),
+	submittedAt: timestamp("submitted_at", { withTimezone: true, mode: 'string' }),
 }, (table) => [
 	index("idx_workflow_artifacts_programme").using("btree", table.programmeId.asc().nullsLast().op("uuid_ops")),
 	index("idx_workflow_artifacts_task").using("btree", table.taskId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_artifacts_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
 	foreignKey({
 			columns: [table.programmeId],
 			foreignColumns: [workflowProgrammes.id],
@@ -545,7 +548,8 @@ export const workflowArtifacts = workflow.table("artifacts", {
 			columns: [table.createdBy],
 			foreignColumns: [workflowUsers.id],
 			name: "workflow_artifacts_created_by_fkey"
-		}).onDelete("set null"),
+	}).onDelete("set null"),
+	check("workflow_artifacts_status_check", sql`${table.status} = ANY (ARRAY['draft'::text, 'submitted'::text])`),
 ]);
 
 export const workflowAuditEvents = workflow.table("audit_events", {

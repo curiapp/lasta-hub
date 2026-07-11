@@ -63,6 +63,9 @@ export type WorkflowArtifactInput = {
   title: string;
   reference: string;
   required: boolean;
+  multiple?: boolean;
+  maxFiles?: number;
+  maxFileSizeMb?: number;
 };
 
 export type WorkflowArtifactRecord = {
@@ -73,6 +76,8 @@ export type WorkflowArtifactRecord = {
   reference?: string;
   mimeType?: string;
   size?: number;
+  status?: 'draft' | 'submitted';
+  submittedAt?: string;
   createdAt: string;
 };
 

@@ -1,5 +1,5 @@
 <main class="min-h-[calc(100vh-7rem)] bg-base-200 p-3 lg:p-5">
-  <div class="mx-auto max-w-[1800px]">
+  <div class="mx-auto max-w-450">
     <header class="flex min-h-16 flex-col justify-between gap-3 py-2 md:flex-row md:items-center">
       <div class="flex min-w-0 items-center gap-2">
         <button type="button" class="btn btn-ghost btn-square btn-sm" title="Back to programmes"
@@ -8,7 +8,7 @@
         </button>
         <div class="min-w-0">
           <p class="text-xs font-bold uppercase text-base-content/55">{{ programme?.code || 'Programme' }}</p>
-          <h1 class="truncate text-xl font-bold lg:text-2xl">{{ programme?.title || 'Programme workflow' }}</h1>
+          <h1 class="truncate text-xl font-bold lg:text-2xl">{{ programme?.title || 'Programme details' }}</h1>
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 text-xs text-base-content/60">
@@ -58,13 +58,13 @@
     @if (canManageWorkflow && detail?.process) {
       <section class="mb-3 flex flex-col gap-3 border border-base-300 bg-base-100 p-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <p class="text-xs font-bold uppercase text-base-content/50">Programme workflow</p>
+          <p class="text-xs font-bold uppercase text-base-content/50">Development path</p>
           <p class="mt-1 text-sm font-semibold">{{ workflowDisplayName }}</p>
           <p class="text-xs text-base-content/55">
             @if (completedTaskCount) {
-              Workflow switching is locked because this programme has completed task history.
+              This path is locked because this programme has completed task history.
             } @else {
-              PDQA can switch this programme to another published workflow.
+              PDQA can switch this programme to another published development path.
             }
           </p>
         </div>
@@ -84,22 +84,11 @@
       </section>
     }
 
-    @if (message) {
-      <div role="alert" class="alert mb-3 py-2 text-sm" [class.alert-error]="messageType === 'error'"
-        [class.alert-success]="messageType === 'success'">
-        <span class="material-symbols-rounded">{{ messageType === 'error' ? 'error' : 'check_circle' }}</span>
-        <span>{{ message }}</span>
-        <button type="button" class="btn btn-ghost btn-square btn-xs" title="Dismiss" (click)="message = ''">
-          <span class="material-symbols-rounded">close</span>
-        </button>
-      </div>
-    }
-
     @if (loading) {
       <div class="grid min-h-[34rem] place-items-center border border-base-300 bg-base-100">
         <div class="flex items-center gap-2 text-sm text-base-content/60">
           <span class="loading loading-spinner loading-md"></span>
-          Loading programme workflow
+          Loading programme details
         </div>
       </div>
     } @else {
@@ -113,7 +102,7 @@
             <span class="badge badge-ghost badge-sm">{{ stages.length }}</span>
           </header>
 
-          <nav class="flex gap-2 overflow-x-auto xl:grid" aria-label="Workflow stages">
+          <nav class="flex gap-2 overflow-x-auto xl:grid" aria-label="Programme stages">
             @for (stage of stages; track stage.id) {
               <button type="button" [class]="stageClasses(stage)" (click)="selectStage(stage)">
                 <span class="grid size-7 place-items-center rounded bg-base-300 text-xs font-bold">{{ stage.order }}</span>
@@ -142,12 +131,12 @@
                 <span class="material-symbols-rounded text-5xl text-primary">play_circle</span>
                 <h2 class="mt-2 text-lg font-bold">Ready to begin</h2>
                 <p class="mx-auto mt-1 max-w-md text-sm text-base-content/60">
-                  Start the Lasta programme development workflow for this programme.
+                  Start the Lasta programme development process for this programme.
                 </p>
                 <button class="btn btn-primary btn-sm mt-4" type="button" [disabled]="starting"
                   (click)="startWorkflow()">
                   <span class="material-symbols-rounded">play_arrow</span>
-                  {{ starting ? 'Starting' : 'Start workflow' }}
+                  {{ starting ? 'Starting' : 'Start development' }}
                 </button>
               </div>
             </div>
@@ -169,6 +158,12 @@
                     {{ taskInstance(task.id)?.status === 'completed' ? 'check_circle' : 'task_alt' }}
                   </span>
                   {{ task.name }}
+                  @if (taskArtifacts(task.id).length) {
+                    <span class="badge badge-ghost badge-xs gap-1">
+                      <span class="material-symbols-rounded text-xs">attach_file</span>
+                      {{ taskArtifacts(task.id).length }}
+                    </span>
+                  }
                 </button>
               }
             </div>
@@ -179,7 +174,6 @@
                   <div>
                     <p class="font-mono text-xs uppercase text-base-content/45">{{ taskDefinition.id }}</p>
                     <h2 class="font-bold">{{ taskDefinition.name }}</h2>
-                    <p class="mt-1 text-xs text-base-content/55">Owned by {{ taskDefinition.ownerRoles.join(', ') }}</p>
                   </div>
                   <span [class]="statusClasses(selectedTaskInstance?.status || 'pending')">
                     {{ selectedTaskInstance?.status || 'pending' }}
@@ -190,31 +184,52 @@
                   <div class="grid min-h-48 place-items-center text-center text-sm text-base-content/55">
                     <div>
                       <span class="material-symbols-rounded text-3xl">schedule</span>
-                      <p>This task becomes available when the workflow reaches it.</p>
+                      <p>This task becomes available when the programme reaches it.</p>
                     </div>
                   </div>
                 } @else {
                   @if (isReadOnly) {
                     <section class="grid gap-4 p-4">
-                      <div class="flex items-center justify-between gap-3 rounded-md bg-base-200 px-3 py-2">
-                        <span class="text-xs font-semibold">
-                          {{ selectedTaskInstance.status === 'completed' ? 'Completed submission' : 'Programme task information' }}
-                        </span>
-                        <span class="badge badge-outline badge-sm">View only</span>
-                      </div>
-                      <dl class="grid gap-x-6 gap-y-4 md:grid-cols-2">
-                        @for (field of taskDefinition.form ?? []; track field.key) {
-                          <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
-                            <dt class="text-xs font-semibold text-base-content/55">{{ field.label }}</dt>
-                            <dd class="mt-1 whitespace-pre-wrap break-words text-sm font-medium text-base-content">
-                              {{ displayValue(formData[field.key]) }}
-                            </dd>
+                      @if (selectedTaskNeedsReview) {
+                        <div class="flex items-start gap-3 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">
+                          <span class="material-symbols-rounded text-warning">rate_review</span>
+                          <div>
+                            <strong class="block text-warning-content">Amendment required</strong>
+                            <p class="mt-1 text-base-content/70">{{ selectedTaskReviewMessage }}</p>
                           </div>
-                        }
-                      </dl>
+                        </div>
+                      }
+                      @if ((taskDefinition.form ?? []).length) {
+                        <dl class="grid gap-x-6 gap-y-4 rounded-md border border-base-300 bg-base-100 p-3 md:grid-cols-2">
+                          @for (field of taskDefinition.form ?? []; track field.key) {
+                            <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
+                              <dt class="text-xs font-semibold text-base-content/55">{{ field.label }}</dt>
+                              <dd class="mt-1 whitespace-pre-wrap break-words text-sm font-medium text-base-content">
+                                {{ displayValue(formData[field.key]) }}
+                              </dd>
+                            </div>
+                          }
+                        </dl>
+                      } @else {
+                        <div class="grid min-h-28 place-items-center rounded-md border border-base-300 bg-base-100 text-center">
+                          <div class="text-sm text-base-content/55">
+                            <span class="material-symbols-rounded text-3xl text-success">verified</span>
+                            <p>This step is complete.</p>
+                          </div>
+                        </div>
+                      }
                     </section>
                   } @else {
                   <fieldset class="p-3 lg:p-4" [disabled]="!canCompleteSelectedTask">
+                    @if (selectedTaskNeedsReview) {
+                      <div class="mb-4 flex items-start gap-3 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">
+                        <span class="material-symbols-rounded text-warning">rate_review</span>
+                        <div>
+                          <strong class="block text-warning-content">Review and amend</strong>
+                          <p class="mt-1 text-base-content/70">{{ selectedTaskReviewMessage }}</p>
+                        </div>
+                      </div>
+                    }
                     <div class="grid gap-4 md:grid-cols-2">
                       @for (field of taskDefinition.form ?? []; track field.key) {
                         <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
@@ -262,7 +277,14 @@
                             </label>
                           } @else if (field.type === 'file') {
                             <input class="file-input file-input-bordered w-full" type="file"
-                              [id]="'field-' + field.key" (change)="setFileField(field, $event)">
+                              [id]="'field-' + field.key" [accept]="fileAccept(field)"
+                              (change)="setFileField(field, $event)">
+                            @if (fileHelpText(field)) {
+                              <p class="mt-1 text-xs text-base-content/50">{{ fileHelpText(field) }}</p>
+                            }
+                            @if (fieldError(field)) {
+                              <p class="mt-1 text-xs text-error">{{ fieldError(field) }}</p>
+                            }
                           } @else if (field.type === 'repeater') {
                             <div class="grid gap-2">
                               @for (item of repeaterItems(field); track $index; let itemIndex = $index) {
@@ -312,7 +334,13 @@
                                           </div>
                                         } @else if (child.type === 'file') {
                                           <input class="file-input file-input-bordered w-full" type="file"
-                                            (change)="setFileField(child, $event, item)">
+                                            [accept]="fileAccept(child)" (change)="setFileField(child, $event, item)">
+                                          @if (fileHelpText(child)) {
+                                            <p class="mt-1 text-xs text-base-content/50">{{ fileHelpText(child) }}</p>
+                                          }
+                                          @if (fieldError(child, item)) {
+                                            <p class="mt-1 text-xs text-error">{{ fieldError(child, item) }}</p>
+                                          }
                                         } @else {
                                           <input class="input input-bordered w-full" [type]="child.type || 'text'"
                                             [(ngModel)]="item[child.key]">
@@ -322,10 +350,10 @@
                                   </div>
                                 </section>
                               }
-                              <button class="btn btn-outline btn-sm border-dashed" type="button"
+                              <button class="btn btn-outline btn-sm w-full justify-center bg-base-100 shadow-sm" type="button"
                                 (click)="addRepeaterItem(field)">
-                                <span class="material-symbols-rounded">add</span>
-                                Add {{ field.label }}
+                                <span class="material-symbols-rounded text-base">add</span>
+                                Add another {{ field.label }}
                               </button>
                             </div>
                           } @else {
@@ -342,22 +370,34 @@
                           <span class="material-symbols-rounded">attachment</span>
                           <div>
                             <strong class="block text-xs">Required documents</strong>
-                            <small class="text-base-content/50">Attach or reference each workflow artifact.</small>
+                            <small class="text-base-content/50">Attach or reference each required document.</small>
                           </div>
                         </div>
                         <div class="grid gap-3">
                           @for (artifact of artifacts; track artifact.type) {
-                            <div class="grid items-center gap-2 md:grid-cols-[minmax(150px,.8fr)_minmax(220px,1.4fr)]">
-                              <span class="text-xs">
-                                {{ artifact.title }}
-                                @if (artifact.required) { <b class="text-error">*</b> }
-                              </span>
+                            <div class="grid items-center gap-2 md:grid-cols-[minmax(180px,.9fr)_minmax(220px,1.2fr)]">
+                              <div class="text-xs">
+                                <span>
+                                  {{ artifact.title }}
+                                  @if (artifact.required) { <b class="text-error">*</b> }
+                                </span>
+                                <small class="mt-1 block text-base-content/50">
+                                  {{ artifact.multiple ? 'Multiple files' : 'Single file' }} · {{ artifactHelpText(artifact) }}
+                                </small>
+                              </div>
                               <workflow-task-upload
                                 [taskId]="selectedTaskInstance.id"
                                 [type]="artifact.type"
                                 [title]="artifact.title"
                                 [userId]="currentUserId"
-                                (uploaded)="attachmentUploaded($event)" />
+                                [disabled]="!canUploadArtifact(artifact)"
+                                [multiple]="artifact.multiple === true"
+                                [maxFiles]="artifactUploadLimit(artifact)"
+                                [maxFileSizeMb]="artifact.maxFileSizeMb || 20"
+                                [uploadedCount]="artifactUploadCount(artifact)"
+                                [attachments]="artifactAttachmentMap[artifact.type] || emptyAttachments"
+                                (uploaded)="attachmentUploaded($event)"
+                                (removed)="attachmentRemoved($event)" />
                             </div>
                           }
                         </div>
@@ -366,19 +406,27 @@
                   </fieldset>
                   }
 
-                  @if (selectedTaskArtifacts.length) {
+                  @if (selectedTaskInstance.status === 'completed' && selectedTaskArtifacts.length) {
                     <section class="border-t border-base-300 p-4">
-                      <h3 class="mb-2 text-xs font-bold uppercase text-base-content/55">Attachments</h3>
-                      <div class="grid gap-2">
-                        @for (attachment of selectedTaskArtifacts; track attachment.id) {
-                          <a class="flex items-center justify-between gap-3 rounded-md border border-base-300 px-3 py-2 hover:border-primary hover:text-primary"
-                            [href]="attachmentUrl(attachment)">
-                            <span class="flex min-w-0 items-center gap-2">
-                              <span class="material-symbols-rounded">description</span>
-                              <span class="truncate text-sm font-medium">{{ attachment.reference || attachment.title }}</span>
-                            </span>
-                            <span class="material-symbols-rounded">download</span>
-                          </a>
+                      <div class="mb-2 flex items-center justify-between gap-2">
+                        <h3 class="text-xs font-bold uppercase text-base-content/55">Task attachments</h3>
+                        <span class="badge badge-ghost badge-sm">{{ selectedTaskArtifacts.length }}</span>
+                      </div>
+                      <div class="grid gap-3">
+                        @for (group of selectedTaskAttachmentGroups; track group.type) {
+                          <div class="grid gap-2">
+                            <h4 class="text-sm font-semibold">{{ group.title }}</h4>
+                            @for (attachment of group.attachments; track attachment.id) {
+                              <a class="flex items-center justify-between gap-3 rounded-md border border-base-300 px-3 py-2 hover:border-primary hover:text-primary"
+                                [href]="attachmentUrl(attachment)">
+                                <span class="flex min-w-0 items-center gap-2">
+                                  <span class="material-symbols-rounded">description</span>
+                                  <span class="truncate text-sm font-medium">{{ attachment.reference || attachment.title }}</span>
+                                </span>
+                                <span class="material-symbols-rounded">download</span>
+                              </a>
+                            }
+                          </div>
                         }
                       </div>
                     </section>
@@ -386,7 +434,7 @@
 
                   <footer class="flex min-h-14 items-center justify-between gap-3 border-t border-base-300 bg-base-200/40 px-3">
                     <span class="text-xs text-base-content/55">
-                      Assigned to <strong>{{ taskDefinition.ownerRoles.join(', ') }}</strong>
+                      <!-- Assigned to <strong>{{ taskDefinition.ownerRoles.join(', ') }}</strong> -->
                     </span>
                     @if (canCompleteSelectedTask) {
                       <button class="btn btn-primary btn-sm" type="button"
@@ -394,8 +442,14 @@
                         <span class="material-symbols-rounded">check</span>
                         {{ completing ? 'Completing' : 'Complete task' }}
                       </button>
+                    } @else if (canReopenSelectedTask) {
+                      <button class="btn btn-outline btn-sm" type="button"
+                        [disabled]="reopeningTask" (click)="reopenSelectedTask()">
+                        <span class="material-symbols-rounded">edit_square</span>
+                        {{ reopeningTask ? 'Opening' : 'Review task' }}
+                      </button>
                     } @else {
-                      <span class="badge badge-ghost badge-sm">Read only</span>
+                      <span></span>
                     }
                   </footer>
                 }
@@ -407,7 +461,7 @@
         <aside class="border-t border-base-300 bg-base-200/40 p-3 xl:border-l xl:border-t-0">
           <header class="mb-3 flex items-center justify-between">
             <div>
-              <p class="text-xs font-bold uppercase text-base-content/50">Your workflow</p>
+              <p class="text-xs font-bold uppercase text-base-content/50">Your work</p>
               <h2 class="font-bold">My assigned tasks</h2>
             </div>
             <span class="badge badge-ghost badge-sm">{{ inbox.length }}</span>

@@ -6,6 +6,7 @@ import {
     addTaskAttachment,
     completeTask,
     createProgrammeAndStart,
+    deleteDraftAttachment,
     deleteProgramme,
     getBootstrap,
     getNotificationPreference,
@@ -19,6 +20,7 @@ import {
     markAllWorkflowNotificationsRead,
     markWorkflowNotificationRead,
     publishDefinition,
+    reopenTask,
     setNotificationPreference,
     startProcess,
     switchProgrammeWorkflow,
@@ -84,14 +86,45 @@ workflowRouter.post("/tasks/:taskId/complete", async (req, res) => {
     res.json(await completeTask(req.params.taskId, req.body ?? {}));
 });
 
-workflowRouter.post("/tasks/:taskId/attachments", upload.single("file"), async (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "A file is required" });
-    const artifact = await addTaskAttachment(req.params.taskId, req.file, {
-        type: req.body?.type,
-        title: req.body?.title,
-        userId: req.body?.userId,
-    });
-    res.status(201).json(artifact);
+workflowRouter.post("/tasks/:taskId/reopen", async (req, res) => {
+    res.json(await reopenTask(req.params.taskId, req.body ?? {}));
+});
+
+workflowRouter.post("/tasks/:taskId/attachments", upload.array("file"), async (req, res) => {
+    const files = Array.isArray(req.files) ? req.files : [];
+    if (!files.length) return res.status(400).json({ error: "A file is required" });
+    const type = typeof req.body?.type === "string" ? req.body.type : undefined;
+    const title = typeof req.body?.title === "string" ? req.body.title : undefined;
+    const userId = typeof req.body?.userId === "string" ? req.body.userId : undefined;
+    const parsedMaxFiles = Number(req.body?.maxFiles);
+    const maxFiles = Number.isFinite(parsedMaxFiles) && parsedMaxFiles > 0 ? parsedMaxFiles : undefined;
+    const maxFileSizeMb = Math.max(Number(req.body?.maxFileSizeMb) || 20, 1);
+
+    if (maxFiles != null && files.length > maxFiles) {
+        return res.status(400).json({ error: `Only ${maxFiles} file${maxFiles === 1 ? "" : "s"} can be uploaded` });
+    }
+    const oversized = files.find((file) => file.size > maxFileSizeMb * 1024 * 1024);
+    if (oversized) {
+        return res.status(400).json({ error: `${oversized.originalname} is larger than ${maxFileSizeMb} MB` });
+    }
+
+    const taskId = req.params.taskId as string;
+
+    const artifacts = [];
+    for (const file of files) {
+        artifacts.push(await addTaskAttachment(taskId, file, { type, title, userId }));
+    }
+    res.status(201).json(artifacts);
+});
+
+workflowRouter.delete("/tasks/:taskId/attachments/:attachmentId", async (req, res) => {
+    const userId = typeof req.query.userId === "string" ? req.query.userId : undefined;
+    res.json(await deleteDraftAttachment(req.params.attachmentId, userId, req.params.taskId));
+});
+
+workflowRouter.delete("/attachments/:attachmentId", async (req, res) => {
+    const userId = typeof req.query.userId === "string" ? req.query.userId : undefined;
+    res.json(await deleteDraftAttachment(req.params.attachmentId, userId));
 });
 
 workflowRouter.get("/attachments/:attachmentId/download", async (req, res) => {

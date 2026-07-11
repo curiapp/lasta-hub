@@ -46,4 +46,12 @@ export class MainComponent {
       });
   }
 
+  get isLoggedIn() {
+    return this.auth.isLoggedIn();
+  }
+
+  get isPdqa() {
+    return String(this.user?.role ?? '').trim().toLowerCase() === 'pdqa';
+  }
+
 }

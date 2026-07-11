@@ -33,7 +33,7 @@
         [class.input-error]="title.invalid && title.touched">
         <span class="material-symbols-rounded text-lg text-base-content/40">school</span>
         <input id="programmeTitle" type="text" class="grow" required minlength="3"
-          [(ngModel)]="programme.title" name="title" #title="ngModel"
+          [ngModel]="programme.title" (ngModelChange)="onTitleChange($event)" name="title" #title="ngModel"
           placeholder="e.g. Bachelor of Data Science">
       </label>
       @if (title.invalid && title.touched) {
@@ -50,10 +50,17 @@
           [class.input-error]="code.invalid && code.touched">
           <span class="material-symbols-rounded text-lg text-base-content/40">tag</span>
           <input id="programmeCode" type="text" class="grow uppercase" required minlength="2"
-            [(ngModel)]="programme.code" name="code" #code="ngModel" placeholder="e.g. BDS">
+            [ngModel]="programme.code" (ngModelChange)="onCodeChange($event)" name="code" #code="ngModel"
+            placeholder="e.g. BDS">
+          <button type="button" class="btn btn-ghost btn-xs btn-square" title="Regenerate programme code"
+            (click)="regenerateCode()">
+            <span class="material-symbols-rounded text-base">auto_awesome</span>
+          </button>
         </label>
         @if (code.invalid && code.touched) {
           <span class="mt-1 text-xs text-error">Enter a valid programme code.</span>
+        } @else {
+          <span class="mt-1 text-xs text-base-content/50">Generated from the title, but you can edit it.</span>
         }
       </label>
 

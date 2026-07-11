@@ -11,6 +11,7 @@ import {
 } from '../../graphql/graphql.queries.v2';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoadingService } from '../../services/loading.service';
+import { ToastService } from '../../services/toast.service';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
 import { ClientService } from '../../services/client.service';
 import { environment } from '../../../environments/environment';
@@ -39,6 +40,7 @@ export class ProgrammeComponent implements OnInit {
   private readonly apollo = inject(Apollo);
   private readonly auth = inject(AuthenticationService);
   private readonly loadingService = inject(LoadingService);
+  private readonly toastService = inject(ToastService);
   private readonly definitionService = inject(WorkflowDefinitionService);
   private readonly http = inject(ClientService);
 
@@ -48,9 +50,13 @@ export class ProgrammeComponent implements OnInit {
   selectedTaskKey = '';
   inbox: WorkflowInboxItem[] = [];
   formData: Record<string, any> = {};
+  formErrors: Record<string, string> = {};
   artifacts: WorkflowArtifactInput[] = [];
+  artifactAttachmentMap: Record<string, WorkflowArtifactRecord[]> = {};
+  readonly emptyAttachments: WorkflowArtifactRecord[] = [];
   loading = true;
   completing = false;
+  reopeningTask = false;
   starting = false;
   switchingWorkflow = false;
   workflowDefinitions: WorkflowDefinitionSummary[] = [];
@@ -118,6 +124,32 @@ export class ProgrammeComponent implements OnInit {
         || task.ownerRoles.map((role) => role.toLowerCase()).includes(this.currentUserRole));
   }
 
+  get canReopenSelectedTask() {
+    const task = this.selectedTaskInstance;
+    const isCoordinator = this.programme?.initiatorUser?.id === this.currentUserId;
+    return task?.status === 'completed'
+      && (this.currentUserRole === 'admin'
+        || this.currentUserRole === 'pdqa'
+        || isCoordinator
+        || task.ownerRoles.map((role) => role.toLowerCase()).includes(this.currentUserRole));
+  }
+
+  get selectedTaskDecision() {
+    const value = this.selectedTaskInstance?.decision || this.formData['decision'];
+    return String(value ?? '').trim();
+  }
+
+  get selectedTaskNeedsReview() {
+    if (this.selectedTaskInstance?.status !== 'completed') return false;
+    const decision = this.selectedTaskDecision.toLowerCase();
+    return decision === 'decline' || decision === 'declined';
+  }
+
+  get selectedTaskReviewMessage() {
+    const decision = this.selectedTaskDecision || 'the recorded decision';
+    return `Review this task because the previous decision was ${decision}. The existing details are kept for amendment.`;
+  }
+
   get currentUserRole() {
     return String(this.auth.user?.role ?? '').trim().toLowerCase();
   }
@@ -131,7 +163,7 @@ export class ProgrammeComponent implements OnInit {
   }
 
   get workflowDisplayName() {
-    return this.definition?.name || 'No workflow assigned';
+    return this.definition?.name || 'No development path assigned';
   }
 
   get canSwitchWorkflow() {
@@ -140,6 +172,23 @@ export class ProgrammeComponent implements OnInit {
 
   get selectedTaskArtifacts(): WorkflowArtifactRecord[] {
     return (this.detail?.artifacts ?? []).filter((artifact) => artifact.taskId === this.selectedTaskInstance?.id);
+  }
+
+  get selectedTaskAttachmentGroups(): Array<{ type: string; title: string; attachments: WorkflowArtifactRecord[] }> {
+    const groups = new Map<string, { type: string; title: string; attachments: WorkflowArtifactRecord[] }>();
+    for (const attachment of this.selectedTaskArtifacts) {
+      const requirement = this.artifacts.find((artifact) => artifact.type === attachment.type);
+      const title = requirement?.title || attachment.type || 'Documents';
+      const group = groups.get(attachment.type) ?? { type: attachment.type, title, attachments: [] };
+      group.attachments.push(attachment);
+      groups.set(attachment.type, group);
+    }
+    return [...groups.values()];
+  }
+
+  taskArtifacts(taskKey: string): WorkflowArtifactRecord[] {
+    const task = this.taskInstance(taskKey);
+    return (this.detail?.artifacts ?? []).filter((artifact) => artifact.taskId === task?.id);
   }
 
   get isReadOnly() {
@@ -174,7 +223,7 @@ export class ProgrammeComponent implements OnInit {
       error: () => {
         this.loading = false;
         this.loadingService.isLoading.set(false);
-        this.showMessage('Programme workflow could not be loaded.', 'error');
+        this.showMessage('Programme details could not be loaded.', 'error');
       },
     });
   }
@@ -192,12 +241,12 @@ export class ProgrammeComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.starting = false;
-        this.showMessage('Programme workflow started.', 'success');
+        this.showMessage('Programme development started.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
         this.starting = false;
-        this.showMessage(error?.message ?? 'Workflow could not be started.', 'error');
+        this.showMessage(error?.message ?? 'Programme development could not be started.', 'error');
       },
     });
   }
@@ -218,12 +267,12 @@ export class ProgrammeComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.switchingWorkflow = false;
-        this.showMessage('Programme workflow updated.', 'success');
+        this.showMessage('Programme development path updated.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
         this.switchingWorkflow = false;
-        this.showMessage(error?.message ?? 'Programme workflow could not be updated.', 'error');
+        this.showMessage(error?.message ?? 'Programme development path could not be updated.', 'error');
       },
     });
   }
@@ -238,6 +287,7 @@ export class ProgrammeComponent implements OnInit {
 
   selectTask(taskKey: string) {
     this.selectedTaskKey = taskKey;
+    this.formErrors = {};
     const instance = this.detail?.tasks.find((task) => task.taskKey === taskKey);
     this.formData = instance?.formData ? structuredClone(instance.formData) : {};
     const definition = this.selectedTaskDefinition;
@@ -250,11 +300,15 @@ export class ProgrammeComponent implements OnInit {
       }
     }
     this.artifacts = (definition?.artifacts ?? []).map((artifact) => ({
-      type: String(artifact['key']),
-      title: String(artifact['label']),
+      type: artifact.key,
+      title: artifact.label,
       reference: '',
-      required: artifact['required'] === true,
+      required: artifact.required === true,
+      multiple: artifact.multiple === true,
+      maxFiles: artifact.multiple ? artifact.maxFiles : 1,
+      maxFileSizeMb: Math.max(Number(artifact.maxFileSizeMb) || 20, 1),
     }));
+    this.refreshArtifactAttachmentMap();
   }
 
   taskInstance(taskKey: string) {
@@ -338,8 +392,47 @@ export class ProgrammeComponent implements OnInit {
   }
 
   setFileField(field: WorkflowField, event: Event, target?: Record<string, any>) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    (target ?? this.formData)[field.key] = file?.name ?? '';
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    const errorKey = this.fieldErrorKey(field, target);
+    delete this.formErrors[errorKey];
+
+    if (!file) {
+      (target ?? this.formData)[field.key] = '';
+      return;
+    }
+
+    const maxBytes = (field.maxFileSizeMb ?? 0) * 1024 * 1024;
+    if (maxBytes > 0 && file.size > maxBytes) {
+      this.formErrors[errorKey] = `${field.label} must be ${field.maxFileSizeMb} MB or smaller.`;
+      input.value = '';
+      (target ?? this.formData)[field.key] = '';
+      return;
+    }
+
+    if (!this.fileTypeAllowed(field, file)) {
+      this.formErrors[errorKey] = `${field.label} must be one of: ${field.acceptedFileTypes?.join(', ')}.`;
+      input.value = '';
+      (target ?? this.formData)[field.key] = '';
+      return;
+    }
+
+    (target ?? this.formData)[field.key] = file.name;
+  }
+
+  fileAccept(field: WorkflowField) {
+    return field.acceptedFileTypes?.join(',') ?? '';
+  }
+
+  fileHelpText(field: WorkflowField) {
+    const parts = [];
+    if (field.acceptedFileTypes?.length) parts.push(`Accepted: ${field.acceptedFileTypes.join(', ')}`);
+    if (field.maxFileSizeMb) parts.push(`Max ${field.maxFileSizeMb} MB`);
+    return parts.join(' | ');
+  }
+
+  fieldError(field: WorkflowField, target?: Record<string, any>) {
+    return this.formErrors[this.fieldErrorKey(field, target)] ?? '';
   }
 
   setArtifactFile(artifact: WorkflowArtifactInput, event: Event) {
@@ -350,12 +443,58 @@ export class ProgrammeComponent implements OnInit {
   }
 
   attachmentUploaded(artifact: WorkflowArtifactRecord) {
-    if (this.detail) this.detail.artifacts = [...this.detail.artifacts, artifact];
+    const taskId = artifact.taskId || this.selectedTaskInstance?.id;
+    const uploaded = {
+      ...artifact,
+      taskId: taskId ?? artifact.taskId,
+      status: artifact.status ?? 'draft',
+    };
+    if (this.detail) {
+      this.detail.artifacts = [
+        ...this.detail.artifacts.filter((item) => item.id !== uploaded.id),
+        uploaded,
+      ];
+    }
+    this.refreshArtifactAttachmentMap();
     this.showMessage(`${artifact.reference || artifact.title} uploaded.`, 'success');
+  }
+
+  artifactUploadCount(artifact: WorkflowArtifactInput) {
+    return this.artifactAttachmentMap[artifact.type]?.length ?? 0;
+  }
+
+  artifactAttachments(artifact: WorkflowArtifactInput) {
+    return this.artifactAttachmentMap[artifact.type] ?? this.emptyAttachments;
+  }
+
+  artifactUploadLimit(artifact: WorkflowArtifactInput) {
+    return artifact.multiple ? artifact.maxFiles : 1;
+  }
+
+  canUploadArtifact(artifact: WorkflowArtifactInput) {
+    const limit = this.artifactUploadLimit(artifact);
+    return limit == null || this.artifactUploadCount(artifact) < limit;
+  }
+
+  artifactHelpText(artifact: WorkflowArtifactInput) {
+    const count = this.artifactUploadCount(artifact);
+    const limit = this.artifactUploadLimit(artifact);
+    const fileCount = artifact.multiple
+      ? limit == null ? `${count} files uploaded` : `${count} of ${limit} files uploaded`
+      : `${count} of 1 file uploaded`;
+    return `${fileCount} | Max ${artifact.maxFileSizeMb ?? 20} MB each`;
   }
 
   attachmentUrl(artifact: WorkflowArtifactRecord) {
     return `${environment.apiUrl}/attachments/${artifact.id}/download`;
+  }
+
+  attachmentRemoved(attachmentId: string) {
+    if (this.detail) {
+      this.detail.artifacts = this.detail.artifacts.filter((artifact) => artifact.id !== attachmentId);
+    }
+    this.refreshArtifactAttachmentMap();
+    this.showMessage('Attachment removed.', 'success');
   }
 
   displayValue(value: unknown): string {
@@ -374,10 +513,75 @@ export class ProgrammeComponent implements OnInit {
   completeTask() {
     const task = this.selectedTaskInstance;
     if (!task || !this.canCompleteSelectedTask || this.completing) return;
-    const uploadedTypes = new Set(this.selectedTaskArtifacts.map((artifact) => artifact.type));
-    const missingArtifact = this.artifacts.find((artifact) => artifact.required && !uploadedTypes.has(artifact.type));
+    this.completing = true;
+    this.syncLatestProgrammeBeforeComplete(task.id);
+  }
+
+  reopenSelectedTask() {
+    const task = this.selectedTaskInstance;
+    if (!task || !this.canReopenSelectedTask || this.reopeningTask) return;
+    this.reopeningTask = true;
+    this.http.post(`tasks/${task.id}/reopen`, {
+      actor: {
+        id: this.currentUserId,
+        role: this.currentUserRole,
+      },
+    }).subscribe({
+      next: () => {
+        this.reopeningTask = false;
+        this.showMessage('Task reopened for amendments.', 'success');
+        this.loadProgramme();
+      },
+      error: (error) => {
+        this.reopeningTask = false;
+        this.showMessage(error?.message ?? 'Task could not be reopened.', 'error');
+      },
+    });
+  }
+
+  private syncLatestProgrammeBeforeComplete(taskId: string) {
+    const programmeId = this.route.snapshot.paramMap.get('id');
+    if (!programmeId) {
+      this.completing = false;
+      return;
+    }
+
+    this.apollo.query<{ programmeWorkflow: ProgrammeWorkflowDetail }>({
+      query: V2_GET_PROGRAMME_WORKFLOW,
+      variables: { programmeId },
+      fetchPolicy: 'network-only',
+    }).subscribe({
+      next: ({ data }) => {
+        this.detail = data.programmeWorkflow;
+        this.refreshArtifactAttachmentMap();
+        this.submitCompletedTask(taskId);
+      },
+      error: () => {
+        this.completing = false;
+        this.showMessage('Programme attachments could not be checked. Please try again.', 'error');
+      },
+    });
+  }
+
+  private submitCompletedTask(taskId: string) {
+    if (Object.keys(this.formErrors).length) {
+      this.completing = false;
+      this.showMessage('Fix the file selection before completing this task.', 'error');
+      return;
+    }
+    this.refreshArtifactAttachmentMap();
+    const missingArtifact = this.artifacts.find((artifact) =>
+      artifact.required && !(this.artifactAttachmentMap[artifact.type]?.length));
     if (missingArtifact) {
+      this.completing = false;
       this.showMessage(`${missingArtifact.title} is required.`, 'error');
+      return;
+    }
+    const exceededArtifact = this.artifacts.find((artifact) =>
+      this.artifactUploadLimit(artifact) != null && this.artifactUploadCount(artifact) > this.artifactUploadLimit(artifact)!);
+    if (exceededArtifact) {
+      this.completing = false;
+      this.showMessage(`${exceededArtifact.title} allows at most ${this.artifactUploadLimit(exceededArtifact)} file(s).`, 'error');
       return;
     }
 
@@ -386,11 +590,10 @@ export class ProgrammeComponent implements OnInit {
       ...(user?.id ? { id: user.id } : {}),
       role: this.currentUserRole,
     };
-    this.completing = true;
     this.apollo.mutate({
       mutation: V2_COMPLETE_TASK,
       variables: {
-        taskId: task.id,
+        taskId,
         input: {
           event: 'submit',
           actor,
@@ -401,7 +604,7 @@ export class ProgrammeComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.completing = false;
-        this.showMessage('Task completed and workflow advanced.', 'success');
+        this.showMessage('Task completed and the next step opened.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
@@ -426,5 +629,42 @@ export class ProgrammeComponent implements OnInit {
   private showMessage(message: string, type: 'success' | 'error') {
     this.message = message;
     this.messageType = type;
+    this.toastService.add(message, type);
+  }
+
+  private refreshArtifactAttachmentMap() {
+    const next: Record<string, WorkflowArtifactRecord[]> = {};
+    for (const attachment of this.selectedTaskArtifacts) {
+      next[attachment.type] = [...(next[attachment.type] ?? []), attachment];
+    }
+    this.artifactAttachmentMap = next;
+  }
+
+  private fileTypeAllowed(field: WorkflowField, file: File) {
+    if (!field.acceptedFileTypes?.length) return true;
+    const fileName = file.name.toLowerCase();
+    const mimeType = file.type.toLowerCase();
+    return field.acceptedFileTypes.some((type) => {
+      const accepted = type.trim().toLowerCase();
+      if (!accepted) return false;
+      if (accepted.startsWith('.')) return fileName.endsWith(accepted);
+      if (accepted.endsWith('/*')) return mimeType.startsWith(accepted.slice(0, -1));
+      return mimeType === accepted;
+    });
+  }
+
+  private fieldErrorKey(field: WorkflowField, target?: Record<string, any>) {
+    if (!target) return field.key;
+    return `${field.key}-${this.repeaterTargetIndex(target)}`;
+  }
+
+  private repeaterTargetIndex(target: Record<string, any>) {
+    for (const value of Object.values(this.formData)) {
+      if (Array.isArray(value)) {
+        const index = value.indexOf(target);
+        if (index >= 0) return index;
+      }
+    }
+    return 'item';
   }
 }

@@ -35,6 +35,27 @@ export function validateDefinition(definition: WorkflowDefinition) {
             if (unknown) throw new WorkflowError(`Task ${task.id} targets unknown task: ${unknown}`, 400);
         }
         validateFields(task.form ?? [], task.id);
+        validateArtifacts(task.artifacts ?? [], task.id);
+    }
+}
+
+function validateArtifacts(artifacts: WorkflowTaskDefinition["artifacts"], taskId: string) {
+    const artifactKeys = new Set<string>();
+    for (const artifact of artifacts ?? []) {
+        if (!artifact.key || !artifact.label) {
+            throw new WorkflowError(`Task ${taskId} contains an invalid document requirement`, 400);
+        }
+        if (artifactKeys.has(artifact.key)) {
+            throw new WorkflowError(`Task ${taskId} contains duplicate document key: ${artifact.key}`, 400);
+        }
+        const minimum = artifact.multiple ? 1 : 1;
+        if (artifact.maxFiles != null && artifact.maxFiles < minimum) {
+            throw new WorkflowError(`Document ${artifact.key} has an invalid maximum file count`, 400);
+        }
+        if (artifact.maxFileSizeMb != null && artifact.maxFileSizeMb < 1) {
+            throw new WorkflowError(`Document ${artifact.key} has an invalid maximum file size`, 400);
+        }
+        artifactKeys.add(artifact.key);
     }
 }
 
@@ -71,11 +92,20 @@ export function getTaskDefinition(definition: WorkflowDefinition, taskKey: strin
 
 export function validateCompletion(task: WorkflowTaskDefinition, input: CompleteTaskInput) {
     const missingFields = validateSubmittedFields(task.form ?? [], input.formData ?? {});
-    const artifactTypes = new Set((input.artifacts ?? []).map((artifact) => artifact.type));
+    const artifactCounts = new Map<string, number>();
+    for (const artifact of input.artifacts ?? []) {
+        artifactCounts.set(artifact.type, (artifactCounts.get(artifact.type) ?? 0) + 1);
+    }
     const missingArtifacts = (task.artifacts ?? [])
-        .filter((artifact) => artifact.required && !artifactTypes.has(artifact.key))
+        .filter((artifact) => artifact.required && !artifactCounts.has(artifact.key))
         .map((artifact) => artifact.label);
-    const missing = [...missingFields, ...missingArtifacts];
+    const exceededArtifacts = (task.artifacts ?? [])
+        .filter((artifact) => {
+            const limit = artifact.multiple ? artifact.maxFiles : 1;
+            return limit != null && (artifactCounts.get(artifact.key) ?? 0) > limit;
+        })
+        .map((artifact) => `${artifact.label} allows at most ${artifact.multiple ? artifact.maxFiles : 1} file(s)`);
+    const missing = [...missingFields, ...missingArtifacts, ...exceededArtifacts];
 
     if (missing.length) {
         throw new WorkflowError(`Missing required items: ${missing.join(", ")}`, 400);
