@@ -126,12 +126,12 @@
 
         <section class="min-w-0 p-3 lg:p-4">
           @if (!detail?.process) {
-            <div class="grid min-h-[32rem] place-items-center text-center">
+            <div class="grid min-h-128 place-items-center text-center">
               <div>
                 <span class="material-symbols-rounded text-5xl text-primary">play_circle</span>
                 <h2 class="mt-2 text-lg font-bold">Ready to begin</h2>
                 <p class="mx-auto mt-1 max-w-md text-sm text-base-content/60">
-                  Start the Lasta programme development process for this programme.
+                  Start the programme development process for this programme.
                 </p>
                 <button class="btn btn-primary btn-sm mt-4" type="button" [disabled]="starting"
                   (click)="startWorkflow()">
