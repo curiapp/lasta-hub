@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { CardComponent } from "../../../components/card/card/card.component";
@@ -18,6 +18,7 @@ import { ActionButtonsComponent } from "../../../components/action-buttons/actio
   selector: 'client-external-stakeholders',
   imports: [CurriculumDevPACStartComponent, CurriculumDevPACConsultComponent, PacConsultEndorseComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective, ActionButtonsComponent],
   templateUrl: './external-stakeholders.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './external-stakeholders.component.css'
 })
 export class ExternalStakeholdersComponent {

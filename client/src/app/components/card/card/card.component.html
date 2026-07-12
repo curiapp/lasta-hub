@@ -21,7 +21,7 @@
         file_present
       </span>
       <span class="capitalize transition group-hover:underline grow text-sm">{{item?.name}}</span>
-      <button class="size-8 rounded-full hover:bg-gray-300" (click)="onDownload(item?.name,item?.id)">
+      <button class="size-8 rounded-full hover:bg-gray-300" (click)="onDownload($safeNavigationMigration(item?.name),$safeNavigationMigration(item?.id))">
         <span class="material-symbols-rounded">
           download
         </span>

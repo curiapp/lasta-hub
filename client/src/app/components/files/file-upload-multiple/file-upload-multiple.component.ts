@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal } from '@angular/core';
+import { Component, inject, Input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
@@ -11,6 +11,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
   selector: 'file-upload-multiple',
   imports: [FormsModule, FileUploadModule, FileIconComponent],
   templateUrl: './file-upload-multiple.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './file-upload-multiple.component.css'
 })
 export class FileUploadMultipleComponent {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { CardComponent } from "../../../components/card/card/card.component";
@@ -19,6 +19,7 @@ import { ActionButtonsComponent } from "../../../components/action-buttons/actio
   selector: 'client-nqf-registration',
   imports: [NqaPreparationComponent, PduRecommendComponent, NQARegComponent, NqaSubmitComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective, ActionButtonsComponent],
   templateUrl: './nqf-registration.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './nqf-registration.component.css'
 })
 export class NqfRegistrationComponent {

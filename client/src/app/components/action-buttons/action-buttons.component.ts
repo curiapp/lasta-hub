@@ -1,4 +1,4 @@
-import { Component, inject, Input, ViewContainerRef } from '@angular/core';
+import { Component, inject, Input, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.component';
 import { ClientService } from '../../services/client.service';
 import { ToastService } from '../../services/toast.service';
@@ -11,6 +11,7 @@ type TargetType = { id: string; name: string; type?: string };
   selector: 'action-buttons',
   imports: [],
   templateUrl: './action-buttons.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './action-buttons.component.css'
 })
 export class ActionButtonsComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
@@ -9,6 +9,7 @@ import { FileUploadComponent } from '../../files/file-upload/file-upload.compone
 @Component({
   selector: 'consultation-apc-recommend',
   templateUrl: 'apc-recommend.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class ApcRecommendComponent implements OnInit {

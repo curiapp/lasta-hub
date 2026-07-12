@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ActionButtonsComponent } from "../../action-buttons/action-buttons.component";
 import { CardLoaderComponent } from "../../loaders/card-loader/card-loader.component";
 import { ClientService } from '../../../services/client.service';
@@ -8,6 +8,7 @@ import { ToastService } from '../../../services/toast.service';
   selector: 'card',
   imports: [CardLoaderComponent],
   templateUrl: './card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './card.component.css'
 })
 export class CardComponent {

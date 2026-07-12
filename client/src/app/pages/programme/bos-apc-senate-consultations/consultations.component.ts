@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { CardComponent } from "../../../components/card/card/card.component";
@@ -20,6 +20,7 @@ import { ActionButtonsComponent } from "../../../components/action-buttons/actio
   selector: 'consultations',
   imports: [FinalDraftComponent, FacultyBosFinalComponent, OtherFacultyBosComponent, ApcRecommendComponent, FinalSenateRecommendComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective, ActionButtonsComponent],
   templateUrl: './consultations.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './consultations.component.css'
 })
 export class SenateConsultationsComponent {

@@ -327,10 +327,10 @@
           </button>
           } -->
 
-          <action-buttons *canEdit="item?.initiator"  [actions]="['delete']" [target]="{name: item?.title, id: item?.id, type: 'programme'}" />
+          <action-buttons *canEdit="$safeNavigationMigration(item?.initiator)"  [actions]="['delete']" [target]="{name: $safeNavigationMigration(item?.title), id: $safeNavigationMigration(item?.id), type: 'programme'}" />
 
 
-          <a [routerLink]="['/v1-programme/', item?.id]" class="p-4 pt-0! transition-opacity sm:p-6">
+          <a [routerLink]="['/v1-programme/', $safeNavigationMigration(item?.id)]" class="p-4 pt-0! transition-opacity sm:p-6">
             <!-- <a [routerLink]="['/programme/', item.id]" class="p-4 !pt-0 transition-opacity sm:p-6"> -->
             <h3 class=" mt-4 font-medium sm:text-lg line-clamp-2 capitalize">{{item?.title}}</h3>
 

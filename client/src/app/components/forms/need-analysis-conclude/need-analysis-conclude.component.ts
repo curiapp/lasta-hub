@@ -1,5 +1,5 @@
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
@@ -10,6 +10,7 @@ import { FileUploadComponent } from '../../files/file-upload/file-upload.compone
 @Component({
   selector: 'need-analysis-conclude',
   templateUrl: 'need-analysis-conclude.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     FileUploadModule,

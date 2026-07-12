@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
@@ -7,6 +7,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     selector: 'resume',
     templateUrl: './resume-programme.component.html',
     styleUrls: ['./resume-programme.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, FileUploadModule, NgClass]
 })
 export class ResumeProgrammeComponent {

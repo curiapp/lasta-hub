@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -32,6 +32,7 @@ import {
 @Component({
   selector: 'programme',
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './programme.component.html',
 })
 export class ProgrammeComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
@@ -6,6 +6,7 @@ import { FileUploadComponent } from "../../files/file-upload/file-upload.compone
 @Component({
   selector: 'consultations-other-faculty-bos',
   templateUrl: 'other-faculty-bos.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadComponent]
 })
 export class OtherFacultyBosComponent {

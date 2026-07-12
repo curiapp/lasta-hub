@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
@@ -17,6 +17,7 @@ import {
   selector: 'client-workflow-definition',
   imports: [CommonModule, FormsModule],
   templateUrl: './workflow-definition.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './workflow-definition.component.css',
 })
 export class WorkflowDefinitionComponent implements OnInit {

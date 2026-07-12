@@ -1,6 +1,6 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
-import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { InMemoryCache } from '@apollo/client';
 import { provideApollo } from 'apollo-angular';
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({
       includeRequestsWithAuthHeaders: true,
       includePostRequests: true
-    })),
+    }), withNoIncrementalHydration()),
     provideHttpClient(withFetch(), withInterceptors([loadingInterceptor])),
     provideApollo(() => {
       const httpLink = inject(HttpLink);

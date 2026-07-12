@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
@@ -8,6 +8,7 @@ import { FileUploadComponent } from '../../files/file-upload/file-upload.compone
 @Component({
   selector: 'end-consult',
   templateUrl: 'end-consult.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class EndConsultComponent {

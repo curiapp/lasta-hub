@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -13,6 +13,7 @@ import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'need-analysis-consult',
   templateUrl: 'need-analysis-consult.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule, FilePipe, FileExtensionPipe]
 })
 export class NeedAnalysisConsultationComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { V2_GET_NOTIFICATIONS } from '../../../graphql/graphql.queries.v2';
 import { LoadingService } from '../../../services/loading.service';
@@ -11,6 +11,7 @@ import { ClientService } from '../../../services/client.service';
   selector: 'notification',
   imports: [DatePipe, InitialsPipe],
   templateUrl: './notification.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notification.component.css',
 })
 export class NotificationComponent {

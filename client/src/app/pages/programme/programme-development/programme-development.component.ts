@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { ActionButtonsComponent } from '../../../components/action-buttons/action-buttons.component';
@@ -19,6 +19,7 @@ import { CanEditDirective } from '../../../directives/can-edit.directive';
   selector: 'client-programme-development',
   imports: [CdcComponent, PacComponent, CurriculumDevDraftReviseComponent, CurriculumDevDraftPduApprovalComponent, ActionButtonsComponent, ModalComponent, CardComponent, DatePipe, CanEditDirective],
   templateUrl: './programme-development.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './programme-development.component.css'
 })
 export class ProgrammeDevelopmentComponent {

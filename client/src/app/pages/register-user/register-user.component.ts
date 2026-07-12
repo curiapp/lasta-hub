@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClientService } from '../../services/client.service';
 import { ToastService } from '../../services/toast.service';
@@ -15,6 +15,7 @@ type RegisterUserForm = {
 @Component({
   selector: 'register-user',
   imports: [FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './register-user.component.html',
 })
 export class RegisterUserComponent {

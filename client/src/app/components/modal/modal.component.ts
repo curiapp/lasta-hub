@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ModalControlService } from '../../services/modal-control.service';
 
 @Component({
   selector: 'modal',
   imports: [],
   templateUrl: './modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal.component.css'
 })
 export class ModalComponent implements AfterViewInit {

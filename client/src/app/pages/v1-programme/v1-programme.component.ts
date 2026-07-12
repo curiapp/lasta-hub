@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { GET_PROGRAMME_BY_ID } from '../../graphql/graphql.queries';
@@ -9,6 +9,7 @@ import { Programme } from '../../types';
   selector: 'client-v1-programme',
   imports: [RouterOutlet, RouterLink],
   templateUrl: './v1-programme.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './v1-programme.component.css'
 })
 export class V1ProgrammeComponent {

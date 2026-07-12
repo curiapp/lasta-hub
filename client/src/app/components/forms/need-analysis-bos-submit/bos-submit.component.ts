@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -10,6 +10,7 @@ import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'bos-submit',
   templateUrl: 'bos-submit.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule]
 })
 export class BosSubmitComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
@@ -17,6 +17,7 @@ import { FileIconComponent } from "../../file-icon/file-icon.component";
     FileIconComponent
   ],
   templateUrl: './file-upload.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './file-upload.component.css'
 })
 export class FileUploadComponent {

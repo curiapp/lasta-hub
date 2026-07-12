@@ -15,7 +15,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl">Programme Details</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm btn-secondary text-primary" (click)="edit_program.open()">
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm btn-secondary text-primary" (click)="edit_program.open()">
       <span class="material-symbols-rounded text-[20px]">
         edit
       </span>
@@ -52,7 +52,7 @@
 <div class="my-4 space-y-4">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl">Stakeholders' Consultation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="need_analysis_consult.open()">
       Consultations
     </button>
@@ -63,8 +63,8 @@
   </p>
 
   @if (stakeConsult?.extraData?.startDate) {
-  <span class="text-secondary text-lg font-semibold">Started on {{stakeConsult?.extraData?.startDate | date}} - Ended on
-    {{stakeConsult?.extraData?.endDate | date}}</span>
+  <span class="text-secondary text-lg font-semibold">Started on {{$safeNavigationMigration(stakeConsult?.extraData?.startDate) | date}} - Ended on
+    {{$safeNavigationMigration(stakeConsult?.extraData?.endDate) | date}}</span>
   }
 
   <div class="flex justify-between">
@@ -73,7 +73,7 @@
 
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @for(stake of stakeConsult?.extraData?.organizations; track $index){
-    <card [title]="stake?.name" [descriptions]="[stake.organisation]">
+    <card [title]="$safeNavigationMigration(stake?.name)" [descriptions]="[stake.organisation]">
     </card>
     }@empty {
     <p class="text-sm text-primary font-semibold">No Stakeholders</p>
@@ -87,7 +87,7 @@
   <div class="grid sm:lg:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @for(questionnaire of stakeConsult?.extraData?.questionnaires; track $index){
     <card [title]="'Questionnaire '+($index+1)"
-      [descriptions]="[questionnaire?.name,(stakeConsult.extraData?.startDate | date)  +' - '+ (stakeConsult.extraData?.startDate | date)]">
+      [descriptions]="[$safeNavigationMigration(questionnaire?.name),($safeNavigationMigration(stakeConsult.extraData?.startDate) | date)  +' - '+ ($safeNavigationMigration(stakeConsult.extraData?.startDate) | date)]">
       <action-buttons [actions]="['download']" [target]="{name:questionnaire.name, id: questionnaire.id}" />
     </card>
     }@empty {
@@ -98,7 +98,7 @@
 
   <div class="flex justify-between">
     <h2 class="text-xl">Survey/Questionnaire</h2>
-    <button *canEdit="programme?.initiator" (click)="end_consult.open()"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" (click)="end_consult.open()"
       class="btn btn-sm font-normal btn-secondary text-primary">
       Submit Survey/Questionnaire
     </button>
@@ -106,9 +106,9 @@
 
   <div class="grid gap-4">
     @if(stakeConsult?.extraData?.surveyQuestions){
-    <card title="Final Survey Report" [descriptions]="[(stakeConsult?.date | date)]">
+    <card title="Final Survey Report" [descriptions]="[($safeNavigationMigration(stakeConsult?.date) | date)]">
       <action-buttons [actions]="['download']"
-        [target]="{name:'Final Survey Report', id: stakeConsult?.extraData?.surveyQuestions[0]}" />
+        [target]="{name:'Final Survey Report', id: $safeNavigationMigration(stakeConsult?.extraData?.surveyQuestions[0])}" />
     </card>
     }@else {
     <p class="text-sm text-primary font-bold">No Submission</p>
@@ -132,7 +132,7 @@
 <div class="space-y-4 my-6">
   <div class="flex flex-wrap gap-2 justify-between">
     <h2 class="text-xl md:text-2xl capitalize">PDQA Recommendation</h2>
-    <div class="join" *canEdit="programme?.initiator">
+    <div class="join" *canEdit="$safeNavigationMigration(programme?.initiator)">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="pdqa_recommend.open()">
         PDQA Decision
       </button>
@@ -153,9 +153,9 @@
 
   @if(pdqaRecommend?.stepName){
   <card title="Final PDQA Recommendation"
-    [descriptions]="['Decision: '+pdqaRecommend?.extraData?.decision, 'Submitted: '+(pdqaRecommend?.date | date)]">
+    [descriptions]="['Decision: '+$safeNavigationMigration(pdqaRecommend?.extraData?.decision), 'Submitted: '+($safeNavigationMigration(pdqaRecommend?.date) | date)]">
     <action-buttons [actions]="['download']"
-      [target]="{name:'Need Analysis PDQA Recommendation document', id: pdqaRecommend?.extraData?.recommendationDoc}" />
+      [target]="{name:'Need Analysis PDQA Recommendation document', id: $safeNavigationMigration(pdqaRecommend?.extraData?.recommendationDoc)}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No PDQA Recommendations</p>
@@ -179,7 +179,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">BOS Consultation</h2>
-    <div class="join" *canEdit="programme?.initiator">
+    <div class="join" *canEdit="$safeNavigationMigration(programme?.initiator)">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="bos_ammendments.open()">
         Amendments
       </button>
@@ -195,16 +195,16 @@
 
   @if (bosConsult?.extraData?.startDate) {
   <span class="text-secondary text-lg font-semibold mb-4!">
-    Started on {{stakeConsult?.extraData?.startDate |date}}
+    Started on {{$safeNavigationMigration(stakeConsult?.extraData?.startDate) |date}}
   </span>
   }
 
   @if(bosConsult?.extraData?.status){
   <card title="Recommendations"
-    [descriptions]="['Status: ' + bosConsult?.extraData?.status, 'Submitted: '+(bosConsult?.extraData?.recommendationDate | date)]">
+    [descriptions]="['Status: ' + $safeNavigationMigration(bosConsult?.extraData?.status), 'Submitted: '+($safeNavigationMigration(bosConsult?.extraData?.recommendationDate) | date)]">
     <action-buttons [actions]="['download']"
       [target]="{name:'Need Analysis BOS Recommendation document',
-      id: bosConsult?.extraData?.recommendationFile}" />
+      id: $safeNavigationMigration(bosConsult?.extraData?.recommendationFile)}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No Recommendations</p>
@@ -227,7 +227,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">APC Recommendation</h2>
-    <div class="join" *canEdit="programme?.initiator">
+    <div class="join" *canEdit="$safeNavigationMigration(programme?.initiator)">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="apc_submit.open()">
         Recommendation
       </button>
@@ -240,15 +240,15 @@
 
   @if (apcRecommend?.extraData?.recommendationDate) {
   <span class="text-secondary text-lg font-semibold mb-4!">
-    Started on {{stakeConsult?.extraData?.startDate | date}}
+    Started on {{$safeNavigationMigration(stakeConsult?.extraData?.startDate) | date}}
   </span>
   }
 
   @if(apcRecommend?.extraData?.recommendationFile){
   <card title="Recommendations"
-    [descriptions]="['Decision: ' + apcRecommend?.extraData?.status, 'Consultation Date: '+(apcRecommend?.extraData['consultationDate'] | date)]">
+    [descriptions]="['Decision: ' + $safeNavigationMigration(apcRecommend?.extraData?.status), 'Consultation Date: '+($safeNavigationMigration(apcRecommend?.extraData['consultationDate']) | date)]">
     <action-buttons [actions]="['download']" [target]="{name:'Need Analysis APC Recommendation document',
-      id: apcRecommend?.extraData?.recommendationFile}" />
+      id: $safeNavigationMigration(apcRecommend?.extraData?.recommendationFile)}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No recommendations submitted</p>
@@ -266,7 +266,7 @@
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">Senate Approval</h2>
 
-    <div class="join" *canEdit="programme?.initiator">
+    <div class="join" *canEdit="$safeNavigationMigration(programme?.initiator)">
       <button class="btn btn-sm join-item btn-secondary text-primary" (click)="senate_submit.open()">
         Recommendation
       </button>
@@ -279,9 +279,9 @@
 
   @if(senateApproval?.extraData?.recommendationFile){
   <card title="Recommendations"
-    [descriptions]="['Decision: ' + senateApproval?.extraData?.status, 'Consultation Date: '+(senateApproval?.extraData['recommendationDate'] | date)]">
+    [descriptions]="['Decision: ' + $safeNavigationMigration(senateApproval?.extraData?.status), 'Consultation Date: '+($safeNavigationMigration(senateApproval?.extraData['recommendationDate']) | date)]">
     <action-buttons [actions]="['download']" [target]="{name:'Need Analysis Senate Recommendation document',
-      id: senateApproval?.extraData?.recommendationFile}" />
+      id: $safeNavigationMigration(senateApproval?.extraData?.recommendationFile)}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">No recommendations submitted</p>

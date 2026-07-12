@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
 import { SharedModule } from '../../../shared.module';
@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared.module';
 @Component({
   selector: 'apc-recommend',
   templateUrl: 'apc.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [SharedModule, FileUploadComponent]
 })
 export class ApcComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { ClientService } from '../../../services/client.service';
@@ -9,6 +9,7 @@ import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'pd-pac',
   templateUrl: 'pac.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, ReactiveFormsModule]
 })
 

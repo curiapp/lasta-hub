@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { LoadingService } from '../../../services/loading.service';
@@ -12,6 +12,7 @@ import { Programme } from '../../../types';
   selector: 'need-analysis-edit-program',
   imports: [FormsModule],
   templateUrl: './need-analysis-edit-programme.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './need-analysis-edit-programme.component.css'
 })
 export class NeedAnalysisEditProgramComponent {
