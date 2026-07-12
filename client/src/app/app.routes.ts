@@ -41,7 +41,7 @@ export const routes: Routes = [
       { path: 'about-us', component: AboutUsComponent, data: { title: 'PDQA - About Us' } },
       { path: 'our-team', component: TeamComponent, data: { title: 'PDQA - Our Team' } },
       {
-        path: 'programme/:id', component: ProgrammeComponent, canActivate: [authGuard], data: { title: 'PDQA - Programme Workflow' }
+        path: 'programme/:id', component: ProgrammeComponent, canActivate: [authGuard], data: { title: 'PDQA - Programme Process' }
       },
       {
         path: 'v1-programme/:id', component: V1ProgrammeComponent, canActivate: [authGuard], data: { title: 'PDQA - V1 Programme' },
@@ -50,7 +50,7 @@ export const routes: Routes = [
           { path: 'n-a', component: NeedAnalysisComponent, data: { title: 'PDQA - Need Analysis' } },
           { path: 'p-d', component: ProgrammeDevelopmentComponent, data: { title: 'PDQA - Programme development' } },
           { path: 'e-s', component: ExternalStakeholdersComponent, data: { title: 'PDQA - External stakeholders consultations' } },
-          { path: 'i-s', component: InternalStakeholdersComponent, data: { title: 'PDQA - External stakeholders consultations' } },
+          { path: 'i-s', component: InternalStakeholdersComponent, data: { title: 'PDQA - Internal stakeholders consultations' } },
           { path: 'b-a-s-c', component: SenateConsultationsComponent, data: { title: 'PDQA - BOS, APC and Senate Consultations' } },
           { path: 'n-r', component: NqfRegistrationComponent, data: { title: 'PDQA - NQF Registration' } },
           { path: '', redirectTo: 'n-a', pathMatch: 'full' },
