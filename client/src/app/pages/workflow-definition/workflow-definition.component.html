@@ -19,6 +19,11 @@
         <span class="material-symbols-rounded">add</span>
         New workflow
       </button>
+      <button class="btn btn-sm btn-ghost text-error" type="button" [disabled]="!canDeleteDefinition"
+        (click)="deleteWorkflow()">
+        <span class="material-symbols-rounded">{{ deleting ? 'hourglass_empty' : 'delete' }}</span>
+        {{ deleting ? 'Deleting' : 'Delete' }}
+      </button>
       <button class="btn btn-sm btn-secondary" type="button" [disabled]="publishing || loading" (click)="publish()">
         <span class="material-symbols-rounded">publish</span>
         {{ publishing ? 'Publishing' : 'Publish' }}
