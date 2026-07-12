@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
-import { CreateProgrammeComponent } from "../../components/forms/create-programme/create-programmme.component";
+import { CreateProgrammeComponent } from "../../components/forms/create-programme/create-programme.component";
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';

@@ -20,7 +20,7 @@ import { V1ProgrammeComponent } from './pages/v1-programme/v1-programme.componen
 import { authGuard } from './guards/auth.guard';
 import { pdqaGuard } from './guards/pdqa.guard';
 import { programmeResolver } from './resolvers/programme.resolver';
-import { CreateProgrammeComponent } from './components/forms/create-programme/create-programmme.component';
+import { CreateProgrammeComponent } from './components/forms/create-programme/create-programme.component';
 import { ReportsReviewsComponent } from './pages/reports-reviews/reports-reviews.component';
 import { RegisterUserComponent } from './pages/register-user/register-user.component';
 
