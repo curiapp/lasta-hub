@@ -1,6 +1,8 @@
-<div class="toast toast-bottom toast-end z-50 mb-4 max-w-sm">
-  @for(toast of toastService.messages(); track toast.id){
-    <div class="alert grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md border border-base-300 bg-base-100 px-3 py-2 text-base-content shadow-lg"
+<div class="toast-container">
+  <div class="toast-stack">
+  @for(toast of toastService.messages(); track toast.id; let index = $index){
+    <div class="toast-card alert grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md border border-base-300 bg-base-100 px-3 py-2 text-base-content shadow-lg"
+      [style.--toast-index]="index"
       [class.border-success]="toast.type === 'success'"
       [class.border-error]="toast.type === 'error'"
       [class.border-warning]="toast.type === 'warning'"
@@ -19,4 +21,5 @@
       </button>
     </div>
   }
+  </div>
 </div>

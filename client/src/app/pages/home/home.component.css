@@ -86,3 +86,67 @@
   }
 }
 
+.portfolio-enter {
+  animation: portfolio-enter 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-leave {
+  animation: portfolio-leave 160ms ease-in;
+}
+
+.programme-card-enter {
+  animation: programme-card-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.programme-card-leave {
+  animation: programme-card-leave 140ms ease-in both;
+}
+
+@keyframes portfolio-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes portfolio-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes programme-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes programme-card-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+

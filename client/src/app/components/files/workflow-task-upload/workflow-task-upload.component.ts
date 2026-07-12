@@ -10,9 +10,15 @@ import { WorkflowArtifactRecord } from '../../../types/programme-workflow';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './workflow-task-upload.component.html',
+  styleUrls: ['./workflow-task-upload.component.css'],
 })
 export class WorkflowTaskUploadComponent implements OnChanges {
   private readonly http = inject(HttpClient);
+  private readonly minimumUploadVisibleMs = 1000;
+  private readonly attachmentRevealDelayMs = 170;
+  private uploadStartedAt = 0;
+  private uploadFinishTimer?: ReturnType<typeof setTimeout>;
+  private attachmentRevealTimer?: ReturnType<typeof setTimeout>;
 
   @Input({ required: true }) taskId = '';
   @Input({ required: true }) type = 'attachment';
@@ -151,9 +157,12 @@ export class WorkflowTaskUploadComponent implements OnChanges {
 
   uploadSelected() {
     if (!this.selectedFiles.length || this.isUploading) return;
+    if (this.uploadFinishTimer) clearTimeout(this.uploadFinishTimer);
+    if (this.attachmentRevealTimer) clearTimeout(this.attachmentRevealTimer);
     this.error = '';
     this.isUploading = true;
     this.uploadProgress = 0;
+    this.uploadStartedAt = Date.now();
 
     const form = new FormData();
     this.selectedFiles.forEach((file) => form.append('file', file, file.name));
@@ -178,16 +187,11 @@ export class WorkflowTaskUploadComponent implements OnChanges {
           const body = event.body ?? [];
           const uploadedArtifacts = Array.isArray(body) ? body : [body];
           this.uploadProgress = 100;
-          this.selectedFiles = [];
-          this.visibleAttachments = [...this.visibleAttachments, ...uploadedArtifacts];
-          this.isUploading = false;
-          uploadedArtifacts.forEach((artifact) => this.uploaded.emit(artifact));
+          this.finishUploadAfterMinimumDelay(uploadedArtifacts);
         }
       },
       error: (error) => {
-        this.error = error?.error?.error || 'Upload failed.';
-        this.isUploading = false;
-        this.uploadProgress = 0;
+        this.finishUploadAfterMinimumDelay([], error?.error?.error || 'Upload failed.');
       },
     });
   }
@@ -200,6 +204,28 @@ export class WorkflowTaskUploadComponent implements OnChanges {
 
   private get effectiveMaxFileSizeMb() {
     return Math.max(Number(this.maxFileSizeMb) || 20, 1);
+  }
+
+  private finishUploadAfterMinimumDelay(uploadedArtifacts: WorkflowArtifactRecord[], errorMessage = '') {
+    const elapsed = Date.now() - this.uploadStartedAt;
+    const remainingDelay = Math.max(this.minimumUploadVisibleMs - elapsed, 0);
+    this.uploadFinishTimer = setTimeout(() => {
+      this.isUploading = false;
+      if (errorMessage) {
+        this.error = errorMessage;
+        this.uploadProgress = 0;
+        this.uploadFinishTimer = undefined;
+        return;
+      } else {
+        this.selectedFiles = [];
+        this.attachmentRevealTimer = setTimeout(() => {
+          this.visibleAttachments = [...this.visibleAttachments, ...uploadedArtifacts];
+          uploadedArtifacts.forEach((artifact) => this.uploaded.emit(artifact));
+          this.attachmentRevealTimer = undefined;
+        }, this.attachmentRevealDelayMs);
+      }
+      this.uploadFinishTimer = undefined;
+    }, remainingDelay);
   }
 
   private deleteAttachmentRequest(attachmentId: string) {

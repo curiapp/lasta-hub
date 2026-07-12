@@ -14,7 +14,7 @@
       [attr.multiple]="multiple ? '' : null" (change)="onFilesSelected($event)">
   </label>
   @if (isUploading) {
-    <div class="grid gap-1">
+    <div class="grid gap-1" animate.enter="upload-progress-enter" animate.leave="upload-progress-leave">
       <div class="flex items-center justify-between text-xs text-base-content/60">
         <span>Uploading {{ selectedFiles.length }} file{{ selectedFiles.length === 1 ? '' : 's' }}</span>
         <span>{{ uploadProgress }}%</span>
@@ -23,9 +23,10 @@
     </div>
   }
   @if (selectedFiles.length) {
-    <div class="grid gap-1">
-      @for (file of selectedFiles; track file.name) {
-        <div class="flex items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-2 py-1">
+    <div class="grid gap-1" animate.enter="upload-progress-enter" animate.leave="upload-progress-leave">
+      @for (file of selectedFiles; track file.name; let index = $index) {
+        <div class="flex items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-2 py-1"
+          animate.enter="file-row-enter" animate.leave="file-row-leave" [style.animation-delay.ms]="index * 35">
           <span class="flex min-w-0 items-center gap-2">
             <span class="material-symbols-rounded text-base text-base-content/45">pending</span>
             <span class="truncate text-xs">{{ file.name }}</span>
@@ -36,9 +37,10 @@
     </div>
   }
   @if (visibleAttachments.length) {
-    <div class="grid gap-1">
-      @for (attachment of visibleAttachments; track attachment.id) {
-        <div class="group flex items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-2 py-1">
+    <div class="grid gap-1" animate.enter="upload-progress-enter" animate.leave="upload-progress-leave">
+      @for (attachment of visibleAttachments; track attachment.id; let index = $index) {
+        <div class="group flex items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-2 py-1"
+          animate.enter="file-row-enter" animate.leave="file-row-leave" [style.animation-delay.ms]="index * 35">
           <span class="flex min-w-0 items-center gap-2">
             <span class="material-symbols-rounded text-base text-base-content/45">description</span>
             <span class="truncate text-xs">{{ attachment.reference || attachment.title }}</span>
@@ -56,7 +58,7 @@
         </div>
       }
       @if (visibleAttachments.length > 1) {
-        <div class="flex justify-end pt-1">
+        <div class="flex justify-end pt-1" animate.enter="file-row-enter" animate.leave="file-row-leave">
           <button class="btn btn-ghost btn-xs text-error" type="button" [disabled]="isDeletingAll"
             (click)="clearAttachments()">
             <span class="material-symbols-rounded text-base">delete_sweep</span>

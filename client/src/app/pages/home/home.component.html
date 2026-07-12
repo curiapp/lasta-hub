@@ -303,12 +303,16 @@
     </div>
 
     @if(_loading.isLoading()){
-    <programme-template />
+    <div animate.enter="portfolio-enter" animate.leave="portfolio-leave">
+      <programme-template />
+    </div>
     }@else {
-    <div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4">
-      @for (item of programmes(); track item?.id) {
+    <div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4"
+      animate.enter="portfolio-enter" animate.leave="portfolio-leave">
+      @for (item of programmes(); track item?.id; let index = $index) {
       <article
-        class="group relative flex min-h-40 overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm transition-all hover:border-primary/40 hover:shadow-md">
+        class="group relative flex min-h-40 overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
+        animate.enter="programme-card-enter" animate.leave="programme-card-leave" [style.animation-delay.ms]="index * 45">
           <!-- @if(item.isPreProgramme && user==='PDQA'){
           <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item?.id)">
             Approve

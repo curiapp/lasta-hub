@@ -168,8 +168,10 @@
               }
             </div>
 
-            @if (selectedTaskDefinition; as taskDefinition) {
-              <article class="overflow-hidden rounded-md border border-base-300">
+            <div class="grid">
+            @for (taskDefinition of selectedTaskDefinitionView; track taskDefinition.id) {
+              <article class="col-start-1 row-start-1 overflow-hidden rounded-md border border-base-300"
+                animate.enter="task-panel-enter" animate.leave="task-panel-leave">
                 <header class="flex items-start justify-between gap-3 bg-base-200/50 p-3">
                   <div>
                     <p class="font-mono text-xs uppercase text-base-content/45">{{ taskDefinition.id }}</p>
@@ -204,9 +206,37 @@
                           @for (field of taskDefinition.form ?? []; track field.key) {
                             <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
                               <dt class="text-xs font-semibold text-base-content/55">{{ field.label }}</dt>
-                              <dd class="mt-1 whitespace-pre-wrap wrap-break-word text-sm font-medium text-base-content">
-                                {{ displayValue(formData[field.key]) }}
-                              </dd>
+                              @if (field.type === 'repeater') {
+                                <dd class="mt-2">
+                                  @if (repeaterItems(field).length) {
+                                    <div class="grid gap-2">
+                                      @for (item of repeaterItems(field); track $index; let itemIndex = $index) {
+                                        <section class="overflow-hidden rounded-md border border-base-300 bg-base-200/30">
+                                          <header class="flex min-h-9 items-center justify-between border-b border-base-300 bg-base-200/60 px-3">
+                                            <strong class="text-xs">{{ field.label }} {{ itemIndex + 1 }}</strong>
+                                          </header>
+                                          <dl class="grid gap-3 p-3 sm:grid-cols-2">
+                                            @for (child of field.fields ?? []; track child.key) {
+                                              <div>
+                                                <dt class="text-xs font-semibold text-base-content/50">{{ child.label }}</dt>
+                                                <dd class="mt-0.5 wrap-break-word text-sm font-medium text-base-content">
+                                                  {{ displayValue(item[child.key]) }}
+                                                </dd>
+                                              </div>
+                                            }
+                                          </dl>
+                                        </section>
+                                      }
+                                    </div>
+                                  } @else {
+                                    <p class="text-sm font-medium text-base-content">Not provided</p>
+                                  }
+                                </dd>
+                              } @else {
+                                <dd class="mt-1 whitespace-pre-wrap wrap-break-word text-sm font-medium text-base-content">
+                                  {{ displayValue(formData[field.key]) }}
+                                </dd>
+                              }
                             </div>
                           }
                         </dl>
@@ -455,6 +485,7 @@
                 }
               </article>
             }
+            </div>
           }
         </section>
 

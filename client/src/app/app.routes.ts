@@ -57,7 +57,7 @@ export const routes: Routes = [
         ]
       },
       { path: 'resume', component: ResumeProgrammeComponent, data: { title: 'PDQA - Resume' } },
-      { path: 'create-programme', component: CreateProgrammeComponent, data: { title: 'PDQA - Need Analysis' } }
+      { path: 'create-programme', component: CreateProgrammeComponent, data: { title: 'PDQA - Create Programme' } }
     ]
   },
 

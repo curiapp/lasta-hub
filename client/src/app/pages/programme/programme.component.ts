@@ -34,6 +34,7 @@ import {
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './programme.component.html',
+  styleUrls: ['./programme.component.css'],
 })
 export class ProgrammeComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -88,6 +89,11 @@ export class ProgrammeComponent implements OnInit {
 
   get selectedTaskDefinition() {
     return this.definition?.tasks.find((task) => task.id === this.selectedTaskKey);
+  }
+
+  get selectedTaskDefinitionView() {
+    const task = this.selectedTaskDefinition;
+    return task ? [task] : [];
   }
 
   get selectedTaskInstance() {
