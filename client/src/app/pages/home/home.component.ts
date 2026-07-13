@@ -13,7 +13,6 @@ import { EventsComponent } from "../../components/page/events/events.component";
 import { CanEditDirective } from '../../directives/can-edit.directive';
 import { getGreeting } from '../../functions';
 import { V2_GET_BOOTSTRAP, V2_GET_PROGRAMMES } from '../../graphql/graphql.queries.v2';
-import { LoadingService } from '../../services/loading.service';
 import { programmeDevIcons } from '../../static';
 import { Programme, User } from '../../types';
 import { WorkflowDashboard } from '../../types/programme-workflow';
@@ -31,10 +30,10 @@ export class HomeComponent implements OnInit {
   greetingMessage: string = '';
   programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
   showAll = false;
-  _loading = inject(LoadingService);
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
   programmes = signal<Programme[]>([]);
+  programmesLoading = signal(true);
   dashboard = signal<WorkflowDashboard>({
     programmeCount: 0,
     activeTaskCount: 0,
@@ -60,7 +59,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private viewContainer: ViewContainerRef) {
     this.queryRef.valueChanges.subscribe((result: any) => {
-      this._loading.isLoading.set(result.loading);
+      this.programmesLoading.set(result.loading);
       this.programmes.set(result?.data?.programmes || []);
     });
     this.dashboardQueryRef.valueChanges.subscribe((result) => {

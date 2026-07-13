@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { handleError } from '../functions';
+import { USE_GLOBAL_LOADING } from '../interceptors/loading.interceptor';
 
 type User = {
   email: string;
@@ -20,7 +21,8 @@ export class AuthenticationService {
     return this.http.post(`${environment.apiUrl}/user/login`, { email, password }, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      context: new HttpContext().set(USE_GLOBAL_LOADING, true),
     }).pipe(
       catchError(handleError)
     )

@@ -23,4 +23,8 @@ export class WorkflowDefinitionService {
       definition,
     );
   }
+
+  delete(slug: string) {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/workflow-definition/${encodeURIComponent(slug)}`);
+  }
 }

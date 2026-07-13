@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
 import {
   WorkflowDefinition,
   WorkflowDefinitionSummary,
@@ -22,6 +23,7 @@ import {
 })
 export class WorkflowDefinitionComponent implements OnInit {
   private readonly workflowService = inject(WorkflowDefinitionService);
+  private readonly viewContainer = inject(ViewContainerRef);
 
   definitions: WorkflowDefinitionSummary[] = [];
   definition = this.emptyDefinition();
@@ -34,6 +36,7 @@ export class WorkflowDefinitionComponent implements OnInit {
   mode: 'builder' | 'json' = 'builder';
   loading = true;
   publishing = false;
+  deleting = false;
   readonly fieldTypes: Array<{ value: WorkflowFieldType; label: string }> = [
     { value: 'text', label: 'Text' },
     { value: 'textarea', label: 'Long text' },
@@ -60,6 +63,15 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   get taskOptions() {
     return this.definition.tasks.map((task) => ({ id: task.id, name: task.name }));
+  }
+
+  get selectedDefinitionSummary() {
+    return this.definitions.find((item) =>
+      item.slug === this.definition.slug || item.id === this.definition.id || item.slug === this.definition.id);
+  }
+
+  get canDeleteDefinition() {
+    return !!this.selectedDefinitionSummary && !this.loading && !this.publishing && !this.deleting;
   }
 
   loadDefinitions(slug?: string) {
@@ -133,6 +145,31 @@ export class WorkflowDefinitionComponent implements OnInit {
     } catch {
       this.showMessage('Fix the JSON before publishing.', 'error');
     }
+  }
+
+  deleteWorkflow() {
+    const selected = this.selectedDefinitionSummary;
+    if (!selected || this.deleting) return;
+    const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
+    componentRef.instance.action = 'delete';
+    componentRef.instance.message = `Delete "${selected.name}"? This cannot be undone.`;
+    componentRef.instance.onClose.subscribe(() => {
+      if (!componentRef.hostView.destroyed) componentRef.destroy();
+    });
+    componentRef.instance.onConfirm.subscribe((res) => {
+      if (res !== 'confirmed') return;
+      this.deleting = true;
+      this.workflowService.delete(selected.slug)
+        .pipe(finalize(() => this.deleting = false))
+        .subscribe({
+          next: (result) => {
+            this.showMessage(result.message || 'Workflow definition deleted.', 'success');
+            const nextDefinition = this.definitions.find((item) => item.slug !== selected.slug);
+            this.loadDefinitions(nextDefinition?.slug);
+          },
+          error: (error) => this.showMessage(error?.error?.error ?? 'Workflow definition could not be deleted.', 'error'),
+        });
+    });
   }
 
   addRole() {

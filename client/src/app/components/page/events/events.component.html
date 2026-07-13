@@ -48,7 +48,7 @@
     </div>
 
     <div class="grid gap-2">
-      @if (_loading.isLoading()) {
+      @if (eventsLoading) {
         @for (item of [1,2,3,4]; track $index){
         <div class="rounded-md border border-base-300 bg-base-100 p-3">
           <h5 class="skeleton h-4 w-10/12 rounded"></h5>
@@ -138,8 +138,8 @@
         </div>
 
         <footer class="flex items-center justify-end gap-2 border-t border-base-300 pt-3">
-          <button class="btn btn-sm btn-primary min-w-32" [disabled]="eventForm.invalid || _loading.isLoading()">
-          @if(_loading.isLoading()){
+          <button class="btn btn-sm btn-primary min-w-32" [disabled]="eventForm.invalid || savingEvent">
+          @if(savingEvent){
           <span class="loading loading-spinner loading-sm"></span>
           Creating
           }@else {

@@ -29,6 +29,9 @@ export class ActionButtonsComponent {
     const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
     componentRef.instance.action = "delete"
     componentRef.instance.message = "Are you sure you want to delete this item?";
+    componentRef.instance.onClose.subscribe(() => {
+      if (!componentRef.hostView.destroyed) componentRef.destroy();
+    });
 
     componentRef.instance.onConfirm.subscribe((res) => {
       if (res === "confirmed" && this.target?.type === "programme") {
@@ -40,16 +43,16 @@ export class ActionButtonsComponent {
             this.apollo.client.refetchQueries({
               include: ['V2GetProgrammes', 'V2GetBootstrap']
             });
-            componentRef.destroy();
+            if (!componentRef.hostView.destroyed) componentRef.destroy();
           },
           error: error => {
             this.deleting = false;
             this.toast.error(error?.error?.message || error?.message || "Deletion failed. Please try again.");
-            componentRef.destroy();
+            if (!componentRef.hostView.destroyed) componentRef.destroy();
           }
         })
       } else {
-        componentRef.destroy();
+        if (!componentRef.hostView.destroyed) componentRef.destroy();
       }
     });
   }

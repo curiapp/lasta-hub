@@ -60,6 +60,7 @@ export type WorkflowArtifactRequirement = {
 
 export type WorkflowDefinition = {
   id: string;
+  slug?: string;
   version: number;
   name: string;
   description: string;

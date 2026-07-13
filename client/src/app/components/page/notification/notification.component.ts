@@ -1,7 +1,6 @@
 import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { V2_GET_NOTIFICATIONS } from '../../../graphql/graphql.queries.v2';
-import { LoadingService } from '../../../services/loading.service';
 import { Notifications, User } from '../../../types';
 import { DatePipe } from "../../../pipes/date.pipe";
 import { InitialsPipe } from '../../../pipes/initials-pipe.pipe';
@@ -19,7 +18,6 @@ export class NotificationComponent {
   notifications: Notifications[] = [];
   apollo = inject(Apollo);
   @Input() user: User;
-  _loading = inject(LoadingService);
   http = inject(ClientService);
   unreadNotificationsCount = 0;
   emailEnabled = false;
@@ -51,7 +49,6 @@ export class NotificationComponent {
         userId: this.user?.id
       }
     }).valueChanges.subscribe((result: any) => {
-      this._loading.isLoading.set(result.loading);
       const data = result?.data?.notifications;
       this.unreadNotificationsCount = data?.filter((notification: Notifications) => !notification.isRead).length;
       this.notifications = data;
