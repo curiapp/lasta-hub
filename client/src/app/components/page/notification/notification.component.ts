@@ -1,4 +1,4 @@
-import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, Input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { V2_GET_NOTIFICATIONS } from '../../../graphql/graphql.queries.v2';
 import { Notifications, User } from '../../../types';
@@ -10,18 +10,18 @@ import { ClientService } from '../../../services/client.service';
   selector: 'notification',
   imports: [DatePipe, InitialsPipe],
   templateUrl: './notification.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './notification.component.css',
 })
 export class NotificationComponent {
 
-  notifications: Notifications[] = [];
+  notifications = signal<Notifications[]>([]);
   apollo = inject(Apollo);
   @Input() user: User;
   http = inject(ClientService);
-  unreadNotificationsCount = 0;
-  emailEnabled = false;
-  savingPreference = false;
+  unreadNotificationsCount = signal(0);
+  emailEnabled = signal(false);
+  savingPreference = signal(false);
 
 
   markNotificationAsRead(notification: Notifications) {
@@ -50,25 +50,25 @@ export class NotificationComponent {
       }
     }).valueChanges.subscribe((result: any) => {
       const data = result?.data?.notifications;
-      this.unreadNotificationsCount = data?.filter((notification: Notifications) => !notification.isRead).length;
-      this.notifications = data;
+      this.unreadNotificationsCount.set(data?.filter((notification: Notifications) => !notification.isRead).length ?? 0);
+      this.notifications.set(data ?? []);
     })
     if (this.user?.id) {
       this.http.getAll<any>(`users/${this.user.id}/notification-preference`).subscribe({
-        next: (data: any) => this.emailEnabled = data.emailEnabled === true,
+        next: (data: any) => this.emailEnabled.set(data.emailEnabled === true),
       });
     }
   }
 
   toggleEmailNotifications(enabled: boolean) {
-    if (!this.user?.id || this.savingPreference) return;
-    this.savingPreference = true;
+    if (!this.user?.id || this.savingPreference()) return;
+    this.savingPreference.set(true);
     this.http.put(`users/${this.user.id}/notification-preference`, { emailEnabled: enabled }).subscribe({
       next: (data) => {
-        this.emailEnabled = data.emailEnabled === true;
-        this.savingPreference = false;
+        this.emailEnabled.set(data.emailEnabled === true);
+        this.savingPreference.set(false);
       },
-      error: () => this.savingPreference = false,
+      error: () => this.savingPreference.set(false),
     });
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -10,7 +10,6 @@ import {
   V2_START_PROCESS,
 } from '../../graphql/graphql.queries.v2';
 import { AuthenticationService } from '../../services/authentication.service';
-import { LoadingService } from '../../services/loading.service';
 import { ToastService } from '../../services/toast.service';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
 import { ClientService } from '../../services/client.service';
@@ -32,7 +31,7 @@ import {
 @Component({
   selector: 'programme',
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './programme.component.html',
   styleUrls: ['./programme.component.css'],
 })
@@ -41,7 +40,6 @@ export class ProgrammeComponent implements OnInit {
   readonly router = inject(Router);
   private readonly apollo = inject(Apollo);
   private readonly auth = inject(AuthenticationService);
-  private readonly loadingService = inject(LoadingService);
   private readonly toastService = inject(ToastService);
   private readonly definitionService = inject(WorkflowDefinitionService);
   private readonly http = inject(ClientService);
@@ -56,16 +54,18 @@ export class ProgrammeComponent implements OnInit {
   artifacts: WorkflowArtifactInput[] = [];
   artifactAttachmentMap: Record<string, WorkflowArtifactRecord[]> = {};
   readonly emptyAttachments: WorkflowArtifactRecord[] = [];
-  loading = true;
-  completing = false;
-  reopeningTask = false;
-  starting = false;
-  switchingWorkflow = false;
+  loading = signal(true);
+  completing = signal(false);
+  reopeningTask = signal(false);
+  starting = signal(false);
+  switchingWorkflow = signal(false);
   workflowDefinitions: WorkflowDefinitionSummary[] = [];
   selectedWorkflowSlug = '';
   message = '';
   messageType: 'success' | 'error' = 'success';
   readonly defaultWorkflowSlug = 'lasta-programme-development';
+  private readonly taskCompletionTransitionMs = 850;
+  private taskCompletionTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit() {
     this.loadProgramme();
@@ -205,8 +205,7 @@ export class ProgrammeComponent implements OnInit {
   loadProgramme() {
     const programmeId = this.route.snapshot.paramMap.get('id');
     if (!programmeId) return;
-    this.loading = true;
-    this.loadingService.isLoading.set(true);
+    this.loading.set(true);
 
     this.apollo.query<{ programmeWorkflow: ProgrammeWorkflowDetail }>({
       query: V2_GET_PROGRAMME_WORKFLOW,
@@ -224,20 +223,18 @@ export class ProgrammeComponent implements OnInit {
             next: (definition) => this.applyDefinition(definition),
           });
         }
-        this.loading = false;
-        this.loadingService.isLoading.set(false);
+        this.loading.set(false);
       },
       error: () => {
-        this.loading = false;
-        this.loadingService.isLoading.set(false);
+        this.loading.set(false);
         this.showMessage('Programme details could not be loaded.', 'error');
       },
     });
   }
 
   startWorkflow() {
-    if (!this.programme || this.starting) return;
-    this.starting = true;
+    if (!this.programme || this.starting()) return;
+    this.starting.set(true);
     this.apollo.mutate({
       mutation: V2_START_PROCESS,
       variables: {
@@ -247,12 +244,12 @@ export class ProgrammeComponent implements OnInit {
       },
     }).subscribe({
       next: () => {
-        this.starting = false;
+        this.starting.set(false);
         this.showMessage('Programme development started.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
-        this.starting = false;
+        this.starting.set(false);
         this.showMessage(error?.message ?? 'Programme development could not be started.', 'error');
       },
     });
@@ -266,19 +263,19 @@ export class ProgrammeComponent implements OnInit {
   }
 
   switchWorkflow() {
-    if (!this.programme || !this.canSwitchWorkflow || !this.selectedWorkflowSlug || this.switchingWorkflow) return;
-    this.switchingWorkflow = true;
+    if (!this.programme || !this.canSwitchWorkflow || !this.selectedWorkflowSlug || this.switchingWorkflow()) return;
+    this.switchingWorkflow.set(true);
     this.http.put(`programmes/${this.programme.id}/workflow`, {
       workflowSlug: this.selectedWorkflowSlug,
       actorId: this.currentUserId,
     }).subscribe({
       next: () => {
-        this.switchingWorkflow = false;
+        this.switchingWorkflow.set(false);
         this.showMessage('Programme development path updated.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
-        this.switchingWorkflow = false;
+        this.switchingWorkflow.set(false);
         this.showMessage(error?.message ?? 'Programme development path could not be updated.', 'error');
       },
     });
@@ -519,15 +516,16 @@ export class ProgrammeComponent implements OnInit {
 
   completeTask() {
     const task = this.selectedTaskInstance;
-    if (!task || !this.canCompleteSelectedTask || this.completing) return;
-    this.completing = true;
+    if (!task || !this.canCompleteSelectedTask || this.completing()) return;
+    if (this.taskCompletionTimer) clearTimeout(this.taskCompletionTimer);
+    this.completing.set(true);
     this.syncLatestProgrammeBeforeComplete(task.id);
   }
 
   reopenSelectedTask() {
     const task = this.selectedTaskInstance;
-    if (!task || !this.canReopenSelectedTask || this.reopeningTask) return;
-    this.reopeningTask = true;
+    if (!task || !this.canReopenSelectedTask || this.reopeningTask()) return;
+    this.reopeningTask.set(true);
     this.http.post(`tasks/${task.id}/reopen`, {
       actor: {
         id: this.currentUserId,
@@ -535,12 +533,12 @@ export class ProgrammeComponent implements OnInit {
       },
     }).subscribe({
       next: () => {
-        this.reopeningTask = false;
+        this.reopeningTask.set(false);
         this.showMessage('Task reopened for amendments.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
-        this.reopeningTask = false;
+        this.reopeningTask.set(false);
         this.showMessage(error?.message ?? 'Task could not be reopened.', 'error');
       },
     });
@@ -549,7 +547,7 @@ export class ProgrammeComponent implements OnInit {
   private syncLatestProgrammeBeforeComplete(taskId: string) {
     const programmeId = this.route.snapshot.paramMap.get('id');
     if (!programmeId) {
-      this.completing = false;
+      this.completing.set(false);
       return;
     }
 
@@ -564,7 +562,7 @@ export class ProgrammeComponent implements OnInit {
         this.submitCompletedTask(taskId);
       },
       error: () => {
-        this.completing = false;
+        this.completing.set(false);
         this.showMessage('Programme attachments could not be checked. Please try again.', 'error');
       },
     });
@@ -572,7 +570,7 @@ export class ProgrammeComponent implements OnInit {
 
   private submitCompletedTask(taskId: string) {
     if (Object.keys(this.formErrors).length) {
-      this.completing = false;
+      this.completing.set(false);
       this.showMessage('Fix the file selection before completing this task.', 'error');
       return;
     }
@@ -580,14 +578,14 @@ export class ProgrammeComponent implements OnInit {
     const missingArtifact = this.artifacts.find((artifact) =>
       artifact.required && !(this.artifactAttachmentMap[artifact.type]?.length));
     if (missingArtifact) {
-      this.completing = false;
+      this.completing.set(false);
       this.showMessage(`${missingArtifact.title} is required.`, 'error');
       return;
     }
     const exceededArtifact = this.artifacts.find((artifact) =>
       this.artifactUploadLimit(artifact) != null && this.artifactUploadCount(artifact) > this.artifactUploadLimit(artifact)!);
     if (exceededArtifact) {
-      this.completing = false;
+      this.completing.set(false);
       this.showMessage(`${exceededArtifact.title} allows at most ${this.artifactUploadLimit(exceededArtifact)} file(s).`, 'error');
       return;
     }
@@ -610,12 +608,15 @@ export class ProgrammeComponent implements OnInit {
       },
     }).subscribe({
       next: () => {
-        this.completing = false;
+        this.completing.set(false);
         this.showMessage('Task completed and the next step opened.', 'success');
-        this.loadProgramme();
+        this.taskCompletionTimer = setTimeout(() => {
+          this.loadProgramme();
+          this.taskCompletionTimer = undefined;
+        }, this.taskCompletionTransitionMs);
       },
       error: (error) => {
-        this.completing = false;
+        this.completing.set(false);
         this.showMessage(error?.message ?? 'Task could not be completed.', 'error');
       },
     });

@@ -21,7 +21,7 @@ import { WorkflowDashboard } from '../../types/programme-workflow';
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, EventsComponent, CanEditDirective, ActionButtonsComponent],
 })
 export class HomeComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, NgForm } from "@angular/forms";
 import { Apollo } from 'apollo-angular';
 import moment from 'moment';
@@ -14,55 +14,53 @@ import { ModalComponent } from "../../modal/modal.component";
   selector: 'events',
   imports: [ModalComponent, FormsModule, DatePipe],
   templateUrl: './events.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './events.component.css'
 })
 export class EventsComponent {
-  events = [];
-  eventsLoading = true;
-  savingEvent = false;
-  dates: { day: string, date: string, dayOfMonth: string }[] = [];
+  events = signal<any[]>([]);
+  eventsLoading = signal(true);
+  savingEvent = signal(false);
+  dates = signal<{ day: string, date: string, dayOfMonth: string }[]>([]);
   today = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
   currentMonth = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
   http = inject(ClientService);
   apollo = inject(Apollo);
   toast = inject(ToastService);
   modalControl = inject(ModalControlService);
-  selectedDate;
+  selectedDate = signal('');
 
   onChangeDate(date: string) {
-    this.selectedDate = date;
+    this.selectedDate.set(date);
     this.apollo.client.refetchQueries({
       include: ['GetEventsByDate']
     });
   }
 
   changeDate(action: 'prev' | 'next') {
-    const currentIndex = this.dates.findIndex(d => d.date === this.selectedDate);
+    const currentIndex = this.dates().findIndex(d => d.date === this.selectedDate());
     if (action === 'prev' && currentIndex > 0) {
-      this.selectedDate = this.dates[currentIndex - 1].date;
-      this.onChangeDate(this.selectedDate);
-    } else if (action === 'next' && currentIndex < this.dates.length - 1) {
-      this.selectedDate = this.dates[currentIndex + 1].date;
-      this.onChangeDate(this.selectedDate);
+      this.onChangeDate(this.dates()[currentIndex - 1].date);
+    } else if (action === 'next' && currentIndex < this.dates().length - 1) {
+      this.onChangeDate(this.dates()[currentIndex + 1].date);
     }
   }
 
   canChangeDate(action: 'prev' | 'next') {
-    const currentIndex = this.dates.findIndex(d => d.date === this.selectedDate);
+    const currentIndex = this.dates().findIndex(d => d.date === this.selectedDate());
     return action === 'prev'
       ? currentIndex > 0
-      : currentIndex >= 0 && currentIndex < this.dates.length - 1;
+      : currentIndex >= 0 && currentIndex < this.dates().length - 1;
   }
 
 
   onSubmit(form: NgForm) {
-    if (this.savingEvent) return;
-    this.savingEvent = true;
+    if (this.savingEvent()) return;
+    this.savingEvent.set(true);
     this.http.post('events/create', form.value).subscribe(
       {
         next: (data) => {
-          this.savingEvent = false;
+          this.savingEvent.set(false);
           form.reset();
           this.toast.success(data?.message);
           this.modalControl.close();
@@ -72,7 +70,7 @@ export class EventsComponent {
           });
         },
         error: (error: any) => {
-          this.savingEvent = false;
+          this.savingEvent.set(false);
           this.modalControl.close();
           this.toast?.error("Failed to create an event")
         }
@@ -81,17 +79,17 @@ export class EventsComponent {
   }
 
   ngOnInit() {
-    this.dates = generateNext7Days()
-    this.selectedDate = this.today;
+    this.dates.set(generateNext7Days());
+    this.selectedDate.set(this.today);
 
     this.apollo.watchQuery({
       query: GET_EVENTS_BY_DATE,
       variables: {
-        date: moment(this.selectedDate, "DD/MM/YYYY").format('YYYY-MM-DD')
+        date: moment(this.selectedDate(), "DD/MM/YYYY").format('YYYY-MM-DD')
       }
     }).valueChanges.subscribe((result: any) => {
-      this.eventsLoading = result.loading;
-      this.events = result?.data?.events;
+      this.eventsLoading.set(result.loading);
+      this.events.set(result?.data?.events ?? []);
     });
   }
 

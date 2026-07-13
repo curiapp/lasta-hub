@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'programme-template',
   imports: [],
   templateUrl: './programme-template.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './programme-template.component.css'
 })
 export class ProgrammeTemplateComponent {

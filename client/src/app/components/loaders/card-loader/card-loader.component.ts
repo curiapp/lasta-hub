@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'card-loader',
   imports: [],
   templateUrl: './card-loader.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './card-loader.component.css'
 })
 export class CardLoaderComponent {

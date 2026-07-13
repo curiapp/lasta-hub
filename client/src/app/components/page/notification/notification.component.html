@@ -2,7 +2,7 @@
   <summary class="btn btn-ghost btn-circle">
     <div class="avatar avatar-placeholder !hover:bg-transparent">
       <div
-      [class]="unreadNotificationsCount > 0 ? 'avatar-online' : ''"
+      [class]="unreadNotificationsCount() > 0 ? 'avatar-online' : ''"
         class="bg-transparent avatar  text-white hover:text-black size-10 p-0 flex items-center justify-center">
         <span class="material-symbols-rounded">
           notifications
@@ -24,13 +24,13 @@
           <div class="flex items-center justify-between gap-3 rounded-md bg-base-200 px-3 py-2">
             <span class="text-xs font-medium">Email notifications</span>
             <input type="checkbox" class="toggle toggle-primary toggle-sm"
-              [checked]="emailEnabled" [disabled]="savingPreference"
+              [checked]="emailEnabled()" [disabled]="savingPreference()"
               (change)="toggleEmailNotifications($any($event.target).checked)">
           </div>
         </div>
 
         <div class="min-h-80">
-          @for(notification of notifications; track $index){
+          @for(notification of notifications(); track notification.id){
           <details class="collapse rounded-none!">
             <summary class="collapse-title p-2! hover:bg-gray-50 rounded-lg"
               (click)="markNotificationAsRead(notification)">

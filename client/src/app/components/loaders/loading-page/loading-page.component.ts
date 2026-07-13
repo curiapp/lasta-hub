@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'client-loading-page',
   imports: [],
   templateUrl: './loading-page.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './loading-page.component.css'
 })
 export class LoadingPageComponent {

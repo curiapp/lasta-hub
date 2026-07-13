@@ -13,7 +13,7 @@ import { User } from '../../types';
   selector: 'client-main',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, NotificationComponent, ProfileComponent],
   templateUrl: './main.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './main.component.css',
 })
 export class MainComponent {

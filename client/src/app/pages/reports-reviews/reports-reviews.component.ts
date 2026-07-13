@@ -6,7 +6,7 @@ import { ReportTaskTracking, ReportProgramme, ReportsReviewsData } from '../../t
 @Component({
   selector: 'reports-reviews',
   imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './reports-reviews.component.html',
 })
 export class ReportsReviewsComponent implements OnInit {

@@ -76,15 +76,15 @@
             }
           </select>
           <button type="button" class="btn btn-primary btn-sm"
-            [disabled]="!canSwitchWorkflow || switchingWorkflow" (click)="switchWorkflow()">
+            [disabled]="!canSwitchWorkflow || switchingWorkflow()" (click)="switchWorkflow()">
             <span class="material-symbols-rounded">swap_horiz</span>
-            {{ switchingWorkflow ? 'Updating' : 'Update' }}
+            {{ switchingWorkflow() ? 'Updating' : 'Update' }}
           </button>
         </div>
       </section>
     }
 
-    @if (loading) {
+    @if (loading()) {
       <div class="grid min-h-136 place-items-center border border-base-300 bg-base-100">
         <div class="flex items-center gap-2 text-sm text-base-content/60">
           <span class="loading loading-spinner loading-md"></span>
@@ -133,10 +133,10 @@
                 <p class="mx-auto mt-1 max-w-md text-sm text-base-content/60">
                   Start the programme development process for this programme.
                 </p>
-                <button class="btn btn-primary btn-sm mt-4" type="button" [disabled]="starting"
+                <button class="btn btn-primary btn-sm mt-4" type="button" [disabled]="starting()"
                   (click)="startWorkflow()">
                   <span class="material-symbols-rounded">play_arrow</span>
-                  {{ starting ? 'Starting' : 'Start development' }}
+                  {{ starting() ? 'Starting' : 'Start development' }}
                 </button>
               </div>
             </div>
@@ -468,15 +468,15 @@
                     </span>
                     @if (canCompleteSelectedTask) {
                       <button class="btn btn-primary btn-sm" type="button"
-                        [disabled]="completing" (click)="completeTask()">
+                        [disabled]="completing()" (click)="completeTask()">
                         <span class="material-symbols-rounded">check</span>
-                        {{ completing ? 'Completing' : 'Complete task' }}
+                        {{ completing() ? 'Completing' : 'Complete task' }}
                       </button>
                     } @else if (canReopenSelectedTask) {
                       <button class="btn btn-outline btn-sm" type="button"
-                        [disabled]="reopeningTask" (click)="reopenSelectedTask()">
+                        [disabled]="reopeningTask()" (click)="reopenSelectedTask()">
                         <span class="material-symbols-rounded">edit_square</span>
-                        {{ reopeningTask ? 'Opening' : 'Review task' }}
+                        {{ reopeningTask() ? 'Opening' : 'Review task' }}
                       </button>
                     } @else {
                       <span></span>
