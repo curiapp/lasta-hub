@@ -15,7 +15,7 @@
     <li class="max-h-[55vh] overflow-y-auto">
       <div class="space-y-2">
 
-        <div class="sticky space-y-2 top-0 z-50 backdrop-blur-lg">
+        <div class="sticky space-y-2 top-0 z-50 bg-white pt-2 pb-4">
           <div class="flex justify-between items-center">
             <h3 class="text-lg">Notifications</h3>
             <button class="btn btn-sm btn-ghost" (click)="markAllNotificationsAsRead()">Mark all as read</button>
@@ -36,7 +36,7 @@
               (click)="markNotificationAsRead(notification)">
               <div class="flex gap-4 items-center w-full">
                 <div class="avatar avatar-placeholder" [class]=" notification.isRead?'':'avatar-online'">
-                  <div class="bg-gray-50 text-primary w-8 mask mask-squircle">
+                  <div class="bg-base-200 text-primary w-8 mask mask-squircle">
                     <span class="text-xs font-semibold">{{notification.title | initials}}</span>
                   </div>
                 </div>
@@ -47,7 +47,7 @@
                 </div>
               </div>
             </summary>
-            <div class="collapse-content text-xs bg-gray-50 rounded-lg my-2 p-4">
+            <div class="collapse-content text-xs bg-base-200 rounded-lg my-2 p-4">
               {{ notification?.message }}
             </div>
           </details>
