@@ -140,6 +140,37 @@ export async function listWorkflowDefinitions() {
     }).from(workflowDefinitions).orderBy(asc(workflowDefinitions.name));
 }
 
+export async function deleteWorkflowDefinition(slug: string) {
+    if (!slug) throw new WorkflowError("Workflow definition is required", 400);
+    if (slug === defaultWorkflowDefinition.id) {
+        throw new WorkflowError("The default workflow definition cannot be deleted", 409);
+    }
+
+    return db.transaction(async (tx) => {
+        const [definition] = await tx.select()
+            .from(workflowDefinitions)
+            .where(eq(workflowDefinitions.slug, slug))
+            .for("update")
+            .limit(1);
+        if (!definition) throw new WorkflowError("Workflow definition not found", 404);
+
+        const [usedProcess] = await tx.select({ id: workflowProcessInstances.id })
+            .from(workflowProcessInstances)
+            .innerJoin(
+                workflowDefinitionVersions,
+                eq(workflowProcessInstances.definitionVersionId, workflowDefinitionVersions.id),
+            )
+            .where(eq(workflowDefinitionVersions.definitionId, definition.id))
+            .limit(1);
+        if (usedProcess) {
+            throw new WorkflowError("This workflow definition is already used by a programme and cannot be deleted", 409);
+        }
+
+        await tx.delete(workflowDefinitions).where(eq(workflowDefinitions.id, definition.id));
+        return { message: `${definition.name} deleted successfully` };
+    });
+}
+
 export async function switchProgrammeWorkflow(programmeId: string, workflowSlug: string, actorId: string) {
     if (!actorId) throw new WorkflowError("An authenticated PDQA user is required", 401);
     const current = await currentDefinition(workflowSlug);
@@ -552,21 +583,53 @@ async function resolveActor(tx: Transaction, input: CompleteTaskInput) {
     return actor ?? null;
 }
 
+function defermentReasonFromFormData(formData: unknown) {
+    if (!formData || typeof formData !== "object") return "";
+    const record = formData as Record<string, unknown>;
+    const reasonKeys = [
+        "defermentReason",
+        "deferReason",
+        "deferredReason",
+        "reason",
+        "comments",
+        "comment",
+        "remarks",
+    ];
+    const value = reasonKeys.map((key) => record[key]).find((entry) => typeof entry === "string" && entry.trim());
+    return typeof value === "string" ? value.trim() : "";
+}
+
 async function createNotifications(
     tx: Transaction,
     roles: string[],
     processId: string,
-    title: string,
     taskIds: string[],
+    context: {
+        programmeTitle: string;
+        programmeCode?: string | null;
+        completedTaskName: string;
+        completedStageName?: string;
+        decisionLabel: string;
+        nextTaskNames: string[];
+        defermentReason?: string;
+    },
 ) {
     if (!roles.length) return [];
     const recipients = await tx
         .select({ id: workflowUsers.id })
         .from(workflowUsers)
         .where(inArray(workflowUsers.role, roles));
+    const programmeLabel = [context.programmeTitle, context.programmeCode ? `(${context.programmeCode})` : ""]
+        .filter(Boolean)
+        .join(" ");
+    const stageText = context.completedStageName ? ` in ${context.completedStageName}` : "";
+    const nextText = context.nextTaskNames.length
+        ? ` Next task${context.nextTaskNames.length === 1 ? "" : "s"}: ${context.nextTaskNames.join(", ")}.`
+        : " No further task was opened.";
+    const reasonText = context.defermentReason ? ` Reason: ${context.defermentReason}.` : "";
     const [notification] = await tx.insert(workflowNotifications).values({
-        title,
-        message: title,
+        title: `${programmeLabel}: ${context.decisionLabel}`,
+        message: `${context.completedTaskName}${stageText} was completed with "${context.decisionLabel}".${nextText}${reasonText}`,
         type: "workflow.transition",
         referenceId: processId,
     }).returning();
@@ -721,7 +784,11 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
         const taskDefinition = getTaskDefinition(definition, task.taskKey);
         const actor = await resolveActor(tx, input);
         const actorRole = String(actor?.role ?? input.actor?.role ?? "").trim().toLowerCase();
-        const [programme] = await tx.select({ initiator: workflowProgrammes.initiator })
+        const [programme] = await tx.select({
+            initiator: workflowProgrammes.initiator,
+            title: workflowProgrammes.title,
+            code: workflowProgrammes.code,
+        })
             .from(workflowProgrammes).where(eq(workflowProgrammes.id, task.programmeId)).limit(1);
         const isCoordinator = Boolean(actor?.id && programme?.initiator === actor.id);
         const canComplete = actorRole === "admin"
@@ -829,12 +896,24 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
             ...(transition.notifyRoles ?? []),
             ...createdTasks.flatMap((created) => created.ownerRoles),
         ])];
+        const completedStageName = definition.stages.find((stage) => stage.id === taskDefinition.stageId)?.name;
+        const nextTaskNames = createdTasks.map((created) =>
+            definition.tasks.find((definitionTask) => definitionTask.id === created.taskKey)?.name ?? created.taskKey,
+        );
         const notifications = await createNotifications(
             tx,
             notificationRoles,
             process.id,
-            transition.label,
             createdTasks.map((created) => created.id),
+            {
+                programmeTitle: programme?.title ?? "Programme",
+                programmeCode: programme?.code,
+                completedTaskName: taskDefinition.name,
+                completedStageName,
+                decisionLabel: transition.label,
+                nextTaskNames,
+                defermentReason: defermentReasonFromFormData(input.formData),
+            },
         );
 
         return {

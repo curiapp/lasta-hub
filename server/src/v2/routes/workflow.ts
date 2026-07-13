@@ -8,6 +8,7 @@ import {
     createProgrammeAndStart,
     deleteDraftAttachment,
     deleteProgramme,
+    deleteWorkflowDefinition,
     getBootstrap,
     getNotificationPreference,
     getProgrammeWorkflow,
@@ -48,6 +49,10 @@ workflowRouter.get("/workflow-definition", async (req, res) => {
 
 workflowRouter.put("/workflow-definition", async (req, res) => {
     res.json(await publishDefinition(req.body, req.body?.actor?.id));
+});
+
+workflowRouter.delete("/workflow-definition/:slug", async (req, res) => {
+    res.json(await deleteWorkflowDefinition(req.params.slug));
 });
 
 workflowRouter.post("/programmes", async (req, res) => {
