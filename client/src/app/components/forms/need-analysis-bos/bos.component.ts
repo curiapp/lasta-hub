@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from "../../files/file-upload/file-upload.component";
@@ -11,7 +11,6 @@ import { environment } from '../../../../environments/environment';
   selector: 'bos-amendment',
   //location of our template rather than writing inline templates.
   templateUrl: 'bos.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadComponent]
 })
 export class BosComponent {

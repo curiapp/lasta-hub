@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'programme-template',
   imports: [],
   templateUrl: './programme-template.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './programme-template.component.css'
 })
 export class ProgrammeTemplateComponent {

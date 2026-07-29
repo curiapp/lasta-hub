@@ -1,5 +1,5 @@
 //import component, ElementRef, input and the oninit method from angular core
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 //import the file-upload plugin
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { HttpClient as Http } from '@angular/common/http';
@@ -12,7 +12,6 @@ import { environment } from '../../../../environments/environment';
   //define the element to be selected from the html structure.
   selector: 'ceu-recommend',
   templateUrl: 'ceu-recommend.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class CEURecommendComponent {

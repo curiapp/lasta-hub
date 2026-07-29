@@ -1,4 +1,4 @@
-import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { ClientService } from '../../../services/client.service';
@@ -9,7 +9,6 @@ import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'senate-submit',
   templateUrl: 'senate-submit.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule]
 })
 

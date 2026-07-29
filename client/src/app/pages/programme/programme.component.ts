@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -31,7 +31,6 @@ import {
 @Component({
   selector: 'programme',
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './programme.component.html',
   styleUrls: ['./programme.component.css'],
 })

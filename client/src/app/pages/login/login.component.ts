@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -9,7 +9,6 @@ import { LoadingService } from '../../services/loading.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, RouterLink]
 })
 export class LoginComponent {

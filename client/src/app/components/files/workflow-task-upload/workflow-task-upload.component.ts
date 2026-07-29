@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { WorkflowArtifactRecord } from '../../../types/programme-workflow';
@@ -8,7 +8,6 @@ import { WorkflowArtifactRecord } from '../../../types/programme-workflow';
 @Component({
   selector: 'workflow-task-upload',
   imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workflow-task-upload.component.html',
   styleUrls: ['./workflow-task-upload.component.css'],
 })

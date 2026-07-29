@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
@@ -41,7 +41,6 @@ import { ActionButtonsComponent } from "../../../components/action-buttons/actio
     ActionButtonsComponent
 ],
   templateUrl: './need-analysis.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './need-analysis.component.css'
 })
 export class NeedAnalysisComponent {

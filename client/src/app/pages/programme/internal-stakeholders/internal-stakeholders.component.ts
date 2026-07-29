@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import { CardComponent } from "../../../components/card/card/card.component";
@@ -19,7 +19,6 @@ import { ActionButtonsComponent } from "../../../components/action-buttons/actio
   selector: 'client-internal-stakeholders',
   imports: [TLUCEUQAStartComponent, TLURecommendComponent, CEURecommendComponent, InternalReviewPduComponent, ModalComponent, DatePipe, CardComponent, CanEditDirective, ActionButtonsComponent],
   templateUrl: './internal-stakeholders.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './internal-stakeholders.component.css'
 })
 export class InternalStakeholdersComponent {

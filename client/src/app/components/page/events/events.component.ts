@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from "@angular/forms";
 import { Apollo } from 'apollo-angular';
 import moment from 'moment';
@@ -14,7 +14,6 @@ import { ModalComponent } from "../../modal/modal.component";
   selector: 'events',
   imports: [ModalComponent, FormsModule, DatePipe],
   templateUrl: './events.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './events.component.css'
 })
 export class EventsComponent {

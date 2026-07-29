@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'client-confirm-modal',
   imports: [],
   templateUrl: './confirm-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './confirm-modal.component.css'
 })
 export class ConfirmModalComponent {

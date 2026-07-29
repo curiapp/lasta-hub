@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
@@ -7,7 +7,6 @@ import { FileUploadMultipleComponent } from "../../files/file-upload-multiple/fi
 @Component({
   selector: 'final-draft',
   templateUrl: 'final-draft.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule, FileUploadMultipleComponent]
 })
 export class FinalDraftComponent {

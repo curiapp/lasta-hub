@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
@@ -13,7 +13,6 @@ import { User } from '../../types';
   selector: 'client-main',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, NotificationComponent, ProfileComponent],
   templateUrl: './main.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './main.component.css',
 })
 export class MainComponent {

@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ClientService } from '../../services/client.service';
 import { ReportTaskTracking, ReportProgramme, ReportsReviewsData } from '../../types/reports-reviews';
 
 @Component({
   selector: 'reports-reviews',
   imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './reports-reviews.component.html',
 })
 export class ReportsReviewsComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment';
@@ -8,7 +8,6 @@ import { FileUploadComponent } from "../../files/file-upload/file-upload.compone
 @Component({
   selector: 'consultation-faculty-bos-final',
   templateUrl: 'faculty-bos-final.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, FileUploadModule, FileUploadComponent]
 })
 export class FacultyBosFinalComponent {

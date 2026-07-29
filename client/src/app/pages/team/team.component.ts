@@ -1,10 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-our-team',
   standalone: true,
   templateUrl: './team.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./team.component.css']
 })
 export class TeamComponent {

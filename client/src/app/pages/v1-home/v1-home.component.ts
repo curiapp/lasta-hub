@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -21,7 +21,6 @@ import { Programme, User } from '../../types';
   selector: 'v1-home',
   templateUrl: './v1-home.component.html',
   styleUrls: ['./v1-home.component.css'],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, EventsComponent, CanEditDirective, ActionButtonsComponent]
 })
 export class V1HomeComponent implements OnInit {

@@ -1,5 +1,5 @@
 
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -14,9 +14,7 @@ import { Programme, User } from '../../../types';
   selector: 'create-programme',
   templateUrl: 'create-programme.component.html',
   providers: [StartNeedAnalysisService],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule]
-  //directives: [ ]
 })
 
 export class CreateProgrammeComponent implements OnInit {

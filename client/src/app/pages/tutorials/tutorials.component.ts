@@ -1,5 +1,5 @@
 //import files from the angular framework
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { TutorialProcess, TutorialStage } from '../../types';
 import { TUTORIAL_DATA } from '../../static';
 import { SearchTutorialPipe } from "../../pipes/search-tutorial.pipe";
@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
   selector: 'Tutorial',
   standalone: true,
   templateUrl: 'tutorials.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [SearchTutorialPipe, FormsModule]
 })
 
