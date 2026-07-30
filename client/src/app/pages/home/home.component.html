@@ -286,10 +286,12 @@
           <kbd class="kbd kbd-sm">K</kbd> -->
         </label>
 
+        @if (programmes()?.length > 50) {
         <button class="btn btn-sm btn-ghost border border-base-300 bg-base-100" type="button" (click)="toggleView()">
           <span class="material-symbols-rounded text-lg">{{ showAll ? 'unfold_less' : 'unfold_more' }}</span>
           {{showAll ? "Show less" : "View all"}}
         </button>
+      }
         <!-- @if(user==='LECTURER'){ -->
         <button class="btn btn-sm btn-primary" type="button" (click)="create_programme.open()">
           <span class="material-symbols-rounded text-lg">add</span>
@@ -302,17 +304,18 @@
       </div>
     </div>
 
+    <div class="portfolio-stage">
     @if(programmesLoading()){
-    <div animate.enter="portfolio-enter" animate.leave="portfolio-leave">
+    <div class="portfolio-panel" animate.enter="portfolio-skeleton-enter" animate.leave="portfolio-skeleton-leave">
       <programme-template />
     </div>
     }@else {
-    <div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4"
-      animate.enter="portfolio-enter" animate.leave="portfolio-leave">
+    <div class="portfolio-panel grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4"
+      animate.enter="programme-grid-enter" animate.leave="programme-grid-leave">
       @for (item of programmes(); track item?.id; let index = $index) {
       <article
         class="group relative flex min-h-40 overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
-        animate.enter="programme-card-enter" animate.leave="programme-card-leave" [style.animation-delay.ms]="index * 45">
+        animate.enter="programme-card-enter" animate.leave="programme-card-leave" [style.animation-delay.ms]="190 + (index * 55)">
           <!-- @if(item.isPreProgramme && user==='PDQA'){
           <button class="btn btn-xs absolute right-2 top-2" (click)="onApprove(item?.id)">
             Approve
@@ -379,6 +382,7 @@
       }
     </div>
     }
+    </div>
 
 
 

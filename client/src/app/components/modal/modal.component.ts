@@ -11,6 +11,7 @@ export class ModalComponent implements AfterViewInit {
   @ViewChild('dialog', { static: true }) dialogRef!: ElementRef<HTMLDialogElement>;
   modalControl = inject(ModalControlService);
   @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  @Input() panelClass = '';
   sizes = { sm: 'w-11/12 max-w-5xl', md: '', lg: 'w-6/12', xl: 'w-10/12' };
 
   open() {

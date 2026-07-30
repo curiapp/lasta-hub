@@ -8,7 +8,7 @@
     <div class="head-actions">
       <label class="definition-select">
         <span>Definition</span>
-        <select class="select select-bordered select-sm" [ngModel]="definition.id"
+        <select class="select select-bordered select-sm" [ngModel]="selectedDefinitionSlug()"
           (ngModelChange)="loadDefinition($event)">
           @for (item of definitions; track item.id) {
             <option [value]="item.slug">{{ item.name }}</option>
@@ -21,12 +21,12 @@
       </button>
       <button class="btn btn-sm btn-ghost text-error" type="button" [disabled]="!canDeleteDefinition"
         (click)="deleteWorkflow()">
-        <span class="material-symbols-rounded">{{ deleting ? 'hourglass_empty' : 'delete' }}</span>
-        {{ deleting ? 'Deleting' : 'Delete' }}
+        <span class="material-symbols-rounded">{{ deleting() ? 'hourglass_empty' : 'delete' }}</span>
+        {{ deleting() ? 'Deleting' : 'Delete' }}
       </button>
-      <button class="btn btn-sm btn-secondary" type="button" [disabled]="publishing || loading" (click)="publish()">
+      <button class="btn btn-sm btn-secondary" type="button" [disabled]="publishing() || loading()" (click)="publish()">
         <span class="material-symbols-rounded">publish</span>
-        {{ publishing ? 'Publishing' : 'Publish' }}
+        {{ publishing() ? 'Publishing' : 'Publish' }}
       </button>
     </div>
   </header>
@@ -52,7 +52,7 @@
     </button>
   </div>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="loading-state"><span class="loading loading-spinner loading-md"></span> Loading definition</div>
   } @else if (mode === 'builder') {
     <section class="builder">
@@ -126,15 +126,39 @@
         <div class="stage-list">
           @for (stage of definition.stages; track stage.id; let stageIndex = $index) {
             <section class="stage-band">
-              <header>
+              <header [class.selected]="stage.id === selectedStageId && !selectedTask">
                 <span class="stage-number">{{ stage.order }}</span>
-                <input aria-label="Stage name" [(ngModel)]="stage.name" (ngModelChange)="builderChanged()">
+                <input aria-label="Stage name" [(ngModel)]="stage.name" (focus)="selectStage(stage.id)"
+                  (ngModelChange)="builderChanged()">
                 <input class="stage-id" aria-label="Stage identifier" [ngModel]="stage.id"
-                  (ngModelChange)="renameStage(stage, $event)">
+                  (focus)="selectStage(stage.id)" (ngModelChange)="renameStage(stage, $event)">
+                <button class="icon-button" type="button" title="Edit stage" (click)="selectStage(stage.id)">
+                  <span class="material-symbols-rounded">edit</span>
+                </button>
                 <button class="icon-button danger" type="button" title="Remove stage" (click)="removeStage(stageIndex)">
                   <span class="material-symbols-rounded">delete</span>
                 </button>
               </header>
+              <textarea class="textarea textarea-bordered textarea-sm stage-description"
+                aria-label="Stage description" rows="2" [(ngModel)]="stage.description"
+                (focus)="selectStage(stage.id)" (ngModelChange)="builderChanged()"
+                placeholder="Explain what happens in this stage and what users should prepare."></textarea>
+              <div class="stage-actions">
+                <button type="button" title="Move stage up" [disabled]="stageIndex === 0"
+                  (click)="moveStage(stageIndex, -1)">
+                  <span class="material-symbols-rounded">arrow_upward</span>
+                  Move up
+                </button>
+                <button type="button" title="Move stage down" [disabled]="stageIndex === definition.stages.length - 1"
+                  (click)="moveStage(stageIndex, 1)">
+                  <span class="material-symbols-rounded">arrow_downward</span>
+                  Move down
+                </button>
+                <button type="button" title="Add task to this stage" (click)="addTask(stage.id)">
+                  <span class="material-symbols-rounded">add_task</span>
+                  Add task here
+                </button>
+              </div>
               <div class="task-list">
                 @for (task of definition.tasks; track task.id) {
                   @if (task.stageId === stage.id) {
@@ -156,7 +180,8 @@
       </section>
 
       <aside class="task-panel">
-        @if (selectedTask; as task) {
+        @if (editorVisible && selectedTask; as task) {
+          <div class="editor-panel" animate.enter="editor-panel-enter">
           <div class="section-heading">
             <div><p class="eyebrow">Selected task</p><h2>{{ task.name }}</h2></div>
             <button class="icon-button danger" type="button" title="Remove task" (click)="removeTask(task.id)">
@@ -166,6 +191,12 @@
           <label class="field">
             <span>Task name</span>
             <input class="input input-bordered input-sm" [(ngModel)]="task.name" (ngModelChange)="builderChanged()">
+          </label>
+          <label class="field">
+            <span>Task description</span>
+            <textarea class="textarea textarea-bordered" rows="3" [(ngModel)]="task.description"
+              (ngModelChange)="builderChanged()"
+              placeholder="Explain what the user should do and which evidence may be needed."></textarea>
           </label>
           <label class="field">
             <span>Task identifier</span>
@@ -449,10 +480,67 @@
             }
           </div>
           <p class="json-hint">Conditional branches and advanced routing remain editable in JSON mode.</p>
+          </div>
+        } @else if (editorVisible && selectedStage; as stage) {
+          <div class="editor-panel" animate.enter="editor-panel-enter">
+          <div class="section-heading">
+            <div><p class="eyebrow">Selected stage</p><h2>{{ stage.name }}</h2></div>
+            <button class="icon-button danger" type="button" title="Remove stage"
+              (click)="removeStage(definition.stages.indexOf(stage))">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>
+          <label class="field">
+            <span>Stage name</span>
+            <input class="input input-bordered input-sm" [(ngModel)]="stage.name" (ngModelChange)="builderChanged()">
+          </label>
+          <label class="field">
+            <span>Stage description</span>
+            <textarea class="textarea textarea-bordered" rows="5" [(ngModel)]="stage.description"
+              (ngModelChange)="builderChanged()"
+              placeholder="Explain what happens in this stage and what users should prepare."></textarea>
+          </label>
+          <label class="field">
+            <span>Stage identifier</span>
+            <input class="input input-bordered input-sm" [ngModel]="stage.id"
+              (ngModelChange)="renameStage(stage, $event)">
+            <small>Changing this updates tasks already assigned to the stage.</small>
+          </label>
+          <div class="stage-editor-actions">
+            <button class="btn btn-sm btn-ghost" type="button"
+              [disabled]="definition.stages.indexOf(stage) === 0"
+              (click)="moveStage(definition.stages.indexOf(stage), -1)">
+              <span class="material-symbols-rounded">arrow_upward</span>
+              Move up
+            </button>
+            <button class="btn btn-sm btn-ghost" type="button"
+              [disabled]="definition.stages.indexOf(stage) === definition.stages.length - 1"
+              (click)="moveStage(definition.stages.indexOf(stage), 1)">
+              <span class="material-symbols-rounded">arrow_downward</span>
+              Move down
+            </button>
+            <button class="btn btn-sm btn-primary" type="button" (click)="addTask(stage.id)">
+              <span class="material-symbols-rounded">add_task</span>
+              Add task to stage
+            </button>
+          </div>
+          <div class="stage-task-summary">
+            <p class="eyebrow">Tasks in this stage</p>
+            @for (task of definition.tasks; track task.id) {
+              @if (task.stageId === stage.id) {
+                <button type="button" class="task-item" (click)="selectTask(task.id)">
+                  <span class="material-symbols-rounded">task_alt</span>
+                  <span><strong>{{ task.name }}</strong><small>{{ task.id }}</small></span>
+                  <span class="owner-count">{{ task.ownerRoles.length }}</span>
+                </button>
+              }
+            }
+          </div>
+          </div>
         } @else {
-          <div class="empty task-empty">
+          <div class="empty task-empty editor-panel" animate.enter="editor-panel-enter">
             <span class="material-symbols-rounded">touch_app</span>
-            Select a task to edit its routing.
+            Select a stage or task to edit it.
           </div>
         }
       </aside>

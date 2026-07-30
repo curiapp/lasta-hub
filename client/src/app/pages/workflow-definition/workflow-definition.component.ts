@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
@@ -27,15 +27,17 @@ export class WorkflowDefinitionComponent implements OnInit {
   definitions: WorkflowDefinitionSummary[] = [];
   definition = this.emptyDefinition();
   selectedTaskId = '';
+  selectedStageId = '';
+  editorVisible = true;
   roleEditor = '';
   jsonText = '';
   jsonError = '';
   message = '';
   messageType: 'success' | 'error' = 'success';
   mode: 'builder' | 'json' = 'builder';
-  loading = true;
-  publishing = false;
-  deleting = false;
+  loading = signal(true);
+  publishing = signal(false);
+  deleting = signal(false);
   readonly fieldTypes: Array<{ value: WorkflowFieldType; label: string }> = [
     { value: 'text', label: 'Text' },
     { value: 'textarea', label: 'Long text' },
@@ -60,6 +62,10 @@ export class WorkflowDefinitionComponent implements OnInit {
     return this.definition.tasks.find((task) => task.id === this.selectedTaskId);
   }
 
+  get selectedStage() {
+    return this.definition.stages.find((stage) => stage.id === this.selectedStageId);
+  }
+
   get taskOptions() {
     return this.definition.tasks.map((task) => ({ id: task.id, name: task.name }));
   }
@@ -69,27 +75,31 @@ export class WorkflowDefinitionComponent implements OnInit {
       item.slug === this.definition.slug || item.id === this.definition.id || item.slug === this.definition.id);
   }
 
+  selectedDefinitionSlug() {
+    return this.selectedDefinitionSummary?.slug ?? this.definition.slug ?? this.definition.id;
+  }
+
   get canDeleteDefinition() {
-    return !!this.selectedDefinitionSummary && !this.loading && !this.publishing && !this.deleting;
+    return !!this.selectedDefinitionSummary && !this.loading() && !this.publishing() && !this.deleting();
   }
 
   loadDefinitions(slug?: string) {
-    this.loading = true;
+    this.loading.set(true);
     this.workflowService.list().subscribe({
       next: (definitions) => {
         this.definitions = definitions;
-        this.loadDefinition(slug ?? definitions[0]?.slug);
+        this.loadDefinition(slug);
       },
       error: () => {
-        this.loading = false;
+        this.loading.set(false);
         this.showMessage('Could not load workflow definitions.', 'error');
       },
     });
   }
 
   loadDefinition(slug?: string) {
-    this.loading = true;
-    this.workflowService.get(slug).pipe(finalize(() => this.loading = false)).subscribe({
+    this.loading.set(true);
+    this.workflowService.get(slug).pipe(finalize(() => this.loading.set(false))).subscribe({
       next: (definition) => this.setDefinition(definition),
       error: () => this.showMessage('Could not load this workflow definition.', 'error'),
     });
@@ -130,9 +140,9 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
     try {
       const definition = JSON.parse(this.jsonText) as WorkflowDefinition;
-      this.publishing = true;
+      this.publishing.set(true);
       this.workflowService.publish(definition)
-        .pipe(finalize(() => this.publishing = false))
+        .pipe(finalize(() => this.publishing.set(false)))
         .subscribe({
           next: (saved) => {
             this.setDefinition(saved);
@@ -148,7 +158,7 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   deleteWorkflow() {
     const selected = this.selectedDefinitionSummary;
-    if (!selected || this.deleting) return;
+    if (!selected || this.deleting()) return;
     const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
     componentRef.instance.action = 'delete';
     componentRef.instance.message = `Delete "${selected.name}"? This cannot be undone.`;
@@ -157,9 +167,9 @@ export class WorkflowDefinitionComponent implements OnInit {
     });
     componentRef.instance.onConfirm.subscribe((res) => {
       if (res !== 'confirmed') return;
-      this.deleting = true;
+      this.deleting.set(true);
       this.workflowService.delete(selected.slug)
-        .pipe(finalize(() => this.deleting = false))
+        .pipe(finalize(() => this.deleting.set(false)))
         .subscribe({
           next: (result) => {
             this.showMessage(result.message || 'Workflow definition deleted.', 'success');
@@ -199,8 +209,9 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   addStage() {
     const index = this.definition.stages.length + 1;
-    const stage: WorkflowStage = { id: `stage-${index}`, name: `Stage ${index}`, order: index };
+    const stage: WorkflowStage = { id: `stage-${index}`, name: `Stage ${index}`, description: '', order: index };
     this.definition.stages.push(stage);
+    this.showStageEditor(stage.id);
     this.builderChanged();
   }
 
@@ -212,6 +223,9 @@ export class WorkflowDefinitionComponent implements OnInit {
     }
     this.definition.stages.splice(index, 1);
     this.definition.stages.forEach((item, itemIndex) => item.order = itemIndex + 1);
+    if (this.selectedStageId === stage.id) {
+      this.selectedStageId = this.definition.stages[0]?.id ?? '';
+    }
     this.builderChanged();
   }
 
@@ -224,21 +238,30 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
   }
 
-  addTask() {
+  moveStage(index: number, direction: -1 | 1) {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= this.definition.stages.length) return;
+    const [stage] = this.definition.stages.splice(index, 1);
+    this.definition.stages.splice(targetIndex, 0, stage);
+    this.definition.stages.forEach((item, itemIndex) => item.order = itemIndex + 1);
+    this.builderChanged();
+  }
+
+  addTask(stageId = this.selectedStageId || this.definition.stages[0]?.id || '') {
     const index = this.definition.tasks.length + 1;
     const task: WorkflowTask = {
       id: `task-${index}`,
       name: `Task ${index}`,
-      stageId: this.definition.stages[0]?.id ?? '',
+      description: '',
+      stageId,
       ownerRoles: this.definition.roles[0]?.id ? [this.definition.roles[0].id] : [],
       form: [],
       artifacts: [],
       transitions: [{ event: 'submit', label: 'Continue', to: 'END', outcome: 'completed' }],
     };
     this.definition.tasks.push(task);
-    this.selectedTaskId = task.id;
+    this.showTaskEditor(task.id);
     if (!this.definition.initialTask) this.definition.initialTask = task.id;
-    this.updateRoleEditor();
     this.builderChanged();
   }
 
@@ -273,8 +296,13 @@ export class WorkflowDefinitionComponent implements OnInit {
   }
 
   selectTask(taskId: string) {
-    this.selectedTaskId = taskId;
-    this.updateRoleEditor();
+    if (this.selectedTaskId === taskId && this.editorVisible) return;
+    this.showTaskEditor(taskId);
+  }
+
+  selectStage(stageId: string) {
+    if (this.selectedStageId === stageId && !this.selectedTaskId && this.editorVisible) return;
+    this.showStageEditor(stageId);
   }
 
   applyOwnerRoles() {
@@ -320,7 +348,7 @@ export class WorkflowDefinitionComponent implements OnInit {
       delete field.minItems;
       delete field.maxItems;
       field.acceptedFileTypes ??= ['.pdf', '.doc', '.docx'];
-      field.maxFileSizeMb ??= 10;
+      field.maxFileSizeMb ??= 20;
     } else if (type === 'repeater') {
       delete field.options;
       delete field.acceptedFileTypes;
@@ -479,6 +507,7 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.definition = structuredClone(definition);
     this.normalizeDefinition();
     this.selectedTaskId = this.definition.tasks[0]?.id ?? '';
+    this.selectedStageId = this.selectedTask?.stageId ?? this.definition.stages[0]?.id ?? '';
     this.updateRoleEditor();
     this.syncJson();
   }
@@ -488,7 +517,9 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.definition.stages ??= [];
     this.definition.tasks ??= [];
     this.definition.description ??= '';
+    this.definition.stages.forEach((stage) => stage.description ??= '');
     this.definition.tasks.forEach((task) => {
+      task.description ??= '';
       task.ownerRoles ??= [];
       task.transitions ??= [];
       task.form ??= [];
@@ -509,6 +540,28 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.jsonError = '';
   }
 
+  private showTaskEditor(taskId: string) {
+    const task = this.definition.tasks.find((item) => item.id === taskId);
+    this.selectedTaskId = taskId;
+    this.selectedStageId = task?.stageId ?? this.selectedStageId;
+    this.updateRoleEditor();
+    this.replayEditorAnimation();
+  }
+
+  private showStageEditor(stageId: string) {
+    this.selectedStageId = stageId;
+    this.selectedTaskId = '';
+    this.updateRoleEditor();
+    this.replayEditorAnimation();
+  }
+
+  private replayEditorAnimation() {
+    this.editorVisible = false;
+    requestAnimationFrame(() => {
+      this.editorVisible = true;
+    });
+  }
+
   private showMessage(message: string, type: 'success' | 'error') {
     this.message = message;
     this.messageType = type;
@@ -522,7 +575,7 @@ export class WorkflowDefinitionComponent implements OnInit {
       description: '',
       initialTask: '',
       roles: [{ id: 'owner', name: 'Workflow Owner' }],
-      stages: [{ id: 'stage-1', name: 'Stage 1', order: 1 }],
+      stages: [{ id: 'stage-1', name: 'Stage 1', description: '', order: 1 }],
       tasks: [],
     };
   }

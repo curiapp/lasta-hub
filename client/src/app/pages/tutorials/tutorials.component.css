@@ -1,0 +1,122 @@
+.support-panel-enter {
+  animation: support-panel-enter 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.faq-modal-enter {
+  animation: faq-modal-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tutorial-stage-enter {
+  animation: tutorial-stage-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tutorial-task-enter {
+  animation: tutorial-task-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tutorial-help-enter {
+  animation: tutorial-help-enter 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tutorial-help-alt {
+  animation-name: tutorial-help-enter-alt;
+}
+
+@keyframes support-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tutorial-stage-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tutorial-task-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tutorial-help-enter {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes tutorial-help-enter-alt {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes faq-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+.pb-video-container {
+  padding-top: 20px;
+  font-family: Lato;
+}
+
+.pb-video {
+  border: 1px solid #e6e6e6;
+  padding: 5px;
+}
+
+.pb-video:hover {
+  background: #2c3e50;
+}
+
+.pb-video-frame {
+  transition: width 2s, height 2s;
+}
+
+.pb-video-frame:hover {
+  height: 300px;
+}
+
+.pb-row {
+  margin-bottom: 10px;
+}

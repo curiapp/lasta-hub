@@ -57,7 +57,29 @@ async function ensureDefaultDefinition() {
     });
 }
 
-async function currentDefinition(slug = defaultWorkflowDefinition.id) {
+async function latestPublishedDefinition() {
+    await ensureDefaultDefinition();
+    const [current] = await db
+        .select({
+            record: workflowDefinitions,
+            version: workflowDefinitionVersions,
+        })
+        .from(workflowDefinitionVersions)
+        .innerJoin(workflowDefinitions, eq(workflowDefinitionVersions.definitionId, workflowDefinitions.id))
+        .where(and(
+            eq(workflowDefinitions.status, "active"),
+            eq(workflowDefinitionVersions.status, "published"),
+        ))
+        .orderBy(desc(workflowDefinitionVersions.publishedAt), desc(workflowDefinitionVersions.createdAt))
+        .limit(1);
+
+    if (!current) throw new WorkflowError("No published workflow definition is available", 503);
+    return { ...current, definition: current.version.definition as WorkflowDefinition };
+}
+
+async function currentDefinition(slug?: string) {
+    if (!slug) return latestPublishedDefinition();
+
     const seeded = slug === defaultWorkflowDefinition.id
         ? await ensureDefaultDefinition()
         : (await db.select()
@@ -123,8 +145,9 @@ export async function getPublishedDefinition(slug?: string) {
     const current = await currentDefinition(slug);
     return {
         ...current.definition,
-        id: current.record.id,
+        id: current.definition.id || current.record.slug,
         slug: current.record.slug,
+        definitionId: current.record.id,
         versionId: current.version.id,
     };
 }
@@ -137,7 +160,7 @@ export async function listWorkflowDefinitions() {
         description: workflowDefinitions.description,
         status: workflowDefinitions.status,
         updatedAt: workflowDefinitions.updatedAt,
-    }).from(workflowDefinitions).orderBy(asc(workflowDefinitions.name));
+    }).from(workflowDefinitions).orderBy(desc(workflowDefinitions.updatedAt), asc(workflowDefinitions.name));
 }
 
 export async function deleteWorkflowDefinition(slug: string) {

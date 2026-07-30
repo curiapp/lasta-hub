@@ -108,6 +108,9 @@
                 <span class="grid size-7 place-items-center rounded bg-base-300 text-xs font-bold">{{ stage.order }}</span>
                 <span class="min-w-0">
                   <strong class="block truncate text-xs">{{ stage.name }}</strong>
+                  @if (stage.description) {
+                    <small class="line-clamp-2 text-base-content/45">{{ stage.description }}</small>
+                  }
                   <small class="block capitalize text-base-content/50">{{ stageState(stage.id) }}</small>
                 </span>
                 <span class="size-2 rounded-full"
@@ -145,6 +148,9 @@
               <div>
                 <p class="text-xs font-bold uppercase text-base-content/50">Current stage</p>
                 <h2 class="font-bold">{{ selectedStage?.name }}</h2>
+                @if (selectedStage?.description) {
+                  <p class="mt-1 max-w-2xl text-xs leading-5 text-base-content/60">{{ selectedStage?.description }}</p>
+                }
               </div>
               <span [class]="statusClasses(stageState(selectedStageId))">{{ stageState(selectedStageId) }}</span>
             </header>
@@ -176,6 +182,9 @@
                   <div>
                     <p class="font-mono text-xs uppercase text-base-content/45">{{ taskDefinition.id }}</p>
                     <h2 class="font-bold">{{ taskDefinition.name }}</h2>
+                    @if (taskDefinition.description) {
+                      <p class="mt-1 max-w-2xl text-xs leading-5 text-base-content/60">{{ taskDefinition.description }}</p>
+                    }
                   </div>
                   <span [class]="statusClasses(selectedTaskInstance?.status || 'pending')">
                     {{ selectedTaskInstance?.status || 'pending' }}

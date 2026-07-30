@@ -6,6 +6,7 @@ export type WorkflowRole = {
 export type WorkflowStage = {
   id: string;
   name: string;
+  description?: string;
   order: number;
 }
 
@@ -43,6 +44,7 @@ export type WorkflowTask = {
   id: string;
   stageId: string;
   name: string;
+  description?: string;
   ownerRoles: string[];
   form?: WorkflowField[];
   artifacts?: WorkflowArtifactRequirement[];
@@ -61,6 +63,8 @@ export type WorkflowArtifactRequirement = {
 export type WorkflowDefinition = {
   id: string;
   slug?: string;
+  definitionId?: string;
+  versionId?: string;
   version: number;
   name: string;
   description: string;

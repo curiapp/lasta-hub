@@ -17,7 +17,9 @@
 .inline-actions,
 .notice,
 .mode-tabs,
-.transition-line {
+.transition-line,
+.stage-actions,
+.stage-editor-actions {
   display: flex;
   align-items: center;
 }
@@ -140,6 +142,10 @@ h2 {
 .task-panel {
   min-width: 0;
   padding: 1rem;
+}
+
+.editor-panel-enter {
+  animation: editor-panel-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .definition-panel,
@@ -271,12 +277,17 @@ h2 {
 
 .stage-band > header {
   display: grid;
-  grid-template-columns: 1.8rem minmax(120px, 1fr) minmax(100px, .8fr) 2rem;
+  grid-template-columns: 1.8rem minmax(120px, 1fr) minmax(100px, .8fr) 2rem 2rem;
   align-items: center;
   gap: .45rem;
   min-height: 2.75rem;
   padding: .35rem .55rem;
   background: #f5f7fa;
+}
+
+.stage-band > header.selected {
+  background: #fff8e7;
+  box-shadow: inset 3px 0 #fcaf17;
 }
 
 .stage-band header input {
@@ -293,6 +304,45 @@ h2 {
   font-family: Consolas, monospace;
   font-size: .7rem;
   font-weight: 400;
+}
+
+.stage-description {
+  width: calc(100% - 1rem);
+  min-height: 3.75rem;
+  margin: .5rem;
+  font-size: .75rem;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.stage-actions {
+  justify-content: flex-end;
+  gap: .35rem;
+  padding: 0 .5rem .5rem;
+  flex-wrap: wrap;
+}
+
+.stage-actions button {
+  min-height: 1.8rem;
+  padding: .25rem .4rem;
+  border-radius: 4px;
+  color: #536078;
+  font-size: .66rem;
+  cursor: pointer;
+}
+
+.stage-editor-actions {
+  gap: .4rem;
+  margin: .75rem 0 1rem;
+  flex-wrap: wrap;
+}
+
+.stage-task-summary {
+  display: grid;
+  gap: .35rem;
+  margin-top: 1rem;
+  padding-top: .85rem;
+  border-top: 1px solid #e0e4eb;
 }
 
 .stage-number {
@@ -605,6 +655,8 @@ h2 {
   color: #667188;
 }
 
+@keyframes editor-panel-enter { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+
 @media (max-width: 1100px) {
   .builder {
     grid-template-columns: 260px 1fr;
@@ -652,7 +704,7 @@ h2 {
   }
 
   .stage-band > header {
-    grid-template-columns: 1.8rem 1fr 2rem;
+    grid-template-columns: 1.8rem 1fr 2rem 2rem;
   }
 
   .stage-id {

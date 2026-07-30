@@ -40,6 +40,7 @@ export interface WorkflowTaskDefinition {
     id: string;
     stageId: string;
     name: string;
+    description?: string;
     ownerRoles: string[];
     form?: WorkflowField[];
     artifacts?: WorkflowArtifactRequirement[];
@@ -53,7 +54,7 @@ export interface WorkflowDefinition {
     description?: string;
     initialTask: string;
     roles?: Array<{ id: string; name: string }>;
-    stages?: Array<{ id: string; name: string; order: number }>;
+    stages?: Array<{ id: string; name: string; description?: string; order: number }>;
     tasks: WorkflowTaskDefinition[];
 }
 
