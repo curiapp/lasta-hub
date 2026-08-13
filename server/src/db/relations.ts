@@ -1,30 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, programmes, faculty, departments, notifications, notificationRecipients, phaseSteps, programmePhaseSteps, programmePhases, phases, attachments, workflowUsers, workflowProgrammes, workflowDefinitions, workflowDefinitionVersions, workflowProcessInstances, workflowTaskInstances, workflowArtifacts, workflowAuditEvents } from "./schema";
-
-export const programmesRelations = relations(programmes, ({one, many}) => ({
-	user: one(users, {
-		fields: [programmes.initiator],
-		references: [users.id]
-	}),
-	programmePhases: many(programmePhases),
-}));
-
-export const usersRelations = relations(users, ({many}) => ({
-	programmes: many(programmes),
-	notificationRecipients: many(notificationRecipients),
-	attachments: many(attachments),
-}));
-
-export const departmentsRelations = relations(departments, ({one}) => ({
-	faculty: one(faculty, {
-		fields: [departments.facultyId],
-		references: [faculty.id]
-	}),
-}));
-
-export const facultyRelations = relations(faculty, ({many}) => ({
-	departments: many(departments),
-}));
+import { notifications, notificationRecipients, users, faculty, departments, phaseSteps, programmePhaseSteps, programmePhases, attachments, phases, programmes, usersInWorkflow, programmesInWorkflow, facultyInWorkflow, departmentsInWorkflow, processInstancesInWorkflow, artifactsInWorkflow, taskInstancesInWorkflow, definitionsInWorkflow, definitionVersionsInWorkflow, auditEventsInWorkflow, phasesInWorkflow, phaseStepsInWorkflow, programmePhasesInWorkflow, programmePhaseStepsInWorkflow, attachmentsInWorkflow, notificationsInWorkflow, notificationRecipientsInWorkflow } from "./schema";
 
 export const notificationRecipientsRelations = relations(notificationRecipients, ({one}) => ({
 	notification: one(notifications, {
@@ -39,6 +14,23 @@ export const notificationRecipientsRelations = relations(notificationRecipients,
 
 export const notificationsRelations = relations(notifications, ({many}) => ({
 	notificationRecipients: many(notificationRecipients),
+}));
+
+export const usersRelations = relations(users, ({many}) => ({
+	notificationRecipients: many(notificationRecipients),
+	attachments: many(attachments),
+	programmes: many(programmes),
+}));
+
+export const departmentsRelations = relations(departments, ({one}) => ({
+	faculty: one(faculty, {
+		fields: [departments.facultyId],
+		references: [faculty.id]
+	}),
+}));
+
+export const facultyRelations = relations(faculty, ({many}) => ({
+	departments: many(departments),
 }));
 
 export const programmePhaseStepsRelations = relations(programmePhaseSteps, ({one, many}) => ({
@@ -73,11 +65,6 @@ export const programmePhasesRelations = relations(programmePhases, ({one, many})
 	}),
 }));
 
-export const phasesRelations = relations(phases, ({many}) => ({
-	phaseSteps: many(phaseSteps),
-	programmePhases: many(programmePhases),
-}));
-
 export const attachmentsRelations = relations(attachments, ({one}) => ({
 	programmePhaseStep: one(programmePhaseSteps, {
 		fields: [attachments.programmePhaseStepId],
@@ -89,120 +76,214 @@ export const attachmentsRelations = relations(attachments, ({one}) => ({
 	}),
 }));
 
-export const workflowUsersRelations = relations(workflowUsers, ({many}) => ({
-	programmes: many(workflowProgrammes),
-	createdWorkflowDefinitions: many(workflowDefinitions),
-	createdWorkflowDefinitionVersions: many(workflowDefinitionVersions),
-	startedWorkflowProcessInstances: many(workflowProcessInstances),
-	completedWorkflowTaskInstances: many(workflowTaskInstances),
-	createdWorkflowArtifacts: many(workflowArtifacts),
-	workflowAuditEvents: many(workflowAuditEvents),
+export const phasesRelations = relations(phases, ({many}) => ({
+	phaseSteps: many(phaseSteps),
+	programmePhases: many(programmePhases),
 }));
 
-export const workflowProgrammesRelations = relations(workflowProgrammes, ({one, many}) => ({
-	initiatorUser: one(workflowUsers, {
-		fields: [workflowProgrammes.initiator],
-		references: [workflowUsers.id]
-	}),
-	processInstances: many(workflowProcessInstances),
-	taskInstances: many(workflowTaskInstances),
-	artifacts: many(workflowArtifacts),
-	auditEvents: many(workflowAuditEvents),
-}));
-
-export const workflowDefinitionsRelations = relations(workflowDefinitions, ({one, many}) => ({
-	createdByUser: one(workflowUsers, {
-		fields: [workflowDefinitions.createdBy],
-		references: [workflowUsers.id]
-	}),
-	versions: many(workflowDefinitionVersions),
-}));
-
-export const workflowDefinitionVersionsRelations = relations(workflowDefinitionVersions, ({one, many}) => ({
-	definition: one(workflowDefinitions, {
-		fields: [workflowDefinitionVersions.definitionId],
-		references: [workflowDefinitions.id]
-	}),
-	createdByUser: one(workflowUsers, {
-		fields: [workflowDefinitionVersions.createdBy],
-		references: [workflowUsers.id]
-	}),
-	processInstances: many(workflowProcessInstances),
-}));
-
-export const workflowProcessInstancesRelations = relations(workflowProcessInstances, ({one, many}) => ({
-	programme: one(workflowProgrammes, {
-		fields: [workflowProcessInstances.programmeId],
-		references: [workflowProgrammes.id]
-	}),
-	definitionVersion: one(workflowDefinitionVersions, {
-		fields: [workflowProcessInstances.definitionVersionId],
-		references: [workflowDefinitionVersions.id]
-	}),
-	startedByUser: one(workflowUsers, {
-		fields: [workflowProcessInstances.startedBy],
-		references: [workflowUsers.id]
-	}),
-	tasks: many(workflowTaskInstances),
-	artifacts: many(workflowArtifacts),
-	auditEvents: many(workflowAuditEvents),
-}));
-
-export const workflowTaskInstancesRelations = relations(workflowTaskInstances, ({one, many}) => ({
-	process: one(workflowProcessInstances, {
-		fields: [workflowTaskInstances.processId],
-		references: [workflowProcessInstances.id]
-	}),
-	programme: one(workflowProgrammes, {
-		fields: [workflowTaskInstances.programmeId],
-		references: [workflowProgrammes.id]
-	}),
-	causedByTask: one(workflowTaskInstances, {
-		fields: [workflowTaskInstances.causedByTaskId],
-		references: [workflowTaskInstances.id]
-	}),
-	completedByUser: one(workflowUsers, {
-		fields: [workflowTaskInstances.completedBy],
-		references: [workflowUsers.id]
-	}),
-	artifacts: many(workflowArtifacts),
-	auditEvents: many(workflowAuditEvents),
-}));
-
-export const workflowArtifactsRelations = relations(workflowArtifacts, ({one}) => ({
-	programme: one(workflowProgrammes, {
-		fields: [workflowArtifacts.programmeId],
-		references: [workflowProgrammes.id]
-	}),
-	process: one(workflowProcessInstances, {
-		fields: [workflowArtifacts.processId],
-		references: [workflowProcessInstances.id]
-	}),
-	task: one(workflowTaskInstances, {
-		fields: [workflowArtifacts.taskId],
-		references: [workflowTaskInstances.id]
-	}),
-	createdByUser: one(workflowUsers, {
-		fields: [workflowArtifacts.createdBy],
-		references: [workflowUsers.id]
+export const programmesRelations = relations(programmes, ({one, many}) => ({
+	programmePhases: many(programmePhases),
+	user: one(users, {
+		fields: [programmes.initiator],
+		references: [users.id]
 	}),
 }));
 
-export const workflowAuditEventsRelations = relations(workflowAuditEvents, ({one}) => ({
-	programme: one(workflowProgrammes, {
-		fields: [workflowAuditEvents.programmeId],
-		references: [workflowProgrammes.id]
+export const programmesInWorkflowRelations = relations(programmesInWorkflow, ({one, many}) => ({
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [programmesInWorkflow.initiator],
+		references: [usersInWorkflow.id]
 	}),
-	process: one(workflowProcessInstances, {
-		fields: [workflowAuditEvents.processId],
-		references: [workflowProcessInstances.id]
+	artifactsInWorkflows: many(artifactsInWorkflow),
+	processInstancesInWorkflows: many(processInstancesInWorkflow),
+	taskInstancesInWorkflows: many(taskInstancesInWorkflow),
+	auditEventsInWorkflows: many(auditEventsInWorkflow),
+	programmePhasesInWorkflows: many(programmePhasesInWorkflow),
+}));
+
+export const usersInWorkflowRelations = relations(usersInWorkflow, ({many}) => ({
+	programmesInWorkflows: many(programmesInWorkflow),
+	artifactsInWorkflows: many(artifactsInWorkflow),
+	definitionsInWorkflows: many(definitionsInWorkflow),
+	definitionVersionsInWorkflows: many(definitionVersionsInWorkflow),
+	processInstancesInWorkflows: many(processInstancesInWorkflow),
+	taskInstancesInWorkflows: many(taskInstancesInWorkflow),
+	auditEventsInWorkflows: many(auditEventsInWorkflow),
+	attachmentsInWorkflows: many(attachmentsInWorkflow),
+	notificationRecipientsInWorkflows: many(notificationRecipientsInWorkflow),
+}));
+
+export const departmentsInWorkflowRelations = relations(departmentsInWorkflow, ({one}) => ({
+	facultyInWorkflow: one(facultyInWorkflow, {
+		fields: [departmentsInWorkflow.facultyId],
+		references: [facultyInWorkflow.id]
 	}),
-	task: one(workflowTaskInstances, {
-		fields: [workflowAuditEvents.taskId],
-		references: [workflowTaskInstances.id]
+}));
+
+export const facultyInWorkflowRelations = relations(facultyInWorkflow, ({many}) => ({
+	departmentsInWorkflows: many(departmentsInWorkflow),
+}));
+
+export const artifactsInWorkflowRelations = relations(artifactsInWorkflow, ({one}) => ({
+	processInstancesInWorkflow: one(processInstancesInWorkflow, {
+		fields: [artifactsInWorkflow.processId],
+		references: [processInstancesInWorkflow.id]
 	}),
-	actor: one(workflowUsers, {
-		fields: [workflowAuditEvents.actorId],
-		references: [workflowUsers.id]
+	taskInstancesInWorkflow: one(taskInstancesInWorkflow, {
+		fields: [artifactsInWorkflow.taskId],
+		references: [taskInstancesInWorkflow.id]
 	}),
+	programmesInWorkflow: one(programmesInWorkflow, {
+		fields: [artifactsInWorkflow.programmeId],
+		references: [programmesInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [artifactsInWorkflow.createdBy],
+		references: [usersInWorkflow.id]
+	}),
+}));
+
+export const processInstancesInWorkflowRelations = relations(processInstancesInWorkflow, ({one, many}) => ({
+	artifactsInWorkflows: many(artifactsInWorkflow),
+	definitionVersionsInWorkflow: one(definitionVersionsInWorkflow, {
+		fields: [processInstancesInWorkflow.definitionVersionId],
+		references: [definitionVersionsInWorkflow.id]
+	}),
+	programmesInWorkflow: one(programmesInWorkflow, {
+		fields: [processInstancesInWorkflow.programmeId],
+		references: [programmesInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [processInstancesInWorkflow.startedBy],
+		references: [usersInWorkflow.id]
+	}),
+	taskInstancesInWorkflows: many(taskInstancesInWorkflow),
+	auditEventsInWorkflows: many(auditEventsInWorkflow),
+}));
+
+export const taskInstancesInWorkflowRelations = relations(taskInstancesInWorkflow, ({one, many}) => ({
+	artifactsInWorkflows: many(artifactsInWorkflow),
+	processInstancesInWorkflow: one(processInstancesInWorkflow, {
+		fields: [taskInstancesInWorkflow.processId],
+		references: [processInstancesInWorkflow.id]
+	}),
+	taskInstancesInWorkflow: one(taskInstancesInWorkflow, {
+		fields: [taskInstancesInWorkflow.causedByTaskId],
+		references: [taskInstancesInWorkflow.id],
+		relationName: "taskInstancesInWorkflow_causedByTaskId_taskInstancesInWorkflow_id"
+	}),
+	taskInstancesInWorkflows: many(taskInstancesInWorkflow, {
+		relationName: "taskInstancesInWorkflow_causedByTaskId_taskInstancesInWorkflow_id"
+	}),
+	programmesInWorkflow: one(programmesInWorkflow, {
+		fields: [taskInstancesInWorkflow.programmeId],
+		references: [programmesInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [taskInstancesInWorkflow.completedBy],
+		references: [usersInWorkflow.id]
+	}),
+	auditEventsInWorkflows: many(auditEventsInWorkflow),
+}));
+
+export const definitionsInWorkflowRelations = relations(definitionsInWorkflow, ({one, many}) => ({
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [definitionsInWorkflow.createdBy],
+		references: [usersInWorkflow.id]
+	}),
+	definitionVersionsInWorkflows: many(definitionVersionsInWorkflow),
+}));
+
+export const definitionVersionsInWorkflowRelations = relations(definitionVersionsInWorkflow, ({one, many}) => ({
+	definitionsInWorkflow: one(definitionsInWorkflow, {
+		fields: [definitionVersionsInWorkflow.definitionId],
+		references: [definitionsInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [definitionVersionsInWorkflow.createdBy],
+		references: [usersInWorkflow.id]
+	}),
+	processInstancesInWorkflows: many(processInstancesInWorkflow),
+}));
+
+export const auditEventsInWorkflowRelations = relations(auditEventsInWorkflow, ({one}) => ({
+	processInstancesInWorkflow: one(processInstancesInWorkflow, {
+		fields: [auditEventsInWorkflow.processId],
+		references: [processInstancesInWorkflow.id]
+	}),
+	taskInstancesInWorkflow: one(taskInstancesInWorkflow, {
+		fields: [auditEventsInWorkflow.taskId],
+		references: [taskInstancesInWorkflow.id]
+	}),
+	programmesInWorkflow: one(programmesInWorkflow, {
+		fields: [auditEventsInWorkflow.programmeId],
+		references: [programmesInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [auditEventsInWorkflow.actorId],
+		references: [usersInWorkflow.id]
+	}),
+}));
+
+export const phaseStepsInWorkflowRelations = relations(phaseStepsInWorkflow, ({one, many}) => ({
+	phasesInWorkflow: one(phasesInWorkflow, {
+		fields: [phaseStepsInWorkflow.phaseId],
+		references: [phasesInWorkflow.id]
+	}),
+	programmePhaseStepsInWorkflows: many(programmePhaseStepsInWorkflow),
+}));
+
+export const phasesInWorkflowRelations = relations(phasesInWorkflow, ({many}) => ({
+	phaseStepsInWorkflows: many(phaseStepsInWorkflow),
+	programmePhasesInWorkflows: many(programmePhasesInWorkflow),
+}));
+
+export const programmePhasesInWorkflowRelations = relations(programmePhasesInWorkflow, ({one, many}) => ({
+	programmesInWorkflow: one(programmesInWorkflow, {
+		fields: [programmePhasesInWorkflow.programmeId],
+		references: [programmesInWorkflow.id]
+	}),
+	phasesInWorkflow: one(phasesInWorkflow, {
+		fields: [programmePhasesInWorkflow.phaseId],
+		references: [phasesInWorkflow.id]
+	}),
+	programmePhaseStepsInWorkflows: many(programmePhaseStepsInWorkflow),
+}));
+
+export const programmePhaseStepsInWorkflowRelations = relations(programmePhaseStepsInWorkflow, ({one, many}) => ({
+	phaseStepsInWorkflow: one(phaseStepsInWorkflow, {
+		fields: [programmePhaseStepsInWorkflow.phaseStepId],
+		references: [phaseStepsInWorkflow.id]
+	}),
+	programmePhasesInWorkflow: one(programmePhasesInWorkflow, {
+		fields: [programmePhaseStepsInWorkflow.programmePhaseId],
+		references: [programmePhasesInWorkflow.id]
+	}),
+	attachmentsInWorkflows: many(attachmentsInWorkflow),
+}));
+
+export const attachmentsInWorkflowRelations = relations(attachmentsInWorkflow, ({one}) => ({
+	programmePhaseStepsInWorkflow: one(programmePhaseStepsInWorkflow, {
+		fields: [attachmentsInWorkflow.programmePhaseStepId],
+		references: [programmePhaseStepsInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [attachmentsInWorkflow.uploadedBy],
+		references: [usersInWorkflow.id]
+	}),
+}));
+
+export const notificationRecipientsInWorkflowRelations = relations(notificationRecipientsInWorkflow, ({one}) => ({
+	notificationsInWorkflow: one(notificationsInWorkflow, {
+		fields: [notificationRecipientsInWorkflow.notificationId],
+		references: [notificationsInWorkflow.id]
+	}),
+	usersInWorkflow: one(usersInWorkflow, {
+		fields: [notificationRecipientsInWorkflow.recipientId],
+		references: [usersInWorkflow.id]
+	}),
+}));
+
+export const notificationsInWorkflowRelations = relations(notificationsInWorkflow, ({many}) => ({
+	notificationRecipientsInWorkflows: many(notificationRecipientsInWorkflow),
 }));
