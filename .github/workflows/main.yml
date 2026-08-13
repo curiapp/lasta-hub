@@ -1,11 +1,6 @@
 name: PDQA CI CD
 run-name: ${{ github.actor }} Running Pipeline
 on:
-    pull_request: 
-      types:
-        - closed
-      branches:
-        - develop
     push:
       branches:
         - develop
@@ -13,20 +8,19 @@ on:
 jobs: 
     build_develop:
         name: Build and Push Docker Image
-        if: github.ref == 'refs/heads/develop'
         environment: develop
         runs-on: ubuntu-latest
         outputs:
           output1: ${{ steps.step1.outputs.sha }}
 
         steps:
-            - name: Checkout feature/develop
+            - name: Checkout develop
               uses: actions/checkout@v4
 
             - id: step1
               run: |
-                echo "::set-output name=sha::$(echo $GITHUB_SHA)"
-                echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta 
+                echo "sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+                echo "$GITHUB_SHA" > "$GITHUB_WORKSPACE/_meta"
 
             -   name: Log in to GitHub Container Registry
                 uses: docker/login-action@v2
@@ -57,7 +51,7 @@ jobs:
                     docker build -f ./Dockerfile.frontend \
                     -t ghcr.io/curiapp/lasta-hub/pdqa-frontend:$(echo $GITHUB_SHA | head -c7) .
 
-            -   name: Push Server Image to GitHub Container Registry
+            -   name: Push Frontend Image to GitHub Container Registry
                 # if: steps.filter.outputs.client == 'true'
                 run: |
                       docker push ghcr.io/curiapp/lasta-hub/pdqa-frontend:$(echo $GITHUB_SHA | head -c7)
@@ -65,7 +59,6 @@ jobs:
     gitops_develop:
         name: Update GitOps Image Tag
         needs: build_develop
-        if: github.ref == 'refs/heads/feature/develop'
         environment: develop
         runs-on: ubuntu-latest
         steps:
@@ -103,7 +96,6 @@ jobs:
     deploy_develop:
       name: Apply Kustomize on Server
       needs: gitops_develop
-      if: github.ref == 'refs/heads/feature/develop'
       environment: develop
       runs-on: ubuntu-latest
 
@@ -121,7 +113,6 @@ jobs:
 
             # Verify key file exists and has content
             ls -l ~/.ssh
-            head -n 5 ~/.ssh/id_ed25519
 
 
         - name: Deploy to server
