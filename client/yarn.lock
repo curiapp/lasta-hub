@@ -172,10 +172,10 @@
     ora "9.4.0"
     rxjs "7.8.2"
 
-"@angular/animations@^22.0.6":
-  version "22.0.6"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-22.0.6.tgz#68d51e2718334dd5b2bd887d1c16482527b128ce"
-  integrity sha512-5bBAuKtawVK4KPq6U/yoE5yCyKymEnXNN7UJ1Lb7PUuuYmLnUXb7zJpC7HwtHTuV/0PTCkGlLE59NtcrrolTuA==
+"@angular/animations@22.1.2":
+  version "22.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-22.1.2.tgz#b57265dfa352c1c07396aceabf0b6e2a32a498d4"
+  integrity sha512-SHvopFG8I92isKE6lgoWVVmmt6fSGKt76bfrBuJ9qvrKWYqWmWUh87Z5J3XRPUM8zdzuEkXjcTbn+GTGOGRiaA==
   dependencies:
     tslib "^2.3.0"
 
@@ -2056,10 +2056,10 @@
   dependencies:
     undici-types "~7.16.0"
 
-"@types/node@^26.1.1":
-  version "26.1.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.1.1.tgz#bad758d601e97d6cf457d204ee76a35fce7bd119"
-  integrity sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==
+"@types/node@^26.2.0":
+  version "26.2.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.2.0.tgz#5a4875a862fda8fdc57de8faa579bb81ecba1685"
+  integrity sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==
   dependencies:
     undici-types "~8.3.0"
 
@@ -2272,7 +2272,12 @@ base64id@2.0.0, base64id@~2.0.0:
   resolved "https://registry.yarnpkg.com/base64id/-/base64id-2.0.0.tgz#2770ac6bc47d312af97a8bf9a634342e0cd25cb6"
   integrity sha512-lGe34o6EHj9y3Kts9R4ZYs/Gr+6N7MCaMlIFA3F1R2O5/m7K06AxfSeO5530PEERE6/WyEg3lsuyw4GHlPZHog==
 
-baseline-browser-mapping@^2.8.32, baseline-browser-mapping@^2.9.0:
+baseline-browser-mapping@^2.11.14:
+  version "2.11.14"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.14.tgz#d51bb92285608b0e6356841a2eea76842a771d52"
+  integrity sha512-JyJ954WzuIR8/FFzX0o5krdSTrBAkcCSRfWSleRsIHSWV+cZe2FI1PKggVkFke1hBldRs+LRxUczzE9iPmgZww==
+
+baseline-browser-mapping@^2.9.0:
   version "2.9.12"
   resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.9.12.tgz#fbed5f37edf24b708e6e0b1fb26c70982a577dfc"
   integrity sha512-Mij6Lij93pTAIsSYy5cyBQ975Qh9uLEc5rwGTpomiZeXZL9yIS6uORJakb3ScHgfs0serMMfIbXzokPMuEiRyw==
@@ -2603,10 +2608,10 @@ custom-event@~1.0.0:
   resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.1.tgz#5d02a46850adf1b4a317946a3928fccb5bfd0425"
   integrity sha512-GAj5FOq0Hd+RsCGVJxZuKaIDXDf3h6GQoNEjFgbLLI/trgtavwUbSnZ5pVfg27DVCaWjIohryS0JFwIJyT2cMg==
 
-daisyui@^5.5.14:
-  version "5.5.14"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-5.5.14.tgz#818487da886730f6338f51d0414c32159c297cad"
-  integrity sha512-L47rvw7I7hK68TA97VB8Ee0woHew+/ohR6Lx6Ah/krfISOqcG4My7poNpX5Mo5/ytMxiR40fEaz6njzDi7cuSg==
+daisyui@^5.7.16:
+  version "5.7.16"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-5.7.16.tgz#033e6f86ca4f9f2cdfeffd1752cb99a2c14c7780"
+  integrity sha512-V9CJxvrWIXTDuP/0tpijjWaKaKJNYo2IrULJfTWs3/DjW9rPqswk1n8NCLQRLrTutmlG2Ech7nkJDpCnF+6Dzw==
 
 date-format@^4.0.14:
   version "4.0.14"
