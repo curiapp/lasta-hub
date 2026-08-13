@@ -1,4 +1,4 @@
-import curriculumDefinition from "../../../../workflow-hub/data/workflow-definition.json";
+import curriculumDefinition from "./data/workflow-definition.json";
 import type {
     CompleteTaskInput,
     WorkflowCondition,

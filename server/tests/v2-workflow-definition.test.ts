@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import lastaWorkflowDefinition from "../../workflow-hub/data/lasta-workflow-definition.json";
+import lastaWorkflowDefinition from "../src/v2/workflow/data/lasta-workflow-definition.json";
 import {
     defaultWorkflowDefinition,
     getTaskDefinition,
