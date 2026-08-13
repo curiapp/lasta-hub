@@ -1,0 +1,14 @@
+{
+  "name": "workflow-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Workflow-first curriculum development prototype for Lasta Hub.",
+  "scripts": {
+    "dev": "node server/server.mjs",
+    "start": "node server/server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

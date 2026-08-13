@@ -15,7 +15,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">Internal Consultations</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="internal_consult.open()">
       Start Internal Consultations
     </button>
@@ -31,12 +31,12 @@
   <card title="programme draft document " [descriptions]="
   [
     `Wil Component ${internalConsultations?.extraData['includesWilComponent']?'Included':'Excluded'}`,
-    `Recommended To: ${internalConsultations?.extraData['recommendedTo']?.join(' ')}`,
-    'Date : ' + (internalConsultations?.extraData['date'] | date)
+    `Recommended To: ${$safeNavigationMigration(internalConsultations?.extraData['recommendedTo']?.join(' '))}`,
+    'Date : ' + ($safeNavigationMigration(internalConsultations?.extraData['date']) | date)
   ]
   ">
     <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders Curriculum Programme Draft document',
-      id: internalConsultations?.extraData['draftedProgrammeFile']}" />
+      id: $safeNavigationMigration(internalConsultations?.extraData['draftedProgrammeFile'])}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">Programme Draft document not submitted</p>
@@ -52,7 +52,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between">
     <h2 class="text-xl md:text-2xl capitalize">ADSTLT Review</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="adstlt_review.open()">
       ADS-TLT Review
     </button>
@@ -66,11 +66,11 @@
   @if(adstltReview?.stepName){
   <card title=" ADSTLT Support Letter/Recommendations document" [descriptions]="
     [
-      'Decision : '+ adstltReview?.extraData['decision'],
+      'Decision : '+ $safeNavigationMigration(adstltReview?.extraData['decision']),
       'Date : ' + (adstltReview['date'] | date)
     ]">
     <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders ADSTLT Support Letter/Recommendations document',
-      id: adstltReview?.extraData['reviewFile']}" />
+      id: $safeNavigationMigration(adstltReview?.extraData['reviewFile'])}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">ADSTLT Support Letter/Recommendations document not submitted</p>
@@ -86,7 +86,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center">
     <h2 class="text-xl md:text-2xl capitalize">CE Review</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="ce_review.open()">
       CE Review
     </button>
@@ -99,12 +99,12 @@
 
   @if(ceuReview?.stepName){
   <card title=" CEU Support Letter/Recommendations document" [descriptions]="[
-      'Decision : '+ ceuReview?.extraData['decision'],
+      'Decision : '+ $safeNavigationMigration(ceuReview?.extraData['decision']),
       'Date : ' + (ceuReview['date'] | date)
       ]">
 
     <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders CEU Support Letter/Recommendations document',
-      id: ceuReview?.extraData['reviewFile']}" />
+      id: $safeNavigationMigration(ceuReview?.extraData['reviewFile'])}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">CEU Support Letter/Recommendations document not submitted</p>
@@ -120,7 +120,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center gap-2 flex-wrap">
     <h2 class="text-xl md:text-2xl capitalize">PDQA Recommendation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="pdqa_review.open()">
       PDQA Recommendation
     </button>
@@ -133,11 +133,11 @@
 
   @if(pdqaRecommend?.stepName){
   <card title=" PDQA Support Letter/Recommendations document" [descriptions]="[
-      'Decision : '+ pdqaRecommend?.extraData['decision'],
+      'Decision : '+ $safeNavigationMigration(pdqaRecommend?.extraData['decision']),
       'Date : ' + (pdqaRecommend['date'] | date)
       ]">
     <action-buttons [actions]="['download']" [target]="{name:'Internal Stakeholders PDQA Support Letter/Recommendations document',
-      id: pdqaRecommend?.extraData['reviewFile']}" />
+      id: $safeNavigationMigration(pdqaRecommend?.extraData['reviewFile'])}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">PDQA Support Letter/Recommendations document not submitted</p>

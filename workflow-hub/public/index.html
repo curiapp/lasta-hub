@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lasta Workflow Hub</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <img src="/workflow-mark.svg" alt="" class="brand-mark">
+          <div>
+            <p class="eyebrow">Lasta Hub</p>
+            <h1>Curriculum Workflow</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <label class="role-picker">
+            <span>Role</span>
+            <select id="roleSelect"></select>
+          </label>
+          <button id="refreshButton" class="icon-button" type="button" title="Refresh">R</button>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Workspace">
+        <button class="tab is-active" data-view="work" type="button">Work</button>
+        <button class="tab" data-view="definition" type="button">Definition</button>
+        <button class="tab" data-view="audit" type="button">Audit</button>
+      </nav>
+
+      <main id="app"></main>
+    </div>
+
+    <dialog id="taskDialog" class="dialog">
+      <form id="taskForm" method="dialog">
+        <div class="dialog-head">
+          <div>
+            <p id="dialogStage" class="eyebrow"></p>
+            <h2 id="dialogTitle"></h2>
+          </div>
+          <button class="icon-button" type="button" id="closeDialogButton" title="Close">X</button>
+        </div>
+        <div id="taskFields" class="form-grid"></div>
+        <div id="artifactFields" class="artifact-form"></div>
+        <div class="dialog-actions">
+          <button type="button" id="cancelTaskButton" class="ghost-button">Cancel</button>
+          <button type="submit" class="primary-button">Submit</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

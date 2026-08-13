@@ -6,7 +6,7 @@
 
     <div class="mt-3">
       <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
-        [disabled]="fileUpload?.uploader?.queue?.length < 1">
+        [disabled]="$safeNavigationMigration(fileUpload?.uploader?.queue?.length) < 1">
         Submit
         <span class="material-symbols-rounded">
           cloud_upload

@@ -1,0 +1,11 @@
+- Build a UI to define Workflow Defination 
+- Use JSON editor for the txt version of the defination
+- Verify Workflow def aligns with Business Requirements (Include last update from the last meeting)
+- Work on file upload module including storing all changes of the file. 
+- Updating step details or attachments (we need to think about rules about completed changes)
+- Change the project to align with role setup (coordinator, pdqa, adslt, dean )
+- improve notification functionality email and inbuild.
+
+- think about workflow version 
+- Change from a JSON to database
+- Change UI display on Stages to only show Tasks for the selected Stage

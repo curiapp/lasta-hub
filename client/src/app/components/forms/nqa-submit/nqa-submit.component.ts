@@ -19,5 +19,4 @@ export class NqaSubmitComponent {
   onUpload() {
     this.fileUpload.onUpload({ submissionType: this.model.type ? "initial-submission" : "resubmission" });
   }
-
 }

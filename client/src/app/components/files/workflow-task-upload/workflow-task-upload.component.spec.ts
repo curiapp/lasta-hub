@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StartNeedAnalysisComponent } from './start-need-analysis.component';
+import { WorkflowTaskUploadComponent } from './workflow-task-upload.component';
 
-describe('StartNeedAnalysisComponent', () => {
-  let component: StartNeedAnalysisComponent;
-  let fixture: ComponentFixture<StartNeedAnalysisComponent>;
+describe('WorkflowTaskUploadComponent', () => {
+  let component: WorkflowTaskUploadComponent;
+  let fixture: ComponentFixture<WorkflowTaskUploadComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StartNeedAnalysisComponent]
+      imports: [WorkflowTaskUploadComponent]
     })
       .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StartNeedAnalysisComponent);
+    fixture = TestBed.createComponent(WorkflowTaskUploadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

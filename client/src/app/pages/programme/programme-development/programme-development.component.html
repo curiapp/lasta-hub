@@ -28,7 +28,7 @@
 
   <div class="flex justify-between">
     <h2 class="text-lg md:text-xl capitalize">Curriculum Development Coordinators</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="appoint_cdc.open()">
       Appoint CDC
     </button>
@@ -56,7 +56,7 @@
 
   <div class="flex justify-between">
     <h2 class="text-lg md:text-xl capitalize">Programme Advisory Committee</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="appoint_pac.open()">
       Appoint PAC
     </button>
@@ -96,7 +96,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center">
     <h2 class="text-xl md:text-2xl capitalize">Curriculum Drafting</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="draft_pdqa.open()">
       Submit Draft to PDQA
     </button>
@@ -107,10 +107,10 @@
   </p>
 
   @if(currDraft?.extraData['draftFile']){
-  <card title="Curriculum Draft" [descriptions]="['Submitted : ' + (currDraft?.date | date)]">
+  <card title="Curriculum Draft" [descriptions]="['Submitted : ' + ($safeNavigationMigration(currDraft?.date) | date)]">
     <action-buttons [actions]="['download']"
     [target]="{name:'Curriculum Draft document',
-      id: currDraft?.extraData['draftFile']}" />
+      id: $safeNavigationMigration(currDraft?.extraData['draftFile'])}" />
   </card>
   }@else{
   <p class="text-sm text-primary font-semibold">Curriculum Draft not submitted</p>
@@ -127,7 +127,7 @@
 <div class="space-y-4 my-6">
   <div class="flex justify-between items-center">
     <h2 class="text-xl md:text-2xl capitalize">Draft Curriculum & PDQA Recommendation</h2>
-    <button *canEdit="programme?.initiator" class="btn btn-sm font-normal btn-secondary text-primary"
+    <button *canEdit="$safeNavigationMigration(programme?.initiator)" class="btn btn-sm font-normal btn-secondary text-primary"
       (click)="pdqa_approval.open()">
       Recommendations
     </button>
@@ -139,10 +139,10 @@
 
   @if(pdqaRecommend?.extraData['draftFile']){
   <card title="Recommendation"
-    [descriptions]="['Decision : '+pdqaRecommend?.extraData?.decision  ,'Submitted : ' + (pdqaRecommend?.date | date)]">
+    [descriptions]="['Decision : '+$safeNavigationMigration(pdqaRecommend?.extraData?.decision)  ,'Submitted : ' + ($safeNavigationMigration(pdqaRecommend?.date) | date)]">
     <action-buttons [actions]="['download']"
     [target]="{name:'Curriculum Draft and PDQA Recommendation document',
-      id: pdqaRecommend?.extraData['draftFile']}" />
+      id: $safeNavigationMigration(pdqaRecommend?.extraData['draftFile'])}" />
     </card>
   }@else{
   <p class="text-sm text-primary font-semibold">Curriculum Draft not submitted</p>

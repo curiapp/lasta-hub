@@ -1,20 +1,31 @@
-<dialog id="confirm_modal" class="modal">
-  <div class="modal-box max-w-sm">
+<dialog #confirmDialog class="modal" (close)="closed()">
+  <div class="modal-box max-w-sm border border-base-300 p-0 shadow-xl">
     <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">
+        <span class="material-symbols-rounded text-base">close</span>
+      </button>
     </form>
 
-    <h3 class="text-lg font-semibold">Confirm to {{action}}</h3>
-
-    <div class="p">
-      <p class="text-xs">{{message}}</p>
+    <div class="flex items-start gap-3 border-b border-base-300 p-4">
+      <span class="grid size-9 place-items-center rounded bg-base-200"
+        [class.text-error]="action === 'delete'"
+        [class.text-success]="action === 'accept'">
+        <span class="material-symbols-rounded text-xl">{{ icon }}</span>
+      </span>
+      <div class="min-w-0">
+        <h3 class="text-base font-bold">{{ title }}</h3>
+        <p class="mt-1 text-xs leading-relaxed text-base-content/65">{{ message }}</p>
+      </div>
     </div>
 
-    <div class="modal-action">
+    <div class="modal-action m-0 bg-base-200/40 p-3">
       <form method="dialog">
-        <button class="btn btn-sm btn-outline">Cancel</button>
+        <button class="btn btn-sm btn-ghost border border-base-300 bg-base-100">Cancel</button>
       </form>
-      <button class="btn btn-sm btn-accent capitalize" (click)="confirm()">{{action}}</button>
+      <button class="btn btn-sm capitalize" [class.btn-error]="action === 'delete'"
+        [class.btn-primary]="action !== 'delete'" (click)="confirm()">
+        {{ action }}
+      </button>
     </div>
   </div>
 </dialog>

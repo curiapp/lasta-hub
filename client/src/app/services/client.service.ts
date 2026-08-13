@@ -14,6 +14,12 @@ export class ClientService {
   http = inject(HttpClient);
   apollo = inject(Apollo);
 
+  get<T>(path: string): Observable<T> {
+    return this.http.get<T>(`${environment.apiUrl}/${path}`).pipe(
+      catchError(handleError)
+    )
+  }
+
   getAll<T>(path: string): Observable<T[]> {
     return this.http.get<T[]>(`${environment.apiUrl}/${path}`, {
       headers: {
@@ -32,6 +38,12 @@ export class ClientService {
     }).pipe(
       catchError(handleError)
     )
+  }
+
+  put<T>(path: string, data: T): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/${path}`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(handleError))
   }
 
   downloadFile<T>(path: string): Observable<T[]> {

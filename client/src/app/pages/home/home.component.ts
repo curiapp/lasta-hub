@@ -1,27 +1,27 @@
 import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { StartNeedAnalysisComponent } from "../../components/forms/start-need-analysis/start-need-analysis.component";
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
+import { CreateProgrammeComponent } from "../../components/forms/create-programme/create-programme.component";
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
 import { EventsComponent } from "../../components/page/events/events.component";
 import { CanEditDirective } from '../../directives/can-edit.directive';
 import { getGreeting } from '../../functions';
-import { GET_PROGRAMMES } from '../../graphql/graphql.queries';
-import { LoadingService } from '../../services/loading.service';
-import { Programme, User } from '../../types';
+import { V2_GET_BOOTSTRAP, V2_GET_PROGRAMMES } from '../../graphql/graphql.queries.v2';
 import { programmeDevIcons } from '../../static';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
-import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
+import { Programme, User } from '../../types';
+import { WorkflowDashboard } from '../../types/programme-workflow';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, StartNeedAnalysisComponent, EventsComponent, CanEditDirective, ActionButtonsComponent]
+  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, EventsComponent, CanEditDirective, ActionButtonsComponent],
 })
 export class HomeComponent implements OnInit {
   currentUser: User;
@@ -29,25 +29,42 @@ export class HomeComponent implements OnInit {
   greetingMessage: string = '';
   programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
   showAll = false;
-  _loading = inject(LoadingService);
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
   programmes = signal<Programme[]>([]);
+  programmesLoading = signal(true);
+  dashboard = signal<WorkflowDashboard>({
+    programmeCount: 0,
+    activeTaskCount: 0,
+    completedTaskCount: 0,
+    processCounts: {},
+    stageCount: 0,
+    taskDefinitionCount: 0,
+  });
 
   searchText = signal("");
   limit = 50;
 
   private queryRef = this.apollo.watchQuery<any>({
-    query: GET_PROGRAMMES,
+    query: V2_GET_PROGRAMMES,
     variables: { searchText: '', offset: 0, limit: this.limit },
+  });
+  private dashboardQueryRef = this.apollo.watchQuery<{ bootstrap: { dashboard: WorkflowDashboard } }>({
+    query: V2_GET_BOOTSTRAP,
+    fetchPolicy: 'network-only',
   });
 
   queryResult = toSignal(this.queryRef.valueChanges);
 
   constructor(private viewContainer: ViewContainerRef) {
     this.queryRef.valueChanges.subscribe((result: any) => {
-      this._loading.isLoading.set(result.loading);
+      this.programmesLoading.set(result.loading);
       this.programmes.set(result?.data?.programmes || []);
+    });
+    this.dashboardQueryRef.valueChanges.subscribe((result) => {
+      if (result.data?.bootstrap?.dashboard) {
+        this.dashboard.set(result.data.bootstrap.dashboard as WorkflowDashboard);
+      }
     });
 
     toObservable(this.searchText).pipe(
@@ -56,12 +73,16 @@ export class HomeComponent implements OnInit {
     ).subscribe(searchText => {
       this.queryRef.refetch({ searchText, offset: 0 });
     });
-
   }
 
   onSearch(event: Event) {
     const val = (event.target as HTMLInputElement).value;
     this.searchText.set(val);
+  }
+
+  clearSearch() {
+    this.searchText.set('');
+    this.queryRef.refetch({ searchText: '', offset: 0 });
   }
 
   loadMore() {
@@ -129,9 +150,6 @@ export class HomeComponent implements OnInit {
 
     this.randomDelays = this.programmeDevIcons.map(() => Math.random() * 5);
     this.randomDurations = this.programmeDevIcons.map(() => 6 + Math.random() * 4);
-
   }
-
-
 
 }

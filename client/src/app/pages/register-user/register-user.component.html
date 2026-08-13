@@ -1,0 +1,63 @@
+<main class="min-h-[calc(100vh-7rem)] bg-base-200 p-3 lg:p-5">
+  <section class="mx-auto grid max-w-3xl gap-4">
+    <header>
+      <p class="text-xs font-bold uppercase text-base-content/50">Testing utility</p>
+      <h1 class="text-2xl font-bold">Create App User</h1>
+      <p class="mt-1 text-sm text-base-content/60">
+        Internal form for creating test users during app validation.
+      </p>
+    </header>
+
+    <form #registerForm="ngForm" class="grid gap-4 border border-base-300 bg-base-100 p-4 shadow-sm"
+      (ngSubmit)="createUser()">
+      <div class="grid gap-4 md:grid-cols-2">
+        <label class="form-control">
+          <span class="label-text mb-1 text-xs font-semibold">First name</span>
+          <input class="input input-bordered" name="firstName" required [(ngModel)]="model.firstName">
+        </label>
+        <label class="form-control">
+          <span class="label-text mb-1 text-xs font-semibold">Last name</span>
+          <input class="input input-bordered" name="lastName" required [(ngModel)]="model.lastName">
+        </label>
+      </div>
+
+      <label class="form-control">
+        <span class="label-text mb-1 text-xs font-semibold">Email</span>
+        <input class="input input-bordered" type="email" name="email" required [(ngModel)]="model.email">
+      </label>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <label class="form-control">
+          <span class="label-text mb-1 text-xs font-semibold">Password</span>
+          <input class="input input-bordered" type="password" name="password" required [(ngModel)]="model.password">
+        </label>
+        <label class="form-control">
+          <span class="label-text mb-1 text-xs font-semibold">Role</span>
+          <select class="select select-bordered" name="role" required [(ngModel)]="model.role">
+            @for (role of roles; track role) {
+              <option [value]="role">{{ role }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <label class="form-control">
+        <span class="label-text mb-1 text-xs font-semibold">Department ID</span>
+        <input class="input input-bordered font-mono text-sm" name="department" required
+          placeholder="Paste workflow department UUID" [(ngModel)]="model.department">
+      </label>
+
+      <footer class="flex justify-end border-t border-base-300 pt-4">
+        <button class="btn btn-primary" type="submit" [disabled]="saving || registerForm.invalid">
+          @if (saving) {
+            <span class="loading loading-spinner"></span>
+            Creating
+          } @else {
+            <span class="material-symbols-rounded">person_add</span>
+            Create user
+          }
+        </button>
+      </footer>
+    </form>
+  </section>
+</main>
