@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { Router } from "express";
-import { db } from "../../db";
+import { db } from "../db";
 
 const healthRouter = Router();
 

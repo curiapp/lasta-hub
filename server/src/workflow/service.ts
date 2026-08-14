@@ -1,20 +1,20 @@
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import fs from "fs";
-import { db } from "../../db";
+import { db } from "../db";
 import {
-    workflowArtifacts,
-    workflowAuditEvents,
-    workflowDefinitions,
-    workflowDefinitionVersions,
-    workflowDepartments,
-    workflowFaculty,
-    workflowNotificationRecipients,
-    workflowNotifications,
-    workflowProcessInstances,
-    workflowProgrammes,
-    workflowTaskInstances,
-    workflowUsers,
-} from "../../db/schema";
+    attachmentsInWorkflow as workflowArtifacts,
+    auditEventsInWorkflow as workflowAuditEvents,
+    definitionsInWorkflow as workflowDefinitions,
+    definitionVersionsInWorkflow as workflowDefinitionVersions,
+    departments as workflowDepartments,
+    faculty as workflowFaculty,
+    notificationRecipients as workflowNotificationRecipients,
+    notifications as workflowNotifications,
+    processInstancesInWorkflow as workflowProcessInstances,
+    programmes as workflowProgrammes,
+    taskInstancesInWorkflow as workflowTaskInstances,
+    users as workflowUsers,
+} from "../db/schema";
 import { defaultWorkflowDefinition, getTaskDefinition, selectTransition, validateCompletion, validateDefinition } from "./definition";
 import { WorkflowError } from "./errors";
 import type { CompleteTaskInput, WorkflowDefinition, WorkflowTaskDefinition } from "./types";

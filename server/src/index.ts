@@ -1,23 +1,11 @@
 import cors from "cors";
 import "dotenv/config";
-import express, { type Request, type Response, type NextFunction, type ErrorRequestHandler, type Router } from "express";
+import express from "express";
 import fs from "fs";
 import multer from "multer";
 import path from "path";
 import { v7 as uuid } from "uuid";
-import consultationRoutes from "./routes/consultations";
-import curriculumDevelopmentRoutes from "./routes/curriculum-development";
-import eventsRoutes from "./routes/events";
-import fetchRoutes from "./routes/fetch-queries";
-import graphqlRoutes from "./routes/graphql";
-import institutionalBodiesRoutes from "./routes/institutional-bodies";
-import needAnalysisRoutes from "./routes/need-analysis";
-import notificationsRoutes from "./routes/notifications";
-import programmeRoutes from "./routes/programme";
-import qualificationsRoutes from "./routes/qualifications";
-import reviewsRoutes from "./routes/reviews";
-import usersRoutes from "./routes/users";
-import createV2Router from "./v2/router";
+import createRouter from "./router";
 
 interface UploadConfig {
     limits: multer.Options["limits"];
@@ -73,24 +61,7 @@ app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 
 const PORT: string | number = process.env.PORT || 3000;
-const api: Router = express.Router();
-usersRoutes(api);
-eventsRoutes(api);
-programmeRoutes(api);
-notificationsRoutes(api);
-fetchRoutes(api, upload);
-reviewsRoutes(api, upload);
-needAnalysisRoutes(api, upload);
-consultationRoutes(api, upload);
-qualificationsRoutes(api, upload);
-institutionalBodiesRoutes(api, upload);
-curriculumDevelopmentRoutes(api, upload);
-graphqlRoutes(api);
-
-app.use("/api/v2", createV2Router(upload));
-
-app.use("/api/v2", api);
-app.use("/api", api);
+app.use("/api", createRouter(upload));
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

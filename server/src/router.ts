@@ -3,6 +3,7 @@ import type { Multer } from "multer";
 import healthRouter from "./routes/health";
 import graphqlRouter from "./routes/graphql";
 import workflowRouter from "./routes/workflow";
+import usersRouter from "./routes/users";
 import { WorkflowError } from "./workflow/errors";
 
 interface ApiInfo {
@@ -17,7 +18,7 @@ interface WorkflowErrorLike extends Error {
 
 type WorkflowRouterFactory = (upload: Multer) => Router;
 
-export default function createV2Router(upload: Multer): Router {
+export default function createRouter(upload: Multer): Router {
     const v2Router: Router = Router();
 
 v2Router.get("/", (_req: Request, res: Response) => {
@@ -31,6 +32,7 @@ v2Router.get("/", (_req: Request, res: Response) => {
 });
 
 v2Router.use("/health", healthRouter);
+v2Router.use(usersRouter);
 v2Router.use(graphqlRouter);
 v2Router.use(workflowRouter(upload));
 
