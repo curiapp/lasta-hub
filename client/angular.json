@@ -25,6 +25,11 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "css",
+            "security": {
+              "allowedHosts": [
+                "cd.nust.na"
+              ]
+            },
             "assets": [
               {
                 "glob": "**/*",
