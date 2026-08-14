@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, timestamp, index, foreignKey, unique, boolean, smallint, jsonb, bigint, check, pgSchema } from "drizzle-orm/pg-core"
+import { pgTable, uuid, varchar, text, timestamp, index, foreignKey, unique, boolean, smallint, jsonb, pgSchema, bigint, check } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const workflow = pgSchema("workflow");
@@ -23,12 +23,6 @@ export const notifications = pgTable("notifications", {
 	index("idx_notification_created").using("btree", table.createdAt.asc().nullsLast().op("timestamp_ops")),
 ]);
 
-export const events = pgTable("events", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	title: text(),
-	date: timestamp({ mode: 'string' }),
-});
-
 export const notificationRecipients = pgTable("notification_recipients", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
 	notificationId: uuid("notification_id"),
@@ -36,7 +30,7 @@ export const notificationRecipients = pgTable("notification_recipients", {
 	isRead: boolean("is_read").default(false),
 	readAt: timestamp("read_at", { mode: 'string' }),
 }, (table) => [
-	index("idx_notification_recipient").using("btree", table.recipientId.asc().nullsLast().op("uuid_ops"), table.isRead.asc().nullsLast().op("bool_ops")),
+	index("idx_notification_recipient").using("btree", table.recipientId.asc().nullsLast().op("bool_ops"), table.isRead.asc().nullsLast().op("uuid_ops")),
 	foreignKey({
 			columns: [table.notificationId],
 			foreignColumns: [notifications.id],
@@ -48,16 +42,6 @@ export const notificationRecipients = pgTable("notification_recipients", {
 			name: "notification_recipients_recipient_id_fkey"
 		}).onDelete("cascade"),
 	unique("notification_recipients_notification_id_recipient_id_key").on(table.recipientId, table.notificationId),
-]);
-
-export const phases = pgTable("phases", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	name: varchar({ length: 50 }).notNull(),
-	orderIndex: smallint("order_index").notNull(),
-	description: varchar({ length: 150 }),
-	slug: text(),
-}, (table) => [
-	unique("phases_slug_unique").on(table.slug),
 ]);
 
 export const departments = pgTable("departments", {
@@ -73,108 +57,6 @@ export const departments = pgTable("departments", {
 			foreignColumns: [faculty.id],
 			name: "fk_department_faculty"
 		}).onDelete("set null"),
-]);
-
-export const programmePhaseSteps = pgTable("programme_phase_steps", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programmePhaseId: uuid("programme_phase_id"),
-	phaseStepId: uuid("phase_step_id"),
-	decision: text(),
-	notes: text(),
-	completed: boolean().default(false),
-	completedAt: timestamp("completed_at", { withTimezone: true, mode: 'string' }),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
-	extraData: jsonb("extra_data"),
-}, (table) => [
-	foreignKey({
-			columns: [table.phaseStepId],
-			foreignColumns: [phaseSteps.id],
-			name: "programme_phase_steps_phase_step_id_fkey"
-		}),
-	foreignKey({
-			columns: [table.programmePhaseId],
-			foreignColumns: [programmePhases.id],
-			name: "programme_phase_steps_programme_phase_id_fkey"
-		}).onDelete("cascade"),
-	unique("program_phase_steps_program_phase_id_phase_step_id_key").on(table.programmePhaseId, table.phaseStepId),
-]);
-
-export const attachments = pgTable("attachments", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programmePhaseStepId: uuid("programme_phase_step_id").notNull(),
-	path: text().notNull(),
-	uploadedBy: uuid("uploaded_by"),
-	uploadedAt: timestamp("uploaded_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	mimeType: text("mime_type"),
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	size: bigint({ mode: "number" }),
-}, (table) => [
-	foreignKey({
-			columns: [table.programmePhaseStepId],
-			foreignColumns: [programmePhaseSteps.id],
-			name: "attachments_programme_phase_step_id_fkey"
-		}),
-	foreignKey({
-			columns: [table.uploadedBy],
-			foreignColumns: [users.id],
-			name: "attachments_uploaded_by_fkey"
-		}),
-]);
-
-export const phaseSteps = pgTable("phase_steps", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	name: varchar({ length: 50 }).notNull(),
-	description: varchar({ length: 150 }),
-	orderIndex: smallint("order_index").notNull(),
-	phaseId: uuid("phase_id").notNull(),
-	slug: text(),
-}, (table) => [
-	foreignKey({
-			columns: [table.phaseId],
-			foreignColumns: [phases.id],
-			name: "phase_steps_phase_id_fkey"
-		}),
-	unique("phase_steps_slug_unique").on(table.slug),
-]);
-
-export const programmePhases = pgTable("programme_phases", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programmeId: uuid("programme_id").notNull(),
-	phaseId: uuid("phase_id").notNull(),
-	status: text().default('not_started').notNull(),
-	startedAt: timestamp("started_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	completedAt: timestamp("completed_at", { withTimezone: true, mode: 'string' }),
-}, (table) => [
-	foreignKey({
-			columns: [table.programmeId],
-			foreignColumns: [programmes.id],
-			name: "program_phases_program_id_fkey"
-		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.phaseId],
-			foreignColumns: [phases.id],
-			name: "programme_phases_phase_id_fkey"
-		}),
-	unique("program_phases_program_id_phase_id_key").on(table.programmeId, table.phaseId),
-	check("program_phases_status_check", sql`status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'completed'::text])`),
-]);
-
-export const users = pgTable("users", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	adUserId: uuid("ad_user_id"),
-	email: text().notNull(),
-	displayName: text("display_name"),
-	role: text().notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }),
-	password: text(),
-	firstName: text("first_name"),
-	lastName: text("last_name"),
-	authToken: text(),
-	department: uuid(),
-}, (table) => [
-	unique("users_ad_user_id_key").on(table.adUserId),
-	unique("users_email_key").on(table.email),
 ]);
 
 export const programmes = pgTable("programmes", {
@@ -197,79 +79,7 @@ export const programmes = pgTable("programmes", {
 		}),
 ]);
 
-export const programmesInWorkflow = workflow.table("programmes", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	title: varchar({ length: 100 }).notNull(),
-	code: varchar({ length: 20 }).notNull(),
-	department: uuid().notNull(),
-	faculty: uuid().notNull(),
-	level: smallint().notNull(),
-	status: text().default('draft').notNull(),
-	initiator: uuid().notNull(),
-	coordinators: uuid().array(),
-	advisories: jsonb(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	foreignKey({
-			columns: [table.initiator],
-			foreignColumns: [usersInWorkflow.id],
-			name: "workflow_programmes_initiator_fkey"
-		}),
-]);
-
-export const usersInWorkflow = workflow.table("users", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	adUserId: uuid("ad_user_id"),
-	email: text().notNull(),
-	displayName: text("display_name"),
-	role: text().notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }),
-	password: text(),
-	firstName: text("first_name"),
-	lastName: text("last_name"),
-	authToken: text(),
-	department: uuid(),
-	emailNotificationsEnabled: boolean("email_notifications_enabled").default(false).notNull(),
-}, (table) => [
-	unique("workflow_users_ad_user_id_key").on(table.adUserId),
-	unique("workflow_users_email_key").on(table.email),
-]);
-
-export const facultyInWorkflow = workflow.table("faculty", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	name: varchar({ length: 150 }).notNull(),
-	description: text(),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-});
-
-export const departmentsInWorkflow = workflow.table("departments", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	facultyId: uuid("faculty_id"),
-	name: varchar({ length: 150 }).notNull(),
-	description: text(),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-}, (table) => [
-	foreignKey({
-			columns: [table.facultyId],
-			foreignColumns: [facultyInWorkflow.id],
-			name: "workflow_departments_faculty_fkey"
-		}).onDelete("set null"),
-]);
-
-export const phasesInWorkflow = workflow.table("phases", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	name: varchar({ length: 50 }).notNull(),
-	orderIndex: smallint("order_index").notNull(),
-	description: varchar({ length: 150 }),
-	slug: text(),
-}, (table) => [
-	unique("phases_slug_key").on(table.slug),
-]);
-
-export const artifactsInWorkflow = workflow.table("artifacts", {
+export const attachmentsInWorkflow = workflow.table("attachments", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
 	programmeId: uuid("programme_id").notNull(),
 	processId: uuid("process_id").notNull(),
@@ -286,49 +96,28 @@ export const artifactsInWorkflow = workflow.table("artifacts", {
 	status: text().default('submitted').notNull(),
 	submittedAt: timestamp("submitted_at", { withTimezone: true, mode: 'string' }),
 }, (table) => [
-	index("idx_workflow_artifacts_programme").using("btree", table.programmeId.asc().nullsLast().op("uuid_ops")),
-	index("idx_workflow_artifacts_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
-	index("idx_workflow_artifacts_task").using("btree", table.taskId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_attachments_programme").using("btree", table.programmeId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_attachments_task").using("btree", table.taskId.asc().nullsLast().op("uuid_ops")),
+	foreignKey({
+			columns: [table.programmeId],
+			foreignColumns: [programmes.id],
+			name: "workflow_attachments_programme_id_fkey"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.createdBy],
+			foreignColumns: [users.id],
+			name: "workflow_attachments_created_by_fkey"
+		}).onDelete("set null"),
 	foreignKey({
 			columns: [table.processId],
 			foreignColumns: [processInstancesInWorkflow.id],
-			name: "workflow_artifacts_process_id_fkey"
+			name: "workflow_attachments_process_id_fkey"
 		}).onDelete("cascade"),
 	foreignKey({
 			columns: [table.taskId],
 			foreignColumns: [taskInstancesInWorkflow.id],
-			name: "workflow_artifacts_task_id_fkey"
+			name: "workflow_attachments_task_id_fkey"
 		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.programmeId],
-			foreignColumns: [programmesInWorkflow.id],
-			name: "workflow_artifacts_programme_id_fkey"
-		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.createdBy],
-			foreignColumns: [usersInWorkflow.id],
-			name: "workflow_artifacts_created_by_fkey"
-		}).onDelete("set null"),
-	check("workflow_artifacts_status_check", sql`status = ANY (ARRAY['draft'::text, 'submitted'::text])`),
-]);
-
-export const definitionsInWorkflow = workflow.table("definitions", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	slug: text().notNull(),
-	name: text().notNull(),
-	description: text(),
-	status: text().default('draft').notNull(),
-	createdBy: uuid("created_by"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	foreignKey({
-			columns: [table.createdBy],
-			foreignColumns: [usersInWorkflow.id],
-			name: "workflow_definitions_created_by_fkey"
-		}).onDelete("set null"),
-	unique("workflow_definitions_slug_key").on(table.slug),
-	check("workflow_definitions_status_check", sql`status = ANY (ARRAY['draft'::text, 'active'::text, 'archived'::text])`),
 ]);
 
 export const definitionVersionsInWorkflow = workflow.table("definition_versions", {
@@ -350,11 +139,10 @@ export const definitionVersionsInWorkflow = workflow.table("definition_versions"
 		}).onDelete("cascade"),
 	foreignKey({
 			columns: [table.createdBy],
-			foreignColumns: [usersInWorkflow.id],
+			foreignColumns: [users.id],
 			name: "workflow_definition_versions_created_by_fkey"
 		}).onDelete("set null"),
 	unique("workflow_definition_versions_definition_version_key").on(table.version, table.definitionId),
-	check("workflow_definition_versions_status_check", sql`status = ANY (ARRAY['draft'::text, 'published'::text, 'retired'::text])`),
 ]);
 
 export const processInstancesInWorkflow = workflow.table("process_instances", {
@@ -376,15 +164,14 @@ export const processInstancesInWorkflow = workflow.table("process_instances", {
 		}),
 	foreignKey({
 			columns: [table.programmeId],
-			foreignColumns: [programmesInWorkflow.id],
+			foreignColumns: [programmes.id],
 			name: "workflow_process_instances_programme_id_fkey"
 		}).onDelete("cascade"),
 	foreignKey({
 			columns: [table.startedBy],
-			foreignColumns: [usersInWorkflow.id],
+			foreignColumns: [users.id],
 			name: "workflow_process_instances_started_by_fkey"
 		}).onDelete("set null"),
-	check("workflow_process_instances_status_check", sql`status = ANY (ARRAY['running'::text, 'completed'::text, 'rejected'::text, 'stopped'::text, 'cancelled'::text])`),
 ]);
 
 export const taskInstancesInWorkflow = workflow.table("task_instances", {
@@ -406,8 +193,6 @@ export const taskInstancesInWorkflow = workflow.table("task_instances", {
 }, (table) => [
 	index("idx_workflow_tasks_process").using("btree", table.processId.asc().nullsLast().op("uuid_ops")),
 	index("idx_workflow_tasks_programme").using("btree", table.programmeId.asc().nullsLast().op("uuid_ops")),
-	index("idx_workflow_tasks_stage").using("btree", table.stageKey.asc().nullsLast().op("text_ops")),
-	index("idx_workflow_tasks_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
 	foreignKey({
 			columns: [table.processId],
 			foreignColumns: [processInstancesInWorkflow.id],
@@ -420,15 +205,33 @@ export const taskInstancesInWorkflow = workflow.table("task_instances", {
 		}).onDelete("set null"),
 	foreignKey({
 			columns: [table.programmeId],
-			foreignColumns: [programmesInWorkflow.id],
+			foreignColumns: [programmes.id],
 			name: "workflow_task_instances_programme_id_fkey"
 		}).onDelete("cascade"),
 	foreignKey({
 			columns: [table.completedBy],
-			foreignColumns: [usersInWorkflow.id],
+			foreignColumns: [users.id],
 			name: "workflow_task_instances_completed_by_fkey"
 		}).onDelete("set null"),
-	check("workflow_task_instances_status_check", sql`status = ANY (ARRAY['active'::text, 'completed'::text, 'cancelled'::text, 'skipped'::text])`),
+]);
+
+export const definitionsInWorkflow = workflow.table("definitions", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	slug: text().notNull(),
+	name: text().notNull(),
+	description: text(),
+	status: text().default('draft').notNull(),
+	createdBy: uuid("created_by"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.createdBy],
+			foreignColumns: [users.id],
+			name: "workflow_definitions_created_by_fkey"
+		}).onDelete("set null"),
+	unique("workflow_definitions_slug_key").on(table.slug),
+	check("workflow_definitions_status_check", sql`status = ANY (ARRAY['draft'::text, 'active'::text, 'archived'::text])`),
 ]);
 
 export const auditEventsInWorkflow = workflow.table("audit_events", {
@@ -444,8 +247,6 @@ export const auditEventsInWorkflow = workflow.table("audit_events", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
 	index("idx_workflow_audit_created").using("btree", table.createdAt.desc().nullsFirst().op("timestamptz_ops")),
-	index("idx_workflow_audit_process").using("btree", table.processId.asc().nullsLast().op("uuid_ops")),
-	index("idx_workflow_audit_programme").using("btree", table.programmeId.asc().nullsLast().op("uuid_ops")),
 	foreignKey({
 			columns: [table.processId],
 			foreignColumns: [processInstancesInWorkflow.id],
@@ -458,134 +259,31 @@ export const auditEventsInWorkflow = workflow.table("audit_events", {
 		}).onDelete("set null"),
 	foreignKey({
 			columns: [table.programmeId],
-			foreignColumns: [programmesInWorkflow.id],
+			foreignColumns: [programmes.id],
 			name: "workflow_audit_events_programme_id_fkey"
 		}).onDelete("cascade"),
 	foreignKey({
 			columns: [table.actorId],
-			foreignColumns: [usersInWorkflow.id],
+			foreignColumns: [users.id],
 			name: "workflow_audit_events_actor_id_fkey"
 		}).onDelete("set null"),
 ]);
 
-export const phaseStepsInWorkflow = workflow.table("phase_steps", {
+export const users = pgTable("users", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	name: varchar({ length: 50 }).notNull(),
-	description: varchar({ length: 150 }),
-	orderIndex: smallint("order_index").notNull(),
-	phaseId: uuid("phase_id").notNull(),
-	slug: text(),
+	adUserId: uuid("ad_user_id"),
+	email: text().notNull(),
+	displayName: text("display_name"),
+	role: text().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }),
+	password: text(),
+	firstName: text("first_name"),
+	lastName: text("last_name"),
+	authToken: text(),
+	department: uuid(),
+	emailNotificationsEnabled: boolean("email_notifications_enabled").default(false).notNull(),
 }, (table) => [
-	foreignKey({
-			columns: [table.phaseId],
-			foreignColumns: [phasesInWorkflow.id],
-			name: "workflow_phase_steps_phase_fkey"
-		}),
-	unique("phase_steps_slug_key").on(table.slug),
+	unique("users_ad_user_id_key").on(table.adUserId),
+	unique("users_email_key").on(table.email),
 ]);
-
-export const programmePhasesInWorkflow = workflow.table("programme_phases", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programmeId: uuid("programme_id").notNull(),
-	phaseId: uuid("phase_id").notNull(),
-	status: text().default('not_started').notNull(),
-	startedAt: timestamp("started_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	completedAt: timestamp("completed_at", { withTimezone: true, mode: 'string' }),
-}, (table) => [
-	foreignKey({
-			columns: [table.programmeId],
-			foreignColumns: [programmesInWorkflow.id],
-			name: "workflow_programme_phases_programme_fkey"
-		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.phaseId],
-			foreignColumns: [phasesInWorkflow.id],
-			name: "workflow_programme_phases_phase_fkey"
-		}),
-	unique("programme_phases_programme_id_phase_id_key").on(table.programmeId, table.phaseId),
-	check("program_phases_status_check", sql`status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'completed'::text])`),
-]);
-
-export const programmePhaseStepsInWorkflow = workflow.table("programme_phase_steps", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programmePhaseId: uuid("programme_phase_id"),
-	phaseStepId: uuid("phase_step_id"),
-	decision: text(),
-	notes: text(),
-	completed: boolean().default(false),
-	completedAt: timestamp("completed_at", { withTimezone: true, mode: 'string' }),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
-	extraData: jsonb("extra_data"),
-}, (table) => [
-	foreignKey({
-			columns: [table.phaseStepId],
-			foreignColumns: [phaseStepsInWorkflow.id],
-			name: "workflow_programme_phase_steps_phase_step_fkey"
-		}),
-	foreignKey({
-			columns: [table.programmePhaseId],
-			foreignColumns: [programmePhasesInWorkflow.id],
-			name: "workflow_programme_phase_steps_programme_phase_fkey"
-		}).onDelete("cascade"),
-	unique("programme_phase_steps_programme_phase_id_phase_step_id_key").on(table.programmePhaseId, table.phaseStepId),
-]);
-
-export const attachmentsInWorkflow = workflow.table("attachments", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	programmePhaseStepId: uuid("programme_phase_step_id").notNull(),
-	path: text().notNull(),
-	uploadedBy: uuid("uploaded_by"),
-	uploadedAt: timestamp("uploaded_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	mimeType: text("mime_type"),
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	size: bigint({ mode: "number" }),
-}, (table) => [
-	foreignKey({
-			columns: [table.programmePhaseStepId],
-			foreignColumns: [programmePhaseStepsInWorkflow.id],
-			name: "workflow_attachments_programme_phase_step_fkey"
-		}),
-	foreignKey({
-			columns: [table.uploadedBy],
-			foreignColumns: [usersInWorkflow.id],
-			name: "workflow_attachments_uploaded_by_fkey"
-		}),
-]);
-
-export const notificationsInWorkflow = workflow.table("notifications", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	title: text().notNull(),
-	message: text().notNull(),
-	type: text(),
-	referenceId: uuid("reference_id"),
-	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
-}, (table) => [
-	index("notifications_created_at_idx").using("btree", table.createdAt.asc().nullsLast().op("timestamp_ops")),
-]);
-
-export const notificationRecipientsInWorkflow = workflow.table("notification_recipients", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	notificationId: uuid("notification_id"),
-	recipientId: uuid("recipient_id"),
-	isRead: boolean("is_read").default(false),
-	readAt: timestamp("read_at", { mode: 'string' }),
-}, (table) => [
-	index("notification_recipients_recipient_id_is_read_idx").using("btree", table.recipientId.asc().nullsLast().op("uuid_ops"), table.isRead.asc().nullsLast().op("bool_ops")),
-	foreignKey({
-			columns: [table.notificationId],
-			foreignColumns: [notificationsInWorkflow.id],
-			name: "workflow_notification_recipients_notification_fkey"
-		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.recipientId],
-			foreignColumns: [usersInWorkflow.id],
-			name: "workflow_notification_recipients_recipient_fkey"
-		}).onDelete("cascade"),
-	unique("notification_recipients_recipient_id_notification_id_key").on(table.recipientId, table.notificationId),
-]);
-
-export const eventsInWorkflow = workflow.table("events", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	title: text(),
-	date: timestamp({ mode: 'string' }),
-});

@@ -1,151 +1,190 @@
-import { db } from "@/db";
-import { departments, events, faculty, notifications, programmes, users } from "@/db/schema";
-import { getUserNotifications } from "@/helpers/db-queries";
-import cors from "cors";
-import { eq, ilike, sql } from "drizzle-orm";
+import { and, asc, eq, ilike, sql } from "drizzle-orm";
 import { Router } from "express";
-import { buildSchema } from "graphql";
+import { buildSchema, GraphQLScalarType, Kind } from "graphql";
 import { createHandler } from "graphql-http/lib/use/express";
 import { ruruHTML } from "ruru/server";
+import { db } from "../db";
+import {
+    departments as workflowDepartments,
+    faculty as workflowFaculty,
+    programmes as workflowProgrammes,
+    users as workflowUsers,
+} from "../db/schema";
+import {
+    completeTask,
+    createProgrammeAndStart,
+    getBootstrap,
+    getProgrammeWorkflow,
+    getPublishedDefinition,
+    listActiveTasks,
+    listUserNotifications,
+    publishDefinition,
+    startProcess,
+} from "../workflow/service";
 
 const schema = buildSchema(`
-	scalar JSON
-	type Programme {
-		id: ID
-		code: String
-		title: String
-		level: Int
-		faculty: String
-		department: String
-		initiator: ID
-		initiatorFirstName: String
-		initiatorLastName: String
-	}
-	
-	type Events{
-		id:ID
-		title:String
-		date:String
-	}
+    scalar JSON
 
-	type Notification {
-		id: ID
-		title: String
-		message: String
-		type: String
-		referenceId: String
-		createdAt: String
-		isRead: Boolean
-		programmeName: String
-	}
+    type Programme {
+        id: ID!
+        title: String!
+        code: String!
+        department: ID!
+        departmentName: String
+        faculty: ID!
+        facultyName: String
+        level: Int!
+        status: String!
+        initiator: ID!
+        initiatorFirstName: String
+        initiatorLastName: String
+        coordinators: [ID!]
+        advisories: JSON
+        createdAt: String!
+    }
 
-	type Query { 
-		events(date: String!): [Events]
-		programmes(id: String, searchText: String, offset: Int, limit: Int): [Programme]
-		programme_phase_step(programmeId:String, phaseSlug:String): JSON 
-		notifications(userId: String): [Notification]
-	}
-	
+    type Task {
+        id: ID!
+        processId: ID!
+        programmeId: ID!
+        taskKey: String!
+        stageKey: String!
+        name: String!
+        status: String!
+        ownerRoles: [String!]!
+        formData: JSON
+        decision: String
+        transitionLabel: String
+        causedByTaskId: ID
+        completedBy: ID
+        createdAt: String!
+        completedAt: String
+    }
+
+    type TaskEnvelope {
+        task: Task!
+        programme: Programme!
+    }
+
+    type Notification {
+        id: ID!
+        title: String
+        message: String
+        type: String
+        referenceId: String
+        createdAt: String
+        isRead: Boolean
+        programmeName: String
+    }
+
+    input CreateProgrammeInput {
+        title: String!
+        code: String!
+        department: ID!
+        faculty: ID!
+        level: Int!
+        initiator: ID!
+        workflowSlug: String
+        actor: JSON
+    }
+
+    type Query {
+        workflowDefinition: JSON!
+        bootstrap: JSON!
+        programmes(id: String, searchText: String, offset: Int = 0, limit: Int = 50): [Programme!]!
+        programmeWorkflow(programmeId: ID!): JSON!
+        tasks(role: String): [TaskEnvelope!]!
+        notifications(userId: String): [Notification!]!
+    }
+
+    type Mutation {
+        createProgramme(input: CreateProgrammeInput!): JSON!
+        startProcess(programmeId: ID!, actorId: ID, workflowSlug: String): JSON!
+        completeTask(taskId: ID!, input: JSON!): JSON!
+        publishWorkflowDefinition(definition: JSON!, actorId: ID): JSON!
+    }
 `);
 
+const jsonScalar = schema.getType("JSON") as GraphQLScalarType;
+Object.assign(jsonScalar, {
+    serialize: (value: unknown) => value,
+    parseValue: (value: unknown) => value,
+    parseLiteral: function parseLiteral(node) {
+        switch (node.kind) {
+            case Kind.STRING:
+            case Kind.BOOLEAN:
+                return node.value;
+            case Kind.INT:
+            case Kind.FLOAT:
+                return Number(node.value);
+            case Kind.NULL:
+                return null;
+            case Kind.LIST:
+                return node.values.map(parseLiteral);
+            case Kind.OBJECT:
+                return Object.fromEntries(node.fields.map((field) => [field.name.value, parseLiteral(field.value)]));
+            default:
+                return null;
+        }
+    },
+});
+
 const root = {
-	programmes({ id, searchText, offset, limit }) {
-		if (id) {
-			return db.select(
-				{
-					id: programmes.id,
-					code: programmes.code,
-					title: programmes.title,
-					level: programmes.level,
-					initiator: programmes.initiator,
-					initiatorFirstName: users.firstName,
-					initiatorLastName: users.lastName,
-					department: departments.name,
-					faculty: faculty.name
-				}
-			).from(programmes).where(eq(programmes.id, id))
-				.innerJoin(users, eq(users.id, programmes.initiator))
-				.innerJoin(departments, eq(programmes.department, departments.id))
-				.innerJoin(faculty, eq(programmes.faculty, faculty.id));
-		} else if (searchText) {
-			return db.select(
-				{
-					id: programmes.id,
-					code: programmes.code,
-					title: programmes.title,
-					level: programmes.level,
-					initiator: programmes.initiator,
-					initiatorFirstName: users.firstName,
-					initiatorLastName: users.lastName,
-					department: departments.name,
-					faculty: faculty.name
-				}
-			).from(programmes)
-				.innerJoin(users, eq(users.id, programmes.initiator))
-				.innerJoin(departments, eq(programmes.department, departments.id))
-				.innerJoin(faculty, eq(programmes.faculty, faculty.id))
-				.where(ilike(programmes.title, `%${searchText}%`))
-				.orderBy(programmes.title);
-		} else {
-			return db.select(
-				{
-					id: programmes.id,
-					code: programmes.code,
-					title: programmes.title,
-					level: programmes.level,
-					initiator: programmes.initiator,
-					initiatorFirstName: users.firstName,
-					initiatorLastName: users.lastName,
-					department: departments.name,
-					faculty: faculty.name
-				}
-			).from(programmes)
-				.innerJoin(users, eq(users.id, programmes.initiator))
-				.innerJoin(departments, eq(programmes.department, departments.id))
-				.innerJoin(faculty, eq(programmes.faculty, faculty.id))
-				.offset(offset)
-				.limit(limit);
-		}
-	},
-	async programme_phase_step({ programmeId, phaseSlug }) {
-		const data = await db.execute(
-			sql`SELECT fn_get_programme_phase_step(
-				${programmeId},
-				${phaseSlug}
-				) AS data`
-		);
+    workflowDefinition: () => getPublishedDefinition(),
+    bootstrap: () => getBootstrap(),
+    programmes: ({ id, searchText, offset = 0, limit = 50 }) => {
+        const filters = [];
+        if (id) filters.push(eq(workflowProgrammes.id, id));
+        if (searchText) filters.push(ilike(workflowProgrammes.title, `%${searchText}%`));
 
-		return data.rows[0]?.data
-	},
-	events({ date }) {
-		return db.select().from(events).where(eq(events.date, date))
-	},
-	notifications({ userId }) {
-		return getUserNotifications(userId);
-	}
+        return db.select({
+            id: workflowProgrammes.id,
+            title: workflowProgrammes.title,
+            code: workflowProgrammes.code,
+            department: workflowProgrammes.department,
+            departmentName: workflowDepartments.name,
+            faculty: workflowProgrammes.faculty,
+            facultyName: workflowFaculty.name,
+            level: workflowProgrammes.level,
+            status: workflowProgrammes.status,
+            initiator: workflowProgrammes.initiator,
+            initiatorFirstName: workflowUsers.firstName,
+            initiatorLastName: workflowUsers.lastName,
+            coordinators: workflowProgrammes.coordinators,
+            advisories: workflowProgrammes.advisories,
+            createdAt: workflowProgrammes.createdAt,
+        })
+            .from(workflowProgrammes)
+            .leftJoin(workflowDepartments, eq(workflowProgrammes.department, workflowDepartments.id))
+            .leftJoin(workflowFaculty, eq(workflowProgrammes.faculty, workflowFaculty.id))
+            .leftJoin(workflowUsers, eq(workflowProgrammes.initiator, workflowUsers.id))
+            .where(filters.length ? and(...filters) : undefined)
+            .orderBy(asc(workflowProgrammes.title))
+            .offset(Math.max(0, offset))
+            .limit(Math.min(Math.max(1, limit), 200));
+    },
+    programmeWorkflow: ({ programmeId }) => getProgrammeWorkflow(programmeId),
+    tasks: ({ role }) => listActiveTasks(role),
+    notifications: ({ userId }) => listUserNotifications(userId),
+    createProgramme: ({ input }) => createProgrammeAndStart(input),
+    startProcess: ({ programmeId, actorId, workflowSlug }) => startProcess(programmeId, actorId, workflowSlug),
+    completeTask: ({ taskId, input }) => completeTask(taskId, input),
+    publishWorkflowDefinition: ({ definition, actorId }) => publishDefinition(definition, actorId),
 };
 
+const graphqlRouter = Router();
 
-//all programmes
-//all phases of a programme
-//all steps in a phase of a programme
-//programmes a user is involved in
+graphqlRouter.all(
+    "/graphql",
+    createHandler({
+        schema,
+        rootValue: root,
+    }),
+);
 
-export default (app: Router) => {
-	app.all(
-		"/graphql",
-		cors({
-			origin: "http://localhost:4200",
-			credentials: true
-		}),
-		createHandler({
-			schema: schema,
-			rootValue: root,
-		})
-	);
+graphqlRouter.get("/graphql/ui", (_, res) => {
+    res.type("html");
+    res.end(ruruHTML({ endpoint: "/api/graphql" }));
+});
 
-	app.get("/", (_req, res) => {
-		res.type("html");
-		res.end(ruruHTML({ endpoint: "/graphql" }));
-	});
-};
+export default graphqlRouter;
