@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import {
-  V2_COMPLETE_TASK,
-  V2_GET_ACTIVE_TASKS,
-  V2_GET_PROGRAMME_WORKFLOW,
-  V2_START_PROCESS,
-} from '../../graphql/graphql.queries.v2';
+  COMPLETE_TASK,
+  GET_ACTIVE_TASKS,
+  GET_PROGRAMME_WORKFLOW,
+  START_PROCESS,
+} from '../../graphql/graphql.queries';
 import { AuthenticationService } from '../../services/authentication.service';
 import { ToastService } from '../../services/toast.service';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
@@ -62,7 +62,6 @@ export class ProgrammeComponent implements OnInit {
   selectedWorkflowSlug = '';
   message = '';
   messageType: 'success' | 'error' = 'success';
-  readonly defaultWorkflowSlug = 'lasta-programme-development';
   private readonly taskCompletionTransitionMs = 850;
   private taskCompletionTimer?: ReturnType<typeof setTimeout>;
 
@@ -207,7 +206,7 @@ export class ProgrammeComponent implements OnInit {
     this.loading.set(true);
 
     this.apollo.query<{ programmeWorkflow: ProgrammeWorkflowDetail }>({
-      query: V2_GET_PROGRAMME_WORKFLOW,
+      query: GET_PROGRAMME_WORKFLOW,
       variables: { programmeId },
       fetchPolicy: 'network-only',
     }).subscribe({
@@ -218,7 +217,7 @@ export class ProgrammeComponent implements OnInit {
         if (this.detail.definition) {
           this.applyDefinition(this.detail.definition);
         } else {
-          this.definitionService.get(this.defaultWorkflowSlug).subscribe({
+          this.definitionService.get().subscribe({
             next: (definition) => this.applyDefinition(definition),
           });
         }
@@ -235,11 +234,10 @@ export class ProgrammeComponent implements OnInit {
     if (!this.programme || this.starting()) return;
     this.starting.set(true);
     this.apollo.mutate({
-      mutation: V2_START_PROCESS,
+      mutation: START_PROCESS,
       variables: {
         programmeId: this.programme.id,
         actorId: this.auth.user?.id,
-        workflowSlug: this.defaultWorkflowSlug,
       },
     }).subscribe({
       next: () => {
@@ -343,7 +341,7 @@ export class ProgrammeComponent implements OnInit {
   loadInbox() {
     if (!this.currentUserRole) return;
     this.apollo.query<{ tasks: WorkflowInboxItem[] }>({
-      query: V2_GET_ACTIVE_TASKS,
+      query: GET_ACTIVE_TASKS,
       variables: { role: this.currentUserRole },
       fetchPolicy: 'network-only',
     }).subscribe({
@@ -551,7 +549,7 @@ export class ProgrammeComponent implements OnInit {
     }
 
     this.apollo.query<{ programmeWorkflow: ProgrammeWorkflowDetail }>({
-      query: V2_GET_PROGRAMME_WORKFLOW,
+      query: GET_PROGRAMME_WORKFLOW,
       variables: { programmeId },
       fetchPolicy: 'network-only',
     }).subscribe({
@@ -595,7 +593,7 @@ export class ProgrammeComponent implements OnInit {
       role: this.currentUserRole,
     };
     this.apollo.mutate({
-      mutation: V2_COMPLETE_TASK,
+      mutation: COMPLETE_TASK,
       variables: {
         taskId,
         input: {

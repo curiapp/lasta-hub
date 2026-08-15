@@ -919,7 +919,7 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
             ...(transition.notifyRoles ?? []),
             ...createdTasks.flatMap((created) => created.ownerRoles),
         ])];
-        const completedStageName = definition.stages.find((stage) => stage.id === taskDefinition.stageId)?.name;
+        const completedStageName = definition.stages?.find((stage) => stage.id === taskDefinition.stageId)?.name;
         const nextTaskNames = createdTasks.map((created) =>
             definition.tasks.find((definitionTask) => definitionTask.id === created.taskKey)?.name ?? created.taskKey,
         );

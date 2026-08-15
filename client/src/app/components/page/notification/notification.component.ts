@@ -1,6 +1,6 @@
 import { Component, inject, Input, signal } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { V2_GET_NOTIFICATIONS } from '../../../graphql/graphql.queries.v2';
+import { GET_NOTIFICATIONS } from '../../../graphql/graphql.queries';
 import { Notifications, User } from '../../../types';
 import { DatePipe } from "../../../pipes/date.pipe";
 import { InitialsPipe } from '../../../pipes/initials-pipe.pipe';
@@ -27,7 +27,7 @@ export class NotificationComponent {
     if (notification?.isRead) return;
     this.http.post('notifications/read', { id: notification.id, userId: this.user?.id }).subscribe((res) => {
       this.apollo.client.refetchQueries({
-        include: ['V2GetNotifications']
+        include: ['GetNotifications']
       });
     })
   }
@@ -35,7 +35,7 @@ export class NotificationComponent {
   markAllNotificationsAsRead() {
     this.http.post('notifications/read-all', { userId: this.user?.id }).subscribe((res) => {
       this.apollo.client.refetchQueries({
-        include: ['V2GetNotifications']
+        include: ['GetNotifications']
       });
     })
   }
@@ -43,7 +43,7 @@ export class NotificationComponent {
 
   ngOnInit() {
     this.apollo.watchQuery({
-      query: V2_GET_NOTIFICATIONS,
+      query: GET_NOTIFICATIONS,
       variables: {
         userId: this.user?.id
       }

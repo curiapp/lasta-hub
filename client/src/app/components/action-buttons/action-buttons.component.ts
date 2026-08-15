@@ -40,7 +40,7 @@ export class ActionButtonsComponent {
             this.deleting = false;
             this.toast.success(data?.message || "Item deleted successfully");
             this.apollo.client.refetchQueries({
-              include: ['V2GetProgrammes', 'V2GetBootstrap']
+              include: ['GetProgrammes', 'GetBootstrap']
             });
             if (!componentRef.hostView.destroyed) componentRef.destroy();
           },
