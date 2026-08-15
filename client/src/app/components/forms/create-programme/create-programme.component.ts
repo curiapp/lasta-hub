@@ -84,8 +84,7 @@ export class CreateProgrammeComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     this._http.post('programmes', {
-      ...this.programme,
-      workflowSlug: 'lasta-programme-development',
+      ...this.programme
     })
       .subscribe({
         next: (data) => {
@@ -93,7 +92,7 @@ export class CreateProgrammeComponent implements OnInit {
           this.toast.success(data?.message ?? "Programme created and workflow started");
           this.modalControl.close();
           this.apollo.client.refetchQueries({
-            include: ['V2GetProgrammes', 'V2GetBootstrap']
+            include: ['GetProgrammes', 'GetBootstrap']
           });
           this.codeEditedManually = false;
           this.generatedCode = "";

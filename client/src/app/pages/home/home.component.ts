@@ -9,10 +9,9 @@ import { CreateProgrammeComponent } from "../../components/forms/create-programm
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
-import { EventsComponent } from "../../components/page/events/events.component";
 import { CanEditDirective } from '../../directives/can-edit.directive';
 import { getGreeting } from '../../functions';
-import { V2_GET_BOOTSTRAP, V2_GET_PROGRAMMES } from '../../graphql/graphql.queries.v2';
+import { GET_BOOTSTRAP, GET_PROGRAMMES } from '../../graphql/graphql.queries';
 import { programmeDevIcons } from '../../static';
 import { Programme, User } from '../../types';
 import { WorkflowDashboard } from '../../types/programme-workflow';
@@ -21,13 +20,12 @@ import { WorkflowDashboard } from '../../types/programme-workflow';
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, EventsComponent, CanEditDirective, ActionButtonsComponent],
+  imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, CanEditDirective, ActionButtonsComponent],
 })
 export class HomeComponent implements OnInit {
   currentUser: User;
   programme: string;
   greetingMessage: string = '';
-  programmeTools: string[] = ["Need Analysis Decision", "Programme Development Decision", "External Stakeholders Consultation Decision", "Internal Stakeholders Consultation Decision"];
   showAll = false;
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
@@ -46,11 +44,11 @@ export class HomeComponent implements OnInit {
   limit = 50;
 
   private queryRef = this.apollo.watchQuery<any>({
-    query: V2_GET_PROGRAMMES,
+    query: GET_PROGRAMMES,
     variables: { searchText: '', offset: 0, limit: this.limit },
   });
   private dashboardQueryRef = this.apollo.watchQuery<{ bootstrap: { dashboard: WorkflowDashboard } }>({
-    query: V2_GET_BOOTSTRAP,
+    query: GET_BOOTSTRAP,
     fetchPolicy: 'network-only',
   });
 

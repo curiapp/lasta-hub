@@ -1,324 +1,1973 @@
 {
-  "id": "curriculum-development",
-  "version": 1,
-  "name": "Curriculum Development",
-  "description": "Workflow definition for creating or revising a university programme.",
+  "id": "programme-development",
+  "name": "Programme Development",
+  "slug": "programme-development",
   "roles": [
-    { "id": "hod", "name": "Head of Department" },
-    { "id": "dean", "name": "Executive Dean" },
-    { "id": "pdu", "name": "PDU / PDQA" },
-    { "id": "cdc", "name": "CDC" },
-    { "id": "pac", "name": "PAC" },
-    { "id": "tlu", "name": "TLU" },
-    { "id": "qau", "name": "QAU" },
-    { "id": "bos", "name": "Board of Studies" },
-    { "id": "senate", "name": "Senate" },
-    { "id": "nqa", "name": "NQA Liaison" }
+    {
+      "id": "initiator",
+      "name": "Programme Coordinator"
+    },
+    {
+      "id": "pdqa",
+      "name": "PDQA Administrator"
+    },
+    {
+      "id": "pdqa-manager",
+      "name": "PDQA Manager"
+    },
+    {
+      "id": "cdc",
+      "name": "Curriculum Development Coordinator"
+    },
+    {
+      "id": "pac",
+      "name": "Programme Advisory Committee / PEC"
+    },
+    {
+      "id": "tlt",
+      "name": "Teaching and Learning"
+    },
+    {
+      "id": "ce",
+      "name": "Cooperative Education"
+    },
+    {
+      "id": "bos",
+      "name": "Board of Studies"
+    },
+    {
+      "id": "apc",
+      "name": "Academic Planning Committee"
+    },
+    {
+      "id": "senate",
+      "name": "Senate"
+    },
+    {
+      "id": "nqa",
+      "name": "NQA Liaison"
+    },
+    {
+      "id": "hod",
+      "name": "Head of Department"
+    },
+    {
+      "id": "executive-dean",
+      "name": "Executive Dean"
+    },
+    {
+      "id": "senior-faculty-officer",
+      "name": "Senior Faculty Officer"
+    }
   ],
-  "stages": [
-    { "id": "need-analysis", "name": "Need Analysis", "order": 1 },
-    { "id": "curriculum-development", "name": "Curriculum Development", "order": 2 },
-    { "id": "consultations", "name": "Consultations", "order": 3 },
-    { "id": "pac-endorsement", "name": "PAC Endorsement", "order": 4 },
-    { "id": "tlu-review", "name": "TLU Review", "order": 5 },
-    { "id": "qau-review", "name": "QAU Review", "order": 6 },
-    { "id": "bos-approval", "name": "BOS Approval", "order": 7 },
-    { "id": "senate-approval", "name": "Senate Approval", "order": 8 },
-    { "id": "nqa-registration", "name": "NQA Registration", "order": 9 }
-  ],
-  "initialTask": "programme-resume",
   "tasks": [
     {
-      "id": "programme-resume",
-      "stageId": "need-analysis",
-      "name": "Programme Resume",
-      "ownerRoles": ["hod", "dean"],
-      "form": [
-        { "key": "rationale", "label": "Rationale", "type": "textarea", "required": true },
-        { "key": "targetMarket", "label": "Target Market", "type": "text", "required": true },
-        { "key": "expectedLevel", "label": "NQF Level", "type": "select", "required": true, "options": ["5", "6", "7", "8", "9"] }
-      ],
-      "artifacts": [
-        { "key": "concept-note", "label": "Concept Note", "required": true }
-      ],
-      "transitions": [
-        { "event": "submit", "label": "Submit Resume", "to": "stakeholders-consultation", "notifyRoles": ["pdu"] }
-      ]
-    },
-    {
       "id": "stakeholders-consultation",
-      "stageId": "need-analysis",
-      "name": "Stakeholder Consultation",
-      "ownerRoles": ["pdu", "hod"],
       "form": [
-        { "key": "organizations", "label": "Organizations Consulted", "type": "textarea", "required": true },
-        { "key": "startDate", "label": "Start Date", "type": "date", "required": true },
-        { "key": "endDate", "label": "End Date", "type": "date", "required": true }
+        {
+          "key": "startDate",
+          "type": "date",
+          "label": "Consultation Start Date",
+          "required": true
+        },
+        {
+          "key": "endDate",
+          "type": "date",
+          "label": "Consultation End Date",
+          "required": true
+        },
+        {
+          "key": "organisationsConsulted",
+          "type": "repeater",
+          "label": "Organisations / Companies Consulted",
+          "fields": [
+            {
+              "key": "organisation",
+              "type": "text",
+              "label": "Organisation / Company",
+              "required": true
+            },
+            {
+              "key": "sector",
+              "type": "select",
+              "label": "Sector",
+              "options": [
+                "Ministry",
+                "Industry",
+                "Alumni",
+                "Current Students",
+                "Education / Training Provider",
+                "Higher Education Institution",
+                "Professional Body",
+                "Other"
+              ],
+              "required": false
+            }
+          ],
+          "minItems": 0,
+          "required": false
+        }
       ],
+      "name": "Stakeholders Consultation",
+      "stageId": "need-analysis",
       "artifacts": [
-        { "key": "questionnaire", "label": "Questionnaire", "required": true },
-        { "key": "survey-results", "label": "Survey Results", "required": true }
+        {
+          "key": "draft-questionnaire-tool",
+          "label": "Draft Questionnaire / Consultation Tool",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "final-approved-questionnaire-tool",
+          "label": "Final Approved Questionnaire / Consultation Tool",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "final-consultation-report",
+          "label": "Final Consultation Report",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "initiator",
+        "cdc"
+      ],
+      "description": "CDC provides relevant information related to stakeholder consultation on the need of the proposed programme. Capture organisations or companies consulted, not individual survey respondents, and upload the consultation tools and final report.",
       "transitions": [
-        { "event": "submit", "label": "Record Consultation", "to": "pdqa-recommendation", "notifyRoles": ["pdu"] }
+        {
+          "to": "pdqa-need-analysis-recommendation",
+          "event": "submit",
+          "label": "Submit Consultation",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager"
+          ]
+        }
       ]
     },
     {
-      "id": "pdqa-recommendation",
-      "stageId": "need-analysis",
-      "name": "PDQA Recommendation",
-      "ownerRoles": ["pdu"],
+      "id": "pdqa-need-analysis-recommendation",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["proceed", "inconclusive"] },
-        { "key": "notes", "label": "Notes", "type": "textarea", "required": false }
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "Decision",
+          "options": [
+            "recommend",
+            "defer",
+            "decline"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment / Decline",
+          "required": false
+        }
       ],
+      "name": "PDQA Need Analysis Recommendation",
+      "stageId": "need-analysis",
       "artifacts": [
-        { "key": "recommendation-report", "label": "Recommendation Report", "required": true }
+        {
+          "key": "need-analysis-checklist",
+          "label": "Need Analysis Checklist / Recommendation",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "pdqa"
+      ],
+      "description": "PDQA reviews the Need Analysis report and makes a recommendation. The decision and any reason for deferment or decline are captured for tracking and reporting.",
       "transitions": [
-        { "event": "submit", "label": "Proceed", "when": { "field": "decision", "equals": "proceed" }, "to": "bos-need-analysis", "notifyRoles": ["bos"] },
-        { "event": "submit", "label": "Close", "when": { "field": "decision", "equals": "inconclusive" }, "to": "END", "outcome": "stopped" }
+        {
+          "to": "bos-need-analysis-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "recommend"
+          },
+          "event": "submit",
+          "label": "Recommend to BOS",
+          "notifyRoles": [
+            "bos",
+            "hod",
+            "executive-dean",
+            "senior-faculty-officer",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "stakeholders-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "defer"
+          },
+          "event": "submit",
+          "label": "Return for Amendment",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa"
+          ]
+        },
+        {
+          "to": "END",
+          "when": {
+            "field": "decision",
+            "equals": "decline"
+          },
+          "event": "submit",
+          "label": "Decline",
+          "outcome": "rejected",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa-manager"
+          ]
+        }
       ]
     },
     {
-      "id": "bos-need-analysis",
-      "stageId": "need-analysis",
-      "name": "BOS Need Analysis Recommendation",
-      "ownerRoles": ["bos"],
+      "id": "bos-need-analysis-consultation",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["recommended", "revision-required", "rejected"] },
-        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+        {
+          "key": "date",
+          "type": "date",
+          "label": "BOS Date",
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "BOS Decision",
+          "options": [
+            "recommend-to-apc",
+            "defer",
+            "decline"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment / Decline",
+          "required": false
+        }
       ],
+      "name": "BOS Need Analysis Consultation",
+      "stageId": "need-analysis",
       "artifacts": [
-        { "key": "bos-minutes", "label": "BOS Minutes", "required": true }
+        {
+          "key": "bos-recommendation",
+          "label": "BOS Recommendation / Minutes",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "bos"
+      ],
+      "description": "BOS reviews the Need Analysis report and provides a recommendation. Upload the BOS recommendation, minutes or supporting evidence and record deferment reasons where applicable.",
       "transitions": [
-        { "event": "submit", "label": "Recommended", "when": { "field": "decision", "equals": "recommended" }, "to": "senate-need-analysis", "notifyRoles": ["senate"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "stakeholders-consultation", "notifyRoles": ["hod", "pdu"] },
-        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+        {
+          "to": "apc-need-analysis-recommendation",
+          "when": {
+            "field": "decision",
+            "equals": "recommend-to-apc"
+          },
+          "event": "submit",
+          "label": "Recommend to APC",
+          "notifyRoles": [
+            "apc",
+            "governance-secretariat",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "stakeholders-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "defer"
+          },
+          "event": "submit",
+          "label": "Return for Amendment",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa"
+          ]
+        },
+        {
+          "to": "END",
+          "when": {
+            "field": "decision",
+            "equals": "decline"
+          },
+          "event": "submit",
+          "label": "Decline",
+          "outcome": "rejected",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        }
       ]
     },
     {
-      "id": "senate-need-analysis",
+      "id": "apc-need-analysis-recommendation",
+      "form": [
+        {
+          "key": "date",
+          "type": "date",
+          "label": "APC Date",
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "APC Decision",
+          "options": [
+            "recommend-to-senate",
+            "defer-to-bos",
+            "decline"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment / Decline",
+          "required": false
+        }
+      ],
+      "name": "APC Need Analysis Recommendation",
       "stageId": "need-analysis",
+      "artifacts": [
+        {
+          "key": "apc-recommendation",
+          "label": "APC Recommendation / Minutes",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "apc"
+      ],
+      "description": "The department submits the Need Analysis documentation to APC for review and APC makes a recommendation before Senate consideration.",
+      "transitions": [
+        {
+          "to": "senate-need-analysis-approval",
+          "when": {
+            "field": "decision",
+            "equals": "recommend-to-senate"
+          },
+          "event": "submit",
+          "label": "Recommend to Senate",
+          "notifyRoles": [
+            "senate",
+            "governance-secretariat",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "bos-need-analysis-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "defer-to-bos"
+          },
+          "event": "submit",
+          "label": "Defer to BOS",
+          "notifyRoles": [
+            "bos",
+            "pdqa"
+          ]
+        },
+        {
+          "to": "END",
+          "when": {
+            "field": "decision",
+            "equals": "decline"
+          },
+          "event": "submit",
+          "label": "Decline",
+          "outcome": "rejected",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "senate-need-analysis-approval",
+      "form": [
+        {
+          "key": "date",
+          "type": "date",
+          "label": "Senate Date",
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "Senate Decision",
+          "options": [
+            "approve",
+            "defer-to-apc",
+            "decline"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment / Decline",
+          "required": false
+        }
+      ],
       "name": "Senate Need Analysis Approval",
-      "ownerRoles": ["senate"],
-      "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["approved", "revision-required", "rejected"] },
-        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
-      ],
+      "stageId": "need-analysis",
       "artifacts": [
-        { "key": "senate-extract", "label": "Senate Extract", "required": true }
+        {
+          "key": "senate-recommendation",
+          "label": "Senate Recommendation / Extract",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "senate"
+      ],
+      "description": "The department submits the Need Analysis documentation to Senate and Senate makes a decision on whether programme development may continue.",
       "transitions": [
-        { "event": "submit", "label": "Approved", "when": { "field": "decision", "equals": "approved" }, "to": "cdc-and-pac-appointment", "notifyRoles": ["pdu", "cdc"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "bos-need-analysis", "notifyRoles": ["bos", "pdu"] },
-        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+        {
+          "to": "appoint-cdc-members",
+          "when": {
+            "field": "decision",
+            "equals": "approve"
+          },
+          "event": "submit",
+          "label": "Approve Need Analysis",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "apc-need-analysis-recommendation",
+          "when": {
+            "field": "decision",
+            "equals": "defer-to-apc"
+          },
+          "event": "submit",
+          "label": "Defer to APC",
+          "notifyRoles": [
+            "apc",
+            "pdqa"
+          ]
+        },
+        {
+          "to": "END",
+          "when": {
+            "field": "decision",
+            "equals": "decline"
+          },
+          "event": "submit",
+          "label": "Decline",
+          "outcome": "rejected",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        }
       ]
     },
     {
-      "id": "cdc-and-pac-appointment",
-      "stageId": "curriculum-development",
-      "name": "CDC and PAC Appointment",
-      "ownerRoles": ["pdu", "dean"],
+      "id": "appoint-cdc-members",
       "form": [
-        { "key": "cdcMembers", "label": "CDC Members", "type": "textarea", "required": true },
-        { "key": "pacMembers", "label": "PAC Members", "type": "textarea", "required": true },
-        { "key": "appointmentDate", "label": "Appointment Date", "type": "date", "required": true }
+        {
+          "key": "members",
+          "type": "repeater",
+          "label": "CDC Members",
+          "fields": [
+            {
+              "key": "firstName",
+              "type": "text",
+              "label": "First Name",
+              "required": true
+            },
+            {
+              "key": "lastName",
+              "type": "text",
+              "label": "Last Name",
+              "required": true
+            },
+            {
+              "key": "emailAddress",
+              "type": "email",
+              "label": "Email Address",
+              "required": true
+            },
+            {
+              "key": "workNumber",
+              "type": "tel",
+              "label": "Work Telephone Number",
+              "required": true
+            },
+            {
+              "key": "cellphone",
+              "type": "tel",
+              "label": "Cell Number",
+              "required": false
+            },
+            {
+              "key": "faculty",
+              "type": "text",
+              "label": "Faculty",
+              "required": true
+            },
+            {
+              "key": "department",
+              "type": "text",
+              "label": "Department",
+              "required": true
+            }
+          ],
+          "minItems": 1,
+          "required": true
+        }
       ],
+      "name": "Appoint Curriculum Development Committee",
+      "stageId": "programme-development",
       "artifacts": [
-        { "key": "appointment-letter", "label": "Appointment Letter", "required": true }
+        {
+          "key": "cdc-appointment-evidence",
+          "label": "CDC Appointment Evidence",
+          "maxFiles": 1,
+          "required": false,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "initiator",
+        "pdqa"
+      ],
+      "description": "The department identifies and appoints the Curriculum Development Coordinator and CDC members. Because CDC members are internal, capture faculty and department instead of organisation, qualification or occupation.",
       "transitions": [
-        { "event": "submit", "label": "Appoint Committees", "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+        {
+          "to": "appoint-pac-members",
+          "event": "submit",
+          "label": "Capture CDC Members",
+          "notifyRoles": [
+            "pdqa",
+            "initiator"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "appoint-pac-members",
+      "form": [
+        {
+          "key": "members",
+          "type": "repeater",
+          "label": "PAC / PEC Members",
+          "fields": [
+            {
+              "key": "sector",
+              "type": "select",
+              "label": "Stakeholder Sector",
+              "options": [
+                "Ministry",
+                "Industry",
+                "Alumni",
+                "Current Student",
+                "Professional Body",
+                "Education / Training Provider",
+                "Higher Education Institution",
+                "Other"
+              ],
+              "required": true
+            },
+            {
+              "key": "organization",
+              "type": "text",
+              "label": "Organisation",
+              "required": true
+            },
+            {
+              "key": "firstName",
+              "type": "text",
+              "label": "First Name",
+              "required": true
+            },
+            {
+              "key": "lastName",
+              "type": "text",
+              "label": "Last Name",
+              "required": true
+            },
+            {
+              "key": "emailAddress",
+              "type": "email",
+              "label": "Email Address",
+              "required": true
+            },
+            {
+              "key": "workNumber",
+              "type": "tel",
+              "label": "Work Telephone Number",
+              "required": true
+            },
+            {
+              "key": "cellphone",
+              "type": "tel",
+              "label": "Cell Number",
+              "required": false
+            },
+            {
+              "key": "qualification",
+              "type": "text",
+              "label": "Qualification",
+              "required": false
+            },
+            {
+              "key": "occupation",
+              "type": "text",
+              "label": "Occupation",
+              "required": false
+            }
+          ],
+          "minItems": 1,
+          "required": true
+        }
+      ],
+      "name": "Appoint Programme Advisory Committee / PEC",
+      "stageId": "programme-development",
+      "artifacts": [
+        {
+          "key": "pac-tor-or-appointment-evidence",
+          "label": "PAC / PEC ToR or Appointment Evidence",
+          "maxFiles": 1,
+          "required": false,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "initiator",
+        "pdqa"
+      ],
+      "description": "Capture PAC or PEC member details using the Terms of Reference sector composition. The sector field helps users check fair representation across ministry, industry, alumni, students, education providers and higher education institutions.",
+      "transitions": [
+        {
+          "to": "curriculum-drafting",
+          "event": "submit",
+          "label": "Capture PAC / PEC Members",
+          "notifyRoles": [
+            "cdc",
+            "pdqa"
+          ]
+        }
       ]
     },
     {
       "id": "curriculum-drafting",
-      "stageId": "curriculum-development",
+      "form": [],
       "name": "Curriculum Drafting",
-      "ownerRoles": ["cdc"],
-      "form": [
-        { "key": "draftVersion", "label": "Draft Version", "type": "text", "required": true },
-        { "key": "summary", "label": "Summary", "type": "textarea", "required": true }
-      ],
+      "stageId": "programme-development",
       "artifacts": [
-        { "key": "curriculum-draft", "label": "Curriculum Draft", "required": true }
+        {
+          "key": "draft-curriculum",
+          "label": "Draft Programme Document",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "cdc"
+      ],
+      "description": "CDC develops the draft programme and submits it to PDQA for review. Upload the draft programme document before submitting.",
       "transitions": [
-        { "event": "submit", "label": "Submit Draft", "to": "pac-consultation", "notifyRoles": ["pac", "pdu"] }
+        {
+          "to": "pdqa-draft-curriculum-recommendation",
+          "event": "submit",
+          "label": "Submit Draft to PDQA",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager"
+          ]
+        }
       ]
     },
     {
-      "id": "pac-consultation",
-      "stageId": "consultations",
-      "name": "PAC Consultation and Benchmarking",
-      "ownerRoles": ["pac", "pdu"],
+      "id": "pdqa-draft-curriculum-recommendation",
       "form": [
-        { "key": "benchmarkInstitutions", "label": "Benchmark Institutions", "type": "textarea", "required": true },
-        { "key": "consultationSummary", "label": "Consultation Summary", "type": "textarea", "required": true }
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "Decision",
+          "options": [
+            "approve",
+            "return-for-revision"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Return",
+          "required": false
+        }
       ],
+      "name": "Draft Curriculum and PDQA Recommendation",
+      "stageId": "programme-development",
       "artifacts": [
-        { "key": "benchmark-report", "label": "Benchmark Report", "required": true },
-        { "key": "pac-feedback", "label": "PAC Feedback", "required": true }
+        {
+          "key": "pdqa-curriculum-checklist",
+          "label": "PDQA Curriculum Checklist / Recommendation",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "pdqa"
+      ],
+      "description": "PDQA reviews and provides recommendation on the draft programme before it is circulated externally.",
       "transitions": [
-        { "event": "submit", "label": "Record Consultation", "to": "pac-endorsement", "notifyRoles": ["pac"] }
+        {
+          "to": "circulate-draft-programme",
+          "when": {
+            "field": "decision",
+            "equals": "approve"
+          },
+          "event": "submit",
+          "label": "Approve Draft",
+          "notifyRoles": [
+            "pac",
+            "initiator",
+            "cdc"
+          ]
+        },
+        {
+          "to": "curriculum-drafting",
+          "when": {
+            "field": "decision",
+            "equals": "return-for-revision"
+          },
+          "event": "submit",
+          "label": "Return for Revision",
+          "notifyRoles": [
+            "cdc",
+            "initiator"
+          ]
+        }
       ]
     },
     {
-      "id": "pac-endorsement",
-      "stageId": "pac-endorsement",
-      "name": "PAC Endorsement",
-      "ownerRoles": ["pac"],
+      "id": "circulate-draft-programme",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["endorsed", "revision-required"] },
-        { "key": "endorsementDate", "label": "Endorsement Date", "type": "date", "required": true }
+        {
+          "key": "consultationDate",
+          "type": "date",
+          "label": "Circulation Date",
+          "required": true
+        }
       ],
+      "name": "Circulation of Draft Programme",
+      "stageId": "external-stakeholders-consultations",
       "artifacts": [
-        { "key": "pac-endorsement-letter", "label": "PAC Endorsement Letter", "required": true }
+        {
+          "key": "programme-draft-for-circulation",
+          "label": "Programme Draft for Circulation",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "initiator",
+        "cdc"
+      ],
+      "description": "CDC uploads the draft programme document for circulation to PAC or PEC members identified in the programme development stage.",
       "transitions": [
-        { "event": "submit", "label": "Endorsed", "when": { "field": "decision", "equals": "endorsed" }, "to": "tlu-review", "notifyRoles": ["tlu"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+        {
+          "to": "pac-consultation-and-benchmarking",
+          "event": "submit",
+          "label": "Circulate Draft",
+          "notifyRoles": [
+            "pac",
+            "pdqa"
+          ]
+        }
       ]
     },
     {
-      "id": "tlu-review",
-      "stageId": "tlu-review",
-      "name": "TLU Review",
-      "ownerRoles": ["tlu"],
+      "id": "pac-consultation-and-benchmarking",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["recommended", "revision-required"] },
-        { "key": "notes", "label": "Review Notes", "type": "textarea", "required": false }
+        {
+          "key": "consultationDate",
+          "type": "date",
+          "label": "Consultation Date",
+          "required": true
+        },
+        {
+          "key": "benchmarkingSummary",
+          "type": "textarea",
+          "label": "Benchmarking Summary",
+          "required": false
+        }
       ],
+      "name": "PAC / PEC Consultation and Benchmarking",
+      "stageId": "external-stakeholders-consultations",
       "artifacts": [
-        { "key": "tlu-review-report", "label": "TLU Review Report", "required": true }
+        {
+          "key": "pac-pec-minutes",
+          "label": "PAC / PEC Minutes",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "benchmarking-documents",
+          "label": "Benchmarking Documents",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "support-letters",
+          "label": "Support Letters",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "revised-programme-draft",
+          "label": "Revised Programme Draft",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "cdc"
+      ],
+      "description": "CDC convenes a meeting with PAC or PEC members and benchmarks with peer universities and other stakeholders to solicit inputs on the draft programme.",
       "transitions": [
-        { "event": "submit", "label": "Recommended", "when": { "field": "decision", "equals": "recommended" }, "to": "qau-review", "notifyRoles": ["qau"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+        {
+          "to": "external-final-draft-pdqa-recommendation",
+          "event": "submit",
+          "label": "Submit External Consultation",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager"
+          ]
+        }
       ]
     },
     {
-      "id": "qau-review",
-      "stageId": "qau-review",
-      "name": "QAU Review",
-      "ownerRoles": ["qau"],
+      "id": "external-final-draft-pdqa-recommendation",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["recommended", "revision-required"] },
-        { "key": "notes", "label": "Review Notes", "type": "textarea", "required": false }
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "Decision",
+          "options": [
+            "approve",
+            "return-for-revision"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Return",
+          "required": false
+        }
       ],
+      "name": "Final Programme Draft and PDQA Recommendation",
+      "stageId": "external-stakeholders-consultations",
       "artifacts": [
-        { "key": "qau-review-report", "label": "QAU Review Report", "required": true }
+        {
+          "key": "pdqa-external-recommendation",
+          "label": "PDQA External Consultation Recommendation",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "final-programme-draft",
+          "label": "Final Programme Draft",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "pdqa"
+      ],
+      "description": "CDC circulates the final programme draft to PDQA for recommendation. PDQA confirms readiness for internal consultation or returns it for revision.",
       "transitions": [
-        { "event": "submit", "label": "Recommended", "when": { "field": "decision", "equals": "recommended" }, "to": "bos-final-approval", "notifyRoles": ["bos"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+        {
+          "to": "start-internal-consultations",
+          "when": {
+            "field": "decision",
+            "equals": "approve"
+          },
+          "event": "submit",
+          "label": "Approve External Consultation",
+          "notifyRoles": [
+            "pdqa",
+            "tlt"
+          ]
+        },
+        {
+          "to": "curriculum-drafting",
+          "when": {
+            "field": "decision",
+            "equals": "return-for-revision"
+          },
+          "event": "submit",
+          "label": "Return for Revision",
+          "notifyRoles": [
+            "cdc",
+            "initiator"
+          ]
+        }
       ]
     },
     {
-      "id": "bos-final-approval",
-      "stageId": "bos-approval",
-      "name": "BOS Final Approval",
-      "ownerRoles": ["bos"],
+      "id": "start-internal-consultations",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["approved", "revision-required", "rejected"] },
-        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+        {
+          "key": "date",
+          "type": "date",
+          "label": "Circulation Date",
+          "required": true
+        },
+        {
+          "key": "includesWilComponent",
+          "type": "checkbox",
+          "label": "Programme Includes WIL Component",
+          "required": false
+        }
       ],
+      "name": "Internal Consultations",
+      "stageId": "internal-stakeholders-consultations",
       "artifacts": [
-        { "key": "bos-final-minutes", "label": "BOS Final Minutes", "required": true }
+        {
+          "key": "drafted-programme-for-internal-review",
+          "label": "Drafted Programme for Internal Review",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "pdqa",
+        "cdc"
+      ],
+      "description": "CDC identifies relevant internal stakeholders for consultation and circulates the programme document for inputs on teaching, learning, assessment, delivery, cooperative education and quality assurance. TLT is consulted by default; CE is included only where the programme has a WIL component.",
       "transitions": [
-        { "event": "submit", "label": "Approved", "when": { "field": "decision", "equals": "approved" }, "to": "senate-final-approval", "notifyRoles": ["senate"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] },
-        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+        {
+          "to": "tlt-review",
+          "event": "submit",
+          "label": "Start TLT Review",
+          "notifyRoles": [
+            "tlt",
+            "pdqa"
+          ]
+        }
       ]
     },
     {
-      "id": "senate-final-approval",
-      "stageId": "senate-approval",
-      "name": "Senate Final Approval",
-      "ownerRoles": ["senate"],
+      "id": "tlt-review",
       "form": [
-        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["approved", "revision-required", "rejected"] },
-        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "TLT Decision",
+          "options": [
+            "support",
+            "defer"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
       ],
+      "name": "ADS-TLT Review",
+      "stageId": "internal-stakeholders-consultations",
       "artifacts": [
-        { "key": "senate-final-extract", "label": "Senate Final Extract", "required": true }
+        {
+          "key": "support-letter-ads",
+          "label": "Support Letter/Recommendations",
+          "maxFiles": 1,
+          "multiple": false,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "tlt"
+      ],
+      "description": "TLT advises the department on appropriate teaching, learning and assessment strategies. CE is skipped for programmes without a WIL component.",
       "transitions": [
-        { "event": "submit", "label": "Approved", "when": { "field": "decision", "equals": "approved" }, "to": "nqf-documentation", "notifyRoles": ["pdu", "nqa"] },
-        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "bos-final-approval", "notifyRoles": ["bos"] },
-        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+        {
+          "to": "curriculum-drafting",
+          "when": {
+            "field": "decision",
+            "equals": "defer"
+          },
+          "event": "submit",
+          "label": "Defer to CDC",
+          "notifyRoles": [
+            "cdc",
+            "pdqa",
+            "initiator",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "ce-review",
+          "event": "submit",
+          "label": "Continue",
+          "notifyRoles": [
+            "pdqa",
+            "initiator",
+            "cdc"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ce-review",
+      "form": [
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "CE Decision",
+          "options": [
+            "support",
+            "defer"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
+      ],
+      "name": "CE Review",
+      "stageId": "internal-stakeholders-consultations",
+      "artifacts": [
+        {
+          "key": "support-letter-ce-",
+          "label": "Support Letter/Recommendations",
+          "maxFiles": 1,
+          "multiple": false,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "ce"
+      ],
+      "description": "CE ensures the Work Integrated Learning component is properly integrated in undergraduate programmes and provides a recommendation.",
+      "transitions": [
+        {
+          "to": "curriculum-drafting",
+          "when": {
+            "field": "decision",
+            "equals": "defer"
+          },
+          "event": "submit",
+          "label": "Defer to CDC",
+          "notifyRoles": [
+            "cdc",
+            "pdqa"
+          ]
+        },
+        {
+          "to": "pdqa-internal-review",
+          "event": "submit",
+          "label": "Continue",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager",
+            "initiator",
+            "cdc"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pdqa-internal-review",
+      "form": [
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "PDQA Decision",
+          "options": [
+            "endorse",
+            "defer"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
+      ],
+      "name": "PDQA Internal Review",
+      "stageId": "internal-stakeholders-consultations",
+      "artifacts": [
+        {
+          "key": "pdqa-internal-checklist",
+          "label": "PDQA Internal Checklist / Recommendation",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "pdqa"
+      ],
+      "description": "PDQA reviews and verifies readiness of the programme for submission to BOS, makes a recommendation and provides a checklist.",
+      "transitions": [
+        {
+          "to": "final-draft-to-bos-submission",
+          "when": {
+            "field": "decision",
+            "equals": "endorse"
+          },
+          "event": "submit",
+          "label": "Endorse for BOS",
+          "notifyRoles": [
+            "bos",
+            "hod",
+            "executive-dean",
+            "senior-faculty-officer"
+          ]
+        },
+        {
+          "to": "curriculum-drafting",
+          "when": {
+            "field": "decision",
+            "equals": "defer"
+          },
+          "event": "submit",
+          "label": "Return for Amendment",
+          "notifyRoles": [
+            "cdc",
+            "initiator",
+            "pdqa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "final-draft-to-bos-submission",
+      "form": [
+        {
+          "key": "date",
+          "type": "date",
+          "label": "Submission Date",
+          "required": true
+        }
+      ],
+      "name": "Final Draft to BOS",
+      "stageId": "bos-apc-senate-consultations",
+      "artifacts": [
+        {
+          "key": "support-letters",
+          "label": "Support Letters / Combined Support Pack",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "pac-pec-minutes",
+          "label": "PAC / PEC Minutes",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "benchmarking",
+          "label": "Benchmarking Documents",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "draft-programme-document",
+          "label": "Draft Programme Document",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "submission-checklist",
+          "label": "Submission Checklist",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "related-documents",
+          "label": "Related Documents",
+          "multiple": true,
+          "required": false,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "pdqa",
+        "initiator",
+        "cdc"
+      ],
+      "description": "On recommendation from PDQA, the department circulates the final draft programme for submission to BOS. Multiple documents can be uploaded, including a combined scanned support-letter pack.",
+      "transitions": [
+        {
+          "to": "faculty-bos-consultation",
+          "event": "submit",
+          "label": "Submit to Faculty BOS",
+          "notifyRoles": [
+            "bos",
+            "hod",
+            "executive-dean",
+            "senior-faculty-officer",
+            "pdqa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faculty-bos-consultation",
+      "form": [
+        {
+          "key": "date",
+          "type": "date",
+          "label": "BOS Date",
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "BOS Decision",
+          "options": [
+            "recommend-to-apc",
+            "defer-to-bosec",
+            "defer-to-bos",
+            "other-faculty-consultation"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
+      ],
+      "name": "Faculty BOS Consultation",
+      "stageId": "bos-apc-senate-consultations",
+      "artifacts": [
+        {
+          "key": "faculty-bos-recommendation",
+          "label": "Faculty BOS Recommendation / Minutes",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "bos"
+      ],
+      "description": "BOS reviews the draft programme and makes recommendations. Record whether the programme is recommended to APC, deferred to BOSEC/BOS, or sent for other faculty consultation.",
+      "transitions": [
+        {
+          "to": "final-apc-recommendation",
+          "when": {
+            "field": "decision",
+            "equals": "recommend-to-apc"
+          },
+          "event": "submit",
+          "label": "Recommend to APC",
+          "notifyRoles": [
+            "apc",
+            "governance-secretariat",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "other-faculty-bos-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "other-faculty-consultation"
+          },
+          "event": "submit",
+          "label": "Other Faculty Consultation",
+          "notifyRoles": [
+            "bos",
+            "initiator",
+            "cdc",
+            "pdqa"
+          ]
+        },
+        {
+          "to": "final-draft-to-bos-submission",
+          "when": {
+            "field": "decision",
+            "equals": "defer-to-bosec"
+          },
+          "event": "submit",
+          "label": "Defer to BOSEC",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa",
+            "bos"
+          ]
+        },
+        {
+          "to": "faculty-bos-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "defer-to-bos"
+          },
+          "event": "submit",
+          "label": "Defer to BOS",
+          "notifyRoles": [
+            "bos",
+            "initiator",
+            "pdqa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other-faculty-bos-consultation",
+      "form": [
+        {
+          "key": "facultyName",
+          "type": "text",
+          "label": "Other Faculty Name",
+          "required": true
+        },
+        {
+          "key": "date",
+          "type": "date",
+          "label": "Other Faculty BOS Date",
+          "required": true
+        },
+        {
+          "key": "recommendedTo",
+          "type": "radio",
+          "label": "Recommended To",
+          "options": [
+            "apc",
+            "bosec"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Return",
+          "required": false
+        }
+      ],
+      "name": "Other Faculty BOS Consultation",
+      "stageId": "bos-apc-senate-consultations",
+      "artifacts": [
+        {
+          "key": "other-faculty-recommendation",
+          "label": "Other Faculty BOS Recommendation",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "bos"
+      ],
+      "description": "This step applies to multidisciplinary or interdisciplinary programmes. CDC circulates the draft programme to relevant faculties for recommendations.",
+      "transitions": [
+        {
+          "to": "final-apc-recommendation",
+          "when": {
+            "field": "recommendedTo",
+            "equals": "apc"
+          },
+          "event": "submit",
+          "label": "Recommend to APC",
+          "notifyRoles": [
+            "apc",
+            "pdqa",
+            "governance-secretariat"
+          ]
+        },
+        {
+          "to": "final-draft-to-bos-submission",
+          "when": {
+            "field": "recommendedTo",
+            "equals": "bosec"
+          },
+          "event": "submit",
+          "label": "Return to BOSEC",
+          "notifyRoles": [
+            "initiator",
+            "cdc",
+            "pdqa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "final-apc-recommendation",
+      "form": [
+        {
+          "key": "consultationDate",
+          "type": "date",
+          "label": "APC Date",
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "APC Decision",
+          "options": [
+            "recommend-to-senate",
+            "defer-to-bos"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
+      ],
+      "name": "APC Recommendation",
+      "stageId": "bos-apc-senate-consultations",
+      "artifacts": [
+        {
+          "key": "final-apc-recommendation",
+          "label": "APC Recommendation / Minutes",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "apc"
+      ],
+      "description": "APC reviews the draft programme and provides recommendations before Senate consideration.",
+      "transitions": [
+        {
+          "to": "final-senate-recommendation",
+          "when": {
+            "field": "decision",
+            "equals": "recommend-to-senate"
+          },
+          "event": "submit",
+          "label": "Recommend to Senate",
+          "notifyRoles": [
+            "senate",
+            "governance-secretariat",
+            "pdqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "faculty-bos-consultation",
+          "when": {
+            "field": "decision",
+            "equals": "defer-to-bos"
+          },
+          "event": "submit",
+          "label": "Defer to BOS",
+          "notifyRoles": [
+            "bos",
+            "pdqa",
+            "initiator"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "final-senate-recommendation",
+      "form": [
+        {
+          "key": "date",
+          "type": "date",
+          "label": "Senate Date",
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "Senate Decision",
+          "options": [
+            "approve",
+            "defer-to-apc"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
+      ],
+      "name": "Senate Recommendation",
+      "stageId": "bos-apc-senate-consultations",
+      "artifacts": [
+        {
+          "key": "senate-programme-document",
+          "label": "Senate Programme Document",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "senate-submission-letter",
+          "label": "Submission Letter to Senate",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "senate-minutes-or-extract",
+          "label": "Senate Minutes / Extract",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "senate"
+      ],
+      "description": "Senate reviews the draft programme and provides a recommendation on approval. Record deferment reasons where the programme is returned.",
+      "transitions": [
+        {
+          "to": "nqf-documentation",
+          "when": {
+            "field": "decision",
+            "equals": "approve"
+          },
+          "event": "submit",
+          "label": "Approve Programme",
+          "notifyRoles": [
+            "pdqa",
+            "nqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "final-apc-recommendation",
+          "when": {
+            "field": "decision",
+            "equals": "defer-to-apc"
+          },
+          "event": "submit",
+          "label": "Defer to APC",
+          "notifyRoles": [
+            "apc",
+            "pdqa",
+            "initiator"
+          ]
+        }
       ]
     },
     {
       "id": "nqf-documentation",
-      "stageId": "nqa-registration",
-      "name": "NQF Documentation Preparation",
-      "ownerRoles": ["pdu", "nqa"],
       "form": [
-        { "key": "submissionType", "label": "Submission Type", "type": "select", "required": true, "options": ["new-programme", "revision"] },
-        { "key": "notes", "label": "Notes", "type": "textarea", "required": false }
+        {
+          "key": "submissionAuthority",
+          "type": "select",
+          "label": "Submission Authority",
+          "options": [
+            "NQA",
+            "MQA",
+            "NQA and MQA"
+          ],
+          "required": true
+        }
       ],
+      "name": "NQF Documentation",
+      "stageId": "nqf-registration",
       "artifacts": [
-        { "key": "qualification-document", "label": "Qualification Document", "required": true },
-        { "key": "support-pack", "label": "Support Pack", "required": true }
+        {
+          "key": "final-senate-approved-document",
+          "label": "Final Senate Approved Document",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "nqf-qualification-document",
+          "label": "NQF Qualification Document",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "review-report",
+          "label": "Review Report",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "rationale-statement",
+          "label": "Rationale Statement",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "letters-of-support",
+          "label": "Letters of Support",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "nqf-benchmarking",
+          "label": "Benchmarking Documents",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "pdqa",
+        "nqa"
+      ],
+      "description": "CDC prepares the NQF qualification documentation for submission within 14 working days after Senate approval. The preparation pack supports final Senate approval, NQF qualification documentation, review report, rationale statement and support letters.",
       "transitions": [
-        { "event": "submit", "label": "Prepare Submission", "to": "nqf-submission", "notifyRoles": ["nqa"] }
+        {
+          "to": "pdqa-nqf-recommendation",
+          "event": "submit",
+          "label": "Prepare Submission",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager",
+            "nqa"
+          ]
+        }
       ]
     },
     {
-      "id": "nqf-submission",
-      "stageId": "nqa-registration",
-      "name": "NQF Submission",
-      "ownerRoles": ["nqa", "pdu"],
+      "id": "pdqa-nqf-recommendation",
       "form": [
-        { "key": "submissionDate", "label": "Submission Date", "type": "date", "required": true },
-        { "key": "referenceNumber", "label": "Reference Number", "type": "text", "required": false }
+        {
+          "key": "submissionType",
+          "type": "radio",
+          "label": "Submission Type",
+          "options": [
+            "initial-submission",
+            "resubmission"
+          ],
+          "required": true
+        },
+        {
+          "key": "decision",
+          "type": "radio",
+          "label": "Decision",
+          "options": [
+            "approve",
+            "defer"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Reason for Deferment",
+          "required": false
+        }
       ],
+      "name": "PDQA NQF / NQA Recommendation",
+      "stageId": "nqf-registration",
       "artifacts": [
-        { "key": "nqa-submission-pack", "label": "NQA Submission Pack", "required": true }
+        {
+          "key": "nqf-submission-documentation",
+          "label": "NQF / NQA Submission Documentation",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "pdqa"
+      ],
+      "description": "PDQA reviews the NQF or NQA submission pack from the department and prepares application documentation for initial submission or resubmission.",
       "transitions": [
-        { "event": "submit", "label": "Submit to NQA", "to": "nqf-feedback", "notifyRoles": ["pdu"] }
+        {
+          "to": "nqa-submission-and-feedback",
+          "when": {
+            "field": "decision",
+            "equals": "approve"
+          },
+          "event": "submit",
+          "label": "Approve Submission",
+          "notifyRoles": [
+            "nqa",
+            "mqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "nqf-documentation",
+          "when": {
+            "field": "decision",
+            "equals": "defer"
+          },
+          "event": "submit",
+          "label": "Return for Amendment",
+          "notifyRoles": [
+            "pdqa",
+            "nqa"
+          ]
+        }
       ]
     },
     {
-      "id": "nqf-feedback",
-      "stageId": "nqa-registration",
-      "name": "NQF Feedback",
-      "ownerRoles": ["nqa", "pdu"],
+      "id": "nqa-submission-and-feedback",
       "form": [
-        { "key": "decision", "label": "Feedback", "type": "select", "required": true, "options": ["accepted", "amendments-required"] },
-        { "key": "feedbackDate", "label": "Feedback Date", "type": "date", "required": true }
+        {
+          "key": "submissionType",
+          "type": "radio",
+          "label": "Submission Type",
+          "options": [
+            "initial-submission",
+            "resubmission"
+          ],
+          "required": true
+        },
+        {
+          "key": "submissionDate",
+          "type": "date",
+          "label": "Submission Date",
+          "required": true
+        },
+        {
+          "key": "feedbackDecision",
+          "type": "radio",
+          "label": "Feedback Decision",
+          "options": [
+            "accepted",
+            "resubmit",
+            "declined"
+          ],
+          "required": true
+        },
+        {
+          "key": "deferReason",
+          "type": "textarea",
+          "label": "Feedback / Resubmission Reason",
+          "required": false
+        }
       ],
+      "name": "NQA / MQA Submission and Feedback",
+      "stageId": "nqf-registration",
       "artifacts": [
-        { "key": "nqa-feedback-letter", "label": "NQA Feedback Letter", "required": true }
+        {
+          "key": "qualification-document",
+          "label": "Submitted Qualification Document",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "nqa-mqa-response",
+          "label": "NQA / MQA Response",
+          "multiple": true,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
       ],
+      "ownerRoles": [
+        "nqa"
+      ],
+      "description": "Submit the complete application to NQA or MQA and record the feedback received. Resubmission is tracked as a submission type and only the latest required version needs to be retained unless history is requested.",
       "transitions": [
-        { "event": "submit", "label": "Accepted", "when": { "field": "decision", "equals": "accepted" }, "to": "nqf-registration", "notifyRoles": ["pdu"] },
-        { "event": "submit", "label": "Amend", "when": { "field": "decision", "equals": "amendments-required" }, "to": "nqf-documentation", "notifyRoles": ["pdu", "cdc"] }
+        {
+          "to": "nqf-registration-record",
+          "when": {
+            "field": "feedbackDecision",
+            "equals": "accepted"
+          },
+          "event": "submit",
+          "label": "Accepted",
+          "notifyRoles": [
+            "pdqa",
+            "nqa",
+            "pdqa-manager"
+          ]
+        },
+        {
+          "to": "nqf-documentation",
+          "when": {
+            "field": "feedbackDecision",
+            "equals": "resubmit"
+          },
+          "event": "submit",
+          "label": "Resubmit",
+          "notifyRoles": [
+            "pdqa",
+            "nqa"
+          ]
+        },
+        {
+          "to": "END",
+          "when": {
+            "field": "feedbackDecision",
+            "equals": "declined"
+          },
+          "event": "submit",
+          "label": "Declined",
+          "outcome": "rejected",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager",
+            "initiator"
+          ]
+        }
       ]
+    },
+    {
+      "id": "nqf-registration-record",
+      "form": [
+        {
+          "key": "qualificationTitle",
+          "type": "text",
+          "label": "Qualification Title",
+          "required": true
+        },
+        {
+          "key": "nqfId",
+          "type": "text",
+          "label": "NQF ID",
+          "required": true
+        },
+        {
+          "key": "registrationDate",
+          "type": "date",
+          "label": "Registration Date",
+          "required": true
+        }
+      ],
+      "name": "NQF / NQA Registration Record",
+      "stageId": "nqf-registration",
+      "artifacts": [
+        {
+          "key": "registered-qualification-document",
+          "label": "Registered Qualification Document / Certificate",
+          "maxFiles": 1,
+          "required": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "ownerRoles": [
+        "nqa",
+        "pdqa"
+      ],
+      "description": "Record the registration details after the qualification has been registered on the National Qualifications Framework.",
+      "transitions": [
+        {
+          "to": "END",
+          "event": "submit",
+          "label": "Complete Registration",
+          "outcome": "completed",
+          "notifyRoles": [
+            "pdqa",
+            "pdqa-manager",
+            "initiator",
+            "nqa"
+          ]
+        }
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "id": "need-analysis",
+      "name": "Need Analysis",
+      "order": 1,
+      "description": "Establish whether there is a justified need for the proposed programme through stakeholder consultation, PDQA review, BOS, APC and Senate consideration."
+    },
+    {
+      "id": "programme-development",
+      "name": "Programme Development",
+      "order": 2,
+      "description": "Appoint the Curriculum Development Coordinator and Programme Advisory Committee, then develop the draft programme for PDQA review."
+    },
+    {
+      "id": "external-stakeholders-consultations",
+      "name": "External Stakeholders Consultations",
+      "order": 3,
+      "description": "Circulate the draft programme to PAC or PEC members and external stakeholders, benchmark with peer institutions, and prepare the final draft for PDQA recommendation."
+    },
+    {
+      "id": "internal-stakeholders-consultations",
+      "name": "Internal Stakeholders Consultations",
+      "order": 4,
+      "description": "Consult internal stakeholders on teaching, learning, assessment, delivery, cooperative education and quality assurance before institutional submission."
+    },
+    {
+      "id": "bos-apc-senate-consultations",
+      "name": "BOS, APC and Senate Consultations",
+      "order": 5,
+      "description": "Submit the final draft through BOS, APC and Senate so recommendations, deferments and approval decisions are formally recorded."
     },
     {
       "id": "nqf-registration",
-      "stageId": "nqa-registration",
-      "name": "NQF Registration",
-      "ownerRoles": ["nqa", "pdu"],
-      "form": [
-        { "key": "nqfId", "label": "NQF ID", "type": "text", "required": true },
-        { "key": "qualificationTitle", "label": "Qualification Title", "type": "text", "required": true },
-        { "key": "registrationDate", "label": "Registration Date", "type": "date", "required": true }
-      ],
-      "artifacts": [
-        { "key": "registration-certificate", "label": "Registration Certificate", "required": true }
-      ],
-      "transitions": [
-        { "event": "submit", "label": "Register Programme", "to": "END", "outcome": "completed" }
-      ]
+      "name": "NQF / NQA Registration",
+      "order": 6,
+      "description": "Prepare and submit NQF documentation to the Namibia Qualifications Authority, record feedback, and capture the final registration details."
     }
-  ]
+  ],
+  "version": 3,
+  "versionId": "019fb0b3-f7cd-717d-ad06-d4645600d48c",
+  "description": "A programme development guide that follows the institutional process from Need Analysis to NQF/NQA registration, with clearer stage instructions, role-based responsibilities, reportable decisions, deferment reasons, and document requirements from the meeting change log.",
+  "initialTask": "stakeholders-consultation",
+  "definitionId": "019fb080-0e56-7580-aa35-de7a761b4f6a"
 }

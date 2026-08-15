@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { ModalComponent } from '../../components/modal/modal.component';
-import { V2_GET_WORKFLOW_DEFINITION } from '../../graphql/graphql.queries.v2';
+import { GET_WORKFLOW_DEFINITION } from '../../graphql/graphql.queries';
 import {
   WorkflowArtifactRequirement,
   WorkflowDefinition,
@@ -90,7 +90,7 @@ export class TutorialComponent implements OnInit {
 
   ngOnInit() {
     this.apollo.query<{ workflowDefinition: WorkflowDefinition }>({
-      query: V2_GET_WORKFLOW_DEFINITION,
+      query: GET_WORKFLOW_DEFINITION,
       fetchPolicy: 'network-only',
     }).subscribe({
       next: ({ data }) => {

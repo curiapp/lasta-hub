@@ -19,30 +19,30 @@ interface WorkflowErrorLike extends Error {
 type WorkflowRouterFactory = (upload: Multer) => Router;
 
 export default function createRouter(upload: Multer): Router {
-    const v2Router: Router = Router();
+    const router: Router = Router();
 
-v2Router.get("/", (_req: Request, res: Response) => {
-    const info: ApiInfo = {
-        name: "PDQA Workflow API",
-        version: "2",
-        status: "available",
-    };
+    router.get("/", (_req: Request, res: Response) => {
+        const info: ApiInfo = {
+            name: "PDQA Workflow API",
+            version: "2",
+            status: "available",
+        };
 
-    res.json(info);
-});
+        res.json(info);
+    });
 
-v2Router.use("/health", healthRouter);
-v2Router.use(usersRouter);
-v2Router.use(graphqlRouter);
-v2Router.use(workflowRouter(upload));
+    router.use("/health", healthRouter);
+    router.use(usersRouter);
+    router.use(graphqlRouter);
+    router.use(workflowRouter(upload));
 
-v2Router.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
-    const err = error as WorkflowErrorLike;
-    if (err instanceof WorkflowError) {
-        return res.status(err.status).json({ error: err.message });
-    }
-    next(error);
-});
+    router.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
+        const err = error as WorkflowErrorLike;
+        if (err instanceof WorkflowError) {
+            return res.status(err.status).json({ error: err.message });
+        }
+        next(error);
+    });
 
-return v2Router;
+    return router;
 }
