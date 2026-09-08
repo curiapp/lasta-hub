@@ -1,5 +1,5 @@
-<details class="dropdown dropdown-bottom dropdown-left ml-4">
-  <summary class="btn btn-ghost btn-circle">
+<div class="dropdown dropdown-bottom dropdown-left ml-4">
+  <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
     <div class="avatar avatar-placeholder !hover:bg-transparent">
       <div
       [class]="unreadNotificationsCount() > 0 ? 'avatar-online' : ''"
@@ -9,9 +9,9 @@
         </span>
       </div>
     </div>
-  </summary>
+  </div>
 
-  <ul class="bg-white text-black rounded-box dropdown-content w-96 mt-3 p-4 shadow">
+  <ul tabindex="-1" class="bg-white text-black rounded-box dropdown-content w-[28rem] mt-3 p-4 shadow-2xl border border-base-200">
     <li class="max-h-[55vh] overflow-y-auto">
       <div class="space-y-2">
 
@@ -36,18 +36,19 @@
               (click)="markNotificationAsRead(notification)">
               <div class="flex gap-4 items-center w-full">
                 <div class="avatar avatar-placeholder" [class]=" notification.isRead?'':'avatar-online'">
-                  <div class="bg-base-200 text-primary w-8 mask mask-squircle">
-                    <span class="text-xs font-semibold">{{notification.title | initials}}</span>
+                  <div class="bg-base-300 text-primary size-12 mask mask-squircle">
+                    <span class="text-sm font-semibold">{{notification.title | initials}}</span>
                   </div>
                 </div>
+
                 <div class="flex flex-col flex-auto">
-                  <span [class]="notification.isRead ? 'text-gray-800' : 'text-primary/95 font-semibold'"
+                  <span [class]="notification.isRead ? 'text-base-content/85 font-bold' : 'text-base-content font-bold'"
                     class="text-sm">{{notification.title}}</span>
                   <span class="text-xs text-gray-500">{{notification.createdAt | date:true}}</span>
                 </div>
               </div>
             </summary>
-            <div class="collapse-content text-xs bg-base-200 rounded-lg my-2 p-4">
+            <div class="collapse-content text-xs bg-base-300 rounded-lg my-2 p-4 pl-16">
               {{ notification?.message }}
             </div>
           </details>
@@ -64,4 +65,4 @@
       </div>
     </li>
   </ul>
-</details>
+</div>
