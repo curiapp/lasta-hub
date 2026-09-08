@@ -160,18 +160,27 @@
                 </button>
               </div>
               <div class="task-list">
-                @for (task of definition.tasks; track task.id) {
-                  @if (task.stageId === stage.id) {
-                    <button type="button" class="task-item" [class.selected]="task.id === selectedTaskId"
-                      (click)="selectTask(task.id)">
+                @for (task of stageTasks(stage.id); track task.id) {
+                    <article class="task-item" [class.selected]="task.id === selectedTaskId"
+                      [class.moved]="task.id === movedTaskId">
+                      <button type="button" class="grid min-h-10 w-full grid-cols-[1.4rem_minmax(0,1fr)_1.8rem] items-center gap-2 px-1 py-0.5 text-left" (click)="selectTask(task.id)">
                       <span class="material-symbols-rounded">task_alt</span>
                       <span><strong>{{ task.name }}</strong><small>{{ task.id }}</small></span>
                       <span class="owner-count">{{ task.ownerRoles.length }}</span>
-                    </button>
-                  }
-                }
-                @if (!definition.tasks.length) {
-                  <p class="empty">Add the first task to begin the workflow.</p>
+                      </button>
+                      <span class="flex gap-0.5">
+                        <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task up" [disabled]="!canMoveTask(task, -1)"
+                          (click)="moveTask(task.id, -1)">
+                          <span class="material-symbols-rounded">arrow_upward</span>
+                        </button>
+                        <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task down" [disabled]="!canMoveTask(task, 1)"
+                          (click)="moveTask(task.id, 1)">
+                          <span class="material-symbols-rounded">arrow_downward</span>
+                        </button>
+                      </span>
+                    </article>
+                } @empty {
+                  <p class="empty">Add the first task to this stage.</p>
                 }
               </div>
             </section>
@@ -212,12 +221,34 @@
               }
             </select>
           </label>
-          <label class="field">
+          <div class="field">
             <span>Owner roles</span>
-            <input class="input input-bordered input-sm" [(ngModel)]="roleEditor" (blur)="applyOwnerRoles()"
-              placeholder="hod, dean">
-            <small>Comma-separated role identifiers</small>
-          </label>
+            <div class="dropdown dropdown-bottom w-full">
+              <button type="button" tabindex="0"
+                class="select select-bordered select-sm flex min-h-8 w-full items-center justify-between gap-2 bg-base-100 text-left">
+                <span class="truncate">{{ ownerRoleSummary(task) }}</span>
+                <span class="material-symbols-rounded text-base text-base-content/45">expand_more</span>
+              </button>
+              <div tabindex="0"
+                class="dropdown-content z-30 mt-1 max-h-64 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-2 shadow-lg">
+              @for (role of definition.roles; track role.id) {
+                <label
+                  class="flex min-h-9 cursor-pointer items-center gap-2 rounded px-2 text-xs transition-colors hover:bg-base-200"
+                  [class.bg-primary/10]="ownsRole(task, role.id)">
+                  <input type="checkbox" class="checkbox checkbox-xs"
+                    [checked]="ownsRole(task, role.id)"
+                    (change)="toggleOwnerRole(task, role.id, $any($event.target).checked)">
+                  <span class="min-w-0 flex-1">
+                    <span class="block truncate font-semibold">{{ role.name }}</span>
+                    <span class="block truncate font-mono text-[0.62rem] text-base-content/50">{{ role.id }}</span>
+                  </span>
+                </label>
+              } @empty {
+                <p class="empty px-2 py-3">Add roles before assigning task ownership.</p>
+              }
+              </div>
+            </div>
+          </div>
 
           <div class="section-heading compact">
             <div><p class="eyebrow">Task form</p><h2>Input fields</h2></div>
@@ -293,6 +324,33 @@
                     </label>
                   </div>
                 }
+                @if (inputField.type === 'user-search') {
+                  <label class="option-editor">
+                    <span>Selection mode</span>
+                    <span class="choice-kind">
+                      <button type="button" [class.active]="!inputField.multiple"
+                        (click)="setUserSearchMode(inputField, false)">Single</button>
+                      <button type="button" [class.active]="inputField.multiple"
+                        (click)="setUserSearchMode(inputField, true)">Multiple</button>
+                    </span>
+                  </label>
+                }
+                @if (canConfigureEmailAction(inputField)) {
+                  <div class="grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                    <label class="required-toggle">
+                      <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="inputField.emailAction"
+                        (ngModelChange)="builderChanged()">
+                      Allow email composer
+                    </label>
+                    @if (inputField.emailAction) {
+                      <input class="input input-bordered input-sm" [(ngModel)]="inputField.emailSubject"
+                        (ngModelChange)="builderChanged()" placeholder="Default subject">
+                      <textarea class="textarea textarea-bordered textarea-sm min-h-24 w-full" rows="4"
+                        [(ngModel)]="inputField.emailMessage" (ngModelChange)="builderChanged()"
+                        [placeholder]="'Default message. You can use {{programmeTitle}}, {{programmeCode}}, {{initiator}}, {{recipientName}}.'"></textarea>
+                    }
+                  </div>
+                }
                 @if (inputField.type === 'repeater') {
                   <div class="repeater-config">
                     <div class="repeater-limits">
@@ -351,6 +409,30 @@
                               aria-label="Maximum file size in MB"
                               [(ngModel)]="childField.maxFileSizeMb" (ngModelChange)="builderChanged()">
                           }
+                          @if (childField.type === 'user-search') {
+                            <span class="choice-kind child-options">
+                              <button type="button" [class.active]="!childField.multiple"
+                                (click)="setUserSearchMode(childField, false)">Single user</button>
+                              <button type="button" [class.active]="childField.multiple"
+                                (click)="setUserSearchMode(childField, true)">Multiple users</button>
+                            </span>
+                          }
+                          @if (canConfigureEmailAction(childField)) {
+                            <div class="child-options grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                              <label class="child-required">
+                                <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="childField.emailAction"
+                                  (ngModelChange)="builderChanged()">
+                                Email composer
+                              </label>
+                              @if (childField.emailAction) {
+                                <input class="input input-bordered input-sm" [(ngModel)]="childField.emailSubject"
+                                  (ngModelChange)="builderChanged()" placeholder="Default subject">
+                                <textarea class="textarea textarea-bordered textarea-sm min-h-24 w-full" rows="4"
+                                  [(ngModel)]="childField.emailMessage" (ngModelChange)="builderChanged()"
+                                  [placeholder]="'Default message. You can use {{programmeTitle}}, {{programmeCode}}, {{initiator}}, {{recipientName}}.'"></textarea>
+                              }
+                            </div>
+                          }
                         </div>
                       }
                     </div>
@@ -395,7 +477,7 @@
                   <label>
                     <span>File count</span>
                     <span class="choice-kind">
-                      <button type="button" [class.active]="!artifact.multiple"
+                      <button type="button" class="w-full" [class.active]="!artifact.multiple"
                         (click)="setArtifactMode(artifactIndex, false)">Single</button>
                       <button type="button" [class.active]="artifact.multiple"
                         (click)="setArtifactMode(artifactIndex, true)">Multiple</button>
@@ -526,14 +608,27 @@
           </div>
           <div class="stage-task-summary">
             <p class="eyebrow">Tasks in this stage</p>
-            @for (task of definition.tasks; track task.id) {
-              @if (task.stageId === stage.id) {
-                <button type="button" class="task-item" (click)="selectTask(task.id)">
+            @for (task of stageTasks(stage.id); track task.id) {
+                <article class="task-item" [class.selected]="task.id === selectedTaskId"
+                  [class.moved]="task.id === movedTaskId">
+                  <button type="button" class="grid min-h-10 w-full grid-cols-[1.4rem_minmax(0,1fr)_1.8rem] items-center gap-2 px-1 py-0.5 text-left" (click)="selectTask(task.id)">
                   <span class="material-symbols-rounded">task_alt</span>
                   <span><strong>{{ task.name }}</strong><small>{{ task.id }}</small></span>
                   <span class="owner-count">{{ task.ownerRoles.length }}</span>
-                </button>
-              }
+                  </button>
+                  <span class="flex gap-0.5">
+                    <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task up" [disabled]="!canMoveTask(task, -1)"
+                      (click)="moveTask(task.id, -1)">
+                      <span class="material-symbols-rounded">arrow_upward</span>
+                    </button>
+                    <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task down" [disabled]="!canMoveTask(task, 1)"
+                      (click)="moveTask(task.id, 1)">
+                      <span class="material-symbols-rounded">arrow_downward</span>
+                    </button>
+                  </span>
+                </article>
+            } @empty {
+              <p class="empty">Add the first task to this stage.</p>
             }
           </div>
           </div>

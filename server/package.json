@@ -25,6 +25,7 @@
     "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
+    "nodemailer": "^10.0.0",
     "pg": "^8.16.3",
     "ruru": "^2.0.0-beta.30",
     "uuid": "^13.0.0"
@@ -37,6 +38,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
+    "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.15.5",
     "@types/supertest": "^6.0.3",
     "drizzle-kit": "^0.31.5",

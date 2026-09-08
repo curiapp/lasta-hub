@@ -1,9 +1,10 @@
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import fs from "fs";
 import { db } from "../db";
 import {
     attachmentsInWorkflow as workflowArtifacts,
     auditEventsInWorkflow as workflowAuditEvents,
+    communicationsInWorkflow as workflowCommunications,
     definitionsInWorkflow as workflowDefinitions,
     definitionVersionsInWorkflow as workflowDefinitionVersions,
     departments as workflowDepartments,
@@ -15,12 +16,12 @@ import {
     taskInstancesInWorkflow as workflowTaskInstances,
     users as workflowUsers,
 } from "../db/schema";
+import { sendMail } from "../email/service";
 import { defaultWorkflowDefinition, getTaskDefinition, selectTransition, validateCompletion, validateDefinition } from "./definition";
 import { WorkflowError } from "./errors";
-import type { CompleteTaskInput, WorkflowDefinition, WorkflowTaskDefinition } from "./types";
+import type { CommunicationRecipientInput, CompleteTaskInput, SendCommunicationInput, WorkflowDefinition, WorkflowTaskDefinition } from "./types";
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
-
 async function ensureDefaultDefinition() {
     const existing = await db
         .select()
@@ -785,6 +786,137 @@ export async function setNotificationPreference(userId: string, emailEnabled: bo
     return user;
 }
 
+function displayUserName(user?: { displayName?: string | null; firstName?: string | null; lastName?: string | null; email?: string | null }) {
+    if (!user) return "";
+    return user.displayName
+        || [user.firstName, user.lastName].filter(Boolean).join(" ")
+        || user.email
+        || "";
+}
+
+function uniqueCommunicationRecipients(recipients: CommunicationRecipientInput[]) {
+    const seen = new Set<string>();
+    return recipients
+        .map((recipient) => ({
+            id: recipient.id?.trim(),
+            email: recipient.email?.trim().toLowerCase(),
+            name: recipient.name?.trim(),
+        }))
+        .filter((recipient) => {
+            if (!recipient.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.email)) return false;
+            const key = recipient.id || recipient.email;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+}
+
+export async function sendCommunication(input: SendCommunicationInput) {
+    const subject = String(input.subject ?? "").trim();
+    const body = String(input.body ?? "").trim();
+    const scope = input.scope === "system" ? "system" : "programme";
+    const recipients = uniqueCommunicationRecipients(input.recipients ?? []);
+
+    if (!subject) throw new WorkflowError("Subject is required", 400);
+    if (!body) throw new WorkflowError("Message is required", 400);
+    if (!recipients.length) throw new WorkflowError("At least one recipient is required", 400);
+    if (scope === "programme" && !input.programmeId) throw new WorkflowError("Programme is required", 400);
+
+    const recipientIds = recipients.map((recipient) => recipient.id).filter(Boolean) as string[];
+    const knownUsers = recipientIds.length
+        ? await db.select({
+            id: workflowUsers.id,
+            email: workflowUsers.email,
+            displayName: workflowUsers.displayName,
+            firstName: workflowUsers.firstName,
+            lastName: workflowUsers.lastName,
+        }).from(workflowUsers).where(inArray(workflowUsers.id, recipientIds))
+        : [];
+    const knownUserById = new Map(knownUsers.map((user) => [user.id, user]));
+
+    const savedMessages = await db.transaction(async (tx) => {
+        const messages = await tx.insert(workflowCommunications).values(recipients.map((recipient) => {
+            const user = recipient.id ? knownUserById.get(recipient.id) : undefined;
+            return {
+                programmeId: input.programmeId || null,
+                senderId: input.senderId || null,
+                recipientId: user?.id || null,
+                recipientEmail: recipient.email,
+                recipientName: recipient.name || displayUserName(user) || null,
+                scope,
+                subject,
+                body,
+                emailStatus: input.sendEmail === false ? "not_requested" : "pending",
+            };
+        })).returning();
+
+        const internalRecipientIds = [...new Set(messages.map((message) => message.recipientId).filter(Boolean) as string[])];
+        if (internalRecipientIds.length) {
+            const [notification] = await tx.insert(workflowNotifications).values({
+                title: subject,
+                message: body,
+                type: scope === "programme" ? "communication.programme" : "communication.system",
+                referenceId: input.programmeId || null,
+            }).returning();
+            await tx.insert(workflowNotificationRecipients).values(internalRecipientIds.map((recipientId) => ({
+                notificationId: notification.id,
+                recipientId,
+            })));
+        }
+
+        return messages;
+    });
+
+    if (input.sendEmail === false) {
+        return { messages: savedMessages, email: { requested: false, sent: 0, failed: 0, skipped: 0 } };
+    }
+
+    let sent = 0;
+    let failed = 0;
+    let skipped = 0;
+    const emailResults = [];
+
+    for (const message of savedMessages) {
+        try {
+            const result = await sendMail({
+                to: [{ email: message.recipientEmail, name: message.recipientName ?? undefined }],
+                subject: message.subject,
+                text: message.body,
+            });
+            const emailStatus = result.sent ? "sent" : "skipped";
+            if (result.sent) sent += 1;
+            else skipped += 1;
+            const [updated] = await db.update(workflowCommunications).set({
+                emailStatus,
+                emailError: result.error ?? null,
+                sentAt: result.sent ? new Date().toISOString() : null,
+            }).where(eq(workflowCommunications.id, message.id)).returning();
+            emailResults.push({ id: message.id, status: emailStatus, error: result.error, messageId: result.messageId });
+            Object.assign(message, updated);
+        } catch (error) {
+            failed += 1;
+            const errorMessage = error instanceof Error ? error.message : "Email could not be sent";
+            const [updated] = await db.update(workflowCommunications).set({
+                emailStatus: "failed",
+                emailError: errorMessage,
+            }).where(eq(workflowCommunications.id, message.id)).returning();
+            emailResults.push({ id: message.id, status: "failed", error: errorMessage });
+            Object.assign(message, updated);
+        }
+    }
+
+    return {
+        messages: savedMessages,
+        email: {
+            requested: true,
+            sent,
+            failed,
+            skipped,
+            results: emailResults,
+        },
+    };
+}
+
 export async function completeTask(taskId: string, input: CompleteTaskInput) {
     return db.transaction(async (tx) => {
         const [task] = await tx
@@ -968,15 +1100,13 @@ export async function reopenTask(taskId: string, input: Pick<CompleteTaskInput, 
             .for("update");
         if (!process) throw new WorkflowError("Process not found", 404);
 
-        const [activeTask] = await tx
-            .select({ id: workflowTaskInstances.id })
+        const activeTasks = await tx
+            .select({ id: workflowTaskInstances.id, taskKey: workflowTaskInstances.taskKey, name: workflowTaskInstances.name })
             .from(workflowTaskInstances)
             .where(and(
                 eq(workflowTaskInstances.processId, task.processId),
                 eq(workflowTaskInstances.status, "active"),
-            ))
-            .limit(1);
-        if (activeTask) throw new WorkflowError("This programme already has an active task", 409);
+            ));
 
         const definition = await definitionForProcess(tx, process.definitionVersionId);
         const taskDefinition = getTaskDefinition(definition, task.taskKey);
@@ -991,6 +1121,24 @@ export async function reopenTask(taskId: string, input: Pick<CompleteTaskInput, 
             || taskDefinition.ownerRoles.map((role) => role.toLowerCase()).includes(actorRole);
         if (!actorRole || !canReopen) {
             throw new WorkflowError(`Role ${actorRole || "unknown"} cannot edit ${taskDefinition.name}`, 403);
+        }
+
+        if (activeTasks.length) {
+            await tx.update(workflowTaskInstances).set({ status: "cancelled" })
+                .where(and(
+                    eq(workflowTaskInstances.processId, task.processId),
+                    eq(workflowTaskInstances.status, "active"),
+                ));
+            await tx.insert(workflowAuditEvents).values(activeTasks.map((activeTask) => ({
+                programmeId: task.programmeId,
+                processId: task.processId,
+                taskId: activeTask.id,
+                actorId: actor?.id,
+                actorRole,
+                type: "task.cancelled_for_reopen",
+                message: `${activeTask.name} paused because ${taskDefinition.name} was reopened for amendment`,
+                metadata: { taskKey: activeTask.taskKey, reopenedTaskKey: task.taskKey },
+            })));
         }
 
         const [reopenedTask] = await tx.update(workflowTaskInstances).set({
@@ -1127,6 +1275,42 @@ export async function getBootstrap() {
         artifacts,
         audit,
     };
+}
+
+export async function searchWorkflowUsers(query = "") {
+    const search = query.trim();
+    const filters = search
+        ? or(
+            ilike(workflowUsers.displayName, `%${search}%`),
+            ilike(workflowUsers.firstName, `%${search}%`),
+            ilike(workflowUsers.lastName, `%${search}%`),
+            ilike(workflowUsers.email, `%${search}%`),
+            ilike(workflowUsers.role, `%${search}%`),
+        )
+        : sql`true`;
+
+    const rows = await db
+        .select({
+            id: workflowUsers.id,
+            displayName: workflowUsers.displayName,
+            firstName: workflowUsers.firstName,
+            lastName: workflowUsers.lastName,
+            email: workflowUsers.email,
+            role: workflowUsers.role,
+            departmentName: workflowDepartments.name,
+            facultyName: workflowFaculty.name,
+        })
+        .from(workflowUsers)
+        .leftJoin(workflowDepartments, eq(workflowUsers.department, workflowDepartments.id))
+        .leftJoin(workflowFaculty, eq(workflowDepartments.facultyId, workflowFaculty.id))
+        .where(filters)
+        .orderBy(asc(workflowUsers.displayName), asc(workflowUsers.email))
+        .limit(20);
+
+    return rows.map((user) => ({
+        ...user,
+        displayName: user.displayName || [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email,
+    }));
 }
 
 export async function publishDefinition(input: WorkflowDefinition, actorId?: string) {

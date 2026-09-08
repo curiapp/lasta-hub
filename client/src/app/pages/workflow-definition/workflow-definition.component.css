@@ -365,16 +365,11 @@ h2 {
 
 .task-item {
   display: grid;
-  grid-template-columns: 1.4rem 1fr 1.8rem;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: .5rem;
-  width: 100%;
-  min-height: 3rem;
-  padding: .45rem .55rem;
+  padding: .25rem;
   border: 1px solid transparent;
   border-radius: 4px;
-  text-align: left;
-  cursor: pointer;
 }
 
 .task-item:hover,
@@ -385,6 +380,10 @@ h2 {
 
 .task-item.selected {
   box-shadow: inset 3px 0 #fcaf17;
+}
+
+.task-item.moved {
+  animation:editor-panel-enter .35s;
 }
 
 .task-item strong,
@@ -447,7 +446,7 @@ h2 {
 
 .choice-kind {
   display: grid !important;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   margin-bottom: .45rem !important;
   padding: .18rem;
   border: 1px solid #d8dee9;

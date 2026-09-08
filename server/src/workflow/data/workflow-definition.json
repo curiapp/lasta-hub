@@ -511,6 +511,13 @@
           "label": "CDC Members",
           "fields": [
             {
+              "key": "appUser",
+              "type": "user-search",
+              "label": "Existing App Users",
+              "required": false,
+              "multiple": true
+            },
+            {
               "key": "firstName",
               "type": "text",
               "label": "First Name",

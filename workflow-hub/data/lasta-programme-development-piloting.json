@@ -190,6 +190,7 @@
           "required": true,
           "minItems": 1,
           "fields": [
+            { "key": "appUser", "label": "Existing App Users", "type": "user-search", "required": false, "multiple": true },
             { "key": "firstName", "label": "First Name", "type": "text", "required": true },
             { "key": "lastName", "label": "Last Name", "type": "text", "required": true },
             { "key": "emailAddress", "label": "Email Address", "type": "email", "required": true },

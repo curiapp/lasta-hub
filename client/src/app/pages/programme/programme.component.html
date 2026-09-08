@@ -213,8 +213,17 @@
                       @if ((taskDefinition.form ?? []).length) {
                         <dl class="grid gap-x-6 gap-y-4 rounded-md border border-base-300 bg-base-100 p-3 md:grid-cols-2">
                           @for (field of taskDefinition.form ?? []; track field.key) {
-                            <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
-                              <dt class="text-xs font-semibold text-base-content/55">{{ field.label }}</dt>
+                            <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater' || field.type === 'user-search'">
+                              <dt class="flex items-center justify-between gap-2 text-xs font-semibold text-base-content/55">
+                                <span>{{ field.label }}</span>
+                                @if (canComposeEmail(field) && fieldEmailRecipients(field).length) {
+                                  <button type="button" class="btn btn-ghost btn-xs"
+                                    (click)="openEmailComposer(field.label, fieldEmailRecipients(field), field)">
+                                    <span class="material-symbols-rounded text-base">mail</span>
+                                    Write message
+                                  </button>
+                                }
+                              </dt>
                               @if (field.type === 'repeater') {
                                 <dd class="mt-2">
                                   @if (repeaterItems(field).length) {
@@ -227,14 +236,105 @@
                                           <dl class="grid gap-3 p-3 sm:grid-cols-2">
                                             @for (child of field.fields ?? []; track child.key) {
                                               <div>
-                                                <dt class="text-xs font-semibold text-base-content/50">{{ child.label }}</dt>
-                                                <dd class="mt-0.5 wrap-break-word text-sm font-medium text-base-content">
-                                                  {{ displayValue(item[child.key]) }}
-                                                </dd>
+                                                <dt class="flex items-center justify-between gap-2 text-xs font-semibold text-base-content/50">
+                                                  <span>{{ child.label }}</span>
+                                                  @if (canComposeEmail(child) && repeaterEmailRecipients(field, child).length) {
+                                                    <button type="button" class="btn btn-ghost btn-xs"
+                                                      (click)="openEmailComposer(child.label, repeaterEmailRecipients(field, child), child)">
+                                                      <span class="material-symbols-rounded text-base">mail</span>
+                                                      Write message
+                                                    </button>
+                                                  }
+                                                </dt>
+                                                @if (child.type === 'user-search') {
+                                                  <dd class="mt-2">
+                                                    @if (userDisplayCards(item[child.key]).length) {
+                                                      <div class="grid gap-2">
+                                                        @for (user of userDisplayCards(item[child.key]); track user.id || user.email) {
+                                                          <article class="rounded-md border border-base-300 bg-base-100 p-3 shadow-sm">
+                                                            <div class="flex items-start gap-3">
+                                                              <span class="grid size-9 shrink-0 place-items-center rounded bg-primary/10 text-primary">
+                                                                <span class="material-symbols-rounded text-xl">person</span>
+                                                              </span>
+                                                              <div class="min-w-0 flex-1">
+                                                                <strong class="block truncate text-sm text-base-content">{{ userLabel(user) }}</strong>
+                                                                @if (user.email) {
+                                                                  <span class="block truncate text-xs text-base-content/60">{{ user.email }}</span>
+                                                                }
+                                                                <div class="mt-2 flex flex-wrap gap-1">
+                                                                  @if (user.role) {
+                                                                    <span class="badge badge-ghost badge-xs uppercase">{{ user.role }}</span>
+                                                                  }
+                                                                  @if (user.departmentName) {
+                                                                    <span class="badge badge-outline badge-xs">{{ user.departmentName }}</span>
+                                                                  }
+                                                                </div>
+                                                              </div>
+                                                              @if (user.email && canComposeEmail(child)) {
+                                                                <button type="button" class="btn btn-ghost btn-square btn-xs"
+                                                                  title="Write message"
+                                                                  (click)="openUserEmailComposer(user, child)">
+                                                                  <span class="material-symbols-rounded text-base">mail</span>
+                                                                </button>
+                                                              }
+                                                            </div>
+                                                          </article>
+                                                        }
+                                                      </div>
+                                                    } @else {
+                                                      <p class="text-sm font-medium text-base-content">Not provided</p>
+                                                    }
+                                                  </dd>
+                                                } @else {
+                                                  <dd class="mt-0.5 wrap-break-word text-sm font-medium text-base-content">
+                                                    {{ displayValue(item[child.key]) }}
+                                                  </dd>
+                                                }
                                               </div>
                                             }
                                           </dl>
                                         </section>
+                                      }
+                                    </div>
+                                  } @else {
+                                    <p class="text-sm font-medium text-base-content">Not provided</p>
+                                  }
+                                </dd>
+                              } @else if (field.type === 'user-search') {
+                                <dd class="mt-2">
+                                  @if (userDisplayCards(formData[field.key]).length) {
+                                    <div class="grid gap-2 sm:grid-cols-2">
+                                      @for (user of userDisplayCards(formData[field.key]); track user.id || user.email) {
+                                        <article class="rounded-md border border-base-300 bg-base-100 p-3 shadow-sm">
+                                          <div class="flex items-start gap-3">
+                                            <span class="grid size-10 shrink-0 place-items-center rounded bg-primary/10 text-primary">
+                                              <span class="material-symbols-rounded text-2xl">person</span>
+                                            </span>
+                                            <div class="min-w-0 flex-1">
+                                              <strong class="block truncate text-sm text-base-content">{{ userLabel(user) }}</strong>
+                                              @if (user.email) {
+                                                <span class="block truncate text-xs text-base-content/60">{{ user.email }}</span>
+                                              }
+                                              <div class="mt-2 flex flex-wrap gap-1">
+                                                @if (user.role) {
+                                                  <span class="badge badge-ghost badge-xs uppercase">{{ user.role }}</span>
+                                                }
+                                                @if (user.departmentName) {
+                                                  <span class="badge badge-outline badge-xs">{{ user.departmentName }}</span>
+                                                }
+                                                @if (user.facultyName) {
+                                                  <span class="badge badge-outline badge-xs">{{ user.facultyName }}</span>
+                                                }
+                                              </div>
+                                            </div>
+                                            @if (user.email && canComposeEmail(field)) {
+                                              <button type="button" class="btn btn-ghost btn-square btn-xs"
+                                                title="Write message" (click)="openUserEmailComposer(user, field)">
+                                                <span class="material-symbols-rounded text-base">mail</span>
+                                              </button>
+                                            }
+                                          </div>
+                                        </article>
                                       }
                                     </div>
                                   } @else {
@@ -324,6 +424,64 @@
                             @if (fieldError(field)) {
                               <p class="mt-1 text-xs text-error">{{ fieldError(field) }}</p>
                             }
+                          } @else if (field.type === 'user-search') {
+                            <div class="relative">
+                              @if (field.multiple && selectedUsers(field).length) {
+                                <div class="mb-2 flex flex-wrap gap-2">
+                                  @for (user of selectedUsers(field); track user.id) {
+                                    <span class="inline-flex max-w-full items-center gap-2 rounded border border-base-300 bg-base-100 px-2 py-1 text-xs shadow-sm">
+                                      <span class="truncate">{{ userLabel(user) }}</span>
+                                      <button type="button" class="grid size-5 place-items-center rounded hover:bg-base-200"
+                                        title="Remove selected user" (click)="removeSelectedUser(field, user.id)">
+                                        <span class="material-symbols-rounded text-sm">close</span>
+                                      </button>
+                                    </span>
+                                  }
+                                  <button type="button" class="btn btn-ghost btn-xs" (click)="clearSelectedUser(field)">
+                                    Clear all
+                                  </button>
+                                </div>
+                              }
+                              @if (!field.multiple && selectedUserLabel(field)) {
+                                <div class="flex min-h-10 items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-3">
+                                  <span class="min-w-0 truncate text-sm font-medium">{{ selectedUserLabel(field) }}</span>
+                                  <button type="button" class="btn btn-ghost btn-square btn-xs" title="Remove selected user"
+                                    (click)="clearSelectedUser(field)">
+                                    <span class="material-symbols-rounded text-base">close</span>
+                                  </button>
+                                </div>
+                              } @else {
+                                <label class="input input-bordered flex w-full items-center gap-2">
+                                  <span class="material-symbols-rounded text-base text-base-content/45">person_search</span>
+                                  <input type="search" class="grow text-sm" placeholder="Search existing users"
+                                    [value]="userSearchText[fieldErrorKey(field)] || ''"
+                                    (input)="searchUsers(field, $event)">
+                                  @if (userFieldLoading(field)) {
+                                    <span class="loading loading-spinner loading-xs"></span>
+                                  }
+                                </label>
+                                @if (userFieldResults(field).length) {
+                                  <div class="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-1 shadow-lg">
+                                    @for (user of userFieldResults(field); track user.id) {
+                                      <button type="button" class="w-full rounded px-3 py-2 text-left hover:bg-base-200"
+                                        (click)="selectUser(field, user)">
+                                        <span class="block text-sm font-semibold">{{ userLabel(user) }}</span>
+                                        <span class="block truncate text-xs text-base-content/55">
+                                          {{ user.email }} · {{ user.role }}
+                                        </span>
+                                      </button>
+                                    }
+                                  </div>
+                                }
+                              }
+                            </div>
+                            @if (canComposeEmail(field) && fieldEmailRecipients(field).length) {
+                              <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                (click)="openEmailComposer(field.label, fieldEmailRecipients(field), field)">
+                                <span class="material-symbols-rounded text-base">mail</span>
+                                Write message
+                              </button>
+                            }
                           } @else if (field.type === 'repeater') {
                             <div class="grid gap-2">
                               @for (item of repeaterItems(field); track $index; let itemIndex = $index) {
@@ -380,9 +538,74 @@
                                           @if (fieldError(child, item)) {
                                             <p class="mt-1 text-xs text-error">{{ fieldError(child, item) }}</p>
                                           }
+                                        } @else if (child.type === 'user-search') {
+                                          <div class="relative">
+                                            @if (child.multiple && selectedUsers(child, item).length) {
+                                              <div class="mb-2 flex flex-wrap gap-2">
+                                                @for (user of selectedUsers(child, item); track user.id) {
+                                                  <span class="inline-flex max-w-full items-center gap-2 rounded border border-base-300 bg-base-100 px-2 py-1 text-xs shadow-sm">
+                                                    <span class="truncate">{{ userLabel(user) }}</span>
+                                                    <button type="button" class="grid size-5 place-items-center rounded hover:bg-base-200"
+                                                      title="Remove selected user" (click)="removeSelectedUser(child, user.id, item)">
+                                                      <span class="material-symbols-rounded text-sm">close</span>
+                                                    </button>
+                                                  </span>
+                                                }
+                                                <button type="button" class="btn btn-ghost btn-xs" (click)="clearSelectedUser(child, item)">
+                                                  Clear all
+                                                </button>
+                                              </div>
+                                            }
+                                            @if (!child.multiple && selectedUserLabel(child, item)) {
+                                              <div class="flex min-h-10 items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-3">
+                                                <span class="min-w-0 truncate text-sm font-medium">{{ selectedUserLabel(child, item) }}</span>
+                                                <button type="button" class="btn btn-ghost btn-square btn-xs" title="Remove selected user"
+                                                  (click)="clearSelectedUser(child, item)">
+                                                  <span class="material-symbols-rounded text-base">close</span>
+                                                </button>
+                                              </div>
+                                            } @else {
+                                              <label class="input input-bordered flex w-full items-center gap-2">
+                                                <span class="material-symbols-rounded text-base text-base-content/45">person_search</span>
+                                                <input type="search" class="grow text-sm" placeholder="Search existing users"
+                                                  [value]="userSearchText[fieldErrorKey(child, item)] || ''"
+                                                  (input)="searchUsers(child, $event, item)">
+                                                @if (userFieldLoading(child, item)) {
+                                                  <span class="loading loading-spinner loading-xs"></span>
+                                                }
+                                              </label>
+                                              @if (userFieldResults(child, item).length) {
+                                                <div class="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-1 shadow-lg">
+                                                  @for (user of userFieldResults(child, item); track user.id) {
+                                                    <button type="button" class="w-full rounded px-3 py-2 text-left hover:bg-base-200"
+                                                      (click)="selectUser(child, user, item)">
+                                                      <span class="block text-sm font-semibold">{{ userLabel(user) }}</span>
+                                                      <span class="block truncate text-xs text-base-content/55">
+                                                        {{ user.email }} · {{ user.role }}
+                                                      </span>
+                                                    </button>
+                                                  }
+                                                </div>
+                                              }
+                                            }
+                                          </div>
+                                          @if (canComposeEmail(child) && fieldEmailRecipients(child, item).length) {
+                                            <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                              (click)="openEmailComposer(child.label, fieldEmailRecipients(child, item), child)">
+                                              <span class="material-symbols-rounded text-base">mail</span>
+                                              Write message
+                                            </button>
+                                          }
                                         } @else {
                                           <input class="input input-bordered w-full" [type]="child.type || 'text'"
                                             [(ngModel)]="item[child.key]">
+                                          @if (canComposeEmail(child) && fieldEmailRecipients(child, item).length) {
+                                            <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                              (click)="openEmailComposer(child.label, fieldEmailRecipients(child, item), child)">
+                                              <span class="material-symbols-rounded text-base">mail</span>
+                                              Write message
+                                            </button>
+                                          }
                                         }
                                       </div>
                                     }
@@ -398,6 +621,13 @@
                           } @else {
                             <input class="input input-bordered w-full" [id]="'field-' + field.key"
                               [type]="field.type || 'text'" [(ngModel)]="formData[field.key]">
+                            @if (canComposeEmail(field) && fieldEmailRecipients(field).length) {
+                              <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                (click)="openEmailComposer(field.label, fieldEmailRecipients(field), field)">
+                                <span class="material-symbols-rounded text-base">mail</span>
+                                Write message
+                              </button>
+                            }
                           }
                         </div>
                       }
@@ -542,4 +772,97 @@
       </section>
     }
   </div>
+
+  @if (emailComposer().open) {
+    <div class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-5xl overflow-hidden border border-base-300 p-0 shadow-2xl">
+        <header class="flex min-h-16 items-center justify-between gap-3 border-b border-base-300 px-6">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase text-base-content/50">Compose email</p>
+            <h2 class="truncate text-base font-bold">{{ emailComposer().title }}</h2>
+          </div>
+          <button type="button" class="btn btn-ghost btn-square btn-sm" title="Close" (click)="closeEmailComposer()">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </header>
+
+        <div class="grid gap-5 p-6 lg:grid-cols-[minmax(220px,.8fr)_1fr]">
+          <section class="rounded-md border border-base-300 bg-base-200/40 p-4">
+            <div class="mb-3 flex items-center justify-between gap-2">
+              <div>
+                <strong class="block text-xs uppercase text-base-content/55">Recipients</strong>
+                <small class="text-xs text-base-content/50">{{ selectedEmailRecipients.length }} selected</small>
+              </div>
+              <div class="flex gap-1">
+                <button type="button" class="btn btn-ghost btn-xs" (click)="selectAllEmailRecipients()">All</button>
+                <button type="button" class="btn btn-ghost btn-xs" (click)="clearEmailRecipients()">None</button>
+              </div>
+            </div>
+            <div class="grid max-h-72 gap-2 overflow-y-auto pr-1">
+              @for (recipient of emailComposer().recipients; track recipient.email) {
+                <article class="rounded-md border border-base-300 bg-base-100 p-2"
+                  [class.border-primary]="recipientSelected(recipient.email)"
+                  [class.bg-primary/5]="recipientSelected(recipient.email)">
+                  <div class="flex items-start justify-between gap-2">
+                    <label class="flex min-w-0 flex-1 cursor-pointer items-start gap-2">
+                      <input type="checkbox" class="checkbox checkbox-xs mt-1"
+                        [checked]="recipientSelected(recipient.email)"
+                        (change)="toggleEmailRecipient(recipient.email, $any($event.target).checked)">
+                      <span class="min-w-0">
+                        <strong class="block truncate text-sm">{{ recipient.name || recipient.email }}</strong>
+                        <span class="block truncate text-xs text-base-content/60">{{ recipient.email }}</span>
+                        @if (recipient.role) {
+                          <span class="badge badge-ghost badge-xs mt-2 uppercase">{{ recipient.role }}</span>
+                        }
+                      </span>
+                    </label>
+                    <button type="button" class="btn btn-ghost btn-square btn-xs" title="Email this person"
+                      [disabled]="sendingEmail()"
+                      (click)="sendIndividualEmail(recipient)">
+                      <span class="material-symbols-rounded text-base">outgoing_mail</span>
+                    </button>
+                  </div>
+                </article>
+              }
+            </div>
+          </section>
+
+          <section class="grid min-w-0 gap-3">
+            <label class="grid gap-1">
+              <span class="text-xs font-semibold text-base-content/60">Subject</span>
+              <input class="input input-bordered input-sm" [value]="emailComposer().subject"
+                (input)="updateEmailSubject($any($event.target).value)">
+            </label>
+            <label class="grid gap-1">
+              <span class="text-xs font-semibold text-base-content/60">Message</span>
+              <textarea class="textarea textarea-bordered min-h-44 w-full" [value]="emailComposer().body"
+                (input)="updateEmailBody($any($event.target).value)"
+                placeholder="Write the message you want to send."></textarea>
+            </label>
+            <div class="flex flex-wrap justify-end gap-2">
+              <button type="button" class="btn btn-ghost btn-sm" (click)="closeEmailComposer()">Cancel</button>
+              <button type="button" class="btn btn-outline btn-sm" [disabled]="!selectedEmailRecipients.length || sendingEmail()"
+                (click)="sendSelectedEmail()">
+                @if (sendingEmail()) {
+                  <span class="loading loading-spinner loading-xs"></span>
+                } @else {
+                  <span class="material-symbols-rounded text-base">mark_email_unread</span>
+                }
+                {{ sendingEmail() ? 'Sending' : 'Email selected' }}
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" [disabled]="sendingEmail()" (click)="sendGroupEmail()">
+                @if (sendingEmail()) {
+                  <span class="loading loading-spinner loading-xs"></span>
+                } @else {
+                  <span class="material-symbols-rounded text-base">group</span>
+                }
+                {{ sendingEmail() ? 'Sending' : 'Email all' }}
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+      <button type="button" class="modal-backdrop" aria-label="Close email composer" (click)="closeEmailComposer()"></button>
+    </div>
+  }
 </main>

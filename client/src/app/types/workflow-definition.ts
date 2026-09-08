@@ -25,7 +25,7 @@ export type WorkflowTransition = {
 }
 
 export type WorkflowFieldType =
-  'text' | 'textarea' | 'date' | 'file' | 'select' | 'radio' | 'number' | 'email' | 'tel' | 'url' | 'checkbox' | 'repeater';
+  'text' | 'textarea' | 'date' | 'file' | 'select' | 'radio' | 'number' | 'email' | 'tel' | 'url' | 'checkbox' | 'repeater' | 'user-search';
 
 export type WorkflowField = {
   key: string;
@@ -36,6 +36,10 @@ export type WorkflowField = {
   fields?: WorkflowField[];
   minItems?: number;
   maxItems?: number;
+  multiple?: boolean;
+  emailAction?: boolean;
+  emailSubject?: string;
+  emailMessage?: string;
   acceptedFileTypes?: string[];
   maxFileSizeMb?: number;
 }

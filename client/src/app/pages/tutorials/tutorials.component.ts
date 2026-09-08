@@ -147,6 +147,7 @@ export class TutorialComponent implements OnInit {
       tel: 'Phone number',
       text: 'Short text',
       textarea: 'Long text',
+      'user-search': 'Existing user search',
       url: 'Web link',
     };
     return labels[type] ?? type;
@@ -163,6 +164,9 @@ export class TutorialComponent implements OnInit {
     if (field.type === 'file') {
       if (field.acceptedFileTypes?.length) details.push(field.acceptedFileTypes.join(', '));
       details.push(`up to ${field.maxFileSizeMb ?? 20} MB`);
+    }
+    if (field.type === 'user-search') {
+      details.push(field.multiple ? 'multiple users' : 'single user');
     }
     return details.join(' - ');
   }

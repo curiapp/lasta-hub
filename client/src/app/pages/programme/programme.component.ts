@@ -28,6 +28,37 @@ import {
   WorkflowInboxItem,
 } from '../../types/programme-workflow';
 
+type WorkflowUserOption = {
+  id: string;
+  displayName?: string;
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  role: string;
+  departmentName?: string;
+  facultyName?: string;
+};
+
+type EmailRecipient = {
+  id?: string;
+  email: string;
+  name?: string;
+  role?: string;
+  departmentName?: string;
+  facultyName?: string;
+};
+
+type EmailComposerState = {
+  open: boolean;
+  title: string;
+  recipients: EmailRecipient[];
+  selectedEmails: string[];
+  subject: string;
+  body: string;
+  subjectTemplate: string;
+  bodyTemplate: string;
+};
+
 @Component({
   selector: 'programme',
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
@@ -50,6 +81,9 @@ export class ProgrammeComponent implements OnInit {
   inbox: WorkflowInboxItem[] = [];
   formData: Record<string, any> = {};
   formErrors: Record<string, string> = {};
+  userSearchText: Record<string, string> = {};
+  userSearchResults: Record<string, WorkflowUserOption[]> = {};
+  userSearchLoading: Record<string, boolean> = {};
   artifacts: WorkflowArtifactInput[] = [];
   artifactAttachmentMap: Record<string, WorkflowArtifactRecord[]> = {};
   readonly emptyAttachments: WorkflowArtifactRecord[] = [];
@@ -62,6 +96,17 @@ export class ProgrammeComponent implements OnInit {
   selectedWorkflowSlug = '';
   message = '';
   messageType: 'success' | 'error' = 'success';
+  emailComposer = signal<EmailComposerState>({
+    open: false,
+    title: '',
+    recipients: [],
+    selectedEmails: [],
+    subject: '',
+    body: '',
+    subjectTemplate: '',
+    bodyTemplate: '',
+  });
+  sendingEmail = signal(false);
   private readonly taskCompletionTransitionMs = 850;
   private taskCompletionTimer?: ReturnType<typeof setTimeout>;
 
@@ -296,6 +341,9 @@ export class ProgrammeComponent implements OnInit {
       if (field.type === 'repeater' && !Array.isArray(this.formData[field.key])) {
         this.formData[field.key] = [];
       }
+      if (field.type === 'user-search' && field.multiple && !Array.isArray(this.formData[field.key])) {
+        this.formData[field.key] = [];
+      }
       if (field.type === 'checkbox' && field.options?.length && !Array.isArray(this.formData[field.key])) {
         this.formData[field.key] = [];
       }
@@ -365,7 +413,7 @@ export class ProgrammeComponent implements OnInit {
     const values = this.formData[field.key] as Array<Record<string, unknown>>;
     const item: Record<string, unknown> = {};
     for (const child of field.fields ?? []) {
-      item[child.key] = child.type === 'checkbox' && child.options?.length ? [] : '';
+      item[child.key] = (child.type === 'checkbox' && child.options?.length) || (child.type === 'user-search' && child.multiple) ? [] : '';
     }
     values.push(item);
   }
@@ -419,6 +467,93 @@ export class ProgrammeComponent implements OnInit {
     }
 
     (target ?? this.formData)[field.key] = file.name;
+  }
+
+  searchUsers(field: WorkflowField, event: Event, target?: Record<string, any>) {
+    const query = (event.target as HTMLInputElement).value.trim();
+    const key = this.fieldErrorKey(field, target);
+    this.userSearchText[key] = query;
+    if (query.length < 2) {
+      this.userSearchResults[key] = [];
+      return;
+    }
+    this.userSearchLoading[key] = true;
+    this.http.getAll<WorkflowUserOption>(`users/search?q=${encodeURIComponent(query)}`).subscribe({
+      next: (users) => {
+        this.userSearchResults[key] = users;
+        this.userSearchLoading[key] = false;
+      },
+      error: () => {
+        this.userSearchResults[key] = [];
+        this.userSearchLoading[key] = false;
+      },
+    });
+  }
+
+  selectUser(field: WorkflowField, user: WorkflowUserOption, target?: Record<string, any>) {
+    const record = target ?? this.formData;
+    const selected = {
+      id: user.id,
+      displayName: this.userLabel(user),
+      email: user.email,
+      role: user.role,
+      departmentName: user.departmentName,
+      facultyName: user.facultyName,
+    };
+    if (field.multiple) {
+      const users = Array.isArray(record[field.key]) ? record[field.key] : [];
+      if (!users.some((item: WorkflowUserOption) => item.id === selected.id)) {
+        record[field.key] = [...users, selected];
+      }
+    } else {
+      record[field.key] = selected;
+    }
+    const key = this.fieldErrorKey(field, target);
+    this.userSearchText[key] = '';
+    this.userSearchResults[key] = [];
+  }
+
+  clearSelectedUser(field: WorkflowField, target?: Record<string, any>) {
+    (target ?? this.formData)[field.key] = field.multiple ? [] : '';
+    const key = this.fieldErrorKey(field, target);
+    this.userSearchText[key] = '';
+    this.userSearchResults[key] = [];
+  }
+
+  removeSelectedUser(field: WorkflowField, userId: string, target?: Record<string, any>) {
+    const record = target ?? this.formData;
+    record[field.key] = Array.isArray(record[field.key])
+      ? record[field.key].filter((user: WorkflowUserOption) => user.id !== userId)
+      : '';
+  }
+
+  selectedUserLabel(field: WorkflowField, target?: Record<string, any>) {
+    const value = (target ?? this.formData)[field.key];
+    if (!value) return '';
+    if (Array.isArray(value)) return value.map((user) => this.userLabel(user)).join(', ');
+    if (typeof value === 'string') return value;
+    return this.userLabel(value as WorkflowUserOption);
+  }
+
+  selectedUsers(field: WorkflowField, target?: Record<string, any>) {
+    const value = (target ?? this.formData)[field.key];
+    if (Array.isArray(value)) return value as WorkflowUserOption[];
+    return value && typeof value === 'object' ? [value as WorkflowUserOption] : [];
+  }
+
+  userLabel(user: Partial<WorkflowUserOption>) {
+    return user.displayName
+      || [user.firstName, user.lastName].filter(Boolean).join(' ')
+      || user.email
+      || 'Selected user';
+  }
+
+  userFieldResults(field: WorkflowField, target?: Record<string, any>) {
+    return this.userSearchResults[this.fieldErrorKey(field, target)] ?? [];
+  }
+
+  userFieldLoading(field: WorkflowField, target?: Record<string, any>) {
+    return this.userSearchLoading[this.fieldErrorKey(field, target)] === true;
   }
 
   fileAccept(field: WorkflowField) {
@@ -501,14 +636,152 @@ export class ProgrammeComponent implements OnInit {
   displayValue(value: unknown): string {
     if (value === null || value === undefined || value === '') return 'Not provided';
     if (Array.isArray(value)) {
-      return value.map((item) => typeof item === 'object'
+      return value.map((item) => {
+        if (item && typeof item === 'object' && 'id' in item && ('displayName' in item || 'email' in item)) {
+          const user = item as Partial<WorkflowUserOption>;
+          return [this.userLabel(user), user.email, user.role].filter(Boolean).join(' · ');
+        }
+        return typeof item === 'object'
         ? Object.entries(item as Record<string, unknown>)
           .map(([key, entry]) => `${key}: ${this.displayValue(entry)}`).join(', ')
-        : String(item)).join('; ');
+        : String(item);
+      }).join('; ');
     }
-    if (typeof value === 'object') return JSON.stringify(value, null, 2);
+    if (typeof value === 'object') {
+      const user = value as Partial<WorkflowUserOption>;
+      if (user.id && (user.displayName || user.email)) {
+        return [this.userLabel(user), user.email, user.role].filter(Boolean).join(' · ');
+      }
+      return JSON.stringify(value, null, 2);
+    }
     if (typeof value === 'boolean') return value ? 'Yes' : 'No';
     return String(value);
+  }
+
+  userDisplayCards(value: unknown): Partial<WorkflowUserOption>[] {
+    if (!value) return [];
+    const values = Array.isArray(value) ? value : [value];
+    return values.filter((item): item is Partial<WorkflowUserOption> =>
+      !!item && typeof item === 'object' && ('id' in item || 'displayName' in item || 'email' in item)
+    );
+  }
+
+  canComposeEmail(field: WorkflowField) {
+    return field.emailAction === true && (field.type === 'email' || field.type === 'user-search');
+  }
+
+  fieldEmailRecipients(field: WorkflowField, target?: Record<string, any>) {
+    if (!this.canComposeEmail(field)) return [];
+    const source = target ?? this.formData;
+    return this.emailRecipientsFromValue(source[field.key], source);
+  }
+
+  repeaterEmailRecipients(group: WorkflowField, child: WorkflowField) {
+    if (!this.canComposeEmail(child)) return [];
+    return this.uniqueEmailRecipients(
+      this.repeaterItems(group).flatMap((item) => this.emailRecipientsFromValue(item[child.key], item))
+    );
+  }
+
+  openEmailComposer(title: string, recipients: EmailRecipient[], field?: WorkflowField) {
+    const uniqueRecipients = this.uniqueEmailRecipients(recipients);
+    if (!uniqueRecipients.length) {
+      this.showMessage('No email address is available for this field.', 'error');
+      return;
+    }
+    const subjectTemplate = field?.emailSubject || (this.programme?.title ? `Programme: ${this.programme.title}` : '');
+    const bodyTemplate = field?.emailMessage || '';
+    const previewRecipient = uniqueRecipients.length === 1 ? uniqueRecipients[0] : this.groupEmailRecipient(uniqueRecipients);
+    this.emailComposer.set({
+      open: true,
+      title,
+      recipients: uniqueRecipients,
+      selectedEmails: uniqueRecipients.map((recipient) => recipient.email),
+      subject: this.renderEmailTemplate(subjectTemplate, previewRecipient),
+      body: this.renderEmailTemplate(bodyTemplate, previewRecipient),
+      subjectTemplate,
+      bodyTemplate,
+    });
+  }
+
+  openUserEmailComposer(user: Partial<WorkflowUserOption>, field?: WorkflowField) {
+    this.openEmailComposer(this.userLabel(user), this.emailRecipientsFromValue(user), field);
+  }
+
+  closeEmailComposer() {
+    this.emailComposer.update((composer) => ({ ...composer, open: false }));
+  }
+
+  updateEmailSubject(subject: string) {
+    this.emailComposer.update((composer) => ({ ...composer, subject, subjectTemplate: subject }));
+  }
+
+  updateEmailBody(body: string) {
+    this.emailComposer.update((composer) => ({ ...composer, body, bodyTemplate: body }));
+  }
+
+  recipientSelected(email: string) {
+    return this.emailComposer().selectedEmails.includes(email);
+  }
+
+  toggleEmailRecipient(email: string, selected: boolean) {
+    this.emailComposer.update((composer) => {
+      const selectedEmails = new Set(composer.selectedEmails);
+      if (selected) selectedEmails.add(email);
+      else selectedEmails.delete(email);
+      return this.emailComposerWithRenderedTemplate({ ...composer, selectedEmails: [...selectedEmails] });
+    });
+  }
+
+  selectAllEmailRecipients() {
+    this.emailComposer.update((composer) => this.emailComposerWithRenderedTemplate({
+      ...composer,
+      selectedEmails: composer.recipients.map((recipient) => recipient.email),
+    }));
+  }
+
+  clearEmailRecipients() {
+    this.emailComposer.update((composer) => this.emailComposerWithRenderedTemplate({ ...composer, selectedEmails: [] }));
+  }
+
+  get selectedEmailRecipients() {
+    const composer = this.emailComposer();
+    return composer.recipients.filter((recipient) => composer.selectedEmails.includes(recipient.email));
+  }
+
+  sendGroupEmail() {
+    const composer = this.emailComposer();
+    const recipient = this.groupEmailRecipient(composer.recipients);
+    this.openMailClient(
+      composer.recipients,
+      this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
+      this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
+    );
+  }
+
+  sendSelectedEmail() {
+    const composer = this.emailComposer();
+    if (!this.selectedEmailRecipients.length) {
+      this.showMessage('Select at least one recipient.', 'error');
+      return;
+    }
+    const recipient = this.selectedEmailRecipients.length === 1
+      ? this.selectedEmailRecipients[0]
+      : this.groupEmailRecipient(this.selectedEmailRecipients);
+    this.openMailClient(
+      this.selectedEmailRecipients,
+      this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
+      this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
+    );
+  }
+
+  sendIndividualEmail(recipient: EmailRecipient) {
+    const composer = this.emailComposer();
+    this.openMailClient(
+      [recipient],
+      this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
+      this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
+    );
   }
 
   completeTask() {
@@ -658,7 +931,132 @@ export class ProgrammeComponent implements OnInit {
     });
   }
 
-  private fieldErrorKey(field: WorkflowField, target?: Record<string, any>) {
+  private emailRecipientsFromValue(value: unknown, context?: Record<string, any>): EmailRecipient[] {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return this.uniqueEmailRecipients(value.flatMap((item) => this.emailRecipientsFromValue(item, context)));
+    }
+    if (typeof value === 'string') {
+      const name = this.recipientNameFromRecord(context);
+      return value
+        .split(/[;,]/)
+        .map((email) => email.trim())
+        .filter((email) => this.looksLikeEmail(email))
+        .map((email) => ({ email, name }));
+    }
+    if (typeof value === 'object') {
+      const user = value as Partial<WorkflowUserOption>;
+      if (!user.email || !this.looksLikeEmail(user.email)) return [];
+      return [{
+        id: user.id,
+        email: user.email,
+        name: this.userLabel(user),
+        role: user.role,
+        departmentName: user.departmentName,
+        facultyName: user.facultyName,
+      }];
+    }
+    return [];
+  }
+
+  private uniqueEmailRecipients(recipients: EmailRecipient[]) {
+    const seen = new Set<string>();
+    return recipients.filter((recipient) => {
+      const email = recipient.email.trim().toLowerCase();
+      if (!email || seen.has(email)) return false;
+      seen.add(email);
+      recipient.email = email;
+      return true;
+    });
+  }
+
+  private looksLikeEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  private recipientNameFromRecord(record?: Record<string, any>) {
+    if (!record) return '';
+    return String(
+      record['displayName']
+      || record['name']
+      || [record['firstName'], record['lastName']].filter(Boolean).join(' ')
+      || [record['firstName'], record['surname']].filter(Boolean).join(' ')
+      || [record['first_name'], record['last_name']].filter(Boolean).join(' ')
+      || ''
+    ).trim();
+  }
+
+  private emailComposerWithRenderedTemplate(composer: EmailComposerState): EmailComposerState {
+    const recipients = composer.recipients.filter((recipient) => composer.selectedEmails.includes(recipient.email));
+    const previewRecipient = recipients.length === 1 ? recipients[0] : this.groupEmailRecipient(recipients);
+    return {
+      ...composer,
+      subject: this.renderEmailTemplate(composer.subjectTemplate, previewRecipient),
+      body: this.renderEmailTemplate(composer.bodyTemplate, previewRecipient),
+    };
+  }
+
+  private groupEmailRecipient(recipients: EmailRecipient[]): EmailRecipient {
+    return {
+      email: '',
+      name: recipients.length ? 'PAC member' : '',
+      role: recipients.length > 1 ? 'group' : recipients[0]?.role,
+    };
+  }
+
+  private renderEmailTemplate(template: string, recipient?: EmailRecipient) {
+    const values: Record<string, string> = {
+      programmeTitle: this.programme?.title ?? '',
+      programmeCode: this.programme?.code ?? '',
+      initiator: this.initiatorName,
+      recipientName: recipient?.name ?? '',
+      recipientEmail: recipient?.email ?? '',
+      recipientRole: recipient?.role ?? '',
+      departmentName: recipient?.departmentName ?? this.programme?.department ?? '',
+      facultyName: recipient?.facultyName ?? this.programme?.faculty ?? '',
+    };
+    return template.replace(/\{\{(\w+)\}\}/g, (_, key: string) => values[key] ?? '');
+  }
+
+  private openMailClient(recipients: EmailRecipient[], subject: string, body: string) {
+    if (this.sendingEmail()) return;
+    this.sendingEmail.set(true);
+    this.http.post('communications/send', {
+      programmeId: this.programme?.id,
+      senderId: this.currentUserId,
+      scope: this.programme?.id ? 'programme' : 'system',
+      subject,
+      body,
+      sendEmail: true,
+      recipients: recipients.map((recipient) => ({
+        id: recipient.id,
+        email: recipient.email,
+        name: recipient.name,
+      })),
+    }).subscribe({
+      next: (result) => {
+        this.sendingEmail.set(false);
+        const email = result?.email;
+        if (email?.failed) {
+          this.showMessage(`Message saved, but ${email.failed} email${email.failed === 1 ? '' : 's'} could not be sent.`, 'error');
+          return;
+        }
+        if (email?.skipped) {
+          this.showMessage('Message saved. Email sending is not configured on the server yet.', 'success');
+          this.closeEmailComposer();
+          return;
+        }
+        this.showMessage('Message sent successfully.', 'success');
+        this.closeEmailComposer();
+      },
+      error: (error) => {
+        this.sendingEmail.set(false);
+        this.showMessage(error?.message ?? 'Message could not be sent.', 'error');
+      },
+    });
+  }
+
+  fieldErrorKey(field: WorkflowField, target?: Record<string, any>) {
     if (!target) return field.key;
     return `${field.key}-${this.repeaterTargetIndex(target)}`;
   }
