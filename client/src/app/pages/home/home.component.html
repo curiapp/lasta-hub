@@ -262,18 +262,19 @@
     </div> -->
     <!-- } -->
 
-    <div class="mb-1 flex flex-col gap-3 border-b border-base-300 pb-3 lg:flex-row lg:items-end lg:justify-between">
-      <div>
+    <div class="mb-1 flex flex-col gap-3 border-b border-base-300 pb-3 xl:flex-row xl:items-end xl:justify-between">
+      <div class="shrink-0">
         <p class="text-xs font-bold uppercase text-base-content/50">Programme portfolio</p>
         <div class="mt-1 flex items-center gap-2">
           <h2 class="text-xl font-bold tracking-normal lg:text-2xl">
             {{currentUser?.role ==='PDQA'?'':'Your'}} Programmes
           </h2>
-          <span class="badge badge-ghost badge-sm">{{ programmes()?.length }}</span>
+          <span class="badge badge-ghost badge-sm">{{ filteredProgrammes().length }}</span>
         </div>
       </div>
-      <div class="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
-        <label class="input input-bordered input-sm flex w-full items-center gap-2 bg-base-100 sm:min-w-64 lg:w-80">
+
+      <div class="flex w-full flex-col gap-2 md:flex-row md:items-center md:justify-end xl:max-w-3xl">
+        <label class="input input-bordered input-sm flex w-full items-center gap-2 bg-base-100 shadow-sm md:w-64! md:flex-none">
           <span class="material-symbols-rounded text-lg text-base-content/45">search</span>
           <input type="search" class="grow" [value]="searchText()" (input)="onSearch($event)"
             placeholder="Search programmes" />
@@ -286,14 +287,64 @@
           <kbd class="kbd kbd-sm">K</kbd> -->
         </label>
 
-        @if (programmes()?.length > 50) {
-        <button class="btn btn-sm btn-ghost border border-base-300 bg-base-100" type="button" (click)="toggleView()">
-          <span class="material-symbols-rounded text-lg">{{ showAll ? 'unfold_less' : 'unfold_more' }}</span>
-          {{showAll ? "Show less" : "View all"}}
+        <div class="dropdown dropdown-end md:shrink-0">
+          <button tabindex="0" role="button" type="button"
+            class="btn btn-sm btn-square border-2 border-base-content/20 bg-base-100 text-primary shadow-md hover:border-primary/50 hover:bg-primary/5"
+            [title]="'View: ' + scopeLabel()">
+            <span class="material-symbols-rounded text-lg">{{ scopeIcon(programmeScope()) }}</span>
+          </button>
+          <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-56 rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+            @for (option of programmeScopeOptions; track option.value) {
+              @if (option.value !== 'department' || currentUser?.department?.id || currentUser?.department?.name) {
+                @if (option.value !== 'faculty' || currentUser?.faculty?.id || currentUser?.faculty?.name) {
+                  <li>
+                    <button type="button" class="gap-3"
+                      [class.active]="programmeScope() === option.value"
+                      (click)="setProgrammeScope(option.value)">
+                      <span class="material-symbols-rounded text-lg">{{ option.icon }}</span>
+                      <span>{{ option.label }}</span>
+                      @if (programmeScope() === option.value) {
+                        <span class="material-symbols-rounded ml-auto text-base">check</span>
+                      }
+                    </button>
+                  </li>
+                }
+              }
+            }
+          </ul>
+        </div>
+
+        <div class="dropdown dropdown-end md:shrink-0">
+          <button tabindex="0" role="button" type="button"
+            class="btn btn-sm btn-square border-2 border-base-content/20 bg-base-100 text-primary shadow-md hover:border-primary/50 hover:bg-primary/5"
+            [title]="'Sort: ' + sortLabel()">
+            <span class="material-symbols-rounded text-lg">{{ sortIcon(programmeSort()) }}</span>
+          </button>
+          <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-52 rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+            @for (option of programmeSortOptions; track option.value) {
+              <li>
+                <button type="button" class="gap-3"
+                  [class.active]="programmeSort() === option.value"
+                  (click)="setProgrammeSort(option.value)">
+                  <span class="material-symbols-rounded text-lg">{{ option.icon }}</span>
+                  <span>{{ option.label }}</span>
+                  @if (programmeSort() === option.value) {
+                    <span class="material-symbols-rounded ml-auto text-base">check</span>
+                  }
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+
+        @if (filteredProgrammes().length > 50) {
+        <button class="btn btn-sm btn-ghost shrink-0 border border-base-300 bg-base-100" type="button" (click)="toggleView()">
+          <span class="material-symbols-rounded text-lg">{{ showAll() ? 'unfold_less' : 'unfold_more' }}</span>
+          {{showAll() ? "Show less" : "View all"}}
         </button>
       }
         <!-- @if(user==='LECTURER'){ -->
-        <button class="btn btn-sm btn-primary" type="button" (click)="create_programme.open()">
+        <button class="btn btn-sm btn-primary shrink-0" type="button" (click)="create_programme.open()">
           <span class="material-symbols-rounded text-lg">add</span>
           New programme
         </button>
@@ -312,7 +363,7 @@
     }@else {
     <div class="portfolio-panel grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4"
       animate.enter="programme-grid-enter" animate.leave="programme-grid-leave">
-      @for (item of programmes(); track item?.id; let index = $index) {
+      @for (item of displayedProgrammes(); track item?.id; let index = $index) {
       <article
         class="group relative flex min-h-40 overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
         animate.enter="programme-card-enter" animate.leave="programme-card-leave" [style.animation-delay.ms]="190 + (index * 55)">
@@ -332,7 +383,7 @@
               <h3 class="line-clamp-2 text-sm font-semibold capitalize text-base-content sm:text-base">
                 {{item?.title}}
               </h3>
-              <span class="badge badge-ghost badge-sm shrink-0 capitalize">{{ item.status || 'draft' }}</span>
+              <span [class]="programmeStatusClasses(item.status)">{{ item.status || 'draft' }}</span>
             </div>
 
             <div class="grid gap-1 text-xs text-base-content/60">
@@ -366,6 +417,16 @@
               (click)="clearSearch()">
               <span class="material-symbols-rounded text-lg">filter_alt_off</span>
               Clear search
+            </button>
+          } @else if (programmeScope() !== 'all') {
+            <h3 class="mt-4 text-base font-bold">No programmes in {{ scopeEmptyLabel() }}</h3>
+            <p class="mt-1 text-sm text-base-content/55">
+              Change the view to all programmes, your department, or your faculty to browse more records.
+            </p>
+            <button type="button" class="btn btn-ghost btn-sm mt-4 border border-base-300 bg-base-100"
+              (click)="setProgrammeScope('all')">
+              <span class="material-symbols-rounded text-lg">view_list</span>
+              Show all programmes
             </button>
           } @else {
             <h3 class="mt-4 text-base font-bold">No programmes yet</h3>

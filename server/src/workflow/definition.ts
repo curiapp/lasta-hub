@@ -11,7 +11,7 @@ import { WorkflowError } from "./errors";
 
 export const defaultWorkflowDefinition = curriculumDefinition as WorkflowDefinition;
 const supportedFieldTypes = new Set([
-    "text", "textarea", "date", "file", "select", "radio", "number", "email", "tel", "url", "checkbox", "repeater",
+    "text", "textarea", "date", "file", "select", "radio", "number", "email", "tel", "url", "checkbox", "repeater", "user-search",
 ]);
 
 export function validateDefinition(definition: WorkflowDefinition) {

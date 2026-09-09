@@ -29,7 +29,7 @@ export class WorkflowDefinitionComponent implements OnInit {
   selectedTaskId = '';
   selectedStageId = '';
   editorVisible = true;
-  roleEditor = '';
+  movedTaskId = '';
   jsonText = '';
   jsonError = '';
   message = '';
@@ -51,6 +51,7 @@ export class WorkflowDefinitionComponent implements OnInit {
     { value: 'url', label: 'URL' },
     { value: 'checkbox', label: 'Checkbox' },
     { value: 'repeater', label: 'Repeatable group' },
+    { value: 'user-search', label: 'User search' },
   ];
   readonly childFieldTypes = this.fieldTypes.filter((field) => field.value !== 'repeater');
 
@@ -203,7 +204,6 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.definition.tasks.forEach((task) => {
       task.ownerRoles = task.ownerRoles.map((ownerRole) => ownerRole === previousId ? id : ownerRole);
     });
-    this.updateRoleEditor();
     this.builderChanged();
   }
 
@@ -247,6 +247,10 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
   }
 
+  stageTasks(stageId: string) {
+    return this.definition.tasks.filter((task) => task.stageId === stageId);
+  }
+
   addTask(stageId = this.selectedStageId || this.definition.stages[0]?.id || '') {
     const index = this.definition.tasks.length + 1;
     const task: WorkflowTask = {
@@ -274,7 +278,32 @@ export class WorkflowDefinitionComponent implements OnInit {
       this.definition.initialTask = this.definition.tasks[0]?.id ?? '';
     }
     this.selectedTaskId = this.definition.tasks[0]?.id ?? '';
-    this.updateRoleEditor();
+    this.builderChanged();
+  }
+
+  canMoveTask(task: WorkflowTask, direction: -1 | 1) {
+    const tasks = this.stageTasks(task.stageId);
+    const index = tasks.findIndex((item) => item.id === task.id);
+    const targetIndex = index + direction;
+    return index >= 0 && targetIndex >= 0 && targetIndex < tasks.length;
+  }
+
+  moveTask(taskId: string, direction: -1 | 1) {
+    const task = this.definition.tasks.find((item) => item.id === taskId);
+    if (!task || !this.canMoveTask(task, direction)) return;
+
+    const reorderedStageTasks = this.stageTasks(task.stageId);
+    const currentIndex = reorderedStageTasks.findIndex((item) => item.id === taskId);
+    const targetIndex = currentIndex + direction;
+    const [movedTask] = reorderedStageTasks.splice(currentIndex, 1);
+    reorderedStageTasks.splice(targetIndex, 0, movedTask);
+
+    let nextStageTaskIndex = 0;
+    this.definition.tasks = this.definition.tasks.map((item) =>
+      item.stageId === task.stageId ? reorderedStageTasks[nextStageTaskIndex++] : item
+    );
+    this.selectedTaskId = taskId;
+    this.flashMovedTask(taskId);
     this.builderChanged();
   }
 
@@ -305,10 +334,22 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.showStageEditor(stageId);
   }
 
-  applyOwnerRoles() {
-    const task = this.selectedTask;
-    if (!task) return;
-    task.ownerRoles = this.roleEditor.split(',').map((role) => role.trim()).filter(Boolean);
+  ownsRole(task: WorkflowTask, roleId: string) {
+    return task.ownerRoles?.includes(roleId) ?? false;
+  }
+
+  ownerRoleSummary(task: WorkflowTask) {
+    const selectedRoles = this.definition.roles.filter((role) => task.ownerRoles?.includes(role.id));
+    if (selectedRoles.length === 0) return 'Select owner roles';
+    if (selectedRoles.length === 1) return selectedRoles[0].name;
+    return `${selectedRoles.length} roles selected`;
+  }
+
+  toggleOwnerRole(task: WorkflowTask, roleId: string, enabled: boolean) {
+    const roles = new Set(task.ownerRoles ?? []);
+    if (enabled) roles.add(roleId);
+    else roles.delete(roleId);
+    task.ownerRoles = [...roles];
     this.builderChanged();
   }
 
@@ -347,12 +388,27 @@ export class WorkflowDefinitionComponent implements OnInit {
       delete field.fields;
       delete field.minItems;
       delete field.maxItems;
+      delete field.emailAction;
+      delete field.emailSubject;
+      delete field.emailMessage;
       field.acceptedFileTypes ??= ['.pdf', '.doc', '.docx'];
       field.maxFileSizeMb ??= 20;
+    } else if (type === 'user-search') {
+      delete field.options;
+      delete field.fields;
+      delete field.minItems;
+      delete field.maxItems;
+      delete field.acceptedFileTypes;
+      delete field.maxFileSizeMb;
+      field.multiple ??= false;
     } else if (type === 'repeater') {
       delete field.options;
       delete field.acceptedFileTypes;
       delete field.maxFileSizeMb;
+      delete field.multiple;
+      delete field.emailAction;
+      delete field.emailSubject;
+      delete field.emailMessage;
       field.fields ??= [
         { key: 'organisation', label: 'Organisation', type: 'text', required: true },
         { key: 'firstName', label: 'First Name', type: 'text', required: true },
@@ -368,7 +424,22 @@ export class WorkflowDefinitionComponent implements OnInit {
       delete field.maxItems;
       delete field.acceptedFileTypes;
       delete field.maxFileSizeMb;
+      delete field.multiple;
+      if (type !== 'email') {
+        delete field.emailAction;
+        delete field.emailSubject;
+        delete field.emailMessage;
+      }
     }
+    this.builderChanged();
+  }
+
+  canConfigureEmailAction(field: WorkflowField) {
+    return field.type === 'email' || field.type === 'user-search';
+  }
+
+  setUserSearchMode(field: WorkflowField, multiple: boolean) {
+    field.multiple = multiple;
     this.builderChanged();
   }
 
@@ -508,7 +579,6 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.normalizeDefinition();
     this.selectedTaskId = this.definition.tasks[0]?.id ?? '';
     this.selectedStageId = this.selectedTask?.stageId ?? this.definition.stages[0]?.id ?? '';
-    this.updateRoleEditor();
     this.syncJson();
   }
 
@@ -531,10 +601,6 @@ export class WorkflowDefinitionComponent implements OnInit {
     });
   }
 
-  private updateRoleEditor() {
-    this.roleEditor = this.selectedTask?.ownerRoles.join(', ') ?? '';
-  }
-
   private syncJson() {
     this.jsonText = JSON.stringify(this.definition, null, 2);
     this.jsonError = '';
@@ -544,14 +610,12 @@ export class WorkflowDefinitionComponent implements OnInit {
     const task = this.definition.tasks.find((item) => item.id === taskId);
     this.selectedTaskId = taskId;
     this.selectedStageId = task?.stageId ?? this.selectedStageId;
-    this.updateRoleEditor();
     this.replayEditorAnimation();
   }
 
   private showStageEditor(stageId: string) {
     this.selectedStageId = stageId;
     this.selectedTaskId = '';
-    this.updateRoleEditor();
     this.replayEditorAnimation();
   }
 
@@ -559,6 +623,16 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.editorVisible = false;
     requestAnimationFrame(() => {
       this.editorVisible = true;
+    });
+  }
+
+  private flashMovedTask(taskId: string) {
+    this.movedTaskId = '';
+    requestAnimationFrame(() => {
+      this.movedTaskId = taskId;
+      window.setTimeout(() => {
+        if (this.movedTaskId === taskId) this.movedTaskId = '';
+      }, 650);
     });
   }
 

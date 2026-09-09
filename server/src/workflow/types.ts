@@ -1,12 +1,16 @@
 export interface WorkflowField {
     key: string;
     label: string;
-    type: "text" | "textarea" | "date" | "file" | "select" | "radio" | "number" | "email" | "tel" | "url" | "checkbox" | "repeater";
+    type: "text" | "textarea" | "date" | "file" | "select" | "radio" | "number" | "email" | "tel" | "url" | "checkbox" | "repeater" | "user-search";
     required?: boolean;
     options?: string[];
     fields?: WorkflowField[];
     minItems?: number;
     maxItems?: number;
+    multiple?: boolean;
+    emailAction?: boolean;
+    emailSubject?: string;
+    emailMessage?: string;
     acceptedFileTypes?: string[];
     maxFileSizeMb?: number;
 }
@@ -74,3 +78,19 @@ export interface CompleteTaskInput {
         size?: number;
     }>;
 }
+
+export type CommunicationRecipientInput = {
+    id?: string;
+    email: string;
+    name?: string;
+};
+
+export type SendCommunicationInput = {
+    programmeId?: string;
+    senderId?: string;
+    scope?: "programme" | "system";
+    subject?: string;
+    body?: string;
+    recipients?: CommunicationRecipientInput[];
+    sendEmail?: boolean;
+};

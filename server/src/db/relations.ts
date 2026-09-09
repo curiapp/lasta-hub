@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { notifications, notificationRecipients, users, faculty, departments, programmes, attachmentsInWorkflow, processInstancesInWorkflow, taskInstancesInWorkflow, definitionsInWorkflow, definitionVersionsInWorkflow, auditEventsInWorkflow } from "./schema";
+import { notifications, notificationRecipients, users, faculty, departments, programmes, attachmentsInWorkflow, processInstancesInWorkflow, taskInstancesInWorkflow, definitionsInWorkflow, definitionVersionsInWorkflow, auditEventsInWorkflow, communicationsInWorkflow } from "./schema";
 
 export const notificationRecipientsRelations = relations(notificationRecipients, ({one}) => ({
 	notification: one(notifications, {
@@ -25,6 +25,12 @@ export const usersRelations = relations(users, ({many}) => ({
 	taskInstancesInWorkflows: many(taskInstancesInWorkflow),
 	definitionsInWorkflows: many(definitionsInWorkflow),
 	auditEventsInWorkflows: many(auditEventsInWorkflow),
+	communicationsInWorkflows_senderId: many(communicationsInWorkflow, {
+		relationName: "communicationsInWorkflow_senderId_users_id"
+	}),
+	communicationsInWorkflows_recipientId: many(communicationsInWorkflow, {
+		relationName: "communicationsInWorkflow_recipientId_users_id"
+	}),
 }));
 
 export const departmentsRelations = relations(departments, ({one}) => ({
@@ -47,6 +53,7 @@ export const programmesRelations = relations(programmes, ({one, many}) => ({
 	processInstancesInWorkflows: many(processInstancesInWorkflow),
 	taskInstancesInWorkflows: many(taskInstancesInWorkflow),
 	auditEventsInWorkflows: many(auditEventsInWorkflow),
+	communicationsInWorkflows: many(communicationsInWorkflow),
 }));
 
 export const attachmentsInWorkflowRelations = relations(attachmentsInWorkflow, ({one}) => ({
@@ -147,5 +154,22 @@ export const auditEventsInWorkflowRelations = relations(auditEventsInWorkflow, (
 	user: one(users, {
 		fields: [auditEventsInWorkflow.actorId],
 		references: [users.id]
+	}),
+}));
+
+export const communicationsInWorkflowRelations = relations(communicationsInWorkflow, ({one}) => ({
+	programme: one(programmes, {
+		fields: [communicationsInWorkflow.programmeId],
+		references: [programmes.id]
+	}),
+	user_senderId: one(users, {
+		fields: [communicationsInWorkflow.senderId],
+		references: [users.id],
+		relationName: "communicationsInWorkflow_senderId_users_id"
+	}),
+	user_recipientId: one(users, {
+		fields: [communicationsInWorkflow.recipientId],
+		references: [users.id],
+		relationName: "communicationsInWorkflow_recipientId_users_id"
 	}),
 }));

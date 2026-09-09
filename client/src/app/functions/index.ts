@@ -14,6 +14,10 @@ export function handleError(error: HttpErrorResponse): Observable<never> {
       errorMessage = 'Invalid email or password';
     } else if (error.status === 500) {
       errorMessage = 'Server error. Please try again later.';
+    } else if (error.error?.error) {
+      errorMessage = error.error.error;
+    } else if (typeof error.error === 'string' && error.error.trim()) {
+      errorMessage = error.error;
     } else {
       errorMessage = `Error ${error.status}: ${error.message}`;
     }

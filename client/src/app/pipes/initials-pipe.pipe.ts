@@ -12,7 +12,9 @@ export class InitialsPipe implements PipeTransform {
 
     if (!trimmedValue) return '';
 
-    const words = trimmedValue.split(/\s+/);
+    const words = trimmedValue.match(/[A-Za-z0-9]+/g) ?? [];
+
+    if (!words.length) return '';
 
     if (words.length === 1) {
       return words[0].substring(0, 2).toUpperCase();

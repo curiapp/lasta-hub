@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -16,6 +16,9 @@ import { programmeDevIcons } from '../../static';
 import { Programme, User } from '../../types';
 import { WorkflowDashboard } from '../../types/programme-workflow';
 
+type ProgrammeScope = 'mine' | 'all' | 'department' | 'faculty';
+type ProgrammeSort = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
+
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
@@ -23,14 +26,28 @@ import { WorkflowDashboard } from '../../types/programme-workflow';
   imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, CanEditDirective, ActionButtonsComponent],
 })
 export class HomeComponent implements OnInit {
-  currentUser: User;
+  currentUser: User | null;
   programme: string;
   greetingMessage: string = '';
-  showAll = false;
+  showAll = signal(false);
   apollo = inject(Apollo);
   programmeDevIcons = programmeDevIcons;
   programmes = signal<Programme[]>([]);
   programmesLoading = signal(true);
+  programmeScope = signal<ProgrammeScope>('all');
+  programmeSort = signal<ProgrammeSort>('newest');
+  readonly programmeScopeOptions: Array<{ value: ProgrammeScope; label: string; icon: string }> = [
+    { value: 'mine', label: 'My programmes', icon: 'person' },
+    { value: 'all', label: 'All programmes', icon: 'view_list' },
+    { value: 'department', label: 'My department', icon: 'groups' },
+    { value: 'faculty', label: 'My faculty', icon: 'account_balance' },
+  ];
+  readonly programmeSortOptions: Array<{ value: ProgrammeSort; label: string; icon: string }> = [
+    { value: 'newest', label: 'Newest first', icon: 'calendar_month' },
+    { value: 'oldest', label: 'Oldest first', icon: 'event' },
+    { value: 'title-asc', label: 'A to Z', icon: 'sort_by_alpha' },
+    { value: 'title-desc', label: 'Z to A', icon: 'sort_by_alpha' },
+  ];
   dashboard = signal<WorkflowDashboard>({
     programmeCount: 0,
     activeTaskCount: 0,
@@ -41,6 +58,8 @@ export class HomeComponent implements OnInit {
   });
 
   searchText = signal("");
+  filteredProgrammes = computed(() => this.programmes().filter((programme) => this.matchesScope(programme)));
+  displayedProgrammes = computed(() => this.sortProgrammes(this.filteredProgrammes()));
   limit = 50;
 
   private queryRef = this.apollo.watchQuery<any>({
@@ -98,16 +117,7 @@ export class HomeComponent implements OnInit {
   }
 
   toggleView() {
-    this.showAll = !this.showAll;
-    this.updateDisplayedPrograms();
-  }
-
-  updateDisplayedPrograms() {
-    if (this.showAll) {
-      this.programmes.set(this.programmes());
-    } else {
-      this.programmes.set(this.programmes().slice(0, 10));
-    }
+    this.showAll.update((showAll) => !showAll);
   }
 
   onApprove(code: string) {
@@ -124,9 +134,50 @@ export class HomeComponent implements OnInit {
     let currentUser: User = JSON.parse(sessionStorage.getItem('loggedInUser'));
     if (currentUser) {
       this.currentUser = currentUser;
+      this.programmeScope.set(this.isLecturerUser() ? 'mine' : 'all');
     } else {
       this.currentUser = null;
     }
+  }
+
+  setProgrammeScope(scope: ProgrammeScope) {
+    this.programmeScope.set(scope);
+    this.showAll.set(false);
+  }
+
+  setProgrammeSort(sort: ProgrammeSort) {
+    this.programmeSort.set(sort);
+  }
+
+  scopeIcon(scope: ProgrammeScope) {
+    return this.programmeScopeOptions.find((option) => option.value === scope)?.icon ?? 'filter_list';
+  }
+
+  scopeLabel(scope: ProgrammeScope = this.programmeScope()) {
+    return this.programmeScopeOptions.find((option) => option.value === scope)?.label ?? 'Programme view';
+  }
+
+  sortIcon(sort: ProgrammeSort) {
+    return this.programmeSortOptions.find((option) => option.value === sort)?.icon ?? 'sort';
+  }
+
+  sortLabel(sort: ProgrammeSort = this.programmeSort()) {
+    return this.programmeSortOptions.find((option) => option.value === sort)?.label ?? 'Sort programmes';
+  }
+
+  programmeStatusClasses(status?: string) {
+    const normalized = String(status || 'draft').trim().toLowerCase().replace(/\s+/g, '_');
+    const base = 'badge badge-sm shrink-0 capitalize font-semibold';
+
+    if (['completed', 'approved', 'registered'].includes(normalized)) return `${base} badge-success`;
+    if (['in_progress', 'running', 'active'].includes(normalized)) return `${base} badge-warning`;
+    if (['declined', 'rejected', 'stopped', 'cancelled'].includes(normalized)) return `${base} badge-error`;
+    if (['deferred', 'on_hold', 'returned', 'paused'].includes(normalized)) return `${base} badge-info`;
+    return `${base} badge-ghost`;
+  }
+
+  scopeEmptyLabel() {
+    return this.programmeScopeOptions.find((option) => option.value === this.programmeScope())?.label.toLowerCase() ?? 'this view';
   }
 
   randomPositions: { top: number; left: number }[] = [];
@@ -135,7 +186,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.greetingMessage = getGreeting();
-    this.updateDisplayedPrograms();
     this.loggedIn();
 
     const width = window.innerWidth;
@@ -148,6 +198,51 @@ export class HomeComponent implements OnInit {
 
     this.randomDelays = this.programmeDevIcons.map(() => Math.random() * 5);
     this.randomDurations = this.programmeDevIcons.map(() => 6 + Math.random() * 4);
+  }
+
+  private isLecturerUser() {
+    return (this.currentUser?.role ?? '').toLowerCase() === 'lecturer';
+  }
+
+  private matchesScope(programme: Programme) {
+    const scope = this.programmeScope();
+    if (scope === 'all' || !this.currentUser) return true;
+    if (scope === 'mine') return this.sameValue(programme.initiator, this.currentUser.id);
+    if (scope === 'department') {
+      return this.matchesUnit(programme.department, programme.departmentName, this.currentUser.department);
+    }
+    return this.matchesUnit(programme.faculty, programme.facultyName, this.currentUser.faculty);
+  }
+
+  private matchesUnit(programmeValue: string | undefined, programmeName: string | undefined, userUnit?: { id: string; name: string }) {
+    return this.sameValue(programmeValue, userUnit?.id)
+      || this.sameValue(programmeValue, userUnit?.name)
+      || this.sameValue(programmeName, userUnit?.id)
+      || this.sameValue(programmeName, userUnit?.name);
+  }
+
+  private sameValue(first?: string, second?: string) {
+    return !!first && !!second && first.trim().toLowerCase() === second.trim().toLowerCase();
+  }
+
+  private sortProgrammes(programmes: Programme[]) {
+    return [...programmes].sort((first, second) => {
+      const sort = this.programmeSort();
+      if (sort === 'title-asc' || sort === 'title-desc') {
+        const comparison = (first.title ?? '').localeCompare(second.title ?? '', undefined, { sensitivity: 'base' });
+        return sort === 'title-asc' ? comparison : -comparison;
+      }
+
+      const firstDate = this.programmeCreatedTime(first);
+      const secondDate = this.programmeCreatedTime(second);
+      return sort === 'oldest' ? firstDate - secondDate : secondDate - firstDate;
+    });
+  }
+
+  private programmeCreatedTime(programme: Programme) {
+    const value = programme.createdAt ?? programme.created_at ?? '';
+    const time = Date.parse(value);
+    return Number.isFinite(time) ? time : 0;
   }
 
 }

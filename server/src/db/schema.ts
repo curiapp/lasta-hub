@@ -287,3 +287,38 @@ export const users = pgTable("users", {
 	unique("users_ad_user_id_key").on(table.adUserId),
 	unique("users_email_key").on(table.email),
 ]);
+
+export const communicationsInWorkflow = workflow.table("communications", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	programmeId: uuid("programme_id"),
+	senderId: uuid("sender_id"),
+	recipientId: uuid("recipient_id"),
+	recipientEmail: text("recipient_email").notNull(),
+	recipientName: text("recipient_name"),
+	scope: text().default('programme').notNull(),
+	subject: text().notNull(),
+	body: text().notNull(),
+	emailStatus: text("email_status").default('pending').notNull(),
+	emailError: text("email_error"),
+	sentAt: timestamp("sent_at", { withTimezone: true, mode: 'string' }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	index("idx_workflow_communications_programme").using("btree", table.programmeId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_communications_recipient").using("btree", table.recipientId.asc().nullsLast().op("uuid_ops"), table.createdAt.desc().nullsFirst().op("timestamptz_ops")),
+	index("idx_workflow_communications_sender").using("btree", table.senderId.asc().nullsLast().op("uuid_ops"), table.createdAt.desc().nullsFirst().op("timestamptz_ops")),
+	foreignKey({
+			columns: [table.programmeId],
+			foreignColumns: [programmes.id],
+			name: "communications_programme_id_fkey"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.senderId],
+			foreignColumns: [users.id],
+			name: "communications_sender_id_fkey"
+		}).onDelete("set null"),
+	foreignKey({
+			columns: [table.recipientId],
+			foreignColumns: [users.id],
+			name: "communications_recipient_id_fkey"
+		}).onDelete("set null"),
+]);

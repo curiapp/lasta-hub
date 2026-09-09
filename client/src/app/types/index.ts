@@ -28,6 +28,7 @@ export type Programme = {
   initiator?: string;
   initiatorFirstName?: string;
   initiatorLastName?: string
+  createdAt?: string;
   created_at?: string;
   description?: string;
   lastReviewDate?: string;

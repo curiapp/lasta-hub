@@ -22,7 +22,9 @@ import {
     markWorkflowNotificationRead,
     publishDefinition,
     reopenTask,
+    sendCommunication,
     setNotificationPreference,
+    searchWorkflowUsers,
     startProcess,
     switchProgrammeWorkflow,
 } from "../workflow/service";
@@ -36,6 +38,11 @@ workflowRouter.get("/bootstrap", async (_, res) => {
 
 workflowRouter.get("/reports-reviews", async (_, res) => {
     res.json(await getReportsAndReviews());
+});
+
+workflowRouter.get("/users/search", async (req, res) => {
+    const query = typeof req.query.q === "string" ? req.query.q : "";
+    res.json(await searchWorkflowUsers(query));
 });
 
 workflowRouter.get("/workflow-definitions", async (_, res) => {
@@ -162,6 +169,10 @@ workflowRouter.get("/users/:userId/notification-preference", async (req, res) =>
 
 workflowRouter.put("/users/:userId/notification-preference", async (req, res) => {
     res.json(await setNotificationPreference(req.params.userId, req.body?.emailEnabled === true));
+});
+
+workflowRouter.post("/communications/send", async (req, res) => {
+    res.status(201).json(await sendCommunication(req.body ?? {}));
 });
 
     return workflowRouter;
