@@ -17,7 +17,7 @@ import {
     users as workflowUsers,
 } from "../db/schema";
 import { sendMail } from "../email/service";
-import { defaultWorkflowDefinition, getTaskDefinition, selectTransition, validateCompletion, validateDefinition } from "./definition";
+import { defaultWorkflowDefinition, getTaskDefinition, selectTransition, taskIsVisible, validateCompletion, validateDefinition } from "./definition";
 import { WorkflowError } from "./errors";
 import type { CommunicationRecipientInput, CompleteTaskInput, SendCommunicationInput, WorkflowDefinition, WorkflowTaskDefinition } from "./types";
 
@@ -140,6 +140,66 @@ async function createTask(
         metadata: { taskKey },
     });
     return task;
+}
+
+async function processFormData(
+    tx: Transaction,
+    processId: string,
+    currentFormData: Record<string, unknown> = {},
+) {
+    const completedTasks = await tx.select({
+        formData: workflowTaskInstances.formData,
+    })
+        .from(workflowTaskInstances)
+        .where(and(
+            eq(workflowTaskInstances.processId, processId),
+            eq(workflowTaskInstances.status, "completed"),
+        ))
+        .orderBy(asc(workflowTaskInstances.completedAt));
+
+    const completedContext = completedTasks.reduce<Record<string, unknown>>((context, task) => {
+        if (task.formData && typeof task.formData === "object" && !Array.isArray(task.formData)) {
+            Object.assign(context, task.formData as Record<string, unknown>);
+        }
+        return context;
+    }, {});
+    return { ...completedContext, ...currentFormData };
+}
+
+function resolveVisibleTaskTargets(
+    definition: WorkflowDefinition,
+    targets: string[],
+    formDataContext: Record<string, unknown>,
+    visited = new Set<string>(),
+) {
+    const taskKeys: string[] = [];
+    let outcome: string | undefined;
+
+    for (const target of targets) {
+        if (target === "END") {
+            outcome ??= "completed";
+            continue;
+        }
+        if (visited.has(target)) {
+            throw new WorkflowError(`Task visibility creates a loop at ${target}`, 400);
+        }
+        visited.add(target);
+        const taskDefinition = getTaskDefinition(definition, target);
+        if (taskIsVisible(taskDefinition, formDataContext)) {
+            taskKeys.push(target);
+            continue;
+        }
+        const skippedTransition = selectTransition(taskDefinition, {
+            event: "submit",
+            formData: formDataContext,
+        });
+        const nextTargets = Array.isArray(skippedTransition.to) ? skippedTransition.to : [skippedTransition.to];
+        const resolved = resolveVisibleTaskTargets(definition, nextTargets, formDataContext, visited);
+        taskKeys.push(...resolved.taskKeys);
+        outcome ??= resolved.outcome ?? skippedTransition.outcome;
+    }
+
+    return { taskKeys: [...new Set(taskKeys)], outcome };
 }
 
 export async function getPublishedDefinition(slug?: string) {
@@ -283,6 +343,76 @@ export async function deleteProgramme(programmeId: string, actorId: string) {
 
         await tx.delete(workflowProgrammes).where(eq(workflowProgrammes.id, programme.id));
         return { message: `${programme.title} deleted successfully` };
+    });
+}
+
+export async function updateProgramme(
+    programmeId: string,
+    input: { title?: string; code?: string; level?: number; actorId?: string },
+) {
+    if (!programmeId) throw new WorkflowError("Programme is required", 400);
+    if (!input.actorId) throw new WorkflowError("An authenticated user is required", 401);
+
+    const title = String(input.title ?? "").trim();
+    const code = String(input.code ?? "").trim();
+    const level = Number(input.level);
+    if (!title) throw new WorkflowError("Programme title is required", 400);
+    if (!code) throw new WorkflowError("Programme code is required", 400);
+    if (!Number.isInteger(level) || level < 1 || level > 10) {
+        throw new WorkflowError("NQF level must be between 1 and 10", 400);
+    }
+
+    return db.transaction(async (tx) => {
+        const [actor] = await tx.select({ id: workflowUsers.id, role: workflowUsers.role })
+            .from(workflowUsers).where(eq(workflowUsers.id, input.actorId!)).limit(1);
+        if (!actor) throw new WorkflowError("User not found", 401);
+
+        const [programme] = await tx.select({
+            id: workflowProgrammes.id,
+            title: workflowProgrammes.title,
+            code: workflowProgrammes.code,
+            level: workflowProgrammes.level,
+            initiator: workflowProgrammes.initiator,
+        }).from(workflowProgrammes)
+            .where(eq(workflowProgrammes.id, programmeId))
+            .for("update");
+        if (!programme) throw new WorkflowError("Programme not found", 404);
+
+        const actorRole = actor.role.trim().toLowerCase();
+        const canUpdate = actorRole === "admin" || actorRole === "pdqa" || programme.initiator === actor.id;
+        if (!canUpdate) {
+            throw new WorkflowError("Only PDQA or the programme coordinator can update this programme", 403);
+        }
+
+        const [updated] = await tx.update(workflowProgrammes).set({
+            title,
+            code,
+            level,
+        }).where(eq(workflowProgrammes.id, programme.id)).returning();
+
+        const [process] = await tx.select({ id: workflowProcessInstances.id })
+            .from(workflowProcessInstances)
+            .where(eq(workflowProcessInstances.programmeId, programme.id))
+            .orderBy(desc(workflowProcessInstances.startedAt))
+            .limit(1);
+        await tx.insert(workflowAuditEvents).values({
+            programmeId: programme.id,
+            processId: process?.id,
+            actorId: actor.id,
+            actorRole,
+            type: "programme.updated",
+            message: `${updated.title} details updated`,
+            metadata: {
+                previous: {
+                    title: programme.title,
+                    code: programme.code,
+                    level: programme.level,
+                },
+                updated: { title, code, level },
+            },
+        });
+
+        return { programme: updated, message: `${updated.title} updated successfully` };
     });
 }
 
@@ -970,6 +1100,7 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
             artifacts: combinedArtifacts,
         });
         const transition = selectTransition(taskDefinition, input);
+        const formDataContext = await processFormData(tx, process.id, input.formData ?? {});
         const completedAt = new Date().toISOString();
         const [completedTask] = await tx.update(workflowTaskInstances).set({
             status: "completed",
@@ -1017,8 +1148,11 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
         let updatedProcess: typeof workflowProcessInstances.$inferSelect;
         let programmeStatus = "in_progress";
 
-        if (transition.to === "END") {
-            const outcome = transition.outcome ?? "completed";
+        const nextTargets = Array.isArray(transition.to) ? transition.to : [transition.to];
+        const resolvedTargets = resolveVisibleTaskTargets(definition, nextTargets, formDataContext);
+
+        if (transition.to === "END" || (!resolvedTargets.taskKeys.length && resolvedTargets.outcome)) {
+            const outcome = transition.outcome ?? resolvedTargets.outcome ?? "completed";
             [updatedProcess] = await tx.update(workflowProcessInstances).set({
                 status: outcome,
                 currentStageKey: null,
@@ -1038,8 +1172,7 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
                 metadata: { outcome },
             });
         } else {
-            const nextTaskKeys = Array.isArray(transition.to) ? transition.to : [transition.to];
-            createdTasks = await Promise.all(nextTaskKeys.map(
+            createdTasks = await Promise.all(resolvedTargets.taskKeys.map(
                 (taskKey) => createTask(tx, process, definition, taskKey, task.id),
             ));
             [updatedProcess] = await tx.update(workflowProcessInstances).set({

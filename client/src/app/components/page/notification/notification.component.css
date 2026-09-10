@@ -1,0 +1,29 @@
+@media (max-width: 640px) {
+  .notification-dropdown .notification-sheet {
+    position: fixed;
+    inset-inline: 0.75rem;
+    bottom: 0.75rem;
+    top: auto;
+    width: auto;
+    max-height: min(78dvh, 38rem);
+    margin-top: 0;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 -18px 55px rgb(15 23 42 / 0.28);
+    transform-origin: bottom center;
+  }
+
+  .notification-dropdown .notification-sheet-body {
+    max-height: calc(min(78dvh, 38rem) - 2rem);
+  }
+
+  .notification-dropdown .notification-sheet::before {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 0.25rem;
+    margin: 0 auto 0.75rem;
+    border-radius: 999px;
+    background: rgb(148 163 184 / 0.7);
+  }
+}

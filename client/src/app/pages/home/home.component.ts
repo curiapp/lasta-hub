@@ -36,6 +36,8 @@ export class HomeComponent implements OnInit {
   programmesLoading = signal(true);
   programmeScope = signal<ProgrammeScope>('all');
   programmeSort = signal<ProgrammeSort>('newest');
+  private readonly programmeScopeStorageKey = 'home.programmeScope';
+  private readonly programmeSortStorageKey = 'home.programmeSort';
   readonly programmeScopeOptions: Array<{ value: ProgrammeScope; label: string; icon: string }> = [
     { value: 'mine', label: 'My programmes', icon: 'person' },
     { value: 'all', label: 'All programmes', icon: 'view_list' },
@@ -134,7 +136,11 @@ export class HomeComponent implements OnInit {
     let currentUser: User = JSON.parse(sessionStorage.getItem('loggedInUser'));
     if (currentUser) {
       this.currentUser = currentUser;
-      this.programmeScope.set(this.isLecturerUser() ? 'mine' : 'all');
+      const defaultScope = this.isLecturerUser() ? 'mine' : 'all';
+      const savedScope = this.readProgrammeScope();
+      const savedSort = this.readProgrammeSort();
+      this.programmeScope.set(savedScope && this.scopeAvailable(savedScope) ? savedScope : defaultScope);
+      if (savedSort) this.programmeSort.set(savedSort);
     } else {
       this.currentUser = null;
     }
@@ -142,11 +148,13 @@ export class HomeComponent implements OnInit {
 
   setProgrammeScope(scope: ProgrammeScope) {
     this.programmeScope.set(scope);
+    sessionStorage.setItem(this.programmeScopeStorageKey, scope);
     this.showAll.set(false);
   }
 
   setProgrammeSort(sort: ProgrammeSort) {
     this.programmeSort.set(sort);
+    sessionStorage.setItem(this.programmeSortStorageKey, sort);
   }
 
   scopeIcon(scope: ProgrammeScope) {
@@ -202,6 +210,22 @@ export class HomeComponent implements OnInit {
 
   private isLecturerUser() {
     return (this.currentUser?.role ?? '').toLowerCase() === 'lecturer';
+  }
+
+  private readProgrammeScope(): ProgrammeScope | null {
+    const value = sessionStorage.getItem(this.programmeScopeStorageKey) as ProgrammeScope | null;
+    return value && this.programmeScopeOptions.some((option) => option.value === value) ? value : null;
+  }
+
+  private readProgrammeSort(): ProgrammeSort | null {
+    const value = sessionStorage.getItem(this.programmeSortStorageKey) as ProgrammeSort | null;
+    return value && this.programmeSortOptions.some((option) => option.value === value) ? value : null;
+  }
+
+  private scopeAvailable(scope: ProgrammeScope) {
+    if (scope === 'department') return Boolean(this.currentUser?.department?.id || this.currentUser?.department?.name);
+    if (scope === 'faculty') return Boolean(this.currentUser?.faculty?.id || this.currentUser?.faculty?.name);
+    return true;
   }
 
   private matchesScope(programme: Programme) {

@@ -15,7 +15,9 @@ import { WorkflowDefinitionService } from '../../services/workflow-definition.se
 import { ClientService } from '../../services/client.service';
 import { environment } from '../../../environments/environment';
 import { WorkflowTaskUploadComponent } from '../../components/files/workflow-task-upload/workflow-task-upload.component';
+import { NQFLevel } from '../../static';
 import {
+  WorkflowCondition,
   WorkflowDefinition,
   WorkflowDefinitionSummary,
   WorkflowField,
@@ -59,6 +61,12 @@ type EmailComposerState = {
   bodyTemplate: string;
 };
 
+type ProgrammeEditForm = {
+  title: string;
+  code: string;
+  level: number;
+};
+
 @Component({
   selector: 'programme',
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
@@ -94,8 +102,17 @@ export class ProgrammeComponent implements OnInit {
   switchingWorkflow = signal(false);
   workflowDefinitions: WorkflowDefinitionSummary[] = [];
   selectedWorkflowSlug = '';
+  workflowDefinitionsLoading = false;
   message = '';
   messageType: 'success' | 'error' = 'success';
+  programmeEditOpen = signal(false);
+  updatingProgramme = signal(false);
+  programmeEditForm = signal<ProgrammeEditForm>({
+    title: '',
+    code: '',
+    level: 1,
+  });
+  readonly levels = NQFLevel;
   emailComposer = signal<EmailComposerState>({
     open: false,
     title: '',
@@ -127,7 +144,26 @@ export class ProgrammeComponent implements OnInit {
   }
 
   get stageTaskDefinitions() {
-    return (this.definition?.tasks ?? []).filter((task) => task.stageId === this.selectedStageId);
+    return (this.definition?.tasks ?? [])
+      .filter((task) => task.stageId === this.selectedStageId && this.taskVisible(task));
+  }
+
+  get mobileVisibleStages() {
+    return this.visibleMobileItems(this.stages, this.selectedStageId, 3);
+  }
+
+  get mobileOverflowStages() {
+    const visibleIds = new Set(this.mobileVisibleStages.map((stage) => stage.id));
+    return this.stages.filter((stage) => !visibleIds.has(stage.id));
+  }
+
+  get mobileVisibleTasks() {
+    return this.visibleMobileItems(this.stageTaskDefinitions, this.selectedTaskKey, 2);
+  }
+
+  get mobileOverflowTasks() {
+    const visibleIds = new Set(this.mobileVisibleTasks.map((task) => task.id));
+    return this.stageTaskDefinitions.filter((task) => !visibleIds.has(task.id));
   }
 
   get selectedTaskDefinition() {
@@ -212,12 +248,20 @@ export class ProgrammeComponent implements OnInit {
     return this.currentUserRole === 'pdqa';
   }
 
+  get canEditProgrammeDetails() {
+    const isCoordinator = this.programme?.initiatorUser?.id === this.currentUserId;
+    return this.currentUserRole === 'admin' || this.currentUserRole === 'pdqa' || isCoordinator;
+  }
+
   get workflowDisplayName() {
     return this.definition?.name || 'No development path assigned';
   }
 
   get canSwitchWorkflow() {
-    return this.canManageWorkflow && this.completedTaskCount === 0 && Boolean(this.detail?.process);
+    return this.canManageWorkflow
+      && this.completedTaskCount === 0
+      && Boolean(this.detail?.process)
+      && !this.workflowDefinitionsLoading;
   }
 
   get selectedTaskArtifacts(): WorkflowArtifactRecord[] {
@@ -257,7 +301,6 @@ export class ProgrammeComponent implements OnInit {
     }).subscribe({
       next: ({ data }) => {
         this.detail = data.programmeWorkflow;
-        this.selectedWorkflowSlug = this.detail.definition?.id ?? '';
         if (this.canManageWorkflow) this.loadWorkflowDefinitions();
         if (this.detail.definition) {
           this.applyDefinition(this.detail.definition);
@@ -298,9 +341,18 @@ export class ProgrammeComponent implements OnInit {
   }
 
   loadWorkflowDefinitions() {
+    this.workflowDefinitionsLoading = true;
     this.definitionService.list().subscribe({
-      next: (definitions) => this.workflowDefinitions = definitions.filter((item) => item.status === 'active'),
-      error: () => this.workflowDefinitions = [],
+      next: (definitions) => {
+        this.workflowDefinitions = definitions.filter((item) => item.status === 'active');
+        this.selectedWorkflowSlug = this.resolveSelectedWorkflowSlug();
+        this.workflowDefinitionsLoading = false;
+      },
+      error: () => {
+        this.workflowDefinitions = [];
+        this.selectedWorkflowSlug = this.resolveSelectedWorkflowSlug();
+        this.workflowDefinitionsLoading = false;
+      },
     });
   }
 
@@ -323,12 +375,75 @@ export class ProgrammeComponent implements OnInit {
     });
   }
 
+  openProgrammeEdit() {
+    if (!this.programme) return;
+    this.programmeEditForm.set({
+      title: this.programme.title ?? '',
+      code: this.programme.code ?? '',
+      level: Number(this.programme.level) || 1,
+    });
+    this.programmeEditOpen.set(true);
+  }
+
+  closeProgrammeEdit() {
+    if (this.updatingProgramme()) return;
+    this.programmeEditOpen.set(false);
+  }
+
+  updateProgrammeField<K extends keyof ProgrammeEditForm>(field: K, value: ProgrammeEditForm[K]) {
+    this.programmeEditForm.update((form) => ({ ...form, [field]: value }));
+  }
+
+  saveProgrammeDetails() {
+    if (!this.programme || this.updatingProgramme()) return;
+    const form = this.programmeEditForm();
+    const title = form.title.trim();
+    const code = form.code.trim();
+    const level = Number(form.level);
+    if (!title || !code || !Number.isInteger(level)) {
+      this.showMessage('Programme title, code and NQF level are required.', 'error');
+      return;
+    }
+
+    this.updatingProgramme.set(true);
+    this.http.put(`programmes/${this.programme.id}`, {
+      title,
+      code,
+      level,
+      actorId: this.currentUserId,
+    }).subscribe({
+      next: (result) => {
+        this.updatingProgramme.set(false);
+        this.programmeEditOpen.set(false);
+        if (this.detail && result?.programme) {
+          this.detail = {
+            ...this.detail,
+            programme: {
+              ...this.detail.programme,
+              ...result.programme,
+            },
+          };
+        }
+        this.showMessage(result?.message ?? 'Programme details updated.', 'success');
+      },
+      error: (error) => {
+        this.updatingProgramme.set(false);
+        this.showMessage(error?.message ?? 'Programme details could not be updated.', 'error');
+      },
+    });
+  }
+
   selectStage(stage: WorkflowStage) {
     this.selectedStageId = stage.id;
-    const stageTasks = this.definition?.tasks.filter((task) => task.stageId === stage.id) ?? [];
+    const stageTasks = this.stageTaskDefinitions;
     const active = stageTasks.find((definition) =>
       this.detail?.tasks.some((instance) => instance.taskKey === definition.id && instance.status === 'active'));
     this.selectTask(active?.id ?? stageTasks[0]?.id ?? '');
+  }
+
+  selectStageById(stageId: string) {
+    const stage = this.stages.find((candidate) => candidate.id === stageId);
+    if (stage) this.selectStage(stage);
   }
 
   selectTask(taskKey: string) {
@@ -425,6 +540,20 @@ export class ProgrammeComponent implements OnInit {
   repeaterItems(field: WorkflowField) {
     const items = this.formData[field.key];
     return Array.isArray(items) ? items as Array<Record<string, any>> : [];
+  }
+
+  visibleFields(fields: WorkflowField[] | undefined, target?: Record<string, any>) {
+    return (fields ?? []).filter((field) => this.fieldVisible(field, target));
+  }
+
+  fieldVisible(field: WorkflowField, target?: Record<string, any>) {
+    return this.conditionMatches(field.visibleWhen, target ?? this.formData, this.formData);
+  }
+
+  taskVisible(task: { id: string; visibleWhen?: WorkflowCondition }) {
+    if (this.taskInstance(task.id)) return true;
+    const context = this.processFormDataContext();
+    return this.conditionMatches(task.visibleWhen, context, context);
   }
 
   checkboxSelected(field: WorkflowField, option: string, target?: Record<string, any>) {
@@ -839,6 +968,7 @@ export class ProgrammeComponent implements OnInit {
   }
 
   private submitCompletedTask(taskId: string) {
+    this.clearHiddenFieldErrors(this.selectedTaskDefinition?.form ?? [], this.formData);
     if (Object.keys(this.formErrors).length) {
       this.completing.set(false);
       this.showMessage('Fix the file selection before completing this task.', 'error');
@@ -872,7 +1002,7 @@ export class ProgrammeComponent implements OnInit {
         input: {
           event: 'submit',
           actor,
-          formData: this.formData,
+          formData: this.visibleFormData(this.selectedTaskDefinition?.form ?? [], this.formData),
           artifacts: [],
         },
       },
@@ -894,6 +1024,7 @@ export class ProgrammeComponent implements OnInit {
 
   private applyDefinition(definition: WorkflowDefinition) {
     this.definition = definition;
+    this.selectedWorkflowSlug = this.resolveSelectedWorkflowSlug();
     const activeTask = this.detail?.tasks.find((task) => task.status === 'active');
     const preferredStage = activeTask?.stageKey
       ?? this.detail?.process?.currentStageKey
@@ -902,6 +1033,17 @@ export class ProgrammeComponent implements OnInit {
     const stage = definition.stages.find((candidate) => candidate.id === preferredStage);
     if (stage) this.selectStage(stage);
     this.loadInbox();
+  }
+
+  private resolveSelectedWorkflowSlug() {
+    const current = this.detail?.definition;
+    if (!current) return this.selectedWorkflowSlug;
+    const matched = this.workflowDefinitions.find((definition) =>
+      definition.slug === current.slug
+      || definition.slug === current.id
+      || definition.id === current.definitionId
+      || definition.id === current.id);
+    return matched?.slug ?? current.slug ?? current.id ?? this.selectedWorkflowSlug;
   }
 
   private showMessage(message: string, type: 'success' | 'error') {
@@ -1054,6 +1196,70 @@ export class ProgrammeComponent implements OnInit {
         this.showMessage(error?.message ?? 'Message could not be sent.', 'error');
       },
     });
+  }
+
+  private visibleMobileItems<T extends { id: string }>(items: T[], selectedId: string, limit: number) {
+    if (items.length <= limit) return items;
+    const visible = items.slice(0, limit);
+    if (!selectedId || visible.some((item) => item.id === selectedId)) return visible;
+    const selected = items.find((item) => item.id === selectedId);
+    return selected ? [...visible.slice(0, Math.max(1, limit - 1)), selected] : visible;
+  }
+
+  private visibleFormData(fields: WorkflowField[], values: Record<string, any>, rootValues = this.formData) {
+    const cleaned: Record<string, any> = {};
+    for (const field of fields) {
+      if (!this.conditionMatches(field.visibleWhen, values, rootValues)) continue;
+      const value = values[field.key];
+      if (field.type === 'repeater' && Array.isArray(value)) {
+        cleaned[field.key] = value.map((item) =>
+          this.visibleFormData(field.fields ?? [], item as Record<string, any>, rootValues));
+      } else {
+        cleaned[field.key] = value;
+      }
+    }
+    return cleaned;
+  }
+
+  private processFormDataContext() {
+    const context: Record<string, any> = {};
+    for (const task of this.detail?.tasks ?? []) {
+      if (task.formData && typeof task.formData === 'object' && !Array.isArray(task.formData)) {
+        Object.assign(context, task.formData);
+      }
+    }
+    return { ...context, ...this.formData };
+  }
+
+  private clearHiddenFieldErrors(fields: WorkflowField[], values: Record<string, any>, rootValues = this.formData) {
+    for (const field of fields) {
+      if (!this.conditionMatches(field.visibleWhen, values, rootValues)) {
+        delete this.formErrors[this.fieldErrorKey(field, values === this.formData ? undefined : values)];
+        continue;
+      }
+      const value = values[field.key];
+      if (field.type === 'repeater' && Array.isArray(value)) {
+        value.forEach((item) =>
+          this.clearHiddenFieldErrors(field.fields ?? [], item as Record<string, any>, rootValues));
+      }
+    }
+  }
+
+  private conditionMatches(condition: WorkflowCondition | undefined, values: Record<string, any>, rootValues: Record<string, any>) {
+    if (!condition) return true;
+    const value = Object.hasOwn(values, condition.field) ? values[condition.field] : rootValues[condition.field];
+    if (Object.hasOwn(condition, 'equals')) return this.sameConditionValue(value, condition.equals);
+    if (Object.hasOwn(condition, 'notEquals')) return !this.sameConditionValue(value, condition.notEquals);
+    if (Array.isArray(condition.in)) {
+      const selected = Array.isArray(value) ? value : [value];
+      return selected.some((item) => condition.in?.some((option) => this.sameConditionValue(item, option)));
+    }
+    return false;
+  }
+
+  private sameConditionValue(left: unknown, right: unknown) {
+    if (Array.isArray(left)) return left.some((item) => String(item) === String(right));
+    return String(left) === String(right);
   }
 
   fieldErrorKey(field: WorkflowField, target?: Record<string, any>) {

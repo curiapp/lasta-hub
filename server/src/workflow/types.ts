@@ -13,6 +13,7 @@ export interface WorkflowField {
     emailMessage?: string;
     acceptedFileTypes?: string[];
     maxFileSizeMb?: number;
+    visibleWhen?: WorkflowCondition;
 }
 
 export interface WorkflowArtifactRequirement {
@@ -46,6 +47,7 @@ export interface WorkflowTaskDefinition {
     name: string;
     description?: string;
     ownerRoles: string[];
+    visibleWhen?: WorkflowCondition;
     form?: WorkflowField[];
     artifacts?: WorkflowArtifactRequirement[];
     transitions?: WorkflowTransition[];

@@ -29,6 +29,7 @@ export function validateDefinition(definition: WorkflowDefinition) {
         if (!task.stageId || !task.name || !task.ownerRoles?.length) {
             throw new WorkflowError(`Task ${task.id} must include stageId, name, and ownerRoles`, 400);
         }
+        validateCondition(task.visibleWhen, `Task ${task.id}`);
         for (const transition of task.transitions ?? []) {
             const targets = Array.isArray(transition.to) ? transition.to : [transition.to];
             const unknown = targets.find((target) => target !== "END" && !taskKeys.has(target));
@@ -71,6 +72,7 @@ function validateFields(fields: WorkflowField[], taskId: string, parentKey?: str
         if ((field.type === "select" || field.type === "radio") && !field.options?.length) {
             throw new WorkflowError(`${field.type} field ${field.key} requires options`, 400);
         }
+        validateCondition(field.visibleWhen, `Field ${field.key}`);
         if (field.type === "repeater") {
             if (!field.fields?.length) {
                 throw new WorkflowError(`Repeatable group ${field.key} requires child fields`, 400);
@@ -81,6 +83,19 @@ function validateFields(fields: WorkflowField[], taskId: string, parentKey?: str
             validateFields(field.fields, taskId, parentKey ? `${parentKey}.${field.key}` : field.key);
         }
         fieldKeys.add(field.key);
+    }
+}
+
+function validateCondition(condition: WorkflowCondition | undefined, context: string) {
+    if (!condition) return;
+    if (!condition.field) {
+        throw new WorkflowError(`${context} has an invalid visibility condition`, 400);
+    }
+    const hasOperator = Object.hasOwn(condition, "equals")
+        || Object.hasOwn(condition, "notEquals")
+        || Array.isArray(condition.in);
+    if (!hasOperator) {
+        throw new WorkflowError(`${context} visibility condition must include a comparison`, 400);
     }
 }
 
@@ -112,9 +127,15 @@ export function validateCompletion(task: WorkflowTaskDefinition, input: Complete
     }
 }
 
-function validateSubmittedFields(fields: WorkflowField[], values: Record<string, unknown>, prefix = "") {
+function validateSubmittedFields(
+    fields: WorkflowField[],
+    values: Record<string, unknown>,
+    prefix = "",
+    rootValues: Record<string, unknown> = values,
+) {
     const errors: string[] = [];
     for (const field of fields) {
+        if (!fieldIsVisible(field, values, rootValues)) continue;
         const value = values[field.key];
         const label = prefix ? `${prefix} / ${field.label}` : field.label;
         const empty = value == null || value === "" || value === false || (Array.isArray(value) && value.length === 0);
@@ -142,7 +163,12 @@ function validateSubmittedFields(fields: WorkflowField[], values: Record<string,
             if (field.maxItems != null && value.length > field.maxItems) errors.push(`${label} allows at most ${field.maxItems}`);
             value.forEach((item, index) => {
                 if (item && typeof item === "object" && !Array.isArray(item)) {
-                    errors.push(...validateSubmittedFields(field.fields ?? [], item as Record<string, unknown>, `${label} ${index + 1}`));
+                    errors.push(...validateSubmittedFields(
+                        field.fields ?? [],
+                        item as Record<string, unknown>,
+                        `${label} ${index + 1}`,
+                        rootValues,
+                    ));
                 } else {
                     errors.push(`${label} ${index + 1} is invalid`);
                 }
@@ -152,13 +178,30 @@ function validateSubmittedFields(fields: WorkflowField[], values: Record<string,
     return errors;
 }
 
-function matches(condition: WorkflowCondition | undefined, formData: Record<string, unknown>) {
+function conditionValue(condition: WorkflowCondition, values: Record<string, unknown>, rootValues: Record<string, unknown>) {
+    if (Object.hasOwn(values, condition.field)) return values[condition.field];
+    return rootValues[condition.field];
+}
+
+function sameValue(left: unknown, right: unknown) {
+    if (Array.isArray(left)) return left.some((item) => String(item) === String(right));
+    return String(left) === String(right);
+}
+
+export function matches(condition: WorkflowCondition | undefined, formData: Record<string, unknown>, rootValues = formData) {
     if (!condition) return true;
-    const value = formData[condition.field];
-    if (Object.hasOwn(condition, "equals")) return value === condition.equals;
-    if (Object.hasOwn(condition, "notEquals")) return value !== condition.notEquals;
-    if (Array.isArray(condition.in)) return condition.in.includes(value);
+    const value = conditionValue(condition, formData, rootValues);
+    if (Object.hasOwn(condition, "equals")) return sameValue(value, condition.equals);
+    if (Object.hasOwn(condition, "notEquals")) return !sameValue(value, condition.notEquals);
+    if (Array.isArray(condition.in)) {
+        const selected = Array.isArray(value) ? value : [value];
+        return selected.some((item) => condition.in?.some((option) => sameValue(item, option)));
+    }
     return false;
+}
+
+function fieldIsVisible(field: WorkflowField, values: Record<string, unknown>, rootValues: Record<string, unknown>) {
+    return matches(field.visibleWhen, values, rootValues);
 }
 
 export function selectTransition(task: WorkflowTaskDefinition, input: CompleteTaskInput): WorkflowTransition {
@@ -169,4 +212,8 @@ export function selectTransition(task: WorkflowTaskDefinition, input: CompleteTa
 
     if (!transition) throw new WorkflowError("No transition matched this submission", 400);
     return transition;
+}
+
+export function taskIsVisible(task: WorkflowTaskDefinition, formData: Record<string, unknown>) {
+    return matches(task.visibleWhen, formData);
 }

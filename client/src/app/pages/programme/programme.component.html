@@ -12,6 +12,12 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 text-xs text-base-content/60">
+        @if (canEditProgrammeDetails) {
+          <button type="button" class="btn btn-ghost btn-square btn-sm border border-base-content/20 bg-base-100 shadow-sm"
+            title="Edit programme details" (click)="openProgrammeEdit()">
+            <span class="material-symbols-rounded text-base">edit</span>
+          </button>
+        }
         <span class="badge badge-outline badge-sm">NQF Level {{ programme?.level }}</span>
         <span [class]="statusClasses(detail?.process?.status || programme?.status)">
           {{ detail?.process?.status || programme?.status || 'draft' }}
@@ -70,13 +76,16 @@
         </div>
         <div class="flex w-full gap-2 md:w-auto">
           <select class="select select-bordered select-sm min-w-64 grow"
-            [(ngModel)]="selectedWorkflowSlug" [disabled]="!canSwitchWorkflow">
+            [(ngModel)]="selectedWorkflowSlug" [disabled]="workflowDefinitionsLoading || !canSwitchWorkflow">
+            @if (workflowDefinitionsLoading) {
+              <option value="">Loading development paths...</option>
+            }
             @for (workflow of workflowDefinitions; track workflow.id) {
               <option [value]="workflow.slug">{{ workflow.name }}</option>
             }
           </select>
           <button type="button" class="btn btn-primary btn-sm"
-            [disabled]="!canSwitchWorkflow || switchingWorkflow()" (click)="switchWorkflow()">
+            [disabled]="workflowDefinitionsLoading || !canSwitchWorkflow || switchingWorkflow()" (click)="switchWorkflow()">
             <span class="material-symbols-rounded">swap_horiz</span>
             {{ switchingWorkflow() ? 'Updating' : 'Update' }}
           </button>
@@ -102,14 +111,54 @@
             <span class="badge badge-ghost badge-sm">{{ stages.length }}</span>
           </header>
 
-          <nav class="flex gap-2 overflow-x-auto xl:grid" aria-label="Programme stages">
+          <div class="mb-3 grid gap-2 sm:hidden">
+            <span class="text-xs font-semibold text-base-content/55">Stages</span>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(5.5rem,1fr))] gap-2">
+              @for (stage of mobileVisibleStages; track stage.id) {
+                <button type="button"
+                  class="min-h-12 rounded-md border border-base-300 bg-base-100 px-2 py-1 text-left shadow-sm"
+                  [class.border-primary]="stage.id === selectedStageId"
+                  [class.bg-primary]="stage.id === selectedStageId"
+                  [class.text-primary-content]="stage.id === selectedStageId"
+                  (click)="selectStage(stage)">
+                  <span class="block text-xs font-bold">{{ stage.order }}. {{ stage.name }}</span>
+                  <span class="mt-1 block text-[0.65rem] capitalize opacity-70">{{ stageState(stage.id) }}</span>
+                </button>
+              }
+              @if (mobileOverflowStages.length) {
+                <div class="dropdown dropdown-end">
+                  <button tabindex="0" role="button" type="button"
+                    class="btn btn-sm min-h-12 w-full border border-base-300 bg-base-100 shadow-sm">
+                    <span class="material-symbols-rounded text-base">more_horiz</span>
+                    More
+                  </button>
+                  <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-64 rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+                    @for (stage of mobileOverflowStages; track stage.id) {
+                      <li>
+                        <button type="button" class="gap-3" [class.active]="stage.id === selectedStageId"
+                          (click)="selectStage(stage)">
+                          <span class="grid size-6 place-items-center rounded bg-base-200 text-xs font-bold">{{ stage.order }}</span>
+                          <span class="min-w-0 flex-1 truncate">{{ stage.name }}</span>
+                          @if (stage.id === selectedStageId) {
+                            <span class="material-symbols-rounded text-base">check</span>
+                          }
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          </div>
+
+          <nav class="programme-scroll hidden max-w-full gap-2 overflow-x-auto pb-1 sm:flex xl:grid xl:overflow-visible xl:pb-0" aria-label="Programme stages">
             @for (stage of stages; track stage.id) {
               <button type="button" [class]="stageClasses(stage)" (click)="selectStage(stage)">
                 <span class="grid size-7 place-items-center rounded bg-base-300 text-xs font-bold">{{ stage.order }}</span>
                 <span class="min-w-0">
                   <strong class="block truncate text-xs">{{ stage.name }}</strong>
                   @if (stage.description) {
-                    <small class="line-clamp-2 text-base-content/45">{{ stage.description }}</small>
+                    <small class="hidden text-base-content/45 xl:line-clamp-2">{{ stage.description }}</small>
                   }
                   <small class="block capitalize text-base-content/50">{{ stageState(stage.id) }}</small>
                 </span>
@@ -155,7 +204,50 @@
               <span [class]="statusClasses(stageState(selectedStageId))">{{ stageState(selectedStageId) }}</span>
             </header>
 
-            <div role="tablist" class="tabs tabs-border mb-3 max-w-full flex-nowrap overflow-x-auto">
+            <div class="mb-3 grid gap-2 sm:hidden">
+              <span class="text-xs font-semibold text-base-content/55">Tasks</span>
+              <div class="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-2">
+                @for (task of mobileVisibleTasks; track task.id) {
+                  <button type="button"
+                    class="min-h-11 rounded-md border border-base-300 bg-base-100 px-2 py-1 text-left shadow-sm"
+                    [class.border-primary]="task.id === selectedTaskKey"
+                    [class.bg-primary]="task.id === selectedTaskKey"
+                    [class.text-primary-content]="task.id === selectedTaskKey"
+                    (click)="selectTask(task.id)">
+                    <span class="block truncate text-xs font-bold">{{ task.name }}</span>
+                    <span class="mt-1 block text-[0.65rem] capitalize opacity-70">{{ taskInstance(task.id)?.status || 'pending' }}</span>
+                  </button>
+                }
+                @if (mobileOverflowTasks.length) {
+                  <div class="dropdown dropdown-end">
+                    <button tabindex="0" role="button" type="button"
+                      class="btn btn-sm min-h-11 w-full border border-base-300 bg-base-100 shadow-sm">
+                      <span class="material-symbols-rounded text-base">more_horiz</span>
+                      More
+                    </button>
+                    <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-72 rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+                      @for (task of mobileOverflowTasks; track task.id) {
+                        <li>
+                          <button type="button" class="gap-3" [class.active]="task.id === selectedTaskKey"
+                            (click)="selectTask(task.id)">
+                            <span class="material-symbols-rounded text-base"
+                              [class.text-success]="taskInstance(task.id)?.status === 'completed'">
+                              {{ taskInstance(task.id)?.status === 'completed' ? 'check_circle' : 'task_alt' }}
+                            </span>
+                            <span class="min-w-0 flex-1 truncate">{{ task.name }}</span>
+                            @if (task.id === selectedTaskKey) {
+                              <span class="material-symbols-rounded text-base">check</span>
+                            }
+                          </button>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div role="tablist" class="programme-scroll tabs tabs-border mb-3 hidden max-w-full flex-nowrap overflow-x-auto pb-1 sm:flex">
               @for (task of stageTaskDefinitions; track task.id) {
                 <button type="button" role="tab" class="tab h-auto min-h-10 flex-none gap-1 px-3 text-xs"
                   [class.tab-active]="task.id === selectedTaskKey" (click)="selectTask(task.id)">
@@ -212,7 +304,7 @@
                       }
                       @if ((taskDefinition.form ?? []).length) {
                         <dl class="grid gap-x-6 gap-y-4 rounded-md border border-base-300 bg-base-100 p-3 md:grid-cols-2">
-                          @for (field of taskDefinition.form ?? []; track field.key) {
+                          @for (field of visibleFields(taskDefinition.form); track field.key) {
                             <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater' || field.type === 'user-search'">
                               <dt class="flex items-center justify-between gap-2 text-xs font-semibold text-base-content/55">
                                 <span>{{ field.label }}</span>
@@ -234,7 +326,7 @@
                                             <strong class="text-xs">{{ field.label }} {{ itemIndex + 1 }}</strong>
                                           </header>
                                           <dl class="grid gap-3 p-3 sm:grid-cols-2">
-                                            @for (child of field.fields ?? []; track child.key) {
+                                            @for (child of visibleFields(field.fields, item); track child.key) {
                                               <div>
                                                 <dt class="flex items-center justify-between gap-2 text-xs font-semibold text-base-content/50">
                                                   <span>{{ child.label }}</span>
@@ -370,7 +462,7 @@
                       </div>
                     }
                     <div class="grid gap-4 md:grid-cols-2">
-                      @for (field of taskDefinition.form ?? []; track field.key) {
+                      @for (field of visibleFields(taskDefinition.form); track field.key) {
                         <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
                           <label class="mb-1 block text-xs font-semibold" [for]="'field-' + field.key">
                             {{ field.label }}
@@ -494,7 +586,7 @@
                                     </button>
                                   </header>
                                   <div class="grid gap-3 p-3 md:grid-cols-2">
-                                    @for (child of field.fields ?? []; track child.key) {
+                                    @for (child of visibleFields(field.fields, item); track child.key) {
                                       <div>
                                         <label class="mb-1 block text-xs font-semibold">
                                           {{ child.label }}
@@ -772,6 +864,101 @@
       </section>
     }
   </div>
+
+  @if (programmeEditOpen()) {
+    <div class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-xl border border-base-300 shadow-2xl">
+        <section class="w-full">
+          <header class="flex items-start justify-between gap-3 border-b border-base-300 pb-3">
+            <div>
+              <p class="text-xs font-bold uppercase text-base-content/50">Programme setup</p>
+              <h2 class="mt-1 text-xl font-bold">Edit programme details</h2>
+              <p class="mt-1 text-sm text-base-content/60">
+                Update the core programme information shown across the system.
+              </p>
+            </div>
+            <button type="button" class="btn btn-ghost btn-square btn-sm" title="Close" (click)="closeProgrammeEdit()">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          </header>
+
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="badge badge-ghost badge-sm">
+              <span class="material-symbols-rounded text-sm">person</span>
+              {{ initiatorName }}
+            </span>
+            <span class="badge badge-ghost badge-sm">
+              <span class="material-symbols-rounded text-sm">account_tree</span>
+              {{ currentStageName }}
+            </span>
+          </div>
+
+          <form class="mt-4 grid gap-4" (ngSubmit)="saveProgrammeDetails()">
+            <label class="form-control">
+              <span class="mb-1 text-xs font-semibold">
+                Programme title <b class="text-error">*</b>
+              </span>
+              <label class="input input-bordered flex items-center gap-2">
+                <span class="material-symbols-rounded text-lg text-base-content/40">school</span>
+                <input class="grow" name="programmeTitle" required
+                  [ngModel]="programmeEditForm().title"
+                  (ngModelChange)="updateProgrammeField('title', $event)"
+                  placeholder="e.g. Bachelor of Data Science">
+              </label>
+            </label>
+
+            <div class="grid gap-4 sm:grid-cols-[1fr_0.75fr]">
+              <label class="form-control">
+                <span class="mb-1 text-xs font-semibold">
+                  Programme code <b class="text-error">*</b>
+                </span>
+                <label class="input input-bordered flex items-center gap-2">
+                  <span class="material-symbols-rounded text-lg text-base-content/40">tag</span>
+                  <input class="grow uppercase" name="programmeCode" required
+                    [ngModel]="programmeEditForm().code"
+                    (ngModelChange)="updateProgrammeField('code', $event)"
+                    placeholder="e.g. BDS">
+                </label>
+                <span class="mt-1 text-xs text-base-content/50">Use the approved programme code.</span>
+              </label>
+
+              <label class="form-control">
+                <span class="mb-1 text-xs font-semibold">
+                  NQF level <b class="text-error">*</b>
+                </span>
+                <select class="select select-bordered w-full" name="programmeLevel" required
+                  [ngModel]="programmeEditForm().level"
+                  (ngModelChange)="updateProgrammeField('level', +$event)">
+                  @for (level of levels; track level) {
+                    <option [value]="level">Level {{ level }}</option>
+                  }
+                </select>
+              </label>
+            </div>
+
+            <div role="note" class="flex items-start gap-2 rounded-md bg-info/10 p-3 text-xs text-base-content/65">
+              <span class="material-symbols-rounded text-info">verified_user</span>
+              <span>Only PDQA, admin users, or the programme coordinator can update these details.</span>
+            </div>
+
+          <footer class="flex items-center justify-end gap-2 border-t border-base-300 pt-3">
+            <button type="button" class="btn btn-ghost btn-sm" (click)="closeProgrammeEdit()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm min-w-36" [disabled]="updatingProgramme()">
+              @if (updatingProgramme()) {
+                <span class="loading loading-spinner loading-sm"></span>
+                Saving
+              } @else {
+                <span class="material-symbols-rounded text-lg">save</span>
+                Save changes
+              }
+            </button>
+          </footer>
+          </form>
+        </section>
+      </div>
+      <button type="button" class="modal-backdrop" aria-label="Close programme editor" (click)="closeProgrammeEdit()"></button>
+    </div>
+  }
 
   @if (emailComposer().open) {
     <div class="modal modal-open">

@@ -250,6 +250,57 @@
             </div>
           </div>
 
+          <section class="my-4 rounded-md border border-primary/20 bg-primary/5 p-3">
+            <header class="mb-3 flex items-start gap-2">
+              <span class="material-symbols-rounded mt-0.5 text-primary">rule</span>
+              <div>
+                <h3 class="text-sm font-bold text-base-content">Task availability</h3>
+                <p class="mt-0.5 text-xs text-base-content/60">
+                  Use this when a full task should only appear after a specific answer is selected in an earlier step.
+                </p>
+              </div>
+            </header>
+            <label class="flex min-h-9 cursor-pointer items-center gap-2 rounded-md border border-base-300 bg-base-100 px-3 text-xs font-semibold shadow-sm">
+              <input type="checkbox" class="checkbox checkbox-xs" [checked]="!!task.visibleWhen"
+                (change)="toggleTaskVisibilityRule(task, $any($event.target).checked)">
+              Show this task only when an earlier answer matches
+            </label>
+            @if (task.visibleWhen) {
+              <div class="field-grid mt-2">
+                <label>
+                  <span>Answer field</span>
+                  <select class="select select-bordered select-sm" [ngModel]="task.visibleWhen.field"
+                    (ngModelChange)="setTaskVisibilityField(task, $event)">
+                    <option value="">Select field</option>
+                    @for (group of workflowConditionFieldGroups(); track group.taskId) {
+                      <optgroup [label]="group.taskName">
+                        @for (sourceField of group.fields; track sourceField.key) {
+                          <option [value]="sourceField.key">{{ sourceField.label }} ({{ sourceField.key }})</option>
+                        }
+                      </optgroup>
+                    } @empty {
+                      <option value="" disabled>No answer fields available yet</option>
+                    }
+                  </select>
+                </label>
+                <label>
+                  <span>Answer value</span>
+                  @if (taskVisibilityValueOptions(task).length) {
+                    <select class="select select-bordered select-sm" [ngModel]="task.visibleWhen.equals"
+                      (ngModelChange)="setTaskVisibilityValue(task, $event)">
+                      @for (option of taskVisibilityValueOptions(task); track option) {
+                        <option [value]="option">{{ option }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <input class="input input-bordered input-sm" [ngModel]="task.visibleWhen.equals"
+                      (ngModelChange)="setTaskVisibilityValue(task, $event)" placeholder="Yes">
+                  }
+                </label>
+              </div>
+            }
+          </section>
+
           <div class="section-heading compact">
             <div><p class="eyebrow">Task form</p><h2>Input fields</h2></div>
             <div class="field-actions">
@@ -351,6 +402,45 @@
                     }
                   </div>
                 }
+                <div class="grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs" [checked]="!!inputField.visibleWhen"
+                      (change)="toggleFieldVisibilityRule(inputField, $any($event.target).checked, task.form)">
+                    Show only when another answer matches
+                  </label>
+                  @if (inputField.visibleWhen) {
+                    <div class="field-grid">
+                      <label>
+                        <span>Answer field</span>
+                        <select class="select select-bordered select-sm" [ngModel]="inputField.visibleWhen.field"
+                          (ngModelChange)="setVisibilityField(inputField, $event)">
+                          <option value="">Select field</option>
+                          @for (group of conditionFieldGroups(inputField, task.form); track group.taskId) {
+                            <optgroup [label]="group.taskName">
+                              @for (sourceField of group.fields; track sourceField.key) {
+                                <option [value]="sourceField.key">{{ sourceField.label }} ({{ sourceField.key }})</option>
+                              }
+                            </optgroup>
+                          }
+                        </select>
+                      </label>
+                      <label>
+                        <span>Answer value</span>
+                        @if (visibilityValueOptions(inputField).length) {
+                          <select class="select select-bordered select-sm" [ngModel]="inputField.visibleWhen.equals"
+                            (ngModelChange)="setVisibilityValue(inputField, $event)">
+                            @for (option of visibilityValueOptions(inputField); track option) {
+                              <option [value]="option">{{ option }}</option>
+                            }
+                          </select>
+                        } @else {
+                          <input class="input input-bordered input-sm" [ngModel]="inputField.visibleWhen.equals"
+                            (ngModelChange)="setVisibilityValue(inputField, $event)" placeholder="Yes">
+                        }
+                      </label>
+                    </div>
+                  }
+                </div>
                 @if (inputField.type === 'repeater') {
                   <div class="repeater-config">
                     <div class="repeater-limits">
@@ -417,6 +507,39 @@
                                 (click)="setUserSearchMode(childField, true)">Multiple users</button>
                             </span>
                           }
+                          <div class="child-options grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                            <label class="child-required">
+                              <input type="checkbox" class="checkbox checkbox-xs" [checked]="!!childField.visibleWhen"
+                                (change)="toggleFieldVisibilityRule(childField, $any($event.target).checked, inputField.fields, task.form)">
+                              Show only when another answer matches
+                            </label>
+                            @if (childField.visibleWhen) {
+                              <div class="grid gap-2 md:grid-cols-2">
+                                <select class="select select-bordered select-sm" [ngModel]="childField.visibleWhen.field"
+                                  (ngModelChange)="setVisibilityField(childField, $event)">
+                                  <option value="">Select field</option>
+                                  @for (group of conditionFieldGroups(childField, inputField.fields, task.form); track group.taskId) {
+                                    <optgroup [label]="group.taskName">
+                                      @for (sourceField of group.fields; track sourceField.key) {
+                                        <option [value]="sourceField.key">{{ sourceField.label }} ({{ sourceField.key }})</option>
+                                      }
+                                    </optgroup>
+                                  }
+                                </select>
+                                @if (visibilityValueOptions(childField).length) {
+                                  <select class="select select-bordered select-sm" [ngModel]="childField.visibleWhen.equals"
+                                    (ngModelChange)="setVisibilityValue(childField, $event)">
+                                    @for (option of visibilityValueOptions(childField); track option) {
+                                      <option [value]="option">{{ option }}</option>
+                                    }
+                                  </select>
+                                } @else {
+                                  <input class="input input-bordered input-sm" [ngModel]="childField.visibleWhen.equals"
+                                    (ngModelChange)="setVisibilityValue(childField, $event)" placeholder="Yes">
+                                }
+                              </div>
+                            }
+                          </div>
                           @if (canConfigureEmailAction(childField)) {
                             <div class="child-options grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
                               <label class="child-required">

@@ -10,18 +10,20 @@ export type WorkflowStage = {
   order: number;
 }
 
+export type WorkflowCondition = {
+  field: string;
+  equals?: unknown;
+  notEquals?: unknown;
+  in?: unknown[];
+}
+
 export type WorkflowTransition = {
   event: string;
   label: string;
   to: string | string[];
   notifyRoles?: string[];
   outcome?: string;
-  when?: {
-    field: string;
-    equals?: unknown;
-    notEquals?: unknown;
-    in?: unknown[];
-  };
+  when?: WorkflowCondition;
 }
 
 export type WorkflowFieldType =
@@ -42,6 +44,7 @@ export type WorkflowField = {
   emailMessage?: string;
   acceptedFileTypes?: string[];
   maxFileSizeMb?: number;
+  visibleWhen?: WorkflowCondition;
 }
 
 export type WorkflowTask = {
@@ -50,6 +53,7 @@ export type WorkflowTask = {
   name: string;
   description?: string;
   ownerRoles: string[];
+  visibleWhen?: WorkflowCondition;
   form?: WorkflowField[];
   artifacts?: WorkflowArtifactRequirement[];
   transitions: WorkflowTransition[];
