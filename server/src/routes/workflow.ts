@@ -27,6 +27,7 @@ import {
     searchWorkflowUsers,
     startProcess,
     switchProgrammeWorkflow,
+    updateProgramme,
 } from "../workflow/service";
 
 export default function createWorkflowRouter(upload: Multer) {
@@ -70,6 +71,10 @@ workflowRouter.post("/programmes", async (req, res) => {
 workflowRouter.delete("/programmes/:programmeId", async (req, res) => {
     const actorId = typeof req.query.actorId === "string" ? req.query.actorId : "";
     res.json(await deleteProgramme(req.params.programmeId, actorId));
+});
+
+workflowRouter.put("/programmes/:programmeId", async (req, res) => {
+    res.json(await updateProgramme(req.params.programmeId, req.body ?? {}));
 });
 
 workflowRouter.post("/processes", async (req, res) => {

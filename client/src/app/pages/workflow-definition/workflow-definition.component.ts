@@ -452,6 +452,131 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
   }
 
+  conditionFieldOptions(currentField: WorkflowField, localFields?: WorkflowField[], parentFields?: WorkflowField[]) {
+    const options = [...(parentFields ?? []), ...(localFields ?? [])]
+      .filter((field) => field !== currentField && field.key && field.type !== 'repeater');
+    return options.filter((field, index) => options.findIndex((item) => item.key === field.key) === index);
+  }
+
+  conditionFieldGroups(currentField: WorkflowField, localFields?: WorkflowField[], parentFields?: WorkflowField[]) {
+    const fields = this.conditionFieldOptions(currentField, localFields, parentFields);
+    return fields.length
+      ? [{ taskId: this.selectedTask?.id ?? 'current-task', taskName: this.selectedTask?.name ?? 'Current task', fields }]
+      : [];
+  }
+
+  workflowConditionFieldOptions() {
+    return this.workflowConditionFieldGroups().flatMap((group) => group.fields);
+  }
+
+  workflowConditionFieldGroups() {
+    return this.definition.tasks
+      .map((task) => ({
+        taskId: task.id,
+        taskName: task.name,
+        fields: this.flattenFields(task.form ?? [])
+          .filter((field) => field.type !== 'repeater' && field.key),
+      }))
+      .filter((group) => group.fields.length);
+  }
+
+  toggleTaskVisibilityRule(task: WorkflowTask, enabled: boolean) {
+    if (!enabled) {
+      delete task.visibleWhen;
+      this.builderChanged();
+      return;
+    }
+    const firstOption = this.workflowConditionFieldOptions()[0];
+    task.visibleWhen = {
+      field: firstOption?.key ?? '',
+      equals: this.defaultConditionValue(firstOption),
+    };
+    this.builderChanged();
+  }
+
+  setTaskVisibilityField(task: WorkflowTask, controllingKey: string) {
+    const controllingField = this.findDefinitionField(controllingKey);
+    task.visibleWhen = {
+      field: controllingKey,
+      equals: this.defaultConditionValue(controllingField),
+    };
+    this.builderChanged();
+  }
+
+  setTaskVisibilityValue(task: WorkflowTask, value: string) {
+    task.visibleWhen ??= { field: '', equals: '' };
+    task.visibleWhen.equals = value;
+    delete task.visibleWhen.notEquals;
+    delete task.visibleWhen.in;
+    this.builderChanged();
+  }
+
+  taskVisibilityValueOptions(task: WorkflowTask) {
+    const controllingField = task.visibleWhen?.field ? this.findDefinitionField(task.visibleWhen.field) : undefined;
+    if (controllingField?.options?.length) return controllingField.options;
+    if (controllingField?.type === 'checkbox') return ['true', 'false'];
+    return [];
+  }
+
+  toggleFieldVisibilityRule(field: WorkflowField, enabled: boolean, localFields?: WorkflowField[], parentFields?: WorkflowField[]) {
+    if (!enabled) {
+      delete field.visibleWhen;
+      this.builderChanged();
+      return;
+    }
+    const firstOption = this.conditionFieldOptions(field, localFields, parentFields)[0];
+    field.visibleWhen = {
+      field: firstOption?.key ?? '',
+      equals: this.defaultConditionValue(firstOption),
+    };
+    this.builderChanged();
+  }
+
+  setVisibilityField(field: WorkflowField, controllingKey: string) {
+    const controllingField = this.findDefinitionField(controllingKey);
+    field.visibleWhen = {
+      field: controllingKey,
+      equals: this.defaultConditionValue(controllingField),
+    };
+    this.builderChanged();
+  }
+
+  setVisibilityValue(field: WorkflowField, value: string) {
+    field.visibleWhen ??= { field: '', equals: '' };
+    field.visibleWhen.equals = value;
+    delete field.visibleWhen.notEquals;
+    delete field.visibleWhen.in;
+    this.builderChanged();
+  }
+
+  visibilityValueOptions(field: WorkflowField) {
+    const controllingField = field.visibleWhen?.field ? this.findDefinitionField(field.visibleWhen.field) : undefined;
+    if (controllingField?.options?.length) return controllingField.options;
+    if (controllingField?.type === 'checkbox') return ['true', 'false'];
+    return [];
+  }
+
+  private defaultConditionValue(field?: WorkflowField) {
+    if (field?.options?.length) return field.options[0];
+    if (field?.type === 'checkbox') return 'true';
+    return '';
+  }
+
+  private findDefinitionField(key: string) {
+    for (const field of this.definition.tasks.flatMap((task) => task.form ?? [])) {
+      if (field.key === key) return field;
+      const child = field.fields?.find((item) => item.key === key);
+      if (child) return child;
+    }
+    return undefined;
+  }
+
+  private flattenFields(fields: WorkflowField[]): WorkflowField[] {
+    return fields.flatMap((field) => field.type === 'repeater'
+      ? [field, ...(field.fields ?? [])]
+      : [field]);
+  }
+
   fieldAcceptedTypes(field: WorkflowField) {
     return field.acceptedFileTypes?.join(', ') ?? '';
   }
