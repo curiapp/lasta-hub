@@ -248,6 +248,16 @@
               }
               </div>
             </div>
+            @if (selectedOwnerRoles(task).length) {
+              <div class="mt-2 flex flex-wrap gap-1">
+                @for (role of selectedOwnerRoles(task); track role.id) {
+                  <span class="badge badge-ghost badge-sm max-w-full gap-1">
+                    <span class="material-symbols-rounded text-sm">group</span>
+                    <span class="truncate">{{ role.name }}</span>
+                  </span>
+                }
+              </div>
+            }
           </div>
 
           <section class="my-4 rounded-md border border-primary/20 bg-primary/5 p-3">
@@ -275,7 +285,7 @@
                     @for (group of workflowConditionFieldGroups(); track group.taskId) {
                       <optgroup [label]="group.taskName">
                         @for (sourceField of group.fields; track sourceField.key) {
-                          <option [value]="sourceField.key">{{ sourceField.label }} ({{ sourceField.key }})</option>
+                          <option [value]="sourceField.key">{{ sourceField.label }}</option>
                         }
                       </optgroup>
                     } @empty {
@@ -413,12 +423,12 @@
                       <label>
                         <span>Answer field</span>
                         <select class="select select-bordered select-sm" [ngModel]="inputField.visibleWhen.field"
-                          (ngModelChange)="setVisibilityField(inputField, $event)">
+                          (ngModelChange)="setVisibilityField(inputField, $event, task.form)">
                           <option value="">Select field</option>
                           @for (group of conditionFieldGroups(inputField, task.form); track group.taskId) {
                             <optgroup [label]="group.taskName">
                               @for (sourceField of group.fields; track sourceField.key) {
-                                <option [value]="sourceField.key">{{ sourceField.label }} ({{ sourceField.key }})</option>
+                                <option [value]="sourceField.key">{{ sourceField.label }}</option>
                               }
                             </optgroup>
                           }
@@ -426,10 +436,10 @@
                       </label>
                       <label>
                         <span>Answer value</span>
-                        @if (visibilityValueOptions(inputField).length) {
+                        @if (visibilityValueOptions(inputField, task.form).length) {
                           <select class="select select-bordered select-sm" [ngModel]="inputField.visibleWhen.equals"
                             (ngModelChange)="setVisibilityValue(inputField, $event)">
-                            @for (option of visibilityValueOptions(inputField); track option) {
+                            @for (option of visibilityValueOptions(inputField, task.form); track option) {
                               <option [value]="option">{{ option }}</option>
                             }
                           </select>
@@ -516,20 +526,20 @@
                             @if (childField.visibleWhen) {
                               <div class="grid gap-2 md:grid-cols-2">
                                 <select class="select select-bordered select-sm" [ngModel]="childField.visibleWhen.field"
-                                  (ngModelChange)="setVisibilityField(childField, $event)">
+                                  (ngModelChange)="setVisibilityField(childField, $event, inputField.fields, task.form)">
                                   <option value="">Select field</option>
                                   @for (group of conditionFieldGroups(childField, inputField.fields, task.form); track group.taskId) {
                                     <optgroup [label]="group.taskName">
                                       @for (sourceField of group.fields; track sourceField.key) {
-                                        <option [value]="sourceField.key">{{ sourceField.label }} ({{ sourceField.key }})</option>
+                                        <option [value]="sourceField.key">{{ sourceField.label }}</option>
                                       }
                                     </optgroup>
                                   }
                                 </select>
-                                @if (visibilityValueOptions(childField).length) {
+                                @if (visibilityValueOptions(childField, inputField.fields, task.form).length) {
                                   <select class="select select-bordered select-sm" [ngModel]="childField.visibleWhen.equals"
                                     (ngModelChange)="setVisibilityValue(childField, $event)">
-                                    @for (option of visibilityValueOptions(childField); track option) {
+                                    @for (option of visibilityValueOptions(childField, inputField.fields, task.form); track option) {
                                       <option [value]="option">{{ option }}</option>
                                     }
                                   </select>
@@ -665,21 +675,87 @@
                     <option [value]="option.id" [disabled]="option.id === task.id">{{ option.name }}</option>
                   }
                 </select>
+                <div class="grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs"
+                      [checked]="transitionConditionEnabled(transition)"
+                      (change)="toggleTransitionCondition(transition, $any($event.target).checked)">
+                    Only use this route when an answer matches
+                  </label>
+                  @if (transition.when) {
+                    <div class="field-grid">
+                      <label>
+                        <span>Answer field</span>
+                        <select class="select select-bordered select-sm" [ngModel]="transition.when.field"
+                          (ngModelChange)="setTransitionConditionField(transition, $event)">
+                          <option value="">Select field</option>
+                          @for (field of transitionConditionFields(); track field.key) {
+                            <option [value]="field.key">{{ field.label }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label>
+                        <span>Answer value</span>
+                        @if (transitionConditionOptions(transition).length) {
+                          <select class="select select-bordered select-sm" [ngModel]="transition.when.equals"
+                            (ngModelChange)="setTransitionConditionValue(transition, $event)">
+                            @for (option of transitionConditionOptions(transition); track option) {
+                              <option [value]="option">{{ option }}</option>
+                            }
+                          </select>
+                        } @else {
+                          <input class="input input-bordered input-sm" [ngModel]="transition.when.equals"
+                            (ngModelChange)="setTransitionConditionValue(transition, $event)"
+                            placeholder="Value to match">
+                        }
+                      </label>
+                    </div>
+                  } @else {
+                    <p class="text-xs text-base-content/55">
+                      This route is used when no earlier conditional route matches, or when it is the only route.
+                    </p>
+                  }
+                </div>
                 <div class="notification-config">
                   <span class="notification-label">
                     <span class="material-symbols-rounded">notifications</span>
                     Notify after completion
                   </span>
-                  <div class="role-options">
-                    @for (role of definition.roles; track role.id) {
-                      <label>
-                        <input type="checkbox" class="checkbox checkbox-xs"
-                          [checked]="notifiesRole(transition, role.id)"
-                          (change)="toggleNotificationRole(transition, role.id, $any($event.target).checked)">
-                        {{ role.name }}
-                      </label>
-                    }
+                  <div class="dropdown dropdown-top w-full">
+                    <button type="button" tabindex="0"
+                      class="select select-bordered select-sm flex min-h-8 w-full items-center justify-between gap-2 bg-base-100 text-left">
+                      <span class="truncate">{{ notificationRoleSummary(transition) }}</span>
+                      <span class="material-symbols-rounded text-base text-base-content/45">expand_more</span>
+                    </button>
+                    <div tabindex="0"
+                      class="dropdown-content z-30 mb-1 max-h-64 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-2 shadow-lg">
+                      @for (role of definition.roles; track role.id) {
+                        <label
+                          class="flex min-h-9 cursor-pointer items-center gap-2 rounded px-2 text-xs transition-colors hover:bg-base-200"
+                          [class.bg-primary/10]="notifiesRole(transition, role.id)">
+                          <input type="checkbox" class="checkbox checkbox-xs"
+                            [checked]="notifiesRole(transition, role.id)"
+                            (change)="toggleNotificationRole(transition, role.id, $any($event.target).checked)">
+                          <span class="min-w-0 flex-1">
+                            <span class="block truncate font-semibold">{{ role.name }}</span>
+                            <span class="block truncate font-mono text-[0.62rem] text-base-content/50">{{ role.id }}</span>
+                          </span>
+                        </label>
+                      } @empty {
+                        <p class="empty px-2 py-3">Add roles before configuring notifications.</p>
+                      }
+                    </div>
                   </div>
+                  @if (selectedNotificationRoles(transition).length) {
+                    <div class="mt-2 flex flex-wrap gap-1">
+                      @for (role of selectedNotificationRoles(transition); track role.id) {
+                        <span class="badge badge-ghost badge-sm max-w-full gap-1">
+                          <span class="material-symbols-rounded text-sm">notifications</span>
+                          <span class="truncate">{{ role.name }}</span>
+                        </span>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
             }

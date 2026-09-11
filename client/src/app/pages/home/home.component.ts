@@ -1,9 +1,9 @@
-import { Component, computed, inject, OnInit, signal, ViewContainerRef } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal, ViewContainerRef } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, skip } from 'rxjs';
 import { ActionButtonsComponent } from "../../components/action-buttons/action-buttons.component";
 import { CreateProgrammeComponent } from "../../components/forms/create-programme/create-programme.component";
 import { ProgrammeTemplateComponent } from "../../components/loaders/programme-template/programme-template.component";
@@ -25,8 +25,8 @@ type ProgrammeSort = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
   styleUrls: ['./home.component.css'],
   imports: [RouterModule, FormsModule, ProgrammeTemplateComponent, ModalComponent, CreateProgrammeComponent, CanEditDirective, ActionButtonsComponent],
 })
-export class HomeComponent implements OnInit {
-  currentUser: User | null;
+export class HomeComponent implements OnInit, OnDestroy {
+  currentUser: User | null = this.readLoggedInUser();
   programme: string;
   greetingMessage: string = '';
   showAll = signal(false);
@@ -63,10 +63,14 @@ export class HomeComponent implements OnInit {
   filteredProgrammes = computed(() => this.programmes().filter((programme) => this.matchesScope(programme)));
   displayedProgrammes = computed(() => this.sortProgrammes(this.filteredProgrammes()));
   limit = 50;
+  private readonly minimumProgrammeLoadingMs = 650;
+  private programmeLoadingStartedAt = Date.now();
+  private programmeLoadingTimer?: ReturnType<typeof setTimeout>;
 
   private queryRef = this.apollo.watchQuery<any>({
     query: GET_PROGRAMMES,
     variables: { searchText: '', offset: 0, limit: this.limit },
+    fetchPolicy: 'cache-first',
   });
   private dashboardQueryRef = this.apollo.watchQuery<{ bootstrap: { dashboard: WorkflowDashboard } }>({
     query: GET_BOOTSTRAP,
@@ -76,9 +80,11 @@ export class HomeComponent implements OnInit {
   queryResult = toSignal(this.queryRef.valueChanges);
 
   constructor(private viewContainer: ViewContainerRef) {
+    this.seedProgrammesFromCache();
     this.queryRef.valueChanges.subscribe((result: any) => {
-      this.programmesLoading.set(result.loading);
-      this.programmes.set(result?.data?.programmes || []);
+      const programmes = result?.data?.programmes || [];
+      this.setProgrammesLoading(result.loading && programmes.length === 0 && this.programmes().length === 0);
+      this.programmes.set(programmes);
     });
     this.dashboardQueryRef.valueChanges.subscribe((result) => {
       if (result.data?.bootstrap?.dashboard) {
@@ -87,6 +93,7 @@ export class HomeComponent implements OnInit {
     });
 
     toObservable(this.searchText).pipe(
+      skip(1),
       debounceTime(400),
       distinctUntilChanged()
     ).subscribe(searchText => {
@@ -133,7 +140,7 @@ export class HomeComponent implements OnInit {
   }
 
   loggedIn() {
-    let currentUser: User = JSON.parse(sessionStorage.getItem('loggedInUser'));
+    const currentUser = this.readLoggedInUser();
     if (currentUser) {
       this.currentUser = currentUser;
       const defaultScope = this.isLecturerUser() ? 'mine' : 'all';
@@ -163,6 +170,11 @@ export class HomeComponent implements OnInit {
 
   scopeLabel(scope: ProgrammeScope = this.programmeScope()) {
     return this.programmeScopeOptions.find((option) => option.value === scope)?.label ?? 'Programme view';
+  }
+
+  portfolioHeading() {
+    if (this.programmeScope() === 'all') return 'All programmes';
+    return this.scopeLabel();
   }
 
   sortIcon(sort: ProgrammeSort) {
@@ -208,8 +220,52 @@ export class HomeComponent implements OnInit {
     this.randomDurations = this.programmeDevIcons.map(() => 6 + Math.random() * 4);
   }
 
+  ngOnDestroy() {
+    if (this.programmeLoadingTimer) clearTimeout(this.programmeLoadingTimer);
+  }
+
+  private setProgrammesLoading(loading: boolean) {
+    if (this.programmeLoadingTimer) {
+      clearTimeout(this.programmeLoadingTimer);
+      this.programmeLoadingTimer = undefined;
+    }
+
+    if (loading) {
+      this.programmeLoadingStartedAt = Date.now();
+      this.programmesLoading.set(true);
+      return;
+    }
+
+    const elapsed = Date.now() - this.programmeLoadingStartedAt;
+    const remaining = Math.max(this.minimumProgrammeLoadingMs - elapsed, 220);
+    this.programmeLoadingTimer = setTimeout(() => {
+      this.programmesLoading.set(false);
+      this.programmeLoadingTimer = undefined;
+    }, remaining);
+  }
+
+  private seedProgrammesFromCache() {
+    const cached = this.apollo.client.readQuery<{ programmes: Programme[] }>({
+      query: GET_PROGRAMMES,
+      variables: { searchText: '', offset: 0, limit: this.limit },
+    });
+    if (cached?.programmes?.length) {
+      this.programmes.set(cached.programmes);
+      this.programmesLoading.set(false);
+    }
+  }
+
   private isLecturerUser() {
     return (this.currentUser?.role ?? '').toLowerCase() === 'lecturer';
+  }
+
+  private readLoggedInUser(): User | null {
+    try {
+      const raw = sessionStorage.getItem('loggedInUser');
+      return raw ? JSON.parse(raw) as User : null;
+    } catch {
+      return null;
+    }
   }
 
   private readProgrammeScope(): ProgrammeScope | null {

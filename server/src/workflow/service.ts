@@ -897,6 +897,17 @@ export async function markAllWorkflowNotificationsRead(userId: string) {
     }).where(eq(workflowNotificationRecipients.recipientId, userId));
 }
 
+export async function deleteWorkflowNotification(notificationId: string, userId: string) {
+    if (!notificationId || !userId) throw new WorkflowError("Notification and user are required", 400);
+    const deleted = await db.delete(workflowNotificationRecipients)
+        .where(and(
+            eq(workflowNotificationRecipients.notificationId, notificationId),
+            eq(workflowNotificationRecipients.recipientId, userId),
+        ))
+        .returning({ id: workflowNotificationRecipients.notificationId });
+    if (!deleted.length) throw new WorkflowError("Notification not found", 404);
+}
+
 export async function getNotificationPreference(userId: string) {
     const [user] = await db.select({
         emailEnabled: workflowUsers.emailNotificationsEnabled,

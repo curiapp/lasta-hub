@@ -1,3 +1,8 @@
+ .notification-selected {
+  background: color-mix(in srgb, var(--color-primary, #1b2c5d) 7%, white);
+  border-radius: 0.5rem;
+}
+
 @media (max-width: 640px) {
   .notification-dropdown .notification-sheet {
     position: fixed;

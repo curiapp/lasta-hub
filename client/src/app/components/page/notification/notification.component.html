@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <ul tabindex="-1" class="notification-sheet bg-white text-black rounded-box dropdown-content w-[28rem] mt-3 p-4 shadow-2xl border border-base-200">
+  <ul #notificationSheet tabindex="-1" class="notification-sheet bg-white text-black rounded-box dropdown-content w-[28rem] mt-3 p-4 shadow-2xl border border-base-200">
     <li class="notification-sheet-body max-h-[55vh] overflow-y-auto">
       <div class="space-y-2">
 
@@ -21,20 +21,63 @@
             <button class="btn btn-sm btn-ghost" (click)="markAllNotificationsAsRead()">Mark all as read</button>
           </div>
 
-          <div class="flex items-center justify-between gap-3 rounded-md bg-base-200 px-3 py-2">
-            <span class="text-xs font-medium">Email notifications</span>
+          <div class="flex items-center justify-between gap-3 rounded-md border border-base-200 bg-base-100 px-3 py-2 shadow-sm">
+            <div class="min-w-0">
+              <span class="block text-xs font-semibold text-base-content">Email notifications</span>
+              <span class="block text-[0.68rem] text-base-content/50">Receive updates by email</span>
+            </div>
             <input type="checkbox" class="toggle toggle-primary toggle-sm"
               [checked]="emailEnabled()" [disabled]="savingPreference()"
               (change)="toggleEmailNotifications($any($event.target).checked)">
           </div>
+
+          @if (selectedNotificationCount()) {
+            <div class="flex flex-wrap items-center justify-between gap-3 rounded-md border border-primary/15 bg-primary/5 px-3 py-2.5">
+              <div class="flex min-h-7 items-center gap-2">
+                <span class="rounded bg-primary/10 px-2 py-1 text-[0.68rem] font-semibold text-primary">
+                  {{ selectedNotificationCount() }} selected
+                </span>
+                @if (selectedNotificationCount() < notifications().length) {
+                  <button type="button" class="btn btn-ghost btn-xs px-2"
+                    (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+                    (click)="selectAllNotifications($event)">
+                    Select all
+                  </button>
+                }
+                  <button type="button" class="btn btn-ghost btn-xs px-2"
+                    (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+                    (click)="clearNotificationSelection($event)">
+                    Clear
+                  </button>
+              </div>
+              <button type="button"
+                class="btn btn-xs min-h-8 border border-error/35 bg-error/10 px-3 text-error shadow-sm hover:border-error/60 hover:bg-error/15"
+                [disabled]="deletingSelected()"
+                (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+                (click)="deleteSelectedNotifications($event)">
+                @if (deletingSelected()) {
+                  <span class="loading loading-spinner loading-xs"></span>
+                } @else {
+                  <span class="material-symbols-rounded text-sm">delete</span>
+                }
+                Delete selected
+              </button>
+            </div>
+          }
         </div>
 
         <div class="min-h-80">
           @for(notification of notifications(); track notification.id){
-          <details class="collapse rounded-none!">
+          <details class="collapse rounded-none!" [class.notification-selected]="notificationSelected(notification.id)">
             <summary class="collapse-title p-2! hover:bg-gray-50 rounded-lg"
               (click)="markNotificationAsRead(notification)">
-              <div class="flex gap-4 items-center w-full">
+              <div class="group flex gap-3 items-center w-full">
+                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm shrink-0"
+                  [checked]="notificationSelected(notification.id)"
+                  [title]="notificationSelected(notification.id) ? 'Unselect notification' : 'Select notification'"
+                  (mousedown)="$event.stopPropagation()"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleNotificationSelection(notification, $any($event.target).checked, $event)">
                 <div class="avatar avatar-placeholder" [class]=" notification.isRead?'':'avatar-online'">
                   <div class="bg-base-300 text-primary size-12 mask mask-squircle">
                     <span class="text-sm font-semibold">{{notification.title | initials}}</span>
@@ -46,6 +89,18 @@
                     class="text-sm">{{notification.title}}</span>
                   <span class="text-xs text-gray-500">{{notification.createdAt | date:true}}</span>
                 </div>
+                <button type="button"
+                  class="btn btn-ghost btn-square btn-xs shrink-0 text-base-content/45 opacity-0 transition-opacity hover:text-error group-hover:opacity-100"
+                  title="Delete notification"
+                  [disabled]="deletingNotificationId() === notification.id"
+                  (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+                  (click)="deleteNotification(notification, $event)">
+                  @if (deletingNotificationId() === notification.id) {
+                    <span class="loading loading-spinner loading-xs"></span>
+                  } @else {
+                    <span class="material-symbols-rounded text-base">delete</span>
+                  }
+                </button>
               </div>
             </summary>
             <div class="collapse-content text-xs bg-base-300 rounded-lg my-2 p-4 pl-16">
@@ -54,10 +109,12 @@
           </details>
           }
           @empty {
-          <div class="flex min-h-72 items-end justify-center pb-10 text-center text-gray-400">
-            <div class="flex flex-col items-center gap-1">
-              <span class="material-symbols-rounded text-2xl">notifications_off</span>
-              <span class="text-xs">No notifications</span>
+          <div class="grid min-h-72 place-items-center text-center">
+            <div class="flex flex-col items-center gap-2 text-base-content/65">
+              <span class="grid size-11 place-items-center rounded-full bg-base-200 text-base-content/55">
+                <span class="material-symbols-rounded text-2xl">notifications_off</span>
+              </span>
+              <span class="text-xs font-semibold">No notifications</span>
             </div>
           </div>
           }
