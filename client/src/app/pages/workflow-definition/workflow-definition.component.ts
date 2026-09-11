@@ -339,10 +339,14 @@ export class WorkflowDefinitionComponent implements OnInit {
   }
 
   ownerRoleSummary(task: WorkflowTask) {
-    const selectedRoles = this.definition.roles.filter((role) => task.ownerRoles?.includes(role.id));
+    const selectedRoles = this.selectedOwnerRoles(task);
     if (selectedRoles.length === 0) return 'Select owner roles';
     if (selectedRoles.length === 1) return selectedRoles[0].name;
     return `${selectedRoles.length} roles selected`;
+  }
+
+  selectedOwnerRoles(task: WorkflowTask) {
+    return this.definition.roles.filter((role) => task.ownerRoles?.includes(role.id));
   }
 
   toggleOwnerRole(task: WorkflowTask, roleId: string, enabled: boolean) {
@@ -532,8 +536,9 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
   }
 
-  setVisibilityField(field: WorkflowField, controllingKey: string) {
-    const controllingField = this.findDefinitionField(controllingKey);
+  setVisibilityField(field: WorkflowField, controllingKey: string, localFields?: WorkflowField[], parentFields?: WorkflowField[]) {
+    const controllingField = this.findConditionField(controllingKey, localFields, parentFields)
+      ?? this.findDefinitionField(controllingKey);
     field.visibleWhen = {
       field: controllingKey,
       equals: this.defaultConditionValue(controllingField),
@@ -549,8 +554,11 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
   }
 
-  visibilityValueOptions(field: WorkflowField) {
-    const controllingField = field.visibleWhen?.field ? this.findDefinitionField(field.visibleWhen.field) : undefined;
+  visibilityValueOptions(field: WorkflowField, localFields?: WorkflowField[], parentFields?: WorkflowField[]) {
+    const controllingField = field.visibleWhen?.field
+      ? this.findConditionField(field.visibleWhen.field, localFields, parentFields)
+        ?? this.findDefinitionField(field.visibleWhen.field)
+      : undefined;
     if (controllingField?.options?.length) return controllingField.options;
     if (controllingField?.type === 'checkbox') return ['true', 'false'];
     return [];
@@ -569,6 +577,11 @@ export class WorkflowDefinitionComponent implements OnInit {
       if (child) return child;
     }
     return undefined;
+  }
+
+  private findConditionField(key: string, localFields?: WorkflowField[], parentFields?: WorkflowField[]) {
+    return this.conditionFieldOptions({ key: '', label: '', type: 'text', required: false }, localFields, parentFields)
+      .find((field) => field.key === key);
   }
 
   private flattenFields(fields: WorkflowField[]): WorkflowField[] {
@@ -667,6 +680,59 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.builderChanged();
   }
 
+  transitionConditionEnabled(transition: WorkflowTransition) {
+    return !!transition.when?.field;
+  }
+
+  transitionConditionFields() {
+    return this.flattenFields(this.selectedTask?.form ?? [])
+      .filter((field) => field.type !== 'repeater' && field.key);
+  }
+
+  transitionConditionField(transition: WorkflowTransition) {
+    return transition.when?.field
+      ? this.transitionConditionFields().find((field) => field.key === transition.when?.field)
+      : undefined;
+  }
+
+  transitionConditionOptions(transition: WorkflowTransition) {
+    const field = this.transitionConditionField(transition);
+    if (field?.options?.length) return field.options;
+    if (field?.type === 'checkbox') return ['true', 'false'];
+    return [];
+  }
+
+  toggleTransitionCondition(transition: WorkflowTransition, enabled: boolean) {
+    if (!enabled) {
+      delete transition.when;
+      this.builderChanged();
+      return;
+    }
+    const field = this.transitionConditionFields()[0];
+    transition.when = {
+      field: field?.key ?? '',
+      equals: this.defaultConditionValue(field),
+    };
+    this.builderChanged();
+  }
+
+  setTransitionConditionField(transition: WorkflowTransition, fieldKey: string) {
+    const field = this.transitionConditionFields().find((candidate) => candidate.key === fieldKey);
+    transition.when = {
+      field: fieldKey,
+      equals: this.defaultConditionValue(field),
+    };
+    this.builderChanged();
+  }
+
+  setTransitionConditionValue(transition: WorkflowTransition, value: string) {
+    transition.when ??= { field: '', equals: '' };
+    transition.when.equals = value;
+    delete transition.when.notEquals;
+    delete transition.when.in;
+    this.builderChanged();
+  }
+
   removeTransition(index: number) {
     this.selectedTask?.transitions.splice(index, 1);
     this.builderChanged();
@@ -674,6 +740,17 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   notifiesRole(transition: WorkflowTransition, roleId: string) {
     return transition.notifyRoles?.includes(roleId) ?? false;
+  }
+
+  notificationRoleSummary(transition: WorkflowTransition) {
+    const selected = this.selectedNotificationRoles(transition);
+    if (selected.length === 0) return 'No notification roles';
+    if (selected.length === 1) return selected[0].name;
+    return `${selected.length} roles selected`;
+  }
+
+  selectedNotificationRoles(transition: WorkflowTransition) {
+    return this.definition.roles.filter((role) => transition.notifyRoles?.includes(role.id));
   }
 
   toggleNotificationRole(transition: WorkflowTransition, roleId: string, enabled: boolean) {
