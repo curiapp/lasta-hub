@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -73,7 +73,7 @@ type ProgrammeEditForm = {
   templateUrl: './programme.component.html',
   styleUrls: ['./programme.component.css'],
 })
-export class ProgrammeComponent implements OnInit {
+export class ProgrammeComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
   private readonly apollo = inject(Apollo);
@@ -124,11 +124,16 @@ export class ProgrammeComponent implements OnInit {
     bodyTemplate: '',
   });
   sendingEmail = signal(false);
-  private readonly taskCompletionTransitionMs = 850;
+  private readonly taskCompletionSuccessPauseMs = 360;
+  private readonly taskPanelLeaveMs = 240;
   private taskCompletionTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit() {
     this.loadProgramme();
+  }
+
+  ngOnDestroy() {
+    if (this.taskCompletionTimer) clearTimeout(this.taskCompletionTimer);
   }
 
   get programme() {
@@ -289,10 +294,10 @@ export class ProgrammeComponent implements OnInit {
     return this.selectedTaskInstance?.status === 'completed' || !this.canCompleteSelectedTask;
   }
 
-  loadProgramme() {
+  loadProgramme(options: { quiet?: boolean; onSettled?: () => void } = {}) {
     const programmeId = this.route.snapshot.paramMap.get('id');
     if (!programmeId) return;
-    this.loading.set(true);
+    if (!options.quiet) this.loading.set(true);
 
     this.apollo.query<{ programmeWorkflow: ProgrammeWorkflowDetail }>({
       query: GET_PROGRAMME_WORKFLOW,
@@ -309,10 +314,12 @@ export class ProgrammeComponent implements OnInit {
             next: (definition) => this.applyDefinition(definition),
           });
         }
-        this.loading.set(false);
+        if (!options.quiet) this.loading.set(false);
+        options.onSettled?.();
       },
       error: () => {
-        this.loading.set(false);
+        if (!options.quiet) this.loading.set(false);
+        options.onSettled?.();
         this.showMessage('Programme details could not be loaded.', 'error');
       },
     });
@@ -1008,12 +1015,20 @@ export class ProgrammeComponent implements OnInit {
       },
     }).subscribe({
       next: () => {
-        this.completing.set(false);
         this.showMessage('Task completed and the next step opened.', 'success');
         this.taskCompletionTimer = setTimeout(() => {
-          this.loadProgramme();
-          this.taskCompletionTimer = undefined;
-        }, this.taskCompletionTransitionMs);
+          this.selectedTaskKey = '';
+          this.formErrors = {};
+          this.taskCompletionTimer = setTimeout(() => {
+            this.loadProgramme({
+              quiet: true,
+              onSettled: () => {
+                this.completing.set(false);
+                this.taskCompletionTimer = undefined;
+              },
+            });
+          }, this.taskPanelLeaveMs);
+        }, this.taskCompletionSuccessPauseMs);
       },
       error: (error) => {
         this.completing.set(false);
