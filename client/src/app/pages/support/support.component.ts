@@ -22,12 +22,12 @@ type SupportStage = WorkflowStage & {
 }
 
 @Component({
-  selector: 'Tutorial',
-  templateUrl: 'tutorials.component.html',
-  styleUrl: 'tutorials.component.css',
+  selector: 'app-support',
+  templateUrl: 'support.component.html',
+  styleUrl: 'support.component.css',
   imports: [FormsModule, ModalComponent],
 })
-export class TutorialComponent implements OnInit {
+export class SupportComponent implements OnInit {
   private readonly apollo = inject(Apollo);
 
   loading = signal(true);

@@ -54,4 +54,9 @@ export class MainComponent {
     return String(this.user?.role ?? '').trim().toLowerCase() === 'pdqa';
   }
 
+  get isGuestHome() {
+    const url = this.router.url.split('?')[0].split('#')[0];
+    return !this.isLoggedIn && (url === '/home' || url === '/');
+  }
+
 }

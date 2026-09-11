@@ -1,0 +1,123 @@
+<section class="guest-home">
+  <canvas #networkCanvas class="network-canvas" aria-hidden="true"></canvas>
+  <div class="mesh-glow mesh-glow-one"></div>
+  <div class="mesh-glow mesh-glow-two"></div>
+
+  <div class="guest-shell">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="hero-badge">
+          <span class="material-symbols-rounded">workspace_premium</span>
+          Programme Development Application
+        </span>
+
+        <h1>Transforming Ideas into Accredited Excellence.</h1>
+
+        <p class="text-sm">
+          The <strong>Programme Development App</strong> is a centralised digital solution for
+          <strong>curriculum management, development, maintenance and modernisation</strong>. It supports
+          <strong>ideation, reviews and approvals</strong> leading to registration of
+          <strong>qualifications</strong> on the <strong>NQF</strong>.
+        </p>
+
+        <div class="hero-actions">
+          <a routerLink="/login" class="btn-primary-glow">
+            <span class="material-symbols-rounded">add</span>
+            Initiate New Programme
+          </a>
+          <a routerLink="/support" class="btn-glass">
+            <span class="material-symbols-rounded">travel_explore</span>
+            Learn More
+          </a>
+        </div>
+      </div>
+
+      <div class="curriculum-preview" [ngStyle]="tiltStyle()" (mousemove)="updateTilt($event)" (mouseleave)="resetTilt()">
+        <div class="preview-header">
+          <div>
+            <span>Curriculum Preview</span>
+            <strong>Programme Architecture</strong>
+          </div>
+          <span class="live-pill">Live map</span>
+        </div>
+
+        <div class="hierarchy-flow">
+          <span>Faculty</span>
+          <span>Department</span>
+          <span>NQF Level</span>
+          <span>Modules</span>
+        </div>
+
+        <div class="node-map">
+          <div class="preview-logo">
+            <img src="/assets/logo-white.png" alt="NUST Programme Development" />
+          </div>
+
+          <div class="node node-root">
+            <span class="material-symbols-rounded">account_balance</span>
+            Faculty
+          </div>
+          <div class="connector connector-one"></div>
+          <div class="node node-department">
+            <span class="material-symbols-rounded">groups</span>
+            Department
+          </div>
+          <div class="connector connector-two"></div>
+          <div class="node node-qualification">
+            <span class="material-symbols-rounded">workspace_premium</span>
+            Qualification
+          </div>
+          <div class="module-stack">
+            <span>Core Module</span>
+            <span>Research</span>
+            <span>Assessment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="metrics-bar">
+      @for (metric of metrics(); track metric.label) {
+        <article class="metric-card" [ngClass]="'accent-' + metric.accent">
+          <span class="metric-icon">
+            <span class="material-symbols-rounded">{{ metric.icon }}</span>
+          </span>
+          <div>
+            <span>{{ metric.label }}</span>
+            <strong>{{ metric.value }}</strong>
+          </div>
+        </article>
+      }
+    </div>
+
+  </div>
+</section>
+
+<section class="guest-info-band">
+  <div class="guest-info-shell">
+    <div class="info-heading">
+      <span>Designed For Programme Teams</span>
+      <h2>Keep the full programme journey clear, documented and easier to follow.</h2>
+    </div>
+
+    <div class="info-card-grid">
+      <article class="info-card">
+        <span class="material-symbols-rounded">route</span>
+        <h3>Guided Development</h3>
+        <p>Follow each stage from idea, consultation and approval through to registration, with the right tasks shown at the right time.</p>
+      </article>
+
+      <article class="info-card">
+        <span class="material-symbols-rounded">folder_managed</span>
+        <h3>Document History</h3>
+        <p>Keep submissions, recommendations, support letters and review evidence together so teams can see what was provided and when.</p>
+      </article>
+
+      <article class="info-card">
+        <span class="material-symbols-rounded">notifications_active</span>
+        <h3>Timely Follow-Up</h3>
+        <p>Receive updates when action is needed, decisions are recorded, or a programme needs attention from a responsible unit.</p>
+      </article>
+    </div>
+  </div>
+</section>

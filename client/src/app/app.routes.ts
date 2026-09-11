@@ -18,7 +18,7 @@ export const routes: Routes = [
       { path: 'workflow-definition', loadComponent: () => import('./pages/workflow-definition/workflow-definition.component').then(m => m.WorkflowDefinitionComponent), canActivate: [pdqaGuard], data: { title: 'PDQA - Workflow Definition' } },
       { path: 'register-user', loadComponent: () => import('./pages/register-user/register-user.component').then(m => m.RegisterUserComponent), canActivate: [pdqaGuard], data: { title: 'PDQA - Register User' } },
       { path: 'reports-reviews', loadComponent: () => import('./pages/reports-reviews/reports-reviews.component').then(m => m.ReportsReviewsComponent), canActivate: [authGuard], data: { title: 'PDQA - Reports & Reviews' } },
-      { path: 'tutorials', loadComponent: () => import('./pages/tutorials/tutorials.component').then(m => m.TutorialComponent), data: { title: 'PDQA - Tutorials' } },
+      { path: 'support', loadComponent: () => import('./pages/support/support.component').then(m => m.SupportComponent), data: { title: 'PDQA - Support' } },
       { path: 'about-us', loadComponent: () => import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent), data: { title: 'PDQA - About Us' } },
       { path: 'our-team', loadComponent: () => import('./pages/team/team.component').then(m => m.TeamComponent), data: { title: 'PDQA - Our Team' } },
       {
