@@ -1,6 +1,10 @@
 <div class="app-shell min-h-screen flex flex-col" [class.is-guest]="!isLoggedIn" [class.is-guest-home]="isGuestHome">
   <!--Navbar-->
-  <div class="app-navbar navbar h-fit" [class.public-navbar]="!isLoggedIn" [class.guest-navbar]="isGuestHome">
+  <div
+    class="app-navbar navbar h-fit"
+    [class.public-navbar]="!isLoggedIn"
+    [class.guest-navbar]="isGuestHome"
+    [class.is-scrolled]="isGuestHome && hasScrolled">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost btn-square lg:hidden text-white hover:bg-white/10">

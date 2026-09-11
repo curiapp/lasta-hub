@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import { User } from '../../types';
 export class MainComponent {
   title = 'PDU - Home'
   currentYear: number = new Date().getFullYear();
+  hasScrolled = false;
   user: User;
   auth = inject(AuthenticationService);
   router = inject(Router);
@@ -30,6 +31,7 @@ export class MainComponent {
   ngOnInit() {
     const appTitle = this.titleService.getTitle();
     this.user = this.auth.user;
+    this.updateScrollState();
 
     this.router
       .events.pipe(
@@ -43,7 +45,13 @@ export class MainComponent {
         })
       ).subscribe((ttl: string) => {
         this.titleService.setTitle(ttl);
+        this.updateScrollState();
       });
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.updateScrollState();
   }
 
   get isLoggedIn() {
@@ -57,6 +65,10 @@ export class MainComponent {
   get isGuestHome() {
     const url = this.router.url.split('?')[0].split('#')[0];
     return !this.isLoggedIn && (url === '/home' || url === '/');
+  }
+
+  private updateScrollState() {
+    this.hasScrolled = typeof window !== 'undefined' && window.scrollY > 24;
   }
 
 }

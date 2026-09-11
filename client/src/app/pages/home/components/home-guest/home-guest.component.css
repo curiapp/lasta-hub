@@ -202,6 +202,12 @@
   color: rgba(226, 232, 240, 0.7);
 }
 
+.metric-card span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
 .preview-header strong {
   display: block;
   margin-top: 0.15rem;
@@ -351,7 +357,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  margin-top: clamp(2rem, 4vw, 3rem);
+  margin-top: clamp(3rem, 10vw, 4.25rem);
   border-radius: 8px;
   overflow: hidden;
 }
