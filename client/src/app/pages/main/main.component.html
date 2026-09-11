@@ -1,14 +1,12 @@
-<div class="min-h-screen flex flex-col">
+<div class="app-shell min-h-screen flex flex-col" [class.is-guest]="!isLoggedIn" [class.is-guest-home]="isGuestHome">
   <!--Navbar-->
-  <div class="navbar bg-primary! text-white h-fit">
+  <div class="app-navbar navbar h-fit" [class.public-navbar]="!isLoggedIn" [class.guest-navbar]="isGuestHome">
     <div class="navbar-start">
       <div class="dropdown">
-        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-          </svg>
+        <div tabindex="0" role="button" class="btn btn-ghost btn-square lg:hidden text-white hover:bg-white/10">
+          <span class="material-symbols-rounded">menu</span>
         </div>
-        <ul tabindex="-1" class="menu menu-sm dropdown-content bg-[#1b2c5d] rounded-box z-1 mt-3 w-52 p-2 shadow-2xl border border-white/10">
+        <ul tabindex="-1" class="menu menu-sm dropdown-content app-dropdown rounded-box z-30 mt-3 w-56 p-2">
           <li><a routerLink='/home' routerLinkActive="active"
               class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           @if (isPdqa) {
@@ -19,19 +17,19 @@
           @if (isLoggedIn) {
           <li><a routerLink='/reports-reviews' routerLinkActive="active">Reports & Reviews</a></li>
           }
-          <li><a routerLink='/tutorials' routerLinkActive="active">Support</a></li>
+          <li><a routerLink='/support' routerLinkActive="active">Support</a></li>
           <!-- <li><a routerLink='/our-team' routerLinkActive="active">Team</a></li> -->
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
       </div>
       <img alt="NUST logo" src="/logo.png" class="h-6 ml-4" />
       <a routerLink="/home"
-        class="btn btn-ghost hover:bg-transparent hover:border-primary hover:scale-95 transition-all ml-2">
-        <span class="text-xl text-white!">PDQA</span>
+        class="brand-link btn btn-ghost hover:bg-transparent transition-all ml-2">
+        <span class="text-xl text-white! font-extrabold">PDQA</span>
       </a>
-      <span class="hidden lg:block">|</span>
+      <span class="brand-divider hidden lg:block"></span>
       <div class="hidden lg:flex">
-        <ul class="menu menu-horizontal px-1">
+        <ul class="menu menu-horizontal app-menu px-1">
           <li><a routerLink='/home' routerLinkActive="active"
               class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           @if (isPdqa) {
@@ -42,7 +40,7 @@
           @if (isLoggedIn) {
           <li><a routerLink='/reports-reviews' routerLinkActive="active">Reports & Reviews</a></li>
           }
-          <li><a routerLink='/tutorials' routerLinkActive="active">Support</a></li>
+          <li><a routerLink='/support' routerLinkActive="active">Support</a></li>
           <!-- <li><a routerLink='/our-team' routerLinkActive="active">Team</a></li> -->
           <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
         </ul>
@@ -56,7 +54,7 @@
       <notification [user]="user" />
       <profile [user]="user" />
       }@else {
-      <a routerLink='/login' routerLinkActive="active" class="btn btn-secondary btn-sm btn-outline px-5">Login</a>
+      <a routerLink='/login' routerLinkActive="active" class="login-button btn btn-sm px-5">Sign in</a>
       }
     </div>
 
@@ -70,19 +68,31 @@
   <!--Main layout-->
 
   <!--Footer-->
-  <footer class="page-footer bottom text-white bg-primary">
+  <footer class="app-footer page-footer bottom text-white">
     <!--Call to action-->
-    <div class="container mx-auto">
-      <div class="py-4">
-        <div class="space-y-2">
-          <p class="text-center text-xs">
-            <a href="#">Terms of Service</a> | <a href="#">Privacy</a> | <a href="#">Help</a>
-          </p>
-          <p class="text-center text-xs">
-            Copyright &copy; {{ currentYear }} Programme Development and Quality Assurance at the Namibia University of
-            Science and Technology (NUST). All rights reserved
+    <div class="max-w-8/12 mx-auto px-4">
+      <div class="footer-inner">
+        <div>
+          <strong class="footer-brand">PDQA</strong>
+          <p>
+            Programme Development and Quality Assurance at the Namibia University of Science and Technology.
           </p>
         </div>
+        <div class="footer-links">
+          <a href="#">Terms of Service</a>
+          <a href="#">Privacy</a>
+          <a routerLink="/support">Support</a>
+        </div>
+        <div class="footer-status">
+          <span></span>
+          All Systems Operational
+        </div>
+      </div>
+      <div class="footer-copy">
+        <p>
+          Copyright &copy; {{ currentYear }} Namibia University of
+          Science and Technology. All rights reserved
+        </p>
       </div>
     </div>
     <!--/.Call to action-->

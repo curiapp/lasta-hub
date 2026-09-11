@@ -1,0 +1,112 @@
+.portfolio-stage {
+  position: relative;
+  min-height: 18rem;
+}
+
+.portfolio-panel {
+  width: 100%;
+  transform-origin: top center;
+}
+
+.portfolio-skeleton-enter {
+  animation: portfolio-skeleton-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.portfolio-skeleton-leave {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  animation: portfolio-skeleton-leave 460ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.programme-grid-enter {
+  animation: programme-grid-enter 520ms 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.programme-grid-leave {
+  animation: programme-grid-leave 180ms ease-in both;
+}
+
+.programme-card-enter {
+  animation: programme-card-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+.programme-card-leave {
+  animation: programme-card-leave 160ms ease-in both;
+}
+
+@keyframes portfolio-skeleton-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes portfolio-skeleton-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.992);
+    filter: blur(3px);
+  }
+}
+
+@keyframes programme-grid-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes programme-grid-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes programme-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes programme-card-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
