@@ -11,7 +11,7 @@
           <span class="material-symbols-rounded">menu</span>
         </div>
         <ul tabindex="-1" class="menu menu-sm dropdown-content app-dropdown rounded-box z-30 mt-3 w-56 p-2">
-          <li><a routerLink='/home' routerLinkActive="active"
+          <li><a routerLink='/' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
               class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           @if (isPdqa) {
           <li><a routerLink='/workflow-definition' routerLinkActive="active">Workflow</a></li>
@@ -27,14 +27,14 @@
         </ul>
       </div>
       <img alt="NUST logo" src="/logo.png" class="h-6 ml-4" />
-      <a routerLink="/home"
+      <a routerLink="/"
         class="brand-link btn btn-ghost hover:bg-transparent transition-all ml-2">
         <span class="text-xl text-white! font-extrabold">PDQA</span>
       </a>
       <span class="brand-divider hidden lg:block"></span>
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal app-menu px-1">
-          <li><a routerLink='/home' routerLinkActive="active"
+          <li><a routerLink='/' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
               class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           @if (isPdqa) {
           <li><a routerLink='/workflow-definition' routerLinkActive="active">Workflow</a></li>

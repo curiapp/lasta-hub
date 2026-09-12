@@ -39,7 +39,7 @@ export class AuthenticationService {
 
   logout() {
     sessionStorage.removeItem('loggedInUser');
-    this.router.navigate(["/home"])
+    this.router.navigate(["/"])
     window.location.reload();
   }
 }

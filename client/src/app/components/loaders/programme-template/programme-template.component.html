@@ -1,16 +1,35 @@
-<div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4">
-  @for (item of [1,2,3,4]; track $index) {
-  <div class="p-4 border border-base-300 bg-base-100 min-h-40 shadow-sm transition-all rounded-lg hover:shadow-md duration-300 space-y-4">
-    <div class="flex gap-2 items-center">
-      <div class="skeleton rounded-md h-5 w-7/12"></div>
-      <div class="skeleton rounded-md h-5 w-3/12"></div>
-    </div>
+@if (viewMode === 'list') {
+  <div class="grid gap-2">
+    @for (item of [1,2,3,4,5]; track $index) {
+      <div class="grid min-h-20 gap-3 rounded-md border border-base-300 bg-base-100 p-3 shadow-sm md:grid-cols-[minmax(12rem,1fr)_minmax(0,1.35fr)] md:items-center">
+        <div class="space-y-2">
+          <div class="skeleton h-5 w-8/12 rounded-md"></div>
+          <div class="skeleton h-4 w-3/12 rounded-md"></div>
+        </div>
 
-    <div class="flex flex-col gap-2">
-      <div class="skeleton rounded-md h-3 w-8/12"></div>
-      <div class="skeleton rounded-md h-3 w-6/12"></div>
-      <div class="skeleton rounded-md h-3 w-4/12"></div>
-    </div>
+        <div class="grid gap-2 md:grid-cols-3">
+          <div class="skeleton h-3 w-8/12 rounded-md"></div>
+          <div class="skeleton h-3 w-7/12 rounded-md"></div>
+          <div class="skeleton h-3 w-6/12 rounded-md"></div>
+        </div>
+      </div>
+    }
   </div>
-  }
-</div>
+} @else {
+  <div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4">
+    @for (item of [1,2,3,4]; track $index) {
+      <div class="min-h-40 space-y-4 rounded-md border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:shadow-md">
+        <div class="flex items-center gap-2">
+          <div class="skeleton h-5 w-7/12 rounded-md"></div>
+          <div class="skeleton h-5 w-3/12 rounded-md"></div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <div class="skeleton h-3 w-8/12 rounded-md"></div>
+          <div class="skeleton h-3 w-6/12 rounded-md"></div>
+          <div class="skeleton h-3 w-4/12 rounded-md"></div>
+        </div>
+      </div>
+    }
+  </div>
+}

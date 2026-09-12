@@ -41,7 +41,7 @@ export class LoginComponent {
         {
           next: (data) => {
             sessionStorage.setItem('loggedInUser', JSON.stringify(data));
-            this.router.navigate(['/home']);
+            this.router.navigate(['/']);
           },
           error: (error: any) => {
             this.message.set(error.message);
