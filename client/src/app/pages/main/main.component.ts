@@ -64,7 +64,7 @@ export class MainComponent {
 
   get isGuestHome() {
     const url = this.router.url.split('?')[0].split('#')[0];
-    return !this.isLoggedIn && (url === '/home' || url === '/');
+    return !this.isLoggedIn && url === '/';
   }
 
   private updateScrollState() {

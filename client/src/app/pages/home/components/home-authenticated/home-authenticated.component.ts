@@ -16,6 +16,7 @@ import { WorkflowDashboard } from '../../../../types/programme-workflow';
 
 type ProgrammeScope = 'mine' | 'all' | 'department' | 'faculty';
 type ProgrammeSort = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
+type ProgrammeViewMode = 'grid' | 'list';
 
 type ProgrammeOption<T> = {
   value: T;
@@ -41,6 +42,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   private readonly apollo = inject(Apollo);
   private readonly programmeScopeStorageKey = 'home.programmeScope';
   private readonly programmeSortStorageKey = 'home.programmeSort';
+  private readonly programmeViewModeStorageKey = 'home.programmeViewMode';
   private readonly minimumProgrammeLoadingMs = 650;
   private readonly limit = 50;
   private programmeLoadingStartedAt = Date.now();
@@ -54,6 +56,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   programmesLoading = signal(true);
   programmeScope = signal<ProgrammeScope>('all');
   programmeSort = signal<ProgrammeSort>('newest');
+  programmeViewMode = signal<ProgrammeViewMode>('grid');
   searchText = signal('');
   dashboard = signal<WorkflowDashboard>({
     programmeCount: 0,
@@ -66,7 +69,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   readonly programmeScopeOptions: Array<ProgrammeOption<ProgrammeScope>> = [
     { value: 'mine', label: 'My programmes', icon: 'person' },
-    { value: 'all', label: 'All programmes', icon: 'view_list' },
+    { value: 'all', label: 'All programmes', icon: 'apps' },
     { value: 'department', label: 'My department', icon: 'groups' },
     { value: 'faculty', label: 'My faculty', icon: 'account_balance' },
   ];
@@ -76,6 +79,11 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     { value: 'oldest', label: 'Oldest first', icon: 'event' },
     { value: 'title-asc', label: 'A to Z', icon: 'sort_by_alpha' },
     { value: 'title-desc', label: 'Z to A', icon: 'sort_by_alpha' },
+  ];
+
+  readonly programmeViewOptions: Array<ProgrammeOption<ProgrammeViewMode>> = [
+    { value: 'grid', label: 'Grid view', icon: 'grid_view' },
+    { value: 'list', label: 'List view', icon: 'view_list' },
   ];
 
   filteredProgrammes = computed(() => this.programmes().filter((programme) => this.matchesScope(programme)));
@@ -148,6 +156,11 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.writeSessionValue(this.programmeSortStorageKey, sort);
   }
 
+  setProgrammeViewMode(mode: ProgrammeViewMode) {
+    this.programmeViewMode.set(mode);
+    this.writeLocalValue(this.programmeViewModeStorageKey, mode);
+  }
+
   portfolioHeading() {
     if (this.programmeScope() === 'all') return 'All programmes';
     return this.scopeLabel();
@@ -169,6 +182,14 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     return this.programmeSortOptions.find((option) => option.value === sort)?.label ?? 'Sort programmes';
   }
 
+  viewIcon(mode: ProgrammeViewMode = this.programmeViewMode()) {
+    return this.programmeViewOptions.find((option) => option.value === mode)?.icon ?? 'grid_view';
+  }
+
+  viewLabel(mode: ProgrammeViewMode = this.programmeViewMode()) {
+    return this.programmeViewOptions.find((option) => option.value === mode)?.label ?? 'Programme layout';
+  }
+
   programmeStatusClasses(status?: string) {
     const normalized = String(status || 'draft').trim().toLowerCase().replace(/\s+/g, '_');
     const base = 'badge badge-sm shrink-0 capitalize font-semibold';
@@ -188,9 +209,11 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     const defaultScope = this.isLecturerUser() ? 'mine' : 'all';
     const savedScope = this.readProgrammeScope();
     const savedSort = this.readProgrammeSort();
+    const savedViewMode = this.readProgrammeViewMode();
 
     this.programmeScope.set(savedScope && this.scopeAvailable(savedScope) ? savedScope : defaultScope);
     if (savedSort) this.programmeSort.set(savedSort);
+    if (savedViewMode) this.programmeViewMode.set(savedViewMode);
   }
 
   private setProgrammesLoading(loading: boolean) {
@@ -244,6 +267,11 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     return value && this.programmeSortOptions.some((option) => option.value === value) ? value : null;
   }
 
+  private readProgrammeViewMode(): ProgrammeViewMode | null {
+    const value = this.readLocalValue(this.programmeViewModeStorageKey) as ProgrammeViewMode | null;
+    return value && this.programmeViewOptions.some((option) => option.value === value) ? value : null;
+  }
+
   private readSessionValue(key: string) {
     if (typeof sessionStorage === 'undefined') return null;
     return sessionStorage.getItem(key);
@@ -251,6 +279,15 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   private writeSessionValue(key: string, value: string) {
     if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(key, value);
+  }
+
+  private readLocalValue(key: string) {
+    if (typeof localStorage === 'undefined') return null;
+    return localStorage.getItem(key);
+  }
+
+  private writeLocalValue(key: string, value: string) {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
   }
 
   private isLecturerUser() {

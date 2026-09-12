@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'programme-template',
@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './programme-template.component.css'
 })
 export class ProgrammeTemplateComponent {
-
+  @Input() viewMode: 'grid' | 'list' = 'grid';
 }

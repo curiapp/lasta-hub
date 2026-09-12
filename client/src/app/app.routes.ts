@@ -7,14 +7,13 @@ import { authGuard } from './guards/auth.guard';
 import { pdqaGuard } from './guards/pdqa.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
   { path: 'login', component: LoginComponent, data: { title: 'PDQA - Login' } },
   { path: 'loading', component: LoadingPageComponent, data: { title: 'Loading' } },
   {
     path: '', component: MainComponent, data: { title: 'PDQA - Main' },
     children: [
-      { path: '', redirectTo: '/home', pathMatch: 'full', data: { title: 'PDQA - Home' } },
-      { path: 'home', component: HomeComponent, data: { title: 'PDQA - Home' } },
+      { path: '', component: HomeComponent, data: { title: 'PDQA - Home' } },
+      { path: 'home', redirectTo: '', pathMatch: 'full', data: { title: 'PDQA - Home' } },
       { path: 'workflow-definition', loadComponent: () => import('./pages/workflow-definition/workflow-definition.component').then(m => m.WorkflowDefinitionComponent), canActivate: [pdqaGuard], data: { title: 'PDQA - Workflow Definition' } },
       { path: 'register-user', loadComponent: () => import('./pages/register-user/register-user.component').then(m => m.RegisterUserComponent), canActivate: [pdqaGuard], data: { title: 'PDQA - Register User' } },
       { path: 'reports-reviews', loadComponent: () => import('./pages/reports-reviews/reports-reviews.component').then(m => m.ReportsReviewsComponent), canActivate: [authGuard], data: { title: 'PDQA - Reports & Reviews' } },
