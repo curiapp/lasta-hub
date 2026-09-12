@@ -1,12 +1,11 @@
-<div class="flex min-h-dvh bg-base-200 px-4 sm:px-6 lg:px-12">
+<div class="login-page">
 
-  <div class="py-12 mx-auto grid place-items-center flex-auto">
-    <div class="h-full flex flex-col md:flex-row justify-center items-center gap-10 w-full p-8 md:p-0">
+  <div class="login-shell">
+    <div class="login-card">
 
-      <div class="login-bg relative hidden h-32! overflow-hidden rounded-md md:block md:h-full! md:w-1/2">
-        <div
-          class="relative left-0 top-0 z-20 flex h-full w-full grow flex-col bg-black/45 p-4">
-          <div class="flex justify-between items-start grow">
+      <div class="login-visual">
+        <div class="login-visual-overlay">
+          <div class="flex items-start justify-between gap-3">
             <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
             <a routerLink="/home"
               class="btn btn-sm border-white/30 bg-black/25 text-white shadow-none hover:border-white/50 hover:bg-black/40 group"><span
@@ -14,11 +13,11 @@
                 class="transition-all group-hover:translate-x-1">&rarr;</span></a>
           </div>
 
-          <div class="my-3">
-            <p class="text-white lg:text-xl text-center w-full lg:w-96 font-thin mx-auto">
-              Streamline Curriculum
-              Development, Maintenance, and
-              Modernization
+          <div class="login-visual-copy">
+            <span>Programme Development Application</span>
+            <h1>Develop, review, and modernise programmes with confidence.</h1>
+            <p>
+              One connected space for curriculum development, maintenance, approvals, and quality assurance records.
             </p>
           </div>
         </div>
@@ -26,27 +25,35 @@
           class="pointer-events-none absolute left-0 top-0 z-0 h-full w-full select-none object-cover" />
       </div>
 
-      <div class="w-full md:w-1/2 space-y-8 py-2">
+      <div class="login-form-panel">
 
-        <div class="flex justify-between items-start md:hidden mx-auto max-w-sm">
-          <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
+        <div class="mobile-login-header">
+          <img class="h-9" src="assets/logo.png" alt="NUST Logo">
           <a routerLink="/home"
-            class="btn btn-sm border-base-300 bg-base-100 text-base-content shadow-sm hover:border-primary group"><span
-              class="transition-all group-hover:scale-105">Back to Website</span> <span
-              class="transition-all group-hover:translate-x-1">&rarr;</span></a>
+            class="btn btn-sm border-base-300 bg-base-100 text-base-content shadow-sm hover:border-primary group">
+            <span class="transition-all group-hover:scale-105">Back</span>
+            <span class="transition-all group-hover:translate-x-1">&rarr;</span>
+          </a>
         </div>
 
-        <div class="space-y-1 flex flex-col max-w-sm w-full mx-auto">
-          <span class="text-4xl font-bold text-base-content">Sign In</span>
-          <span class="text-xs text-base-content/60">Welcome to PDQA - Let's get started</span>
-          <hr class="border-base-300">
+        <div class="mobile-login-copy">
+          <span>PDQA Portal</span>
+          <h1>Streamline academic programme development.</h1>
+          <p>Sign in to continue with programme reviews, approvals, and development records.</p>
         </div>
 
-        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-6 md:space-y-8 max-w-sm w-full mx-auto">
+        <div class="login-heading">
+          <span>Sign In</span>
+          <p>Welcome back. Continue where your programme work left off.</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
 
           <div class="form-control w-full">
-            <input id="email" type="text" class="input input-bordered w-full bg-base-100 text-base-content placeholder:text-base-content/40"
-              placeholder="Enter Email" required [(ngModel)]="model.email" name="email" #email="ngModel">
+            <label class="login-label" for="email">Email address</label>
+            <input id="email" type="text"
+              class="input input-bordered w-full bg-base-100 text-base-content placeholder:text-base-content/40"
+              placeholder="Enter your email" required [(ngModel)]="model.email" name="email" #email="ngModel">
             @if(email.invalid && loginForm.submitted){
             <div class="label">
               <span class="label-text-alt text-error">Email is required*</span>
@@ -55,12 +62,10 @@
           </div>
 
           <div class="form-control w-full">
-            <!-- <div class="label">
-              <span class="label-text">Password</span>
-            </div> -->
+            <label class="login-label" for="password">Password</label>
             <label class="relative">
               <input #pass class="input input-bordered w-full bg-base-100 text-base-content placeholder:text-base-content/40" id="password"
-                [type]="showPassword?'text':'password'" placeholder="Enter Password" [(ngModel)]="model.password"
+                [type]="showPassword?'text':'password'" placeholder="Enter your password" [(ngModel)]="model.password"
                 required name="password" #password="ngModel">
               <button type="button" class="btn btn-ghost btn-circle btn-sm absolute right-1 top-1/2 -translate-y-1/2 text-base-content/55"
                 title="{{ showPassword ? 'Hide password' : 'Show password' }}"
@@ -76,17 +81,9 @@
               <span class="label-text-alt text-error">Password is required*</span>
             </div>
             }
-            <!-- @else{
-            <div class="label">
-              <span class="label-text-alt text-error"></span>
-            </div>
-            } -->
-            <!-- <a class="label-text-alt float-end text-gray-200">Forgot Password</a> -->
           </div>
-          <!-- <div  class="alert alert-danger">Password is required</div> -->
 
           <div class="form-control w-full space-y-4">
-            <!-- <button (click)="close()" type="button" class="btn btn-ghost">Close</button> -->
             <button type="submit"
               class="btn btn-primary w-full disabled:border-primary disabled:bg-primary disabled:text-primary-content disabled:opacity-100"
               [disabled]="!loginForm.form.valid || isLoading()">

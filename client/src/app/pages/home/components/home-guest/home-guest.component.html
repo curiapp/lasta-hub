@@ -14,10 +14,10 @@
         <h1>Transforming Ideas into Accredited Excellence.</h1>
 
         <p class="text-sm">
-          The <strong>Programme Development App</strong> is a centralised digital solution for
-          <strong>curriculum management, development, maintenance and modernisation</strong>. It supports
-          <strong>ideation, reviews and approvals</strong> leading to registration of
-          <strong>qualifications</strong> on the <strong>NQF</strong>.
+          The <span>Programme Development App</span> is a centralised digital solution for
+          <span>curriculum management, development, maintenance and modernisation</span>. It supports
+          <span>ideation, reviews and approvals</span> leading to registration of
+          <span>qualifications</span> on the <span>NQF</span>.
         </p>
 
         <div class="hero-actions">
@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div class="curriculum-preview" [ngStyle]="tiltStyle()" (mousemove)="updateTilt($event)" (mouseleave)="resetTilt()">
+      <div class="curriculum-preview" [class.is-active]="previewActive()" [ngStyle]="tiltStyle()" (mouseenter)="activateTilt()" (mousemove)="updateTilt($event)" (mouseleave)="resetTilt()">
         <div class="preview-header">
           <div>
             <span>Curriculum Preview</span>
@@ -43,8 +43,11 @@
 
         <div class="hierarchy-flow">
           <span>Faculty</span>
+          &rightarrow;
           <span>Department</span>
+          &rightarrow;
           <span>NQF Level</span>
+          &rightarrow;
           <span>Modules</span>
         </div>
 
@@ -53,16 +56,26 @@
             <img src="/assets/logo-white.png" alt="NUST Programme Development" />
           </div>
 
+          <svg class="node-connectors" viewBox="0 0 520 324" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="connectorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="rgba(252, 175, 23, 0)" />
+                <stop offset="48%" stop-color="#fcaf17" />
+                <stop offset="100%" stop-color="#da2128" />
+              </linearGradient>
+            </defs>
+            <path class="connector-path connector-path-one" d="M 88 58 C 160 90, 210 142, 286 164" />
+            <path class="connector-path connector-path-two" d="M 344 164 C 394 124, 424 72, 468 54" />
+          </svg>
+
           <div class="node node-root">
             <span class="material-symbols-rounded">account_balance</span>
             Faculty
           </div>
-          <div class="connector connector-one"></div>
           <div class="node node-department">
             <span class="material-symbols-rounded">groups</span>
             Department
           </div>
-          <div class="connector connector-two"></div>
           <div class="node node-qualification">
             <span class="material-symbols-rounded">workspace_premium</span>
             Qualification
@@ -78,7 +91,7 @@
 
     <div class="metrics-bar">
       @for (metric of metrics(); track metric.label) {
-        <article class="metric-card" [ngClass]="'accent-' + metric.accent">
+        <article class="metric-card" [class]="'accent-' + metric.accent">
           <span class="metric-icon">
             <span class="material-symbols-rounded">{{ metric.icon }}</span>
           </span>

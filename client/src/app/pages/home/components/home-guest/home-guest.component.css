@@ -67,7 +67,7 @@
 .guest-shell {
   position: relative;
   z-index: 1;
-  width: min(100% - 2rem, 74rem);
+  width: min(100% - 2rem, 86rem);
   margin-inline: auto;
   padding: clamp(6.5rem, 8vw, 7.5rem) 0 2rem;
 }
@@ -76,7 +76,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.86fr);
   align-items: center;
-  gap: clamp(2rem, 5vw, 4.5rem);
+  gap: clamp(2.75rem, 6vw, 5.5rem);
 }
 
 .hero-copy {
@@ -97,6 +97,7 @@
   font-weight: 700;
   backdrop-filter: blur(14px);
   box-shadow: 0 0 34px rgba(var(--brand-yellow-rgb), 0.14);
+  animation: heroBubbleIn 720ms cubic-bezier(0.18, 0.9, 0.22, 1) 120ms both;
 }
 
 .hero-badge .material-symbols-rounded {
@@ -105,27 +106,33 @@
 }
 
 .hero-copy h1 {
-  margin-top: 1.45rem;
+  margin-top: 1.8rem;
   max-width: 45rem;
   color: #ffffff;
-  font-size: clamp(2.75rem, 6vw, 5.2rem);
+  font-size: clamp(2.45rem, 5.1vw, 4.55rem);
   font-weight: 900;
   letter-spacing: 0;
-  line-height: 0.94;
+  line-height: 1;
   text-wrap: balance;
+  animation: heroSlideIn 820ms cubic-bezier(0.18, 0.9, 0.22, 1) 220ms both;
 }
 
 .hero-copy p {
-  margin-top: 1.1rem;
+  margin-top: 1.45rem;
   max-width: 36rem;
   color: rgba(226, 232, 240, 0.82);
   font-size: clamp(0.94rem, 1.45vw, 1.08rem);
-  line-height: 1.65;
+  line-height: 1.78;
+  animation: heroSlideIn 820ms cubic-bezier(0.18, 0.9, 0.22, 1) 360ms both;
 }
 
-.hero-copy p strong {
-  color: #ffffff;
-  font-weight: 800;
+.hero-copy p span {
+  color: var(--brand-yellow);
+  font-weight: 500;
+}
+
+.hero-copy p span:nth-of-type(even) {
+  color: #ff8a8f;
 }
 
 .hero-secondary {
@@ -138,7 +145,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
-  margin-top: 1.8rem;
+  margin-top: 2.25rem;
+  animation: heroBubbleIn 760ms cubic-bezier(0.18, 0.9, 0.22, 1) 520ms both;
 }
 
 .btn-primary-glow,
@@ -186,7 +194,15 @@
   border-radius: 8px;
   padding: 1rem;
   transform-style: preserve-3d;
-  transition: transform 180ms ease, box-shadow 220ms ease;
+  transition: transform 180ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  animation: heroPreviewIn 900ms cubic-bezier(0.18, 0.9, 0.22, 1) 420ms backwards;
+}
+
+.curriculum-preview:hover,
+.curriculum-preview.is-active,
+.metrics-bar:hover {
+  border-color: rgba(var(--brand-yellow-rgb), 0.28);
+  box-shadow: 0 34px 95px rgba(0, 0, 0, 0.36), 0 0 48px rgba(var(--brand-yellow-rgb), 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .preview-header {
@@ -200,6 +216,12 @@
 .hierarchy-flow span,
 .metric-card span {
   color: rgba(226, 232, 240, 0.7);
+}
+
+.metric-card span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .preview-header strong {
@@ -222,7 +244,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-top: 1.2rem;
+  margin-top: 1.5rem;
 }
 
 .hierarchy-flow span {
@@ -237,7 +259,7 @@
 .node-map {
   position: relative;
   min-height: 20.2rem;
-  margin-top: 1rem;
+  margin-top: 1.35rem;
   border-radius: 8px;
   overflow: hidden;
   background:
@@ -273,6 +295,7 @@
 
 .node {
   position: absolute;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -298,34 +321,31 @@
 
 .node-department {
   top: 8.4rem;
-  left: 34%;
+  left: 48%;
 }
 
 .node-qualification {
-  top: 4.6rem;
+  top: 2.5rem;
   right: 1.2rem;
 }
 
-.connector {
+.node-connectors {
   position: absolute;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(var(--brand-yellow-rgb), 0), var(--brand-yellow), var(--brand-red));
-  transform-origin: left center;
-  box-shadow: 0 0 18px rgba(var(--brand-yellow-rgb), 0.55);
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.connector-one {
-  top: 5.8rem;
-  left: 7rem;
-  width: 11rem;
-  transform: rotate(24deg);
-}
-
-.connector-two {
-  top: 9.6rem;
-  left: 48%;
-  width: 10rem;
-  transform: rotate(-28deg);
+.connector-path {
+  fill: none;
+  stroke: url(#connectorGradient);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(var(--brand-yellow-rgb), 0.62));
+  stroke-dasharray: 7 10;
+  animation: connectorFlow 4.8s linear infinite;
 }
 
 .module-stack {
@@ -351,17 +371,58 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  margin-top: clamp(2rem, 4vw, 3rem);
+  margin-top: clamp(4rem, 10vw, 5.5rem);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
+  perspective: 900px;
+  animation: heroBubbleIn 780ms cubic-bezier(0.18, 0.9, 0.22, 1) 700ms both;
 }
 
 .metric-card {
+  position: relative;
   display: flex;
   min-height: 5rem;
   align-items: center;
   gap: 0.8rem;
   padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.015);
+  transform-style: preserve-3d;
+  transition: transform 260ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.metric-card:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.metric-card:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.metric-card:hover {
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(var(--brand-yellow-rgb), 0.22), 0 24px 54px rgba(0, 0, 0, 0.26), 0 0 36px rgba(var(--brand-yellow-rgb), 0.12);
+  transform: translateY(-9px) rotateX(7deg) rotateY(var(--metric-tilt, -4deg)) scale(1.025);
+}
+
+.metric-card:nth-child(1),
+.metric-card:nth-child(2) {
+  --metric-tilt: -5deg;
+}
+
+.metric-card:nth-child(3),
+.metric-card:nth-child(4) {
+  --metric-tilt: 5deg;
+}
+
+.metric-card:hover .metric-icon {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateZ(18px) scale(1.08);
+}
+
+.metric-card:hover strong,
+.metric-card:hover div > span {
+  transform: translateZ(12px);
 }
 
 .metric-card + .metric-card {
@@ -375,6 +436,12 @@
   place-items: center;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
+  transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.metric-card div > span,
+.metric-card strong {
+  transition: transform 220ms ease;
 }
 
 .metric-card strong {
@@ -413,7 +480,7 @@
 }
 
 .guest-info-shell {
-  width: min(100% - 2rem, 74rem);
+  width: min(100% - 2rem, 86rem);
   margin-inline: auto;
 }
 
@@ -442,8 +509,8 @@
 .info-card-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 1.6rem;
+  gap: 1.25rem;
+  margin-top: 2rem;
 }
 
 .info-card {
@@ -490,6 +557,70 @@
   }
 }
 
+@keyframes connectorFlow {
+  from {
+    stroke-dashoffset: 34;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes heroSlideIn {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(28px) scale(0.985);
+  }
+
+  70% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-2px) scale(1.005);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroBubbleIn {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(18px) scale(0.94);
+  }
+
+  72% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-3px) scale(1.025);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroPreviewIn {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: perspective(1100px) translateY(32px) rotateX(8deg) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: perspective(1100px) translateY(0) rotateX(0) scale(1);
+  }
+}
+
 @media (max-width: 980px) {
   .hero-grid,
   .metrics-bar,
@@ -507,10 +638,32 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge,
+  .hero-copy h1,
+  .hero-copy p,
+  .hero-actions,
+  .curriculum-preview,
+  .metrics-bar {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
 @media (max-width: 640px) {
   .guest-shell {
-    width: min(100% - 1.5rem, 74rem);
-    padding-top: 2rem;
+    width: min(100% - 2.25rem, 86rem);
+    padding-top: 6.25rem;
+  }
+
+  .hero-copy {
+    text-align: center;
+  }
+
+  .hero-badge {
+    margin-inline: auto;
   }
 
   .hero-actions {
@@ -518,7 +671,13 @@
   }
 
   .hero-copy h1 {
-    font-size: clamp(2.35rem, 14vw, 3.4rem);
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    line-height: 1.08;
+  }
+
+  .hero-copy p {
+    margin-inline: auto;
+    line-height: 1.75;
   }
 
   .preview-logo {

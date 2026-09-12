@@ -43,6 +43,7 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
   tiltStyle = signal<Record<string, string>>({
     transform: 'perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(0)',
   });
+  previewActive = signal(false);
 
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -86,13 +87,13 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'All Programmes',
         value: String(dashboard.programmeCount || 0),
         icon: 'school',
-        accent: 'blue',
+        accent: 'gold',
       },
       {
         label: 'Active Programmes',
         value: String(dashboard.processCounts?.['running'] || dashboard.activeTaskCount || 0),
         icon: 'pending_actions',
-        accent: 'gold',
+        accent: 'blue',
       },
       {
         label: 'Completed Tasks',
@@ -104,23 +105,32 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'Tracked Stages',
         value: String(dashboard.stageCount || 0),
         icon: 'timeline',
-        accent: 'rose',
+        accent: 'gold',
       },
     ];
   }
 
   updateTilt(event: MouseEvent) {
+    this.previewActive.set(true);
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
 
     this.tiltStyle.set({
-      transform: `perspective(1100px) rotateX(${(-y * 9).toFixed(2)}deg) rotateY(${(x * 11).toFixed(2)}deg) translateY(-4px)`,
+      transform: `perspective(1100px) rotateX(${(-y * 12).toFixed(2)}deg) rotateY(${(x * 14).toFixed(2)}deg) translateY(-8px) scale(1.012)`,
+    });
+  }
+
+  activateTilt() {
+    this.previewActive.set(true);
+    this.tiltStyle.set({
+      transform: 'perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(-8px) scale(1.012)',
     });
   }
 
   resetTilt() {
+    this.previewActive.set(false);
     this.tiltStyle.set({
       transform: 'perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(0)',
     });

@@ -1,9 +1,38 @@
 .about-page {
+  --pdqa-blue: #1b2c5d;
+  --pdqa-yellow: #fcaf17;
+  --pdqa-red: #da2128;
   min-height: 100%;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--color-base-200) 72%, white), var(--color-base-100) 36rem);
+    radial-gradient(circle at 18% 28%, rgba(27, 44, 93, 0.24), transparent 25rem),
+    radial-gradient(circle at 10% 8%, rgba(27, 44, 93, 0.14), transparent 24rem),
+    radial-gradient(circle at 88% 12%, rgba(252, 175, 23, 0.2), transparent 22rem),
+    radial-gradient(circle at 18% 72%, rgba(218, 33, 40, 0.14), transparent 18rem),
+    radial-gradient(circle at 76% 54%, rgba(218, 33, 40, 0.08), transparent 16rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(246, 249, 255, 0.86) 42%, #ffffff 100%);
   color: var(--color-base-content);
   overflow-x: hidden;
+}
+
+.about-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.72), transparent 34%),
+    radial-gradient(circle at 96% 70%, rgba(218, 33, 40, 0.12), transparent 14rem),
+    linear-gradient(rgba(27, 44, 93, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 44, 93, 0.04) 1px, transparent 1px);
+  background-size: auto, 56px 56px, 56px 56px;
+  mask-image: linear-gradient(to bottom, black, transparent 72%);
+}
+
+.about-page > .container {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2rem, 72rem);
 }
 
 .about-hero {
@@ -35,8 +64,37 @@
 }
 
 .about-card-vision {
-  background: color-mix(in srgb, var(--color-primary) 86%, white);
-  color: var(--color-primary-content);
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle at 86% 12%, rgba(252, 175, 23, 0.24), transparent 9rem),
+    linear-gradient(145deg, color-mix(in srgb, var(--pdqa-blue) 94%, white), var(--pdqa-blue));
+  color: #ffffff;
+  box-shadow: 0 24px 64px rgba(27, 44, 93, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.about-card-vision::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.16), transparent 42%),
+    radial-gradient(circle at 8% 92%, rgba(218, 33, 40, 0.18), transparent 8rem);
+  pointer-events: none;
+}
+
+.about-card-vision .card-body {
+  position: relative;
+  z-index: 1;
+}
+
+.about-card-vision .card-title {
+  color: #ffffff;
+}
+
+.about-card-vision p {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .about-card-mission {
@@ -55,10 +113,37 @@
 }
 
 .roles-panel {
-  border: 1px solid color-mix(in srgb, var(--color-base-content) 10%, transparent);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--color-base-content) 8%, transparent);
+  background: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 18px 50px rgba(27, 44, 93, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  backdrop-filter: blur(24px) saturate(1.25);
   transition: transform 320ms ease, box-shadow 320ms ease;
+}
+
+.roles-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(27, 44, 93, 0.16), transparent 18rem),
+    radial-gradient(circle at 92% 0%, rgba(252, 175, 23, 0.18), transparent 16rem),
+    radial-gradient(circle at 12% 100%, rgba(218, 33, 40, 0.1), transparent 15rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+  pointer-events: none;
+}
+
+.roles-panel-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.roles-panel .card-body {
+  background: transparent !important;
 }
 
 .team-card {
