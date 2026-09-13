@@ -144,6 +144,59 @@ h2 {
   padding: 1rem;
 }
 
+.task-panel {
+  position: sticky;
+  top: 5rem;
+  align-self: start;
+  max-height: calc(100vh - 6rem);
+  padding: 0 1rem 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #fff;
+  scrollbar-gutter: stable;
+}
+
+.task-panel .editor-panel > .section-heading:first-child {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0 -1rem 1rem;
+  padding: 1rem 1rem .75rem;
+  border-bottom: 1px solid #e0e4eb;
+  background: #fff;
+  box-shadow: 0 8px 14px rgba(23, 32, 56, .05);
+}
+
+.workflow-head-enter {
+  animation: workflow-head-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.workflow-tabs-enter,
+.workflow-notice-enter,
+.workflow-panel-enter {
+  animation: workflow-panel-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.workflow-tabs-enter {
+  animation-delay: 70ms;
+}
+
+.workflow-builder-enter {
+  animation: workflow-builder-enter 320ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.workflow-column-enter {
+  animation: workflow-column-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.workflow-stage-enter {
+  animation: workflow-stage-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.workflow-task-enter {
+  animation: workflow-task-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .editor-panel-enter {
   animation: editor-panel-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -383,7 +436,7 @@ h2 {
 }
 
 .task-item.moved {
-  animation:editor-panel-enter .35s;
+  animation: editor-panel-enter .35s;
 }
 
 .task-item strong,
@@ -654,7 +707,40 @@ h2 {
   color: #667188;
 }
 
-@keyframes editor-panel-enter { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes workflow-head-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes workflow-panel-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes workflow-builder-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes workflow-column-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes workflow-stage-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes workflow-task-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes editor-panel-enter {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
 
 @media (max-width: 1100px) {
   .builder {
@@ -662,8 +748,20 @@ h2 {
   }
 
   .task-panel {
+    position: static;
     grid-column: 1 / -1;
+    max-height: none;
+    overflow: visible;
     border-top: 1px solid #e0e4eb;
+  }
+
+  .task-panel .editor-panel > .section-heading:first-child {
+    position: static;
+    margin: 0 0 1rem;
+    padding: 0;
+    border-bottom: 0;
+    background: transparent;
+    backdrop-filter: none;
   }
 
   .flow-panel {
