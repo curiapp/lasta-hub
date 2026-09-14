@@ -650,6 +650,7 @@
     filter: none;
     transform: none;
   }
+
 }
 
 @media (max-width: 640px) {
@@ -684,4 +685,5 @@
     max-width: 11rem;
     opacity: 0.92;
   }
+
 }

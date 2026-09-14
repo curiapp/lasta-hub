@@ -54,13 +54,82 @@
   backdrop-filter: blur(18px);
 }
 
-.brand-link {
+.brand-link,
+.brand-area {
   min-height: 2.5rem;
   border-radius: 8px;
 }
 
-.brand-link:hover {
+.brand-link:hover,
+.brand-area:hover .nav-logo-switch {
   transform: translateY(-1px);
+}
+
+.brand-area {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.75rem;
+  padding-inline: 0.5rem;
+}
+
+.nav-logo-switch {
+  position: relative;
+  display: inline-grid;
+  width: 1.55rem;
+  height: 1.65rem;
+  place-items: center;
+  transition: transform 220ms ease;
+}
+
+.nav-default-logo,
+.nav-brand-mark {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.nav-default-logo {
+  object-fit: contain;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
+.nav-brand-mark {
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(252, 175, 23, 0.18));
+  transform: scale(0.9);
+  transition: opacity 180ms ease, transform 220ms ease, filter 220ms ease;
+}
+
+.nav-brand-mark-path {
+  stroke-dasharray: 520;
+  stroke-dashoffset: 520;
+  transition: stroke-dashoffset 0s linear;
+}
+
+.brand-area:hover .nav-default-logo {
+  opacity: 0;
+  transform: scale(0.82) rotate(-6deg);
+}
+
+.brand-area:hover .nav-brand-mark {
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 0 16px rgba(252, 175, 23, 0.42));
+}
+
+.brand-area:hover .nav-brand-mark-path {
+  animation: navBrandDraw 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.brand-area:hover .nav-brand-mark-path:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.brand-area:hover .nav-brand-mark-path:nth-child(3) {
+  animation-delay: 130ms;
 }
 
 .brand-divider {
@@ -141,7 +210,10 @@
 
 .app-footer {
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+  min-height: clamp(16rem, 24vw, 24rem);
   border-top: 1px solid rgba(27, 44, 93, 0.14);
   background:
     radial-gradient(circle at 12% 0%, rgba(252, 175, 23, 0.18), transparent 20rem),
@@ -162,10 +234,72 @@
   opacity: 0.7;
 }
 
-.footer-container {
-  position: relative;
+.footer-bg-word {
+  position: absolute;
+  left: max(1rem, calc((100vw - 86rem) / 2));
+  bottom: 1.75rem;
+  z-index: 0;
+  color: rgba(255, 255, 255, 0.055);
+  font-size: clamp(5.6rem, 16vw, 14.5rem);
+  font-weight: 950;
+  letter-spacing: -0.08em;
+  line-height: 0.88;
+  pointer-events: none;
+  user-select: none;
+}
+
+.footer-wireframe {
+  position: absolute;
+  right: max(1.25rem, calc((100vw - 90rem) / 2));
+  bottom: 1.35rem;
   z-index: 1;
+  width: min(25vw, 20rem);
+  min-width: 13.5rem;
+  opacity: 0.62;
+  pointer-events: none;
+  filter: drop-shadow(0 28px 42px rgba(0, 0, 0, 0.28));
+  transform: perspective(760px) rotateX(34deg) rotateY(-14deg) rotateZ(-6deg) scaleY(1.05);
+  transform-origin: 50% 100%;
+}
+
+.footer-wireframe path {
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 520;
+  stroke-dashoffset: 520;
+  animation: footerLogoDraw 8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  vector-effect: non-scaling-stroke;
+}
+
+.footer-wireframe path:nth-child(2) {
+  animation-delay: 0.55s;
+}
+
+.footer-wireframe path:nth-child(3) {
+  animation-delay: 1.05s;
+}
+
+.footer-logo-outline .logo-outline-blue {
+  stroke: rgba(255, 255, 255, 0.12);
+}
+
+.footer-logo-outline .logo-outline-red {
+  stroke: rgba(255, 255, 255, 0.12);
+}
+
+.footer-logo-outline .logo-outline-yellow {
+  stroke: rgba(255, 255, 255, 0.12);
+}
+
+.footer-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
   max-width: 86rem;
+  width: 100%;
 }
 
 .footer-inner {
@@ -173,7 +307,7 @@
   grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 1.5rem;
   align-items: center;
-  padding-block: 1.25rem;
+  padding-block: clamp(2.5rem, 5vw, 4rem);
 }
 
 .footer-brand {
@@ -186,6 +320,13 @@
 .footer-copy {
   color: rgba(255, 255, 255, 0.62);
   font-size: 0.76rem;
+}
+
+.footer-support-line {
+  max-width: 34rem;
+  margin-top: 0.55rem;
+  color: rgba(255, 255, 255, 0.48) !important;
+  line-height: 1.55;
 }
 
 .footer-links {
@@ -226,9 +367,46 @@
 }
 
 .footer-copy {
+  margin-top: auto;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-block: 0.85rem;
   text-align: center;
+}
+
+@keyframes navBrandDraw {
+  0% {
+    stroke-dashoffset: 520;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes footerLogoDraw {
+  0% {
+    stroke-dashoffset: 520;
+    opacity: 0.28;
+  }
+
+  42%,
+  74% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -520;
+    opacity: 0.28;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-area:hover .nav-brand-mark-path,
+  .footer-wireframe path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }
 
 @media (max-width: 820px) {
@@ -247,5 +425,18 @@
   .footer-status {
     justify-content: center;
     margin-inline: auto;
+  }
+
+  .footer-bg-word {
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7rem;
+    opacity: 0.75;
+  }
+
+  .footer-wireframe {
+    right: -5rem;
+    width: 19rem;
+    opacity: 0.24;
   }
 }
