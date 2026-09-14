@@ -204,8 +204,8 @@
                   <div class="programme-card-meta grid gap-1 text-xs text-base-content/60">
                     <span><b class="text-base-content/75">Code:</b> {{item?.code}} ·
                       <b class="text-base-content/75">Level:</b> {{item?.level}}</span>
-                    <span><b class="text-base-content/75">Department:</b> {{item?.departmentName || item?.department}}</span>
-                    <span><b class="text-base-content/75">Faculty:</b> {{item?.facultyName || item?.faculty}}</span>
+                    <span><b class="text-base-content/75">Department:</b> {{ programmeDepartmentLabel(item) }}</span>
+                    <span><b class="text-base-content/75">Faculty:</b> {{ programmeFacultyLabel(item) }}</span>
                   </div>
                 </a>
               </article>
