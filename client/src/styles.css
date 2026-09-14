@@ -88,3 +88,75 @@ body,
     }
   }
 }
+
+.hero-brand-mark {
+  display: none;
+  position: absolute;
+  right: clamp(1.25rem, 4vw, 3.25rem);
+  bottom: clamp(1.25rem, 4vw, 3rem);
+  z-index: 1;
+  width: clamp(3.3rem, 6vw, 5rem);
+  opacity: 0.86;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.32)) drop-shadow(0 0 20px rgba(252, 175, 23, 0.2));
+  animation: brandMarkFloat 5.8s ease-in-out 2.4s infinite;
+}
+
+.hero-brand-mark svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-brand-mark .brand-mark-path {
+  stroke-dasharray: 520;
+  stroke-dashoffset: 520;
+  animation: brandMarkDraw 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-brand-mark .mark-blue,
+.hero-brand-mark .mark-yellow {
+  stroke: #ffffff;
+}
+
+.hero-brand-mark .mark-red {
+  animation-delay: 180ms;
+}
+
+.hero-brand-mark .mark-yellow {
+  animation-delay: 320ms;
+}
+
+@keyframes brandMarkDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes brandMarkFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-brand-mark,
+  .hero-brand-mark .brand-mark-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-brand-mark {
+    right: 1rem;
+    bottom: 1rem;
+    width: 3.1rem;
+    opacity: 0.55;
+  }
+}
