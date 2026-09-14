@@ -44,9 +44,11 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   private readonly programmeSortStorageKey = 'home.programmeSort';
   private readonly programmeViewModeStorageKey = 'home.programmeViewMode';
   private readonly minimumProgrammeLoadingMs = 650;
+  private readonly uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   private readonly limit = 50;
   private programmeLoadingStartedAt = Date.now();
   private programmeLoadingTimer?: ReturnType<typeof setTimeout>;
+  private attemptedUnitNameRefresh = false;
   private subscriptions = new Subscription();
 
   currentUser: User | null = null;
@@ -110,6 +112,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
       const programmes = (result?.data?.programmes || []) as Programme[];
       this.setProgrammesLoading(result.loading && programmes.length === 0 && this.programmes().length === 0);
       this.programmes.set(programmes);
+      this.refreshProgrammesIfUnitNamesMissing(programmes);
     }));
 
     this.subscriptions.add(this.dashboardQueryRef.valueChanges.subscribe((result) => {
@@ -201,6 +204,14 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     return `${base} badge-ghost`;
   }
 
+  programmeDepartmentLabel(programme: Programme) {
+    return this.unitLabel(programme.departmentName, programme.department, this.currentUser?.department);
+  }
+
+  programmeFacultyLabel(programme: Programme) {
+    return this.unitLabel(programme.facultyName, programme.faculty, this.currentUser?.faculty);
+  }
+
   scopeEmptyLabel() {
     return this.programmeScopeOptions.find((option) => option.value === this.programmeScope())?.label.toLowerCase() ?? 'this view';
   }
@@ -244,6 +255,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     if (cached?.programmes?.length) {
       this.programmes.set(cached.programmes);
       this.programmesLoading.set(false);
+      this.refreshProgrammesIfUnitNamesMissing(cached.programmes);
     }
   }
 
@@ -319,6 +331,36 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   private sameValue(first?: string, second?: string) {
     return !!first && !!second && first.trim().toLowerCase() === second.trim().toLowerCase();
+  }
+
+  private unitLabel(name?: string, value?: string, currentUserUnit?: { id: string; name: string }) {
+    if (this.isReadableUnitName(name)) return name!.trim();
+    if (this.sameValue(value, currentUserUnit?.id) && this.isReadableUnitName(currentUserUnit?.name)) {
+      return currentUserUnit!.name.trim();
+    }
+    if (this.isReadableUnitName(value)) return value!.trim();
+    return 'Not available';
+  }
+
+  private isReadableUnitName(value?: string) {
+    const text = value?.trim();
+    return !!text && !this.uuidPattern.test(text);
+  }
+
+  private refreshProgrammesIfUnitNamesMissing(programmes: Programme[]) {
+    if (this.attemptedUnitNameRefresh || !programmes.length) return;
+
+    const hasUnitIdsWithoutNames = programmes.some((programme) => (
+      this.uuidPattern.test(programme.department?.trim() ?? '')
+      && !this.isReadableUnitName(programme.departmentName)
+    ) || (
+      this.uuidPattern.test(programme.faculty?.trim() ?? '')
+      && !this.isReadableUnitName(programme.facultyName)
+    ));
+
+    if (!hasUnitIdsWithoutNames) return;
+    this.attemptedUnitNameRefresh = true;
+    this.queryRef.refetch({ searchText: this.searchText(), offset: 0, limit: this.limit });
   }
 
   private sortProgrammes(programmes: Programme[]) {

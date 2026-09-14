@@ -1,6 +1,6 @@
 .portfolio-stage {
   position: relative;
-  min-height: 18rem;
+  min-height: clamp(30rem, 52vh, 42rem);
 }
 
 .portfolio-panel {
@@ -73,6 +73,10 @@
 }
 
 @media (max-width: 640px) {
+  .portfolio-stage {
+    min-height: 34rem;
+  }
+
   .programme-grid-view {
     grid-template-columns: 1fr;
   }
