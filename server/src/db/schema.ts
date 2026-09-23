@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, timestamp, index, foreignKey, unique, boolean, smallint, jsonb, pgSchema, bigint, check } from "drizzle-orm/pg-core"
+import { pgTable, uuid, varchar, text, timestamp, index, foreignKey, unique, boolean, smallint, jsonb, pgSchema, bigint, uniqueIndex, check } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const workflow = pgSchema("workflow");
@@ -215,26 +215,6 @@ export const taskInstancesInWorkflow = workflow.table("task_instances", {
 		}).onDelete("set null"),
 ]);
 
-export const definitionsInWorkflow = workflow.table("definitions", {
-	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
-	slug: text().notNull(),
-	name: text().notNull(),
-	description: text(),
-	status: text().default('draft').notNull(),
-	isDefault: boolean("is_default").default(false).notNull(),
-	createdBy: uuid("created_by"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	foreignKey({
-			columns: [table.createdBy],
-			foreignColumns: [users.id],
-			name: "workflow_definitions_created_by_fkey"
-		}).onDelete("set null"),
-	unique("workflow_definitions_slug_key").on(table.slug),
-	check("workflow_definitions_status_check", sql`status = ANY (ARRAY['draft'::text, 'active'::text, 'archived'::text])`),
-]);
-
 export const auditEventsInWorkflow = workflow.table("audit_events", {
 	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
 	programmeId: uuid("programme_id"),
@@ -268,6 +248,27 @@ export const auditEventsInWorkflow = workflow.table("audit_events", {
 			foreignColumns: [users.id],
 			name: "workflow_audit_events_actor_id_fkey"
 		}).onDelete("set null"),
+]);
+
+export const definitionsInWorkflow = workflow.table("definitions", {
+	id: uuid().default(sql`uuidv7()`).primaryKey().notNull(),
+	slug: text().notNull(),
+	name: text().notNull(),
+	description: text(),
+	status: text().default('draft').notNull(),
+	createdBy: uuid("created_by"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	isDefault: boolean("is_default").default(false).notNull(),
+}, (table) => [
+	uniqueIndex("workflow_definitions_single_default").using("btree", table.isDefault.asc().nullsLast().op("bool_ops")).where(sql`(is_default = true)`),
+	foreignKey({
+			columns: [table.createdBy],
+			foreignColumns: [users.id],
+			name: "workflow_definitions_created_by_fkey"
+		}).onDelete("set null"),
+	unique("workflow_definitions_slug_key").on(table.slug),
+	check("workflow_definitions_status_check", sql`status = ANY (ARRAY['draft'::text, 'active'::text, 'archived'::text])`),
 ]);
 
 export const users = pgTable("users", {

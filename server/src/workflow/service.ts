@@ -104,7 +104,7 @@ async function currentDefinition(slug?: string) {
             .from(workflowDefinitions)
             .where(eq(workflowDefinitions.slug, slug))
             .limit(1))[0];
-    if (!seeded) throw new WorkflowError("Workflow definition not found", 404);
+    if (!seeded || seeded.status !== "active") throw new WorkflowError("Workflow definition not found", 404);
     const [version] = await db
         .select()
         .from(workflowDefinitionVersions)
@@ -240,7 +240,9 @@ export async function listWorkflowDefinitions() {
         status: workflowDefinitions.status,
         isDefault: workflowDefinitions.isDefault,
         updatedAt: workflowDefinitions.updatedAt,
-    }).from(workflowDefinitions).orderBy(asc(workflowDefinitions.name)), db.select({
+    }).from(workflowDefinitions)
+        .where(eq(workflowDefinitions.status, "active"))
+        .orderBy(asc(workflowDefinitions.name)), db.select({
         id: workflowDefinitionVersions.id,
         definitionId: workflowDefinitionVersions.definitionId,
         version: workflowDefinitionVersions.version,
@@ -293,7 +295,11 @@ export async function deleteWorkflowDefinition(slug: string) {
             throw new WorkflowError("This workflow definition is already used by a programme and cannot be deleted", 409);
         }
 
-        await tx.delete(workflowDefinitions).where(eq(workflowDefinitions.id, definition.id));
+        await tx.update(workflowDefinitions).set({
+            status: "archived",
+            isDefault: false,
+            updatedAt: new Date().toISOString(),
+        }).where(eq(workflowDefinitions.id, definition.id));
         return { message: `${definition.name} deleted successfully` };
     });
 }

@@ -60,6 +60,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   programmeSort = signal<ProgrammeSort>('newest');
   programmeViewMode = signal<ProgrammeViewMode>('grid');
   searchText = signal('');
+  private readonly searchTextChanges = toObservable(this.searchText);
   dashboard = signal<WorkflowDashboard>({
     programmeCount: 0,
     activeTaskCount: 0,
@@ -121,7 +122,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
       }
     }));
 
-    this.subscriptions.add(toObservable(this.searchText).pipe(
+    this.subscriptions.add(this.searchTextChanges.pipe(
       skip(1),
       debounceTime(400),
       distinctUntilChanged(),
@@ -234,6 +235,11 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   programmeInitials(programme: Programme) {
     const words = programme.title.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
     return (words.length > 1 ? `${words[0][0]}${words[1][0]}` : words[0]?.slice(0, 2) || 'PD').toUpperCase();
+  }
+
+  programmeAnimationDelay(index: number, view: ProgrammeViewMode = this.programmeViewMode()) {
+    const staggerIndex = Math.min(index, 7);
+    return (view === 'list' ? 60 : 90) + staggerIndex * (view === 'list' ? 22 : 32);
   }
 
   scopeEmptyLabel() {

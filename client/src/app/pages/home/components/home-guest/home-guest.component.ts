@@ -28,6 +28,8 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
   private points?: import('three').Points;
   private lines?: import('three').LineSegments;
   private animationFrame?: number;
+  private networkObserver?: IntersectionObserver;
+  private networkVisible = true;
   private pointer = { x: 0, y: 0 };
   private readonly isBrowser: boolean;
 
@@ -67,6 +69,7 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+    this.networkObserver?.disconnect();
     this.renderer?.dispose();
     this.points?.geometry.dispose();
     const pointMaterial = this.points?.material;
@@ -144,10 +147,10 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
     this.camera.position.z = 18;
-    this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.35));
 
-    const nodeCount = 90;
+    const nodeCount = 72;
     const positions = new Float32Array(nodeCount * 3);
     const linePositions = new Float32Array((nodeCount - 1) * 6);
 
@@ -191,6 +194,12 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.scene.add(this.lines);
     window.addEventListener('resize', this.resizeNetwork);
     window.addEventListener('pointermove', this.trackPointer);
+    if ('IntersectionObserver' in window) {
+      this.networkObserver = new IntersectionObserver(([entry]) => {
+        this.networkVisible = entry?.isIntersecting ?? true;
+      }, { threshold: 0.02 });
+      this.networkObserver.observe(canvas);
+    }
     this.resizeNetwork();
     this.animateNetwork();
   }
@@ -213,13 +222,12 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.renderer || !this.scene || !this.camera) return;
     const time = performance.now() * 0.00025;
 
-    if (this.points && this.lines) {
+    if (this.networkVisible && !document.hidden && this.points && this.lines) {
       this.points.rotation.y = time + this.pointer.x * 0.16;
       this.points.rotation.x = this.pointer.y * 0.12;
       this.lines.rotation.copy(this.points.rotation);
+      this.renderer.render(this.scene, this.camera);
     }
-
-    this.renderer.render(this.scene, this.camera);
     this.animationFrame = requestAnimationFrame(this.animateNetwork);
   };
 }
