@@ -1,33 +1,49 @@
 @if (viewMode === 'list') {
-  <div class="grid gap-2">
+  <div class="overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm">
+    <div class="grid min-w-[62rem] grid-cols-[2fr_1.2fr_1.5fr_1.2fr_.7fr_3rem] gap-5 bg-base-200/70 px-4 py-3">
+      @for (item of [1,2,3,4,5,6]; track $index) {
+        <div class="skeleton h-2.5 rounded"></div>
+      }
+    </div>
     @for (item of [1,2,3,4,5]; track $index) {
-      <div class="grid min-h-20 gap-3 rounded-md border border-base-300 bg-base-100 p-3 shadow-sm md:grid-cols-[minmax(12rem,1fr)_minmax(0,1.35fr)] md:items-center">
-        <div class="space-y-2">
-          <div class="skeleton h-5 w-8/12 rounded-md"></div>
-          <div class="skeleton h-4 w-3/12 rounded-md"></div>
+      <div class="grid min-h-16 min-w-[62rem] grid-cols-[2fr_1.2fr_1.5fr_1.2fr_.7fr_3rem] items-center gap-5 border-t border-base-300 px-4 py-2">
+        <div class="flex items-center gap-3">
+          <div class="skeleton size-8 shrink-0 rounded"></div>
+          <div class="grow space-y-2">
+            <div class="skeleton h-3 w-7/12 rounded"></div>
+            <div class="skeleton h-2.5 w-5/12 rounded"></div>
+          </div>
         </div>
-
-        <div class="grid gap-2 md:grid-cols-3">
-          <div class="skeleton h-3 w-8/12 rounded-md"></div>
-          <div class="skeleton h-3 w-7/12 rounded-md"></div>
-          <div class="skeleton h-3 w-6/12 rounded-md"></div>
-        </div>
+        <div class="space-y-2"><div class="skeleton h-3 w-8/12 rounded"></div><div class="skeleton h-2.5 w-6/12 rounded"></div></div>
+        <div class="space-y-2"><div class="skeleton h-3 w-9/12 rounded"></div><div class="skeleton h-2.5 w-7/12 rounded"></div></div>
+        <div class="space-y-2"><div class="skeleton h-2 w-full rounded"></div><div class="skeleton h-2.5 w-5/12 rounded"></div></div>
+        <div class="skeleton h-5 w-16 rounded-full"></div>
+        <div class="skeleton size-7 rounded"></div>
       </div>
     }
   </div>
 } @else {
   <div class="grid items-stretch gap-3 md:grid-cols-3 2xl:grid-cols-4">
     @for (item of [1,2,3,4]; track $index) {
-      <div class="min-h-40 space-y-4 rounded-md border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:shadow-md">
-        <div class="flex items-center gap-2">
-          <div class="skeleton h-5 w-7/12 rounded-md"></div>
-          <div class="skeleton h-5 w-3/12 rounded-md"></div>
+      <div class="min-h-52 rounded-md border border-base-300 bg-base-100 p-4 shadow-sm">
+        <div class="flex items-start justify-between gap-3">
+          <div class="grow space-y-2">
+            <div class="skeleton h-2.5 w-4/12 rounded"></div>
+            <div class="skeleton h-5 w-9/12 rounded"></div>
+          </div>
+          <div class="skeleton h-5 w-16 rounded-full"></div>
         </div>
-
-        <div class="flex flex-col gap-2">
-          <div class="skeleton h-3 w-8/12 rounded-md"></div>
-          <div class="skeleton h-3 w-6/12 rounded-md"></div>
-          <div class="skeleton h-3 w-4/12 rounded-md"></div>
+        <div class="mt-5 flex items-center gap-4">
+          <div class="skeleton size-13 shrink-0 rounded-full"></div>
+          <div class="grow space-y-2">
+            <div class="skeleton h-2.5 w-4/12 rounded"></div>
+            <div class="skeleton h-3 w-9/12 rounded"></div>
+            <div class="skeleton h-2.5 w-7/12 rounded"></div>
+          </div>
+        </div>
+        <div class="mt-5 grid grid-cols-2 gap-4 border-t border-base-300 pt-3">
+          <div class="space-y-2"><div class="skeleton h-2.5 w-5/12 rounded"></div><div class="skeleton h-3 w-10/12 rounded"></div></div>
+          <div class="space-y-2"><div class="skeleton h-2.5 w-5/12 rounded"></div><div class="skeleton h-3 w-10/12 rounded"></div></div>
         </div>
       </div>
     }

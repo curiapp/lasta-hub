@@ -16,37 +16,46 @@
 }
 
 .programme-grid-view .programme-card {
-  min-height: 10rem;
+  min-height: 13rem;
+}
+
+.programme-progress {
+  --size: 2.75rem;
+  --thickness: 0.2rem;
 }
 
 .programme-list-view {
-  display: grid;
-  gap: 0.5rem;
+  display: block;
 }
 
-.programme-list-view .programme-card {
-  min-height: 4.75rem;
+.programme-table-wrap {
+  width: 100%;
 }
 
-.programme-list-view .programme-card-link {
-  display: grid;
-  grid-template-columns: minmax(12rem, 1fr) minmax(0, 1.35fr);
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 3rem 0.7rem 0.85rem;
+.programme-table {
+  min-width: 62rem;
 }
 
-.programme-list-view .programme-card-heading {
-  margin-bottom: 0;
+.programme-table thead {
+  background: color-mix(in srgb, var(--color-base-200) 72%, transparent);
 }
 
-.programme-list-view .programme-card-title {
-  -webkit-line-clamp: 1;
+.programme-table th {
+  padding-block: 0.65rem;
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
-.programme-list-view .programme-card-meta {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.55rem;
+.programme-table td {
+  border-color: color-mix(in srgb, var(--color-base-content) 10%, transparent);
+  vertical-align: middle;
+}
+
+.programme-table tbody tr {
+  transition: background-color 180ms ease;
 }
 
 @media (min-width: 768px) {
@@ -64,11 +73,6 @@
 @media (max-width: 980px) {
   .programme-grid-view {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .programme-list-view .programme-card-link,
-  .programme-list-view .programme-card-meta {
-    grid-template-columns: 1fr;
   }
 }
 
