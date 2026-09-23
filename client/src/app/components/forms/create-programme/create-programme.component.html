@@ -3,7 +3,7 @@
     <p class="text-xs font-bold uppercase text-base-content/50">Programme setup</p>
     <h2 class="mt-1 text-xl font-bold">Create a new programme</h2>
     <p class="mt-1 text-sm text-base-content/60">
-      Add the core programme details and start the development workflow.
+      Add the core programme details and choose the development path it should follow.
     </p>
   </header>
 
@@ -81,14 +81,40 @@
       </label>
     </div>
 
+    <label class="form-control">
+      <span class="mb-1 text-xs font-semibold">
+        Development path <b class="text-error">*</b>
+      </span>
+      <div class="relative">
+        <span class="material-symbols-rounded pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-lg text-base-content/40">
+          account_tree
+        </span>
+        <select class="select select-bordered w-full pl-10" required [(ngModel)]="selectedWorkflowSlug"
+          name="workflowSlug" [disabled]="workflowDefinitionsLoading()">
+          @if (workflowDefinitionsLoading()) {
+            <option value="">Loading development paths...</option>
+          } @else {
+            @for (definition of workflowDefinitions; track definition.id) {
+              <option [value]="definition.slug">{{ workflowOptionLabel(definition) }}</option>
+            }
+          }
+        </select>
+      </div>
+      @if (selectedWorkflow?.description) {
+        <span class="mt-1 text-xs text-base-content/50">{{ selectedWorkflow?.description }}</span>
+      }
+    </label>
+
     <div role="note" class="flex items-start gap-2 rounded-md bg-info/10 p-3 text-xs text-base-content/65">
       <span class="material-symbols-rounded text-info">account_tree</span>
-      <span>The programme will begin with the <strong>Need Analysis</strong> stage after creation.</span>
+      <span>
+        <strong>{{ selectedWorkflow?.name || 'The current development path' }}</strong> will begin as soon as the programme is created.
+      </span>
     </div>
 
     <footer class="flex items-center justify-end gap-2 border-t border-base-300 pt-3">
       <button type="submit" class="btn btn-primary btn-sm min-w-36"
-        [disabled]="programmeForm.invalid || programme.level === 0 || _loading.isLoading()">
+        [disabled]="programmeForm.invalid || programme.level === 0 || !selectedWorkflowSlug || workflowDefinitionsLoading() || _loading.isLoading()">
         @if (_loading.isLoading()) {
           <span class="loading loading-spinner loading-sm"></span>
           Creating

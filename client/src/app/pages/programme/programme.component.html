@@ -12,6 +12,11 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 text-xs text-base-content/60">
+        <button type="button" class="btn btn-ghost btn-sm border border-base-content/20 bg-base-100 shadow-sm"
+          title="Programme summary" (click)="openProgrammeSummary()">
+          <span class="material-symbols-rounded text-base">summarize</span>
+          Summary
+        </button>
         @if (canEditProgrammeDetails) {
           <button type="button" class="btn btn-ghost btn-square btn-sm border border-base-content/20 bg-base-100 shadow-sm"
             title="Edit programme details" (click)="openProgrammeEdit()">
@@ -67,25 +72,23 @@
           <p class="text-xs font-bold uppercase text-base-content/50">Development path</p>
           <p class="mt-1 text-sm font-semibold">{{ workflowDisplayName }}</p>
           <p class="text-xs text-base-content/55">
-            @if (completedTaskCount) {
-              This path is locked because this programme has completed task history.
-            } @else {
-              PDQA can switch this programme to another published development path.
-            }
+            New versions of this path are applied automatically. Changing to another path keeps completed work as history and restarts active work after confirmation.
           </p>
         </div>
         <div class="flex w-full gap-2 md:w-auto">
           <select class="select select-bordered select-sm min-w-64 grow"
-            [(ngModel)]="selectedWorkflowSlug" [disabled]="workflowDefinitionsLoading || !canSwitchWorkflow">
+            [(ngModel)]="selectedWorkflowSlug">
             @if (workflowDefinitionsLoading) {
               <option value="">Loading development paths...</option>
             }
             @for (workflow of workflowDefinitions; track workflow.id) {
-              <option [value]="workflow.slug">{{ workflow.name }}</option>
+              <option [value]="workflow.slug">
+                {{ workflow.name }} · v{{ workflow.version }}{{ workflow.isDefault ? ' · Current' : '' }}
+              </option>
             }
           </select>
           <button type="button" class="btn btn-primary btn-sm"
-            [disabled]="workflowDefinitionsLoading || !canSwitchWorkflow || switchingWorkflow()" (click)="switchWorkflow()">
+            [disabled]="switchingWorkflow() || !selectedWorkflowSlug" (click)="switchWorkflow()">
             <span class="material-symbols-rounded">swap_horiz</span>
             {{ switchingWorkflow() ? 'Updating' : 'Update' }}
           </button>
@@ -960,6 +963,128 @@
     </div>
   }
 
+  @if (programmeSummaryOpen()) {
+    <div class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-6xl overflow-hidden border border-base-300 p-0 shadow-2xl">
+        <header class="flex min-h-16 items-center justify-between gap-3 border-b border-base-300 px-5">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase text-base-content/50">Programme review</p>
+            <h2 class="truncate text-lg font-bold">{{ programme?.title || 'Programme summary' }}</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" class="btn btn-primary btn-sm"
+              (click)="openProgrammeSummaryEmail()">
+              <span class="material-symbols-rounded text-base">outgoing_mail</span>
+              Email summary
+            </button>
+            <button type="button" class="btn btn-ghost btn-square btn-sm" title="Close" (click)="closeProgrammeSummary()">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="grid max-h-[78vh] gap-4 overflow-y-auto bg-base-200/40 p-5">
+          <section class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-4 md:grid-cols-4">
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Code</span>
+              <strong class="text-sm">{{ programme?.code || 'Not available' }}</strong>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Coordinator</span>
+              <strong class="text-sm">{{ initiatorName }}</strong>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Current stage</span>
+              <strong class="text-sm">{{ currentStageName }}</strong>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Tasks</span>
+              <strong class="text-sm">{{ completedTaskCount }} completed · {{ activeTaskCount }} active</strong>
+            </div>
+          </section>
+
+          <section class="grid gap-3 md:grid-cols-2">
+            @for (stage of stages; track stage.id) {
+              <article class="rounded-md border border-base-300 bg-base-100 p-4">
+                <header class="flex flex-wrap items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold uppercase text-base-content/45">Stage {{ stage.order }}</p>
+                    <h3 class="font-bold">{{ stage.name }}</h3>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span [class]="statusClasses(stageState(stage.id))">{{ stageState(stage.id) }}</span>
+                    <span class="badge badge-ghost badge-sm">
+                      {{ summaryStageCompletedCount(stage.id) }} / {{ summaryStageTaskCount(stage.id) }} done
+                    </span>
+                  </div>
+                </header>
+
+                @if (stage.description) {
+                  <p class="mt-2 line-clamp-2 text-xs leading-5 text-base-content/60">{{ stage.description }}</p>
+                }
+
+                <div class="mt-3 grid gap-2">
+                  @for (task of summaryHighlightsForStage(stage.id); track task.id) {
+                    <section class="rounded-md bg-base-200/55 p-3">
+                      <div class="flex flex-wrap items-start justify-between gap-2">
+                        <div class="min-w-0">
+                          <p class="text-[0.68rem] font-semibold uppercase text-base-content/45">
+                            {{ taskInstance(task.id)?.status === 'active' ? 'Needs attention' : 'Latest completed task' }}
+                          </p>
+                          <h4 class="text-sm font-bold">{{ task.name }}</h4>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                          <span [class]="statusClasses(taskInstance(task.id)?.status || 'pending')">
+                            {{ taskInstance(task.id)?.status || 'pending' }}
+                          </span>
+                          @if (summaryTaskAttachmentCount(task.id)) {
+                            <span class="badge badge-ghost badge-sm gap-1">
+                              <span class="material-symbols-rounded text-xs">attach_file</span>
+                              {{ summaryTaskAttachmentCount(task.id) }}
+                            </span>
+                          }
+                        </div>
+                      </div>
+
+                      @if (taskInstance(task.id)?.decision || taskInstance(task.id)?.completedAt) {
+                        <div class="mt-2 flex flex-wrap gap-2 text-xs">
+                          @if (taskInstance(task.id)?.decision) {
+                            <span class="badge badge-outline badge-sm">Decision: {{ taskInstance(task.id)?.decision }}</span>
+                          }
+                          @if (taskInstance(task.id)?.completedAt) {
+                            <span class="badge badge-outline badge-sm">
+                              Completed {{ formatSummaryDate(taskInstance(task.id)?.completedAt) }}
+                            </span>
+                          }
+                        </div>
+                      }
+
+                      @if (summaryTaskPreview(task.id).length) {
+                        <dl class="mt-2 grid gap-2">
+                          @for (item of summaryTaskPreview(task.id); track item.label) {
+                            <div>
+                              <dt class="text-[0.68rem] font-semibold uppercase text-base-content/45">{{ item.label }}</dt>
+                              <dd class="mt-0.5 whitespace-pre-wrap text-xs font-medium text-base-content/75">{{ item.value }}</dd>
+                            </div>
+                          }
+                        </dl>
+                      }
+                    </section>
+                  } @empty {
+                    <div class="grid min-h-20 place-items-center rounded-md border border-dashed border-base-300 text-center text-xs text-base-content/50">
+                      No recorded activity yet.
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+          </section>
+        </div>
+      </div>
+      <button type="button" class="modal-backdrop" aria-label="Close programme summary" (click)="closeProgrammeSummary()"></button>
+    </div>
+  }
+
   @if (emailComposer().open) {
     <div class="modal modal-open">
       <div class="modal-box w-11/12 max-w-5xl overflow-hidden border border-base-300 p-0 shadow-2xl">
@@ -980,17 +1105,52 @@
                 <strong class="block text-xs uppercase text-base-content/55">Recipients</strong>
                 <small class="text-xs text-base-content/50">{{ selectedEmailRecipients.length }} selected</small>
               </div>
-              <div class="flex gap-1">
-                <button type="button" class="btn btn-ghost btn-xs" (click)="selectAllEmailRecipients()">All</button>
-                <button type="button" class="btn btn-ghost btn-xs" (click)="clearEmailRecipients()">None</button>
-              </div>
+              @if (selectedEmailRecipients.length < emailComposer().recipients.length) {
+                <button type="button" class="btn btn-ghost btn-xs" (click)="selectAllEmailRecipients()">Select all</button>
+              }
             </div>
+
+            <div class="mb-3 grid gap-2">
+              <label class="input input-bordered input-sm flex items-center gap-2 bg-base-100">
+                @if (emailRecipientSearchLoading()) {
+                  <span class="loading loading-spinner loading-xs"></span>
+                } @else {
+                  <span class="material-symbols-rounded text-base text-base-content/45">person_search</span>
+                }
+                <input type="text" class="grow" autocomplete="off" [value]="emailRecipientSearch()"
+                  (input)="searchEmailRecipients($event)"
+                  (keydown.enter)="$event.preventDefault(); canAddTypedEmailRecipient && addTypedEmailRecipient()"
+                  placeholder="Search users or enter an email">
+                @if (canAddTypedEmailRecipient) {
+                  <button type="button" class="btn btn-ghost btn-square btn-xs" title="Add email address"
+                    (click)="addTypedEmailRecipient()">
+                    <span class="material-symbols-rounded text-base">add</span>
+                  </button>
+                }
+              </label>
+
+              @if (emailRecipientSearchResults().length) {
+                <div class="grid max-h-40 gap-1 overflow-y-auto rounded-md border border-base-300 bg-base-100 p-1 shadow-lg">
+                  @for (user of emailRecipientSearchResults(); track user.id) {
+                    <button type="button" class="flex items-center gap-2 rounded px-2 py-2 text-left hover:bg-base-200"
+                      (click)="addSystemEmailRecipient(user)">
+                      <span class="material-symbols-rounded text-lg text-primary">person_add</span>
+                      <span class="min-w-0 grow">
+                        <strong class="block truncate text-xs">{{ userLabel(user) }}</strong>
+                        <span class="block truncate text-xs text-base-content/55">{{ user.email }} · {{ user.role }}</span>
+                      </span>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+
             <div class="grid max-h-72 gap-2 overflow-y-auto pr-1">
               @for (recipient of emailComposer().recipients; track recipient.email) {
                 <article class="rounded-md border border-base-300 bg-base-100 p-2"
                   [class.border-primary]="recipientSelected(recipient.email)"
                   [class.bg-primary/5]="recipientSelected(recipient.email)">
-                  <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-start gap-2">
                     <label class="flex min-w-0 flex-1 cursor-pointer items-start gap-2">
                       <input type="checkbox" class="checkbox checkbox-xs mt-1"
                         [checked]="recipientSelected(recipient.email)"
@@ -1003,13 +1163,15 @@
                         }
                       </span>
                     </label>
-                    <button type="button" class="btn btn-ghost btn-square btn-xs" title="Email this person"
-                      [disabled]="sendingEmail()"
-                      (click)="sendIndividualEmail(recipient)">
-                      <span class="material-symbols-rounded text-base">outgoing_mail</span>
-                    </button>
                   </div>
                 </article>
+              } @empty {
+                <div class="grid min-h-24 place-items-center rounded-md border border-dashed border-base-300 px-4 text-center">
+                  <div>
+                    <span class="material-symbols-rounded text-2xl text-base-content/35">person_add</span>
+                    <p class="text-xs text-base-content/55">Search for a system user or enter an email address above.</p>
+                  </div>
+                </div>
               }
             </div>
           </section>
@@ -1028,22 +1190,14 @@
             </label>
             <div class="flex flex-wrap justify-end gap-2">
               <button type="button" class="btn btn-ghost btn-sm" (click)="closeEmailComposer()">Cancel</button>
-              <button type="button" class="btn btn-outline btn-sm" [disabled]="!selectedEmailRecipients.length || sendingEmail()"
+              <button type="button" class="btn btn-primary btn-sm" [disabled]="!selectedEmailRecipients.length || sendingEmail()"
                 (click)="sendSelectedEmail()">
                 @if (sendingEmail()) {
                   <span class="loading loading-spinner loading-xs"></span>
                 } @else {
                   <span class="material-symbols-rounded text-base">mark_email_unread</span>
                 }
-                {{ sendingEmail() ? 'Sending' : 'Email selected' }}
-              </button>
-              <button type="button" class="btn btn-primary btn-sm" [disabled]="sendingEmail()" (click)="sendGroupEmail()">
-                @if (sendingEmail()) {
-                  <span class="loading loading-spinner loading-xs"></span>
-                } @else {
-                  <span class="material-symbols-rounded text-base">group</span>
-                }
-                {{ sendingEmail() ? 'Sending' : 'Email all' }}
+                {{ sendingEmail() ? 'Sending' : 'Send email' }}
               </button>
             </div>
           </section>

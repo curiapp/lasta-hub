@@ -11,10 +11,24 @@
         <select class="select select-bordered select-sm" [ngModel]="selectedDefinitionSlug()"
           (ngModelChange)="loadDefinition($event)">
           @for (item of definitions; track item.id) {
-            <option [value]="item.slug">{{ item.name }}</option>
+            <option [value]="item.slug">
+              {{ item.name }} · v{{ item.version }}{{ item.isDefault ? ' · Current' : '' }}
+            </option>
           }
         </select>
       </label>
+      @if (selectedDefinitionSummary?.isDefault) {
+        <span class="badge badge-primary badge-sm gap-1 px-3 py-3">
+          <span class="material-symbols-rounded text-sm">check_circle</span>
+          Current path
+        </span>
+      } @else if (selectedDefinitionSummary) {
+        <button class="btn btn-sm btn-outline" type="button" [disabled]="settingDefault() || loading()"
+          (click)="setAsDefault()">
+          <span class="material-symbols-rounded text-base">task_alt</span>
+          {{ settingDefault() ? 'Updating' : 'Set as current' }}
+        </button>
+      }
       <button class="btn btn-sm btn-ghost" type="button" (click)="createWorkflow()">
         <span class="material-symbols-rounded">add</span>
         New workflow

@@ -17,16 +17,16 @@ import {
     users as workflowUsers,
 } from "../db/schema";
 import { sendMail } from "../email/service";
-import { defaultWorkflowDefinition, getTaskDefinition, selectTransition, taskIsVisible, validateCompletion, validateDefinition } from "./definition";
+import { bundledWorkflowDefinitions, defaultWorkflowDefinition, getTaskDefinition, selectTransition, taskIsVisible, validateCompletion, validateDefinition } from "./definition";
 import { WorkflowError } from "./errors";
 import type { CommunicationRecipientInput, CompleteTaskInput, SendCommunicationInput, WorkflowDefinition, WorkflowTaskDefinition } from "./types";
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
-async function ensureDefaultDefinition() {
+async function ensureBundledDefinition(workflowDefinition: WorkflowDefinition) {
     const existing = await db
         .select()
         .from(workflowDefinitions)
-        .where(eq(workflowDefinitions.slug, defaultWorkflowDefinition.id))
+        .where(eq(workflowDefinitions.slug, workflowDefinition.id))
         .limit(1);
 
     if (existing[0]) return existing[0];
@@ -35,31 +35,46 @@ async function ensureDefaultDefinition() {
         const concurrent = await tx
             .select()
             .from(workflowDefinitions)
-            .where(eq(workflowDefinitions.slug, defaultWorkflowDefinition.id))
+            .where(eq(workflowDefinitions.slug, workflowDefinition.id))
             .limit(1);
         if (concurrent[0]) return concurrent[0];
 
         const [definition] = await tx.insert(workflowDefinitions).values({
-            slug: defaultWorkflowDefinition.id,
-            name: defaultWorkflowDefinition.name,
-            description: defaultWorkflowDefinition.description,
+            slug: workflowDefinition.id,
+            name: workflowDefinition.name,
+            description: workflowDefinition.description,
             status: "active",
+            isDefault: workflowDefinition.id === defaultWorkflowDefinition.id,
         }).returning();
 
         await tx.insert(workflowDefinitionVersions).values({
             definitionId: definition.id,
-            version: defaultWorkflowDefinition.version,
+            version: workflowDefinition.version,
             status: "published",
-            initialTaskKey: defaultWorkflowDefinition.initialTask,
-            definition: defaultWorkflowDefinition,
+            initialTaskKey: workflowDefinition.initialTask,
+            definition: workflowDefinition,
             publishedAt: new Date().toISOString(),
         });
         return definition;
     });
 }
 
+async function ensureBundledDefinitions() {
+    return Promise.all(bundledWorkflowDefinitions.map((definition) => ensureBundledDefinition(definition)));
+}
+
 async function latestPublishedDefinition() {
-    await ensureDefaultDefinition();
+    await ensureBundledDefinitions();
+    let [selectedDefault] = await db.select().from(workflowDefinitions)
+        .where(and(
+            eq(workflowDefinitions.isDefault, true),
+            eq(workflowDefinitions.status, "active"),
+        )).limit(1);
+    if (!selectedDefault) {
+        const seeded = await ensureBundledDefinition(defaultWorkflowDefinition);
+        [selectedDefault] = await db.update(workflowDefinitions).set({ isDefault: true })
+            .where(eq(workflowDefinitions.id, seeded.id)).returning();
+    }
     const [current] = await db
         .select({
             record: workflowDefinitions,
@@ -68,6 +83,7 @@ async function latestPublishedDefinition() {
         .from(workflowDefinitionVersions)
         .innerJoin(workflowDefinitions, eq(workflowDefinitionVersions.definitionId, workflowDefinitions.id))
         .where(and(
+            eq(workflowDefinitions.id, selectedDefault.id),
             eq(workflowDefinitions.status, "active"),
             eq(workflowDefinitionVersions.status, "published"),
         ))
@@ -81,8 +97,9 @@ async function latestPublishedDefinition() {
 async function currentDefinition(slug?: string) {
     if (!slug) return latestPublishedDefinition();
 
-    const seeded = slug === defaultWorkflowDefinition.id
-        ? await ensureDefaultDefinition()
+    const bundledDefinition = bundledWorkflowDefinitions.find((definition) => definition.id === slug);
+    const seeded = bundledDefinition
+        ? await ensureBundledDefinition(bundledDefinition)
         : (await db.select()
             .from(workflowDefinitions)
             .where(eq(workflowDefinitions.slug, slug))
@@ -214,14 +231,37 @@ export async function getPublishedDefinition(slug?: string) {
 }
 
 export async function listWorkflowDefinitions() {
-    return db.select({
+    await ensureBundledDefinitions();
+    const [definitions, versions] = await Promise.all([db.select({
         id: workflowDefinitions.id,
         slug: workflowDefinitions.slug,
         name: workflowDefinitions.name,
         description: workflowDefinitions.description,
         status: workflowDefinitions.status,
+        isDefault: workflowDefinitions.isDefault,
         updatedAt: workflowDefinitions.updatedAt,
-    }).from(workflowDefinitions).orderBy(desc(workflowDefinitions.updatedAt), asc(workflowDefinitions.name));
+    }).from(workflowDefinitions).orderBy(asc(workflowDefinitions.name)), db.select({
+        id: workflowDefinitionVersions.id,
+        definitionId: workflowDefinitionVersions.definitionId,
+        version: workflowDefinitionVersions.version,
+        publishedAt: workflowDefinitionVersions.publishedAt,
+    }).from(workflowDefinitionVersions)
+        .where(eq(workflowDefinitionVersions.status, "published"))
+        .orderBy(desc(workflowDefinitionVersions.version))]);
+
+    const latestVersionByDefinition = new Map<string, (typeof versions)[number]>();
+    for (const version of versions) {
+        if (!latestVersionByDefinition.has(version.definitionId)) {
+            latestVersionByDefinition.set(version.definitionId, version);
+        }
+    }
+    return definitions.map((definition) => ({
+        ...definition,
+        version: latestVersionByDefinition.get(definition.id)?.version ?? 0,
+        publishedAt: latestVersionByDefinition.get(definition.id)?.publishedAt ?? null,
+        isDefault: definition.isDefault,
+    })).sort((left, right) => Number(right.isDefault) - Number(left.isDefault)
+        || left.name.localeCompare(right.name));
 }
 
 export async function deleteWorkflowDefinition(slug: string) {
@@ -237,6 +277,9 @@ export async function deleteWorkflowDefinition(slug: string) {
             .for("update")
             .limit(1);
         if (!definition) throw new WorkflowError("Workflow definition not found", 404);
+        if (definition.isDefault) {
+            throw new WorkflowError("Choose another current development path before deleting this one", 409);
+        }
 
         const [usedProcess] = await tx.select({ id: workflowProcessInstances.id })
             .from(workflowProcessInstances)
@@ -271,19 +314,33 @@ export async function switchProgrammeWorkflow(programmeId: string, workflowSlug:
         if (!programme) throw new WorkflowError("Programme not found", 404);
 
         const [process] = await tx.select().from(workflowProcessInstances)
-            .where(and(
-                eq(workflowProcessInstances.programmeId, programmeId),
-                eq(workflowProcessInstances.status, "running"),
-            )).orderBy(desc(workflowProcessInstances.startedAt)).limit(1).for("update");
-        if (!process) throw new WorkflowError("Programme has no running workflow", 409);
+            .where(eq(workflowProcessInstances.programmeId, programmeId))
+            .orderBy(desc(workflowProcessInstances.startedAt)).limit(1).for("update");
+        if (!process) throw new WorkflowError("Programme has no development path", 409);
 
-        const [completed] = await tx.select({ id: workflowTaskInstances.id })
-            .from(workflowTaskInstances).where(and(
-                eq(workflowTaskInstances.processId, process.id),
-                eq(workflowTaskInstances.status, "completed"),
-            )).limit(1);
-        if (completed) {
-            throw new WorkflowError("The workflow cannot be changed after tasks have been completed", 409);
+        const [currentVersion] = await tx.select({ definitionId: workflowDefinitionVersions.definitionId })
+            .from(workflowDefinitionVersions)
+            .where(eq(workflowDefinitionVersions.id, process.definitionVersionId)).limit(1);
+        if (currentVersion?.definitionId === current.record.id) {
+            for (const taskDefinition of current.definition.tasks) {
+                await tx.update(workflowTaskInstances).set({
+                    name: taskDefinition.name,
+                    stageKey: taskDefinition.stageId,
+                    ownerRoles: taskDefinition.ownerRoles,
+                }).where(and(
+                    eq(workflowTaskInstances.processId, process.id),
+                    eq(workflowTaskInstances.taskKey, taskDefinition.id),
+                ));
+            }
+            const [updatedProcess] = await tx.update(workflowProcessInstances).set({
+                definitionVersionId: current.version.id,
+            }).where(eq(workflowProcessInstances.id, process.id)).returning();
+            return {
+                process: updatedProcess,
+                definition: current.definition.name,
+                version: current.version.version,
+                restarted: false,
+            };
         }
 
         await tx.update(workflowTaskInstances).set({ status: "cancelled" })
@@ -291,30 +348,45 @@ export async function switchProgrammeWorkflow(programmeId: string, workflowSlug:
                 eq(workflowTaskInstances.processId, process.id),
                 eq(workflowTaskInstances.status, "active"),
             ));
+        const changedAt = new Date().toISOString();
+        if (process.status === "running") {
+            await tx.update(workflowProcessInstances).set({
+                status: "stopped",
+                currentStageKey: null,
+                completedAt: changedAt,
+            }).where(eq(workflowProcessInstances.id, process.id));
+        }
+
         const firstDefinition = getTaskDefinition(current.definition, current.definition.initialTask);
-        const [updatedProcess] = await tx.update(workflowProcessInstances).set({
+        const [newProcess] = await tx.insert(workflowProcessInstances).values({
+            programmeId,
             definitionVersionId: current.version.id,
             currentStageKey: firstDefinition.stageId,
-        }).where(eq(workflowProcessInstances.id, process.id)).returning();
-        const firstTask = await createTask(tx, updatedProcess, current.definition, current.definition.initialTask, null);
+            startedBy: actor.id,
+        }).returning();
+        const firstTask = await createTask(tx, newProcess, current.definition, current.definition.initialTask, null);
+        await tx.update(workflowProgrammes).set({ status: "in_progress" })
+            .where(eq(workflowProgrammes.id, programmeId));
 
         await tx.insert(workflowAuditEvents).values({
             programmeId,
-            processId: process.id,
+            processId: newProcess.id,
             actorId: actor.id,
             actorRole: "pdqa",
             type: "process.workflow_changed",
-            message: `Workflow changed to ${current.definition.name} version ${current.version.version}`,
+            message: `Development path changed to ${current.definition.name} version ${current.version.version}`,
             metadata: {
                 definitionId: current.record.id,
                 definitionVersionId: current.version.id,
+                previousProcessId: process.id,
             },
         });
         return {
-            process: updatedProcess,
+            process: newProcess,
             firstTask,
             definition: current.definition.name,
             version: current.version.version,
+            restarted: true,
         };
     });
 }
@@ -648,7 +720,12 @@ export async function createProgrammeAndStart(input: CreateProgrammeInput) {
             message: `${programme.title} started`,
             metadata: { definitionVersionId: current.version.id },
         });
-        return { programme, process, firstTask, message: `${programme.title} created, need analysis started` };
+        return {
+            programme,
+            process,
+            firstTask,
+            message: `${programme.title} created with ${current.definition.name}`,
+        };
     });
 }
 
@@ -725,6 +802,58 @@ async function definitionForProcess(tx: Transaction, definitionVersionId: string
         .limit(1);
     if (!version) throw new WorkflowError("Workflow definition version not found", 500);
     return version.definition as WorkflowDefinition;
+}
+
+async function upgradeProcessToLatestVersion(process: typeof workflowProcessInstances.$inferSelect) {
+    const [currentVersion] = await db.select().from(workflowDefinitionVersions)
+        .where(eq(workflowDefinitionVersions.id, process.definitionVersionId)).limit(1);
+    if (!currentVersion) throw new WorkflowError("Workflow definition version not found", 500);
+
+    const [latestVersion] = await db.select().from(workflowDefinitionVersions).where(and(
+        eq(workflowDefinitionVersions.definitionId, currentVersion.definitionId),
+        eq(workflowDefinitionVersions.status, "published"),
+    )).orderBy(desc(workflowDefinitionVersions.version)).limit(1);
+    if (!latestVersion || latestVersion.id === currentVersion.id) {
+        return { process, definitionVersion: currentVersion };
+    }
+
+    return db.transaction(async (tx) => {
+        const definition = latestVersion.definition as WorkflowDefinition;
+        for (const taskDefinition of definition.tasks) {
+            await tx.update(workflowTaskInstances).set({
+                name: taskDefinition.name,
+                stageKey: taskDefinition.stageId,
+                ownerRoles: taskDefinition.ownerRoles,
+            }).where(and(
+                eq(workflowTaskInstances.processId, process.id),
+                eq(workflowTaskInstances.taskKey, taskDefinition.id),
+            ));
+        }
+
+        const [activeTask] = await tx.select({ stageKey: workflowTaskInstances.stageKey })
+            .from(workflowTaskInstances).where(and(
+                eq(workflowTaskInstances.processId, process.id),
+                eq(workflowTaskInstances.status, "active"),
+            )).orderBy(desc(workflowTaskInstances.createdAt)).limit(1);
+        const [updatedProcess] = await tx.update(workflowProcessInstances).set({
+            definitionVersionId: latestVersion.id,
+            currentStageKey: activeTask?.stageKey ?? process.currentStageKey,
+        }).where(eq(workflowProcessInstances.id, process.id)).returning();
+
+        await tx.insert(workflowAuditEvents).values({
+            programmeId: process.programmeId,
+            processId: process.id,
+            type: "process.definition_updated",
+            message: `Development path automatically updated to version ${latestVersion.version}`,
+            metadata: {
+                definitionId: latestVersion.definitionId,
+                definitionVersionId: latestVersion.id,
+                previousVersion: currentVersion.version,
+                version: latestVersion.version,
+            },
+        });
+        return { process: updatedProcess, definitionVersion: latestVersion };
+    });
 }
 
 async function resolveActor(tx: Transaction, input: CompleteTaskInput) {
@@ -809,9 +938,19 @@ export async function addTaskAttachment(
     if (task.status !== "active") throw new WorkflowError("Attachments can only be added to active tasks", 409);
 
     const [user] = input.userId
-        ? await db.select({ id: workflowUsers.id }).from(workflowUsers)
+        ? await db.select({ id: workflowUsers.id, role: workflowUsers.role }).from(workflowUsers)
             .where(eq(workflowUsers.id, input.userId)).limit(1)
         : [];
+    if (!user) throw new WorkflowError("An authenticated user is required to upload attachments", 401);
+    const [programme] = await db.select({ initiator: workflowProgrammes.initiator })
+        .from(workflowProgrammes).where(eq(workflowProgrammes.id, task.programmeId)).limit(1);
+    const userRole = user.role.trim().toLowerCase();
+    const canEditTask = userRole === "pdqa"
+        || programme?.initiator === user.id
+        || task.ownerRoles.some((role) => role.trim().toLowerCase() === userRole);
+    if (!canEditTask) {
+        throw new WorkflowError("This task is assigned to another role", 403);
+    }
     const [artifact] = await db.insert(workflowArtifacts).values({
         programmeId: task.programmeId,
         processId: task.processId,
@@ -838,12 +977,20 @@ export async function deleteDraftAttachment(attachmentId: string, userId?: strin
         .where(eq(workflowTaskInstances.id, artifact.taskId)).limit(1);
     if (!task || task.status !== "active") throw new WorkflowError("Attachment can no longer be removed", 409);
 
-    if (userId && artifact.createdBy && artifact.createdBy !== userId) {
-        const [user] = await db.select({ role: workflowUsers.role }).from(workflowUsers)
-            .where(eq(workflowUsers.id, userId)).limit(1);
-        if (user?.role?.trim().toLowerCase() !== "pdqa") {
-            throw new WorkflowError("Only the uploader or PDQA can remove this attachment", 403);
-        }
+    const [user] = userId
+        ? await db.select({ id: workflowUsers.id, role: workflowUsers.role }).from(workflowUsers)
+            .where(eq(workflowUsers.id, userId)).limit(1)
+        : [];
+    if (!user) throw new WorkflowError("An authenticated user is required to remove attachments", 401);
+    const [programme] = await db.select({ initiator: workflowProgrammes.initiator })
+        .from(workflowProgrammes).where(eq(workflowProgrammes.id, task.programmeId)).limit(1);
+    const userRole = user.role.trim().toLowerCase();
+    const canEditTask = artifact.createdBy === user.id
+        || userRole === "pdqa"
+        || programme?.initiator === user.id
+        || task.ownerRoles.some((role) => role.trim().toLowerCase() === userRole);
+    if (!canEditTask) {
+        throw new WorkflowError("Only the uploader, assigned role, coordinator, or PDQA can remove this attachment", 403);
     }
 
     await db.delete(workflowArtifacts).where(eq(workflowArtifacts.id, attachmentId));
@@ -1259,12 +1406,9 @@ export async function reopenTask(taskId: string, input: Pick<CompleteTaskInput, 
         const [programme] = await tx.select({ initiator: workflowProgrammes.initiator })
             .from(workflowProgrammes).where(eq(workflowProgrammes.id, task.programmeId)).limit(1);
         const isCoordinator = Boolean(actor?.id && programme?.initiator === actor.id);
-        const canReopen = actorRole === "admin"
-            || actorRole === "pdqa"
-            || isCoordinator
-            || taskDefinition.ownerRoles.map((role) => role.toLowerCase()).includes(actorRole);
+        const canReopen = actorRole === "pdqa" || isCoordinator;
         if (!actorRole || !canReopen) {
-            throw new WorkflowError(`Role ${actorRole || "unknown"} cannot edit ${taskDefinition.name}`, 403);
+            throw new WorkflowError("Only PDQA or the programme coordinator can place a task under review", 403);
         }
 
         if (activeTasks.length) {
@@ -1329,26 +1473,31 @@ export async function getProgrammeWorkflow(programmeId: string) {
         .limit(1);
     if (!programme) throw new WorkflowError("Programme not found", 404);
 
-    const [process] = await db
+    let [process] = await db
         .select()
         .from(workflowProcessInstances)
         .where(eq(workflowProcessInstances.programmeId, programmeId))
         .orderBy(desc(workflowProcessInstances.startedAt))
         .limit(1);
-    const tasks = await db.select().from(workflowTaskInstances)
-        .where(eq(workflowTaskInstances.programmeId, programmeId))
-        .orderBy(desc(workflowTaskInstances.createdAt));
-    const artifacts = await db.select().from(workflowArtifacts)
-        .where(eq(workflowArtifacts.programmeId, programmeId))
-        .orderBy(desc(workflowArtifacts.createdAt));
+    let definitionVersion: typeof workflowDefinitionVersions.$inferSelect | undefined;
+    if (process) {
+        const upgraded = await upgradeProcessToLatestVersion(process);
+        process = upgraded.process;
+        definitionVersion = upgraded.definitionVersion;
+    }
+    const tasks = process
+        ? await db.select().from(workflowTaskInstances)
+            .where(eq(workflowTaskInstances.processId, process.id))
+            .orderBy(desc(workflowTaskInstances.createdAt))
+        : [];
+    const artifacts = process
+        ? await db.select().from(workflowArtifacts)
+            .where(eq(workflowArtifacts.processId, process.id))
+            .orderBy(desc(workflowArtifacts.createdAt))
+        : [];
     const audit = await db.select().from(workflowAuditEvents)
         .where(eq(workflowAuditEvents.programmeId, programmeId))
         .orderBy(desc(workflowAuditEvents.createdAt));
-    const [definitionVersion] = process
-        ? await db.select().from(workflowDefinitionVersions)
-            .where(eq(workflowDefinitionVersions.id, process.definitionVersionId))
-            .limit(1)
-        : [];
     const [initiatorUser] = await db.select({
         id: workflowUsers.id,
         firstName: workflowUsers.firstName,
@@ -1483,12 +1632,39 @@ export async function publishDefinition(input: WorkflowDefinition, actorId?: str
             }).where(eq(workflowDefinitions.id, definition.id)).returning();
         }
 
-        const versions = await tx.select({ version: workflowDefinitionVersions.version })
+        const versions = await tx.select({
+            id: workflowDefinitionVersions.id,
+            version: workflowDefinitionVersions.version,
+        })
             .from(workflowDefinitionVersions)
             .where(eq(workflowDefinitionVersions.definitionId, definition.id))
-            .orderBy(desc(workflowDefinitionVersions.version))
-            .limit(1);
+            .orderBy(desc(workflowDefinitionVersions.version));
         const nextVersion = (versions[0]?.version ?? 0) + 1;
+
+        const existingProcesses = versions.length
+            ? await tx.select({
+                id: workflowProcessInstances.id,
+                programmeId: workflowProcessInstances.programmeId,
+            }).from(workflowProcessInstances)
+                .where(inArray(workflowProcessInstances.definitionVersionId, versions.map((version) => version.id)))
+            : [];
+        const processIds = existingProcesses.map((process) => process.id);
+        if (processIds.length) {
+            const usedTasks = await tx.select({ taskKey: workflowTaskInstances.taskKey })
+                .from(workflowTaskInstances)
+                .where(inArray(workflowTaskInstances.processId, processIds));
+            const nextTaskKeys = new Set(input.tasks.map((task) => task.id));
+            const removedTaskKeys = [...new Set(usedTasks
+                .map((task) => task.taskKey)
+                .filter((taskKey) => !nextTaskKeys.has(taskKey)))];
+            if (removedTaskKeys.length) {
+                throw new WorkflowError(
+                    `This update removes tasks already used by programmes: ${removedTaskKeys.join(", ")}. Keep their identifiers or create a new development path.`,
+                    409,
+                );
+            }
+        }
+
         await tx.update(workflowDefinitionVersions).set({ status: "retired" })
             .where(and(
                 eq(workflowDefinitionVersions.definitionId, definition.id),
@@ -1503,6 +1679,100 @@ export async function publishDefinition(input: WorkflowDefinition, actorId?: str
             createdBy: actorId,
             publishedAt: new Date().toISOString(),
         }).returning();
-        return { ...input, version: nextVersion, definitionId: definition.id, versionId: version.id };
+
+        if (processIds.length) {
+            await tx.update(workflowProcessInstances).set({
+                definitionVersionId: version.id,
+            }).where(inArray(workflowProcessInstances.id, processIds));
+
+            for (const taskDefinition of input.tasks) {
+                await tx.update(workflowTaskInstances).set({
+                    name: taskDefinition.name,
+                    stageKey: taskDefinition.stageId,
+                    ownerRoles: taskDefinition.ownerRoles,
+                }).where(and(
+                    inArray(workflowTaskInstances.processId, processIds),
+                    eq(workflowTaskInstances.taskKey, taskDefinition.id),
+                ));
+            }
+
+            const activeTasks = await tx.select({
+                processId: workflowTaskInstances.processId,
+                stageKey: workflowTaskInstances.stageKey,
+            }).from(workflowTaskInstances).where(and(
+                inArray(workflowTaskInstances.processId, processIds),
+                eq(workflowTaskInstances.status, "active"),
+            ));
+            const activeStageByProcess = new Map(activeTasks.map((task) => [task.processId, task.stageKey]));
+            for (const process of existingProcesses) {
+                const currentStageKey = activeStageByProcess.get(process.id);
+                if (currentStageKey) {
+                    await tx.update(workflowProcessInstances).set({ currentStageKey })
+                        .where(eq(workflowProcessInstances.id, process.id));
+                }
+            }
+
+            await tx.insert(workflowAuditEvents).values(existingProcesses.map((process) => ({
+                programmeId: process.programmeId,
+                processId: process.id,
+                actorId,
+                actorRole: "pdqa",
+                type: "process.definition_updated",
+                message: `${input.name} updated to version ${nextVersion}`,
+                metadata: {
+                    definitionId: definition.id,
+                    definitionVersionId: version.id,
+                    version: nextVersion,
+                },
+            })));
+        }
+
+        return {
+            ...input,
+            version: nextVersion,
+            definitionId: definition.id,
+            versionId: version.id,
+            updatedProgrammeCount: existingProcesses.length,
+        };
+    });
+}
+
+export async function setDefaultWorkflowDefinition(slug: string, actorId: string) {
+    if (!slug) throw new WorkflowError("Workflow definition is required", 400);
+    if (!actorId) throw new WorkflowError("An authenticated PDQA user is required", 401);
+
+    return db.transaction(async (tx) => {
+        const [actor] = await tx.select({ role: workflowUsers.role })
+            .from(workflowUsers).where(eq(workflowUsers.id, actorId)).limit(1);
+        if (actor?.role.trim().toLowerCase() !== "pdqa") {
+            throw new WorkflowError("Only PDQA users can select the current development path", 403);
+        }
+
+        const [definition] = await tx.select().from(workflowDefinitions)
+            .where(and(
+                eq(workflowDefinitions.slug, slug),
+                eq(workflowDefinitions.status, "active"),
+            )).for("update").limit(1);
+        if (!definition) throw new WorkflowError("Published workflow definition not found", 404);
+
+        const [publishedVersion] = await tx.select({ version: workflowDefinitionVersions.version })
+            .from(workflowDefinitionVersions).where(and(
+                eq(workflowDefinitionVersions.definitionId, definition.id),
+                eq(workflowDefinitionVersions.status, "published"),
+            )).orderBy(desc(workflowDefinitionVersions.version)).limit(1);
+        if (!publishedVersion) throw new WorkflowError("This development path has no published version", 409);
+
+        await tx.update(workflowDefinitions).set({ isDefault: false })
+            .where(eq(workflowDefinitions.isDefault, true));
+        const [updated] = await tx.update(workflowDefinitions).set({
+            isDefault: true,
+            updatedAt: new Date().toISOString(),
+        }).where(eq(workflowDefinitions.id, definition.id)).returning();
+
+        return {
+            message: `${updated.name} version ${publishedVersion.version} is now the current development path`,
+            slug: updated.slug,
+            version: publishedVersion.version,
+        };
     });
 }

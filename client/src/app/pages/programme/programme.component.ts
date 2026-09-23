@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
+import { finalize } from 'rxjs';
 import {
   COMPLETE_TASK,
   GET_ACTIVE_TASKS,
@@ -15,6 +16,7 @@ import { WorkflowDefinitionService } from '../../services/workflow-definition.se
 import { ClientService } from '../../services/client.service';
 import { environment } from '../../../environments/environment';
 import { WorkflowTaskUploadComponent } from '../../components/files/workflow-task-upload/workflow-task-upload.component';
+import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
 import { NQFLevel } from '../../static';
 import {
   WorkflowCondition,
@@ -22,6 +24,7 @@ import {
   WorkflowDefinitionSummary,
   WorkflowField,
   WorkflowStage,
+  WorkflowTask,
 } from '../../types/workflow-definition';
 import {
   ProgrammeWorkflowDetail,
@@ -67,6 +70,11 @@ type ProgrammeEditForm = {
   level: number;
 };
 
+type SummaryFieldPreview = {
+  label: string;
+  value: string;
+};
+
 @Component({
   selector: 'programme',
   imports: [CommonModule, FormsModule, WorkflowTaskUploadComponent],
@@ -81,6 +89,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   private readonly toastService = inject(ToastService);
   private readonly definitionService = inject(WorkflowDefinitionService);
   private readonly http = inject(ClientService);
+  private readonly viewContainer = inject(ViewContainerRef);
 
   detail?: ProgrammeWorkflowDetail;
   definition?: WorkflowDefinition;
@@ -106,6 +115,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   message = '';
   messageType: 'success' | 'error' = 'success';
   programmeEditOpen = signal(false);
+  programmeSummaryOpen = signal(false);
   updatingProgramme = signal(false);
   programmeEditForm = signal<ProgrammeEditForm>({
     title: '',
@@ -124,6 +134,9 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     bodyTemplate: '',
   });
   sendingEmail = signal(false);
+  emailRecipientSearch = signal('');
+  emailRecipientSearchResults = signal<WorkflowUserOption[]>([]);
+  emailRecipientSearchLoading = signal(false);
   private readonly taskCompletionSuccessPauseMs = 360;
   private readonly taskPanelLeaveMs = 240;
   private taskCompletionTimer?: ReturnType<typeof setTimeout>;
@@ -197,12 +210,49 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     return this.definition?.stages.find((stage) => stage.id === stageKey)?.name ?? 'Not started';
   }
 
+  get programmeSummaryRecipients() {
+    const recipients: EmailRecipient[] = [];
+    const coordinator = this.programme?.initiatorUser;
+    if (coordinator?.email) {
+      recipients.push({
+        id: coordinator.id,
+        email: coordinator.email,
+        name: this.userLabel(coordinator),
+        role: 'Coordinator',
+      });
+    }
+    for (const user of this.programme?.coordinatorUsers ?? []) {
+      if (user.email) {
+        recipients.push({
+          id: user.id,
+          email: user.email,
+          name: this.userLabel(user),
+          role: 'Coordinator',
+        });
+      }
+    }
+    for (const task of this.detail?.tasks ?? []) {
+      const definition = this.taskDefinition(task.taskKey);
+      if (!definition?.form || !task.formData) continue;
+      recipients.push(...this.emailRecipientsFromFields(definition.form, task.formData));
+    }
+    return this.uniqueEmailRecipients(recipients);
+  }
+
   get initiatorName() {
     const user = this.programme?.initiatorUser;
     return user?.displayName
       || [user?.firstName, user?.lastName].filter(Boolean).join(' ')
       || user?.email
       || 'Not available';
+  }
+
+  get currentUserName() {
+    const user = this.auth.user;
+    return user?.displayName
+      || [user?.firstName, user?.lastName].filter(Boolean).join(' ')
+      || user?.email
+      || 'PDQA Team';
   }
 
   get canCompleteSelectedTask() {
@@ -219,10 +269,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     const task = this.selectedTaskInstance;
     const isCoordinator = this.programme?.initiatorUser?.id === this.currentUserId;
     return task?.status === 'completed'
-      && (this.currentUserRole === 'admin'
-        || this.currentUserRole === 'pdqa'
-        || isCoordinator
-        || task.ownerRoles.map((role) => role.toLowerCase()).includes(this.currentUserRole));
+      && (this.currentUserRole === 'pdqa' || isCoordinator);
   }
 
   get selectedTaskDecision() {
@@ -260,13 +307,6 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
 
   get workflowDisplayName() {
     return this.definition?.name || 'No development path assigned';
-  }
-
-  get canSwitchWorkflow() {
-    return this.canManageWorkflow
-      && this.completedTaskCount === 0
-      && Boolean(this.detail?.process)
-      && !this.workflowDefinitionsLoading;
   }
 
   get selectedTaskArtifacts(): WorkflowArtifactRecord[] {
@@ -364,19 +404,37 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   }
 
   switchWorkflow() {
-    if (!this.programme || !this.canSwitchWorkflow || !this.selectedWorkflowSlug || this.switchingWorkflow()) return;
+    if (!this.programme || !this.canManageWorkflow || !this.selectedWorkflowSlug || this.switchingWorkflow()) return;
+    const selected = this.workflowDefinitions.find((definition) => definition.slug === this.selectedWorkflowSlug);
+    const currentSlug = this.resolveSelectedWorkflowSlug();
+    const changesPath = currentSlug !== this.selectedWorkflowSlug;
+    const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
+    componentRef.instance.action = 'edit';
+    componentRef.instance.heading = changesPath ? 'Change development path?' : 'Use the latest version?';
+    componentRef.instance.confirmLabel = changesPath ? 'Switch path' : 'Update version';
+    componentRef.instance.message = changesPath
+      ? `Switch to ${selected?.name ?? 'the selected path'}? Active tasks on the current path will be stopped and the selected path will begin from its first task. Completed submissions and documents will remain available as historical records, but progress cannot be merged automatically.`
+      : `Update this programme to the latest published version of ${selected?.name ?? 'its current path'}? Existing progress and completed submissions will be retained.`;
+    componentRef.instance.onClose.subscribe(() => {
+      if (!componentRef.hostView.destroyed) componentRef.destroy();
+    });
+    componentRef.instance.onConfirm.subscribe((result) => {
+      if (result === 'confirmed') this.performWorkflowSwitch();
+    });
+  }
+
+  private performWorkflowSwitch() {
+    if (!this.programme || !this.selectedWorkflowSlug || this.switchingWorkflow()) return;
     this.switchingWorkflow.set(true);
     this.http.put(`programmes/${this.programme.id}/workflow`, {
       workflowSlug: this.selectedWorkflowSlug,
       actorId: this.currentUserId,
-    }).subscribe({
+    }).pipe(finalize(() => this.switchingWorkflow.set(false))).subscribe({
       next: () => {
-        this.switchingWorkflow.set(false);
         this.showMessage('Programme development path updated.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
-        this.switchingWorkflow.set(false);
         this.showMessage(error?.message ?? 'Programme development path could not be updated.', 'error');
       },
     });
@@ -440,6 +498,34 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     });
   }
 
+  openProgrammeSummary() {
+    this.programmeSummaryOpen.set(true);
+  }
+
+  closeProgrammeSummary() {
+    this.programmeSummaryOpen.set(false);
+  }
+
+  openProgrammeSummaryEmail() {
+    const recipients = this.programmeSummaryRecipients;
+    const subject = `Programme summary: ${this.programme?.title ?? 'Programme'}`;
+    const bodyTemplate = this.programmeSummaryEmailBody();
+    const previewRecipient = recipients.length === 1
+      ? recipients[0]
+      : recipients.length > 1 ? this.groupEmailRecipient(recipients) : undefined;
+    this.emailComposer.set({
+      open: true,
+      title: 'Programme summary',
+      recipients,
+      selectedEmails: recipients.map((recipient) => recipient.email),
+      subject,
+      body: this.renderEmailTemplate(bodyTemplate, previewRecipient),
+      subjectTemplate: subject,
+      bodyTemplate,
+    });
+    this.resetEmailRecipientSearch();
+  }
+
   selectStage(stage: WorkflowStage) {
     this.selectedStageId = stage.id;
     const stageTasks = this.stageTaskDefinitions;
@@ -484,6 +570,61 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
 
   taskInstance(taskKey: string) {
     return this.detail?.tasks.find((task) => task.taskKey === taskKey);
+  }
+
+  taskDefinition(taskKey: string) {
+    return this.definition?.tasks.find((task) => task.id === taskKey);
+  }
+
+  summaryTasksForStage(stageId: string): WorkflowTask[] {
+    const definitions = (this.definition?.tasks ?? [])
+      .filter((task) => task.stageId === stageId && this.taskVisible(task));
+    const definitionIds = new Set(definitions.map((task) => task.id));
+    const instanceOnlyTasks = (this.detail?.tasks ?? [])
+      .filter((task) => task.stageKey === stageId && !definitionIds.has(task.taskKey))
+      .map((task): WorkflowTask => ({
+        id: task.taskKey,
+        stageId,
+        name: task.name,
+        ownerRoles: task.ownerRoles,
+        form: [],
+        artifacts: [],
+        transitions: [],
+      }));
+    return [...definitions, ...instanceOnlyTasks];
+  }
+
+  summaryHighlightsForStage(stageId: string) {
+    const tasks = this.summaryTasksForStage(stageId);
+    const active = tasks.filter((task) => this.taskInstance(task.id)?.status === 'active');
+    if (active.length) return active.slice(0, 2);
+
+    const completed = tasks
+      .filter((task) => this.taskInstance(task.id)?.status === 'completed')
+      .sort((first, second) =>
+        Date.parse(this.taskInstance(second.id)?.completedAt ?? '') - Date.parse(this.taskInstance(first.id)?.completedAt ?? ''));
+    return completed.slice(0, 2);
+  }
+
+  summaryStageTaskCount(stageId: string) {
+    return this.summaryTasksForStage(stageId).length;
+  }
+
+  summaryStageCompletedCount(stageId: string) {
+    return this.summaryTasksForStage(stageId)
+      .filter((task) => this.taskInstance(task.id)?.status === 'completed').length;
+  }
+
+  summaryTaskPreview(taskKey: string): SummaryFieldPreview[] {
+    const instance = this.taskInstance(taskKey);
+    const definition = this.taskDefinition(taskKey);
+    if (!instance?.formData || !definition?.form?.length) return [];
+
+    return this.summaryFieldPreview(definition.form, instance.formData).slice(0, 4);
+  }
+
+  summaryTaskAttachmentCount(taskKey: string) {
+    return this.taskArtifacts(taskKey).length;
   }
 
   stageState(stageId: string) {
@@ -794,6 +935,11 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     return String(value);
   }
 
+  summaryDisplayValue(value: unknown) {
+    const displayed = this.displayValue(value);
+    return displayed.length > 120 ? `${displayed.slice(0, 117)}...` : displayed;
+  }
+
   userDisplayCards(value: unknown): Partial<WorkflowUserOption>[] {
     if (!value) return [];
     const values = Array.isArray(value) ? value : [value];
@@ -838,6 +984,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       subjectTemplate,
       bodyTemplate,
     });
+    this.resetEmailRecipientSearch();
   }
 
   openUserEmailComposer(user: Partial<WorkflowUserOption>, field?: WorkflowField) {
@@ -846,6 +993,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
 
   closeEmailComposer() {
     this.emailComposer.update((composer) => ({ ...composer, open: false }));
+    this.resetEmailRecipientSearch();
   }
 
   updateEmailSubject(subject: string) {
@@ -876,23 +1024,58 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     }));
   }
 
-  clearEmailRecipients() {
-    this.emailComposer.update((composer) => this.emailComposerWithRenderedTemplate({ ...composer, selectedEmails: [] }));
-  }
-
   get selectedEmailRecipients() {
     const composer = this.emailComposer();
     return composer.recipients.filter((recipient) => composer.selectedEmails.includes(recipient.email));
   }
 
-  sendGroupEmail() {
-    const composer = this.emailComposer();
-    const recipient = this.groupEmailRecipient(composer.recipients);
-    this.openMailClient(
-      composer.recipients,
-      this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
-      this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
-    );
+  get canAddTypedEmailRecipient() {
+    return this.looksLikeEmail(this.emailRecipientSearch().trim());
+  }
+
+  searchEmailRecipients(event: Event) {
+    const query = (event.target as HTMLInputElement).value;
+    this.emailRecipientSearch.set(query);
+    const normalizedQuery = query.trim();
+    if (normalizedQuery.length < 2) {
+      this.emailRecipientSearchResults.set([]);
+      this.emailRecipientSearchLoading.set(false);
+      return;
+    }
+
+    this.emailRecipientSearchLoading.set(true);
+    this.http.getAll<WorkflowUserOption>(`users/search?q=${encodeURIComponent(normalizedQuery)}`).subscribe({
+      next: (users) => {
+        if (this.emailRecipientSearch().trim() !== normalizedQuery) return;
+        const existingEmails = new Set(this.emailComposer().recipients.map((recipient) => recipient.email.toLowerCase()));
+        this.emailRecipientSearchResults.set(users.filter((user) => !existingEmails.has(user.email.toLowerCase())));
+        this.emailRecipientSearchLoading.set(false);
+      },
+      error: () => {
+        this.emailRecipientSearchResults.set([]);
+        this.emailRecipientSearchLoading.set(false);
+      },
+    });
+  }
+
+  addSystemEmailRecipient(user: WorkflowUserOption) {
+    this.addEmailRecipient({
+      id: user.id,
+      email: user.email,
+      name: this.userLabel(user),
+      role: user.role,
+      departmentName: user.departmentName,
+      facultyName: user.facultyName,
+    });
+  }
+
+  addTypedEmailRecipient() {
+    const email = this.emailRecipientSearch().trim().toLowerCase();
+    if (!this.looksLikeEmail(email)) {
+      this.showMessage('Enter a valid email address.', 'error');
+      return;
+    }
+    this.addEmailRecipient({ email });
   }
 
   sendSelectedEmail() {
@@ -906,15 +1089,6 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       : this.groupEmailRecipient(this.selectedEmailRecipients);
     this.openMailClient(
       this.selectedEmailRecipients,
-      this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
-      this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
-    );
-  }
-
-  sendIndividualEmail(recipient: EmailRecipient) {
-    const composer = this.emailComposer();
-    this.openMailClient(
-      [recipient],
       this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
       this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
     );
@@ -1156,9 +1330,24 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   private groupEmailRecipient(recipients: EmailRecipient[]): EmailRecipient {
     return {
       email: '',
-      name: recipients.length ? 'PAC member' : '',
+      name: recipients.length ? 'Colleagues' : '',
       role: recipients.length > 1 ? 'group' : recipients[0]?.role,
     };
+  }
+
+  private addEmailRecipient(recipient: EmailRecipient) {
+    this.emailComposer.update((composer) => {
+      const recipients = this.uniqueEmailRecipients([...composer.recipients, recipient]);
+      const selectedEmails = [...new Set([...composer.selectedEmails, recipient.email.toLowerCase()])];
+      return this.emailComposerWithRenderedTemplate({ ...composer, recipients, selectedEmails });
+    });
+    this.resetEmailRecipientSearch();
+  }
+
+  private resetEmailRecipientSearch() {
+    this.emailRecipientSearch.set('');
+    this.emailRecipientSearchResults.set([]);
+    this.emailRecipientSearchLoading.set(false);
   }
 
   private renderEmailTemplate(template: string, recipient?: EmailRecipient) {
@@ -1166,7 +1355,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       programmeTitle: this.programme?.title ?? '',
       programmeCode: this.programme?.code ?? '',
       initiator: this.initiatorName,
-      recipientName: recipient?.name ?? '',
+      recipientName: recipient?.name ?? 'Colleague',
       recipientEmail: recipient?.email ?? '',
       recipientRole: recipient?.role ?? '',
       departmentName: recipient?.departmentName ?? this.programme?.department ?? '',
@@ -1211,6 +1400,83 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
         this.showMessage(error?.message ?? 'Message could not be sent.', 'error');
       },
     });
+  }
+
+  private programmeSummaryEmailBody() {
+    const lines = [
+      'Dear {{recipientName}},',
+      '',
+      `Please find below a progress summary for ${this.programme?.title ?? 'the programme'} (${this.programme?.code ?? 'code not available'}).`,
+      '',
+      `Programme coordinator: ${this.initiatorName}`,
+      `Current stage: ${this.currentStageName}`,
+      `Overall progress: ${this.completedTaskCount} completed task${this.completedTaskCount === 1 ? '' : 's'} and ${this.activeTaskCount} active task${this.activeTaskCount === 1 ? '' : 's'}.`,
+      '',
+      'Stage progress:',
+    ];
+
+    for (const stage of this.stages) {
+      lines.push(`- ${stage.name}: ${this.stageState(stage.id)} (${this.summaryStageCompletedCount(stage.id)} of ${this.summaryStageTaskCount(stage.id)} tasks completed)`);
+    }
+
+    lines.push(
+      '',
+      'Please let us know if you require any additional information regarding this programme.',
+      '',
+      'Kind regards,',
+      this.currentUserName,
+      'Programme Development Application',
+    );
+
+    return lines.join('\n');
+  }
+
+  private summaryFieldPreview(fields: WorkflowField[], values: Record<string, any>, rootValues = values): SummaryFieldPreview[] {
+    const preview: SummaryFieldPreview[] = [];
+    for (const field of fields) {
+      if (!this.conditionMatches(field.visibleWhen, values, rootValues)) continue;
+      const value = values[field.key];
+      if (value === undefined || value === null || value === '') continue;
+      if (Array.isArray(value) && !value.length) continue;
+
+      if (field.type === 'repeater') {
+        preview.push({
+          label: field.label,
+          value: Array.isArray(value) ? `${value.length} entr${value.length === 1 ? 'y' : 'ies'}` : this.displayValue(value),
+        });
+        continue;
+      }
+
+      preview.push({
+        label: field.label,
+        value: this.summaryDisplayValue(value),
+      });
+    }
+    return preview;
+  }
+
+  private emailRecipientsFromFields(fields: WorkflowField[], values: Record<string, any>): EmailRecipient[] {
+    const recipients: EmailRecipient[] = [];
+    for (const field of fields) {
+      const value = values[field.key];
+      if (field.type === 'repeater' && Array.isArray(value)) {
+        for (const item of value) {
+          recipients.push(...this.emailRecipientsFromFields(field.fields ?? [], item as Record<string, any>));
+        }
+        continue;
+      }
+      if (field.type === 'email' || field.type === 'user-search' || field.emailAction === true) {
+        recipients.push(...this.emailRecipientsFromValue(value, values));
+      }
+    }
+    return recipients;
+  }
+
+  formatSummaryDate(value?: string) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   }
 
   private visibleMobileItems<T extends { id: string }>(items: T[], selectedId: string, limit: number) {

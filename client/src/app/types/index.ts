@@ -28,6 +28,13 @@ export type Programme = {
   initiator?: string;
   initiatorFirstName?: string;
   initiatorLastName?: string
+  coordinatorName?: string;
+  currentStage?: string;
+  currentTask?: string;
+  activeTasks?: number;
+  completedTasks?: number;
+  progress?: number;
+  lastActivity?: string;
   createdAt?: string;
   created_at?: string;
   description?: string;

@@ -24,7 +24,7 @@
       </form>
       <button class="btn btn-sm capitalize" [class.btn-error]="action === 'delete'"
         [class.btn-primary]="action !== 'delete'" (click)="confirm()">
-        {{ action }}
+        {{ confirmLabel || action }}
       </button>
     </div>
   </div>
