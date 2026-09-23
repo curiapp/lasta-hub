@@ -202,7 +202,7 @@
                   <tbody>
                     @for (item of displayedProgrammes(); track item?.id; let index = $index) {
                       <tr class="group hover:bg-base-200/55" animate.enter="programme-card-enter"
-                        animate.leave="programme-card-leave" [style.animation-delay.ms]="120 + (index * 35)">
+                        animate.leave="programme-card-leave" [style.animation-delay.ms]="programmeAnimationDelay(index, 'list')">
                         <td class="min-w-64 py-2">
                           <a [routerLink]="['/programme/', item?.id]" class="flex items-center gap-3">
                             <span class="grid size-8 shrink-0 place-items-center rounded bg-primary/10 text-xs font-bold text-primary">
@@ -245,7 +245,7 @@
               @for (item of displayedProgrammes(); track item?.id; let index = $index) {
                 <article
                   class="programme-card group relative flex overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
-                  animate.enter="programme-card-enter" animate.leave="programme-card-leave" [style.animation-delay.ms]="190 + (index * 55)">
+                  animate.enter="programme-card-enter" animate.leave="programme-card-leave" [style.animation-delay.ms]="programmeAnimationDelay(index, 'grid')">
                   <action-buttons *canEdit="item?.initiator || null" [actions]="['delete']"
                     [target]="{name: item?.title || 'programme', id: item?.id || '', type: 'programme'}" />
 

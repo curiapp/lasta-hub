@@ -23,8 +23,8 @@ export const usersRelations = relations(users, ({many}) => ({
 	definitionVersionsInWorkflows: many(definitionVersionsInWorkflow),
 	processInstancesInWorkflows: many(processInstancesInWorkflow),
 	taskInstancesInWorkflows: many(taskInstancesInWorkflow),
-	definitionsInWorkflows: many(definitionsInWorkflow),
 	auditEventsInWorkflows: many(auditEventsInWorkflow),
+	definitionsInWorkflows: many(definitionsInWorkflow),
 	communicationsInWorkflows_senderId: many(communicationsInWorkflow, {
 		relationName: "communicationsInWorkflow_senderId_users_id"
 	}),
