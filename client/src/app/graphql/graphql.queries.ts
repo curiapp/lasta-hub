@@ -12,7 +12,9 @@ export const GET_PROGRAMMES = gql`
   query GetProgrammes($id: String, $searchText: String, $offset: Int = 0, $limit: Int = 50) {
     programmes(id: $id, searchText: $searchText, offset: $offset, limit: $limit) {
       id code title level status faculty facultyName department departmentName
-      initiator coordinators advisories createdAt
+      initiator initiatorFirstName initiatorLastName coordinatorName
+      currentStage currentTask activeTasks completedTasks progress lastActivity
+      coordinators advisories createdAt
     }
   }
 `;

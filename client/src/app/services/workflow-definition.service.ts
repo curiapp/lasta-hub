@@ -18,7 +18,7 @@ export class WorkflowDefinitionService {
   }
 
   publish(definition: WorkflowDefinition) {
-    return this.http.put<WorkflowDefinition & { definitionId: string; versionId: string }>(
+    return this.http.put<WorkflowDefinition & { definitionId: string; versionId: string; updatedProgrammeCount: number }>(
       `${this.baseUrl}/workflow-definition`,
       definition,
     );
@@ -26,5 +26,12 @@ export class WorkflowDefinitionService {
 
   delete(slug: string) {
     return this.http.delete<{ message: string }>(`${this.baseUrl}/workflow-definition/${encodeURIComponent(slug)}`);
+  }
+
+  setDefault(slug: string, actorId: string) {
+    return this.http.put<{ message: string; slug: string; version: number }>(
+      `${this.baseUrl}/workflow-definition/${encodeURIComponent(slug)}/default`,
+      { actorId },
+    );
   }
 }

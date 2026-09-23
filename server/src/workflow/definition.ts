@@ -1,4 +1,5 @@
 import curriculumDefinition from "./data/workflow-definition.json";
+import legacyProgrammeDefinition from "./data/legacy-programme-definition.json";
 import type {
     CompleteTaskInput,
     WorkflowCondition,
@@ -10,6 +11,10 @@ import type {
 import { WorkflowError } from "./errors";
 
 export const defaultWorkflowDefinition = curriculumDefinition as WorkflowDefinition;
+export const bundledWorkflowDefinitions = [
+    defaultWorkflowDefinition,
+    legacyProgrammeDefinition as WorkflowDefinition,
+];
 const supportedFieldTypes = new Set([
     "text", "textarea", "date", "file", "select", "radio", "number", "email", "tel", "url", "checkbox", "repeater", "user-search",
 ]);

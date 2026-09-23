@@ -11,15 +11,17 @@ export class ConfirmModalComponent {
 
   @Input() action: 'edit' | 'delete' | 'accept' | 'view' = 'edit';
   @Input() message: string = 'confirm';
+  @Input() heading = '';
+  @Input() confirmLabel = '';
 
   @Output() onConfirm = new EventEmitter<string>();
   @Output() onClose = new EventEmitter<void>();
 
   get title() {
-    return this.action === 'delete' ? 'Delete item'
+    return this.heading || (this.action === 'delete' ? 'Delete item'
       : this.action === 'accept' ? 'Confirm action'
       : this.action === 'view' ? 'View item'
-      : 'Confirm changes';
+      : 'Confirm changes');
   }
 
   get icon() {

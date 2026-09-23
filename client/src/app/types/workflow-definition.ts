@@ -89,4 +89,7 @@ export type WorkflowDefinitionSummary = {
   description?: string;
   status: string;
   updatedAt: string;
+  version: number;
+  publishedAt?: string | null;
+  isDefault?: boolean;
 }

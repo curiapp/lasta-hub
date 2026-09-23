@@ -212,6 +212,30 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     return this.unitLabel(programme.facultyName, programme.faculty, this.currentUser?.faculty);
   }
 
+  programmeCoordinatorLabel(programme: Programme) {
+    return programme.coordinatorName?.trim()
+      || [programme.initiatorFirstName, programme.initiatorLastName].filter(Boolean).join(' ')
+      || 'Not assigned';
+  }
+
+  programmeProgress(programme: Programme) {
+    const progress = Number(programme.progress ?? 0);
+    return Math.min(100, Math.max(0, Number.isFinite(progress) ? progress : 0));
+  }
+
+  programmeCurrentStage(programme: Programme) {
+    return programme.currentStage?.trim() || 'Not started';
+  }
+
+  programmeCurrentTask(programme: Programme) {
+    return programme.currentTask?.trim() || 'No active task';
+  }
+
+  programmeInitials(programme: Programme) {
+    const words = programme.title.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+    return (words.length > 1 ? `${words[0][0]}${words[1][0]}` : words[0]?.slice(0, 2) || 'PD').toUpperCase();
+  }
+
   scopeEmptyLabel() {
     return this.programmeScopeOptions.find((option) => option.value === this.programmeScope())?.label.toLowerCase() ?? 'this view';
   }

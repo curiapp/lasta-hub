@@ -221,6 +221,7 @@ export const definitionsInWorkflow = workflow.table("definitions", {
 	name: text().notNull(),
 	description: text(),
 	status: text().default('draft').notNull(),
+	isDefault: boolean("is_default").default(false).notNull(),
 	createdBy: uuid("created_by"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),

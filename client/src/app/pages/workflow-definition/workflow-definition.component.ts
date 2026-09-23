@@ -3,6 +3,7 @@ import { Component, inject, OnInit, signal, ViewContainerRef } from '@angular/co
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { WorkflowDefinitionService } from '../../services/workflow-definition.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { ConfirmModalComponent } from '../../components/modals/confirm-modal/confirm-modal.component';
 import {
   WorkflowDefinition,
@@ -22,6 +23,7 @@ import {
 })
 export class WorkflowDefinitionComponent implements OnInit {
   private readonly workflowService = inject(WorkflowDefinitionService);
+  private readonly auth = inject(AuthenticationService);
   private readonly viewContainer = inject(ViewContainerRef);
 
   definitions: WorkflowDefinitionSummary[] = [];
@@ -38,6 +40,7 @@ export class WorkflowDefinitionComponent implements OnInit {
   loading = signal(true);
   publishing = signal(false);
   deleting = signal(false);
+  settingDefault = signal(false);
   readonly fieldTypes: Array<{ value: WorkflowFieldType; label: string }> = [
     { value: 'text', label: 'Text' },
     { value: 'textarea', label: 'Long text' },
@@ -81,7 +84,26 @@ export class WorkflowDefinitionComponent implements OnInit {
   }
 
   get canDeleteDefinition() {
-    return !!this.selectedDefinitionSummary && !this.loading() && !this.publishing() && !this.deleting();
+    return !!this.selectedDefinitionSummary
+      && !this.selectedDefinitionSummary.isDefault
+      && !this.loading()
+      && !this.publishing()
+      && !this.deleting();
+  }
+
+  setAsDefault() {
+    const selected = this.selectedDefinitionSummary;
+    if (!selected || selected.isDefault || this.settingDefault()) return;
+    this.settingDefault.set(true);
+    this.workflowService.setDefault(selected.slug, this.auth.user?.id ?? '')
+      .pipe(finalize(() => this.settingDefault.set(false)))
+      .subscribe({
+        next: (result) => {
+          this.showMessage(result.message, 'success');
+          this.loadDefinitions(selected.slug);
+        },
+        error: (error) => this.showMessage(error?.error?.error ?? 'Current development path could not be updated.', 'error'),
+      });
   }
 
   loadDefinitions(slug?: string) {
@@ -147,7 +169,10 @@ export class WorkflowDefinitionComponent implements OnInit {
         .subscribe({
           next: (saved) => {
             this.setDefinition(saved);
-            this.showMessage(`Version ${saved.version} published.`, 'success');
+            const programmeMessage = saved.updatedProgrammeCount
+              ? ` ${saved.updatedProgrammeCount} programme${saved.updatedProgrammeCount === 1 ? '' : 's'} updated.`
+              : '';
+            this.showMessage(`Version ${saved.version} published.${programmeMessage}`, 'success');
             this.loadDefinitions(saved.id);
           },
           error: (error) => this.showMessage(error?.error?.error ?? 'Workflow could not be published.', 'error'),

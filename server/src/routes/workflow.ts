@@ -24,6 +24,7 @@ import {
     publishDefinition,
     reopenTask,
     sendCommunication,
+    setDefaultWorkflowDefinition,
     setNotificationPreference,
     searchWorkflowUsers,
     startProcess,
@@ -58,6 +59,10 @@ export default function createWorkflowRouter(upload: Multer) {
 
     workflowRouter.put("/workflow-definition", async (req, res) => {
         res.json(await publishDefinition(req.body, req.body?.actor?.id));
+    });
+
+    workflowRouter.put("/workflow-definition/:slug/default", async (req, res) => {
+        res.json(await setDefaultWorkflowDefinition(req.params.slug, req.body?.actorId));
     });
 
     workflowRouter.delete("/workflow-definition/:slug", async (req, res) => {

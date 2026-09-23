@@ -1,5 +1,5 @@
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -9,6 +9,8 @@ import { ModalControlService } from '../../../services/modal-control.service';
 import { StartNeedAnalysisService } from '../../../services/start-need-analysis.service';
 import { ToastService } from '../../../services/toast.service';
 import { Programme, User } from '../../../types';
+import { WorkflowDefinitionSummary } from '../../../types/workflow-definition';
+import { WorkflowDefinitionService } from '../../../services/workflow-definition.service';
 
 @Component({
   selector: 'create-programme',
@@ -22,12 +24,16 @@ export class CreateProgrammeComponent implements OnInit {
   programme: Programme = { code: "", title: "", faculty: "", department: "", initiator: "", level: 0 };
   private codeEditedManually = false;
   private generatedCode = "";
+  workflowDefinitions: WorkflowDefinitionSummary[] = [];
+  selectedWorkflowSlug = '';
+  workflowDefinitionsLoading = signal(true);
   _loading = inject(LoadingService);
   _http = inject(ClientService);
   router = inject(Router);
   toast = inject(ToastService);
   apollo = inject(Apollo);
   modalControl = inject(ModalControlService);
+  workflowDefinitionService = inject(WorkflowDefinitionService);
   currentUser?: User;
 
   ngOnInit(): void {
@@ -38,6 +44,35 @@ export class CreateProgrammeComponent implements OnInit {
       this.programme.faculty = this.currentUser?.faculty?.id;
       this.programme.department = this.currentUser?.department?.id;
     }
+    this.loadWorkflowDefinitions();
+  }
+
+  get selectedWorkflow() {
+    return this.workflowDefinitions.find((definition) => definition.slug === this.selectedWorkflowSlug);
+  }
+
+  loadWorkflowDefinitions() {
+    this.workflowDefinitionsLoading.set(true);
+    this.workflowDefinitionService.list().subscribe({
+      next: (definitions) => {
+        this.workflowDefinitions = definitions.filter((definition) => definition.status === 'active');
+        const current = this.workflowDefinitions.find((definition) => definition.isDefault)
+          ?? this.workflowDefinitions[0];
+        this.selectedWorkflowSlug = current?.slug ?? '';
+        this.workflowDefinitionsLoading.set(false);
+      },
+      error: () => {
+        this.workflowDefinitions = [];
+        this.selectedWorkflowSlug = '';
+        this.workflowDefinitionsLoading.set(false);
+        this.toast.error('Development paths could not be loaded.');
+      },
+    });
+  }
+
+  workflowOptionLabel(definition: WorkflowDefinitionSummary) {
+    const current = definition.isDefault ? ' · Current' : '';
+    return `${definition.name} · v${definition.version}${current}`;
   }
 
   onTitleChange(title: string) {
@@ -84,7 +119,12 @@ export class CreateProgrammeComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     this._http.post('programmes', {
-      ...this.programme
+      ...this.programme,
+      workflowSlug: this.selectedWorkflowSlug || undefined,
+      actor: {
+        id: this.currentUser?.id,
+        role: this.currentUser?.role,
+      },
     })
       .subscribe({
         next: (data) => {
