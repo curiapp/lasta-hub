@@ -216,9 +216,11 @@ const root = {
             const definition = process
                 ? versionById.get(process.definitionVersionId)?.definition as { stages?: Array<{ id: string; name: string }> } | undefined
                 : undefined;
-            const currentStage = definition?.stages?.find((stage) => stage.id === process?.currentStageKey)?.name
-                ?? process?.currentStageKey
-                ?? null;
+            const currentStage = process?.status === "completed"
+                ? "All stages completed"
+                : definition?.stages?.find((stage) => stage.id === process?.currentStageKey)?.name
+                    ?? process?.currentStageKey
+                    ?? null;
             const currentTask = activeTasks[0]?.name ?? (process?.status === "completed" ? "Programme completed" : null);
             const latestTask = processTasks[0];
             return {
