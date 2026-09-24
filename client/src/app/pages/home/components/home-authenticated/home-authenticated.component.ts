@@ -225,6 +225,10 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   }
 
   programmeCurrentStage(programme: Programme) {
+    const status = String(programme.status ?? '').trim().toLowerCase().replace(/\s+/g, '_');
+    if (this.programmeProgress(programme) === 100 || ['completed', 'approved', 'registered'].includes(status)) {
+      return 'All stages completed';
+    }
     return programme.currentStage?.trim() || 'Not started';
   }
 
