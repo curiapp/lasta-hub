@@ -1,4 +1,4 @@
-<div class="dropdown dropdown-bottom dropdown-left">
+<div class="profile-dropdown dropdown dropdown-bottom dropdown-left">
   <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
     <div class="avatar avatar-placeholder">
       <div class="bg-white text-primary size-10 p-0 flex items-center justify-center rounded-full">
@@ -9,7 +9,8 @@
     </div>
   </div>
 
-  <ul tabindex="-1" class="menu menu-sm bg-white text-black rounded-box dropdown-content w-80 mt-3 p-4 shadow-2xl border border-base-200">
+  <ul tabindex="-1" class="profile-sheet menu menu-sm bg-white text-black rounded-box dropdown-content w-80 mt-3 p-4 shadow-2xl border border-base-200">
+    <div class="profile-sheet-body">
     <div class="flex flex-col gap-2">
       <div class="rounded-lg p-4 bg-gray-100 w-full flex items-center gap-4">
         <div class="avatar avatar-online avatar-placeholder">
@@ -61,7 +62,7 @@
           <span class="text-xs font-bold opacity-50">Role</span>
           <div class="grow flex gap-1">
             <div class="rounded-lg p-1.5 capitalize grow border-2 border-gray-300 text-sm font-semibold opacity-70">
-              {{user?.role}}
+              {{ roleLabel() }}
             </div>
           </div>
         </div>
@@ -81,6 +82,7 @@
         </span>
         Logout
       </button>
+    </div>
     </div>
   </ul>
 </div>

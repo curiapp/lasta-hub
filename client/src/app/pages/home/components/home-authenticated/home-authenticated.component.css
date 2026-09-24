@@ -76,6 +76,14 @@
   }
 }
 
+@media (max-width: 767px) {
+  .programme-control-tooltip::before,
+  .programme-control-tooltip::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+
 @media (max-width: 640px) {
   .portfolio-stage {
     min-height: 34rem;
