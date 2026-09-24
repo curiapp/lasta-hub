@@ -22,7 +22,6 @@
   background: var(--brand-blue);
   color: white;
   box-shadow: 0 14px 36px rgba(3, 7, 18, 0.12);
-  backdrop-filter: blur(18px);
 }
 
 .app-navbar .navbar-start {
