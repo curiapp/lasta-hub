@@ -495,7 +495,7 @@ export async function updateProgramme(
 }
 
 export async function getReportsAndReviews() {
-    const [programmes, processes, tasks, artifacts, users] = await Promise.all([
+    const [programmes, processes, tasks, artifacts, users, definitionVersions] = await Promise.all([
         db.select({
             id: workflowProgrammes.id,
             title: workflowProgrammes.title,
@@ -513,6 +513,7 @@ export async function getReportsAndReviews() {
         db.select().from(workflowProcessInstances).orderBy(desc(workflowProcessInstances.startedAt)),
         db.select({
             id: workflowTaskInstances.id,
+            processId: workflowTaskInstances.processId,
             programmeId: workflowTaskInstances.programmeId,
             name: workflowTaskInstances.name,
             stageKey: workflowTaskInstances.stageKey,
@@ -536,6 +537,10 @@ export async function getReportsAndReviews() {
             lastName: workflowUsers.lastName,
             role: workflowUsers.role,
         }).from(workflowUsers),
+        db.select({
+            id: workflowDefinitionVersions.id,
+            definition: workflowDefinitionVersions.definition,
+        }).from(workflowDefinitionVersions),
     ]);
     const userName = (id?: string | null) => {
         const user = users.find((item) => item.id === id);
@@ -545,6 +550,10 @@ export async function getReportsAndReviews() {
             || null;
     };
     const programmeById = new Map(programmes.map((programme) => [programme.id, programme]));
+    const definitionByVersionId = new Map(definitionVersions.map((version) => [
+        version.id,
+        version.definition as WorkflowDefinition,
+    ]));
     const dateYear = (value?: string | null) => value ? new Date(value).getFullYear() : null;
     const normalizedDecision = (task: (typeof tasks)[number]) => task.decision || task.transitionLabel || task.status;
     const isDefermentDecision = (value?: string | null) => {
@@ -580,7 +589,26 @@ export async function getReportsAndReviews() {
 
     const rows = programmes.map((programme) => {
         const process = processes.find((item) => item.programmeId === programme.id);
-        const programmeTasks = tasks.filter((item) => item.programmeId === programme.id);
+        const programmeTasks = process
+            ? tasks.filter((item) => item.processId === process.id)
+            : [];
+        const definition = process ? definitionByVersionId.get(process.definitionVersionId) : undefined;
+        const stages = [...(definition?.stages ?? [])].sort((a, b) => a.order - b.order);
+        const currentStageIndex = stages.findIndex((stage) => stage.id === process?.currentStageKey);
+        const currentStageTasks = definition?.tasks.filter((task) => task.stageId === process?.currentStageKey) ?? [];
+        const completedCurrentStageTasks = programmeTasks.filter((task) =>
+            task.stageKey === process?.currentStageKey && task.status === "completed").length;
+        const currentStageFraction = currentStageTasks.length
+            ? Math.min(completedCurrentStageTasks / currentStageTasks.length, 1)
+            : 0;
+        const completedStages = process?.status === "completed"
+            ? stages.length
+            : Math.max(currentStageIndex, 0);
+        const progress = process?.status === "completed"
+            ? 100
+            : stages.length && currentStageIndex >= 0
+                ? Math.round(((completedStages + currentStageFraction) / stages.length) * 100)
+                : 0;
         const lastActivity = programmeTasks.find((item) => item.completedAt)?.completedAt
             ?? process?.completedAt
             ?? process?.startedAt
@@ -588,9 +616,12 @@ export async function getReportsAndReviews() {
         return {
             ...programme,
             workflowStatus: process?.status ?? "not_started",
-            currentStage: process?.currentStageKey ?? null,
+            currentStage: process?.status === "completed" ? "all-stages-completed" : process?.currentStageKey ?? null,
             activeTasks: programmeTasks.filter((item) => item.status === "active").length,
             completedTasks: programmeTasks.filter((item) => item.status === "completed").length,
+            completedStages,
+            totalStages: stages.length,
+            progress,
             evidenceCount: artifacts.filter((item) => item.programmeId === programme.id).length,
             responsiblePerson: userName(programme.coordinatorId),
             responsibleUnit: programme.departmentName || programme.facultyName || "Not specified",

@@ -108,8 +108,7 @@ export class ReportsReviewsComponent implements OnInit {
   }
 
   progress(programme: ReportProgramme) {
-    const total = programme.activeTasks + programme.completedTasks;
-    return total ? Math.round((programme.completedTasks / total) * 100) : 0;
+    return programme.progress ?? 0;
   }
 
   taskDate(task: ReportTaskTracking) {

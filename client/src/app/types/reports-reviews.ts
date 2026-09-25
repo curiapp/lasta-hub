@@ -10,6 +10,9 @@ export type ReportProgramme = {
   currentStage?: string;
   activeTasks: number;
   completedTasks: number;
+  completedStages: number;
+  totalStages: number;
+  progress: number;
   evidenceCount: number;
   responsiblePerson?: string;
   responsibleUnit?: string;
