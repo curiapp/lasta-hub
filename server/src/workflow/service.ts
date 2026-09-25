@@ -19,6 +19,7 @@ import {
 import { sendMail } from "../email/service";
 import { bundledWorkflowDefinitions, defaultWorkflowDefinition, getTaskDefinition, selectTransition, taskIsVisible, validateCompletion, validateDefinition } from "./definition";
 import { WorkflowError } from "./errors";
+import { calculateStageProgress } from "./progress";
 import type { CommunicationRecipientInput, CompleteTaskInput, SendCommunicationInput, WorkflowDefinition, WorkflowTaskDefinition } from "./types";
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -593,22 +594,12 @@ export async function getReportsAndReviews() {
             ? tasks.filter((item) => item.processId === process.id)
             : [];
         const definition = process ? definitionByVersionId.get(process.definitionVersionId) : undefined;
-        const stages = [...(definition?.stages ?? [])].sort((a, b) => a.order - b.order);
-        const currentStageIndex = stages.findIndex((stage) => stage.id === process?.currentStageKey);
-        const currentStageTasks = definition?.tasks.filter((task) => task.stageId === process?.currentStageKey) ?? [];
-        const completedCurrentStageTasks = programmeTasks.filter((task) =>
-            task.stageKey === process?.currentStageKey && task.status === "completed").length;
-        const currentStageFraction = currentStageTasks.length
-            ? Math.min(completedCurrentStageTasks / currentStageTasks.length, 1)
-            : 0;
-        const completedStages = process?.status === "completed"
-            ? stages.length
-            : Math.max(currentStageIndex, 0);
-        const progress = process?.status === "completed"
-            ? 100
-            : stages.length && currentStageIndex >= 0
-                ? Math.round(((completedStages + currentStageFraction) / stages.length) * 100)
-                : 0;
+        const stageProgress = calculateStageProgress(
+            definition,
+            process?.status,
+            process?.currentStageKey,
+            programmeTasks,
+        );
         const lastActivity = programmeTasks.find((item) => item.completedAt)?.completedAt
             ?? process?.completedAt
             ?? process?.startedAt
@@ -619,9 +610,7 @@ export async function getReportsAndReviews() {
             currentStage: process?.status === "completed" ? "all-stages-completed" : process?.currentStageKey ?? null,
             activeTasks: programmeTasks.filter((item) => item.status === "active").length,
             completedTasks: programmeTasks.filter((item) => item.status === "completed").length,
-            completedStages,
-            totalStages: stages.length,
-            progress,
+            ...stageProgress,
             evidenceCount: artifacts.filter((item) => item.programmeId === programme.id).length,
             responsiblePerson: userName(programme.coordinatorId),
             responsibleUnit: programme.departmentName || programme.facultyName || "Not specified",

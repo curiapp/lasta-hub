@@ -24,6 +24,8 @@ import {
     publishDefinition,
     startProcess,
 } from "../workflow/service";
+import { calculateStageProgress } from "../workflow/progress";
+import type { WorkflowDefinition } from "../workflow/types";
 
 const schema = buildSchema(`
     scalar JSON
@@ -212,10 +214,15 @@ const root = {
             const processTasks = process ? tasksByProcess.get(process.id) ?? [] : [];
             const activeTasks = processTasks.filter((task) => task.status === "active");
             const completedTasks = processTasks.filter((task) => task.status === "completed");
-            const measurableTaskCount = activeTasks.length + completedTasks.length;
             const definition = process
-                ? versionById.get(process.definitionVersionId)?.definition as { stages?: Array<{ id: string; name: string }> } | undefined
+                ? versionById.get(process.definitionVersionId)?.definition as WorkflowDefinition | undefined
                 : undefined;
+            const stageProgress = calculateStageProgress(
+                definition,
+                process?.status,
+                process?.currentStageKey,
+                processTasks,
+            );
             const currentStage = process?.status === "completed"
                 ? "All stages completed"
                 : definition?.stages?.find((stage) => stage.id === process?.currentStageKey)?.name
@@ -230,7 +237,7 @@ const root = {
                 currentTask,
                 activeTasks: activeTasks.length,
                 completedTasks: completedTasks.length,
-                progress: measurableTaskCount ? Math.round((completedTasks.length / measurableTaskCount) * 100) : 0,
+                progress: stageProgress.progress,
                 lastActivity: latestTask?.completedAt ?? latestTask?.createdAt ?? process?.startedAt ?? programme.createdAt,
             };
         });
