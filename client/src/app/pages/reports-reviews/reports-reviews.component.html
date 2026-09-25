@@ -157,7 +157,13 @@
                   <td class="text-xs">{{ programme.responsibleUnit || 'Not specified' }}<small class="block text-base-content/50">{{ programme.responsiblePerson || 'No person recorded' }}</small></td>
                   <td class="text-xs capitalize">{{ stageLabel(programme.currentStage) }}</td>
                   <td class="min-w-40">
-                    <div class="flex items-center gap-2"><progress class="progress progress-primary w-24" [value]="progress(programme)" max="100"></progress><small>{{ programme.completedTasks }} completed</small></div>
+                    <div class="flex items-center gap-2">
+                      <progress class="progress progress-primary w-24" [value]="progress(programme)" max="100"></progress>
+                      <small>{{ progress(programme) }}%</small>
+                    </div>
+                    <small class="mt-1 block text-base-content/50">
+                      {{ programme.completedStages }} of {{ programme.totalStages }} stages completed
+                    </small>
                   </td>
                   <td><span class="badge badge-ghost badge-sm">{{ programme.evidenceCount }} files</span></td>
                   <td><span [class]="statusClass(programme.workflowStatus)">{{ programme.workflowStatus.replaceAll('_', ' ') }}</span></td>
