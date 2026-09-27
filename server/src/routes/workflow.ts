@@ -17,6 +17,7 @@ import {
     getReportsAndReviews,
     getWorkflowAttachment,
     listActiveTasks,
+    listInstitutionalUnits,
     listUserNotifications,
     listWorkflowDefinitions,
     markAllWorkflowNotificationsRead,
@@ -50,6 +51,10 @@ export default function createWorkflowRouter(upload: Multer) {
 
     workflowRouter.get("/workflow-definitions", async (_, res) => {
         res.json(await listWorkflowDefinitions());
+    });
+
+    workflowRouter.get("/institutional-units", async (_, res) => {
+        res.json(await listInstitutionalUnits());
     });
 
     workflowRouter.get("/workflow-definition", async (req, res) => {

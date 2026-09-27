@@ -12,6 +12,20 @@ import { Programme, User } from '../../../types';
 import { WorkflowDefinitionSummary } from '../../../types/workflow-definition';
 import { WorkflowDefinitionService } from '../../../services/workflow-definition.service';
 
+type InstitutionalUnit = {
+  id: string;
+  name: string;
+};
+
+type DepartmentOption = InstitutionalUnit & {
+  facultyId?: string;
+};
+
+type InstitutionalUnitsResponse = {
+  faculties: InstitutionalUnit[];
+  departments: DepartmentOption[];
+};
+
 @Component({
   selector: 'create-programme',
   templateUrl: 'create-programme.component.html',
@@ -27,6 +41,9 @@ export class CreateProgrammeComponent implements OnInit {
   workflowDefinitions: WorkflowDefinitionSummary[] = [];
   selectedWorkflowSlug = '';
   workflowDefinitionsLoading = signal(true);
+  institutionalUnitsLoading = signal(false);
+  faculties: InstitutionalUnit[] = [];
+  departments: DepartmentOption[] = [];
   _loading = inject(LoadingService);
   _http = inject(ClientService);
   router = inject(Router);
@@ -45,6 +62,16 @@ export class CreateProgrammeComponent implements OnInit {
       this.programme.department = this.currentUser?.department?.id;
     }
     this.loadWorkflowDefinitions();
+    if (this.canConfigureProgramme) this.loadInstitutionalUnits();
+  }
+
+  get canConfigureProgramme() {
+    return String(this.currentUser?.role ?? '').trim().toLowerCase() === 'pdqa';
+  }
+
+  get availableDepartments() {
+    if (!this.programme.faculty) return [];
+    return this.departments.filter((department) => department.facultyId === this.programme.faculty);
   }
 
   get selectedWorkflow() {
@@ -73,6 +100,30 @@ export class CreateProgrammeComponent implements OnInit {
   workflowOptionLabel(definition: WorkflowDefinitionSummary) {
     const current = definition.isDefault ? ' · Current' : '';
     return `${definition.name} · v${definition.version}${current}`;
+  }
+
+  loadInstitutionalUnits() {
+    this.institutionalUnitsLoading.set(true);
+    this._http.get<InstitutionalUnitsResponse>('institutional-units').subscribe({
+      next: (units) => {
+        this.faculties = units.faculties ?? [];
+        this.departments = units.departments ?? [];
+        this.institutionalUnitsLoading.set(false);
+      },
+      error: () => {
+        this.faculties = [];
+        this.departments = [];
+        this.institutionalUnitsLoading.set(false);
+        this.toast.error('Faculties and departments could not be loaded.');
+      },
+    });
+  }
+
+  onFacultyChange(facultyId: string) {
+    this.programme.faculty = facultyId;
+    if (!this.availableDepartments.some((department) => department.id === this.programme.department)) {
+      this.programme.department = '';
+    }
   }
 
   onTitleChange(title: string) {
@@ -120,7 +171,7 @@ export class CreateProgrammeComponent implements OnInit {
   onSubmit(form: NgForm) {
     this._http.post('programmes', {
       ...this.programme,
-      workflowSlug: this.selectedWorkflowSlug || undefined,
+      workflowSlug: this.canConfigureProgramme ? this.selectedWorkflowSlug || undefined : undefined,
       actor: {
         id: this.currentUser?.id,
         role: this.currentUser?.role,

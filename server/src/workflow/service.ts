@@ -702,7 +702,7 @@ interface CreateProgrammeInput {
 }
 
 export async function createProgrammeAndStart(input: CreateProgrammeInput) {
-    const required = ["title", "code", "faculty", "department"] as const;
+    const required = ["title", "code"] as const;
     const missing = required.filter((key) => !String(input[key] ?? "").trim());
     const level = Number(input.level);
     if (!Number.isInteger(level)) missing.push("level" as typeof missing[number]);
@@ -710,7 +710,27 @@ export async function createProgrammeAndStart(input: CreateProgrammeInput) {
 
     const initiatorId = input.initiator ?? input.actor?.id;
     if (!initiatorId) throw new WorkflowError("Programme initiator is required", 400);
-    const current = await currentDefinition(input.workflowSlug);
+    const actorId = input.actor?.id ?? initiatorId;
+    const [actor] = await db.select({
+        id: workflowUsers.id,
+        role: workflowUsers.role,
+        departmentId: workflowUsers.department,
+        facultyId: workflowDepartments.facultyId,
+    }).from(workflowUsers)
+        .leftJoin(workflowDepartments, eq(workflowUsers.department, workflowDepartments.id))
+        .where(eq(workflowUsers.id, actorId))
+        .limit(1);
+    if (!actor) throw new WorkflowError("Programme creator was not found", 400);
+
+    const isPdqaAdmin = actor.role.trim().toLowerCase() === "pdqa";
+    const facultyId = isPdqaAdmin ? input.faculty : actor.facultyId;
+    const departmentId = isPdqaAdmin ? input.department : actor.departmentId;
+    if (!facultyId || !departmentId) {
+        throw new WorkflowError(isPdqaAdmin
+            ? "Faculty and department are required"
+            : "Your account must be assigned to a faculty and department before creating a programme", 400);
+    }
+    const current = await currentDefinition(isPdqaAdmin ? input.workflowSlug : undefined);
 
     return db.transaction(async (tx) => {
         const [initiator] = await tx
@@ -720,11 +740,19 @@ export async function createProgrammeAndStart(input: CreateProgrammeInput) {
             .limit(1);
         if (!initiator) throw new WorkflowError("Programme initiator was not found", 400);
 
+        const [department] = await tx.select({ facultyId: workflowDepartments.facultyId })
+            .from(workflowDepartments)
+            .where(eq(workflowDepartments.id, departmentId))
+            .limit(1);
+        if (!department || department.facultyId !== facultyId) {
+            throw new WorkflowError("Select a department that belongs to the chosen faculty", 400);
+        }
+
         const [programme] = await tx.insert(workflowProgrammes).values({
             title: input.title!,
             code: input.code!,
-            faculty: input.faculty!,
-            department: input.department!,
+            faculty: facultyId,
+            department: departmentId,
             level,
             status: "in_progress",
             initiator: initiator.id,
@@ -741,7 +769,7 @@ export async function createProgrammeAndStart(input: CreateProgrammeInput) {
             programmeId: programme.id,
             processId: process.id,
             actorId: initiator.id,
-            actorRole: input.actor?.role,
+            actorRole: actor.role,
             type: "process.started",
             message: `${programme.title} started`,
             metadata: { definitionVersionId: current.version.id },
@@ -753,6 +781,21 @@ export async function createProgrammeAndStart(input: CreateProgrammeInput) {
             message: `${programme.title} created with ${current.definition.name}`,
         };
     });
+}
+
+export async function listInstitutionalUnits() {
+    const [faculties, departmentRows] = await Promise.all([
+        db.select({ id: workflowFaculty.id, name: workflowFaculty.name })
+            .from(workflowFaculty)
+            .orderBy(asc(workflowFaculty.name)),
+        db.select({
+            id: workflowDepartments.id,
+            name: workflowDepartments.name,
+            facultyId: workflowDepartments.facultyId,
+        }).from(workflowDepartments)
+            .orderBy(asc(workflowDepartments.name)),
+    ]);
+    return { faculties, departments: departmentRows };
 }
 
 export async function startProcess(programmeId: string, actorId?: string, workflowSlug?: string) {
