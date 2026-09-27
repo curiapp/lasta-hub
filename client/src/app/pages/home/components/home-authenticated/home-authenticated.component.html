@@ -234,7 +234,7 @@
                           </div>
                           <small class="text-base-content/45">{{ item.completedTasks || 0 }} completed · {{ item.activeTasks || 0 }} active</small>
                         </td>
-                        <td><span [class]="programmeStatusClasses(item?.status)">{{ item?.status || 'draft' }}</span></td>
+                        <td><span [class]="programmeStatusClasses(item?.status)">{{ programmeStatusLabel(item?.status) }}</span></td>
                         <td class="relative h-12 w-12">
                           <action-buttons *canEdit="item?.initiator || null" [actions]="['delete']"
                             [target]="{name: item?.title || 'programme', id: item?.id || '', type: 'programme'}" />
@@ -260,7 +260,7 @@
                           {{item?.title}}
                         </h3>
                       </div>
-                      <span [class]="programmeStatusClasses(item?.status)">{{ item?.status || 'draft' }}</span>
+                      <span [class]="programmeStatusClasses(item?.status)">{{ programmeStatusLabel(item?.status) }}</span>
                     </div>
 
                     <div class="mt-4 flex items-center gap-4">

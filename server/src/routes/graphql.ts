@@ -105,7 +105,7 @@ const schema = buildSchema(`
         bootstrap: JSON!
         programmes(id: String, searchText: String, offset: Int = 0, limit: Int = 50): [Programme!]!
         programmeWorkflow(programmeId: ID!): JSON!
-        tasks(role: String): [TaskEnvelope!]!
+        tasks(role: String, programmeId: ID): [TaskEnvelope!]!
         notifications(userId: String): [Notification!]!
     }
 
@@ -243,7 +243,7 @@ const root = {
         });
     },
     programmeWorkflow: ({ programmeId }) => getProgrammeWorkflow(programmeId),
-    tasks: ({ role }) => listActiveTasks(role),
+    tasks: ({ role, programmeId }) => listActiveTasks(role, programmeId),
     notifications: ({ userId }) => listUserNotifications(userId),
     createProgramme: ({ input }) => createProgrammeAndStart(input),
     startProcess: ({ programmeId, actorId, workflowSlug }) => startProcess(programmeId, actorId, workflowSlug),
