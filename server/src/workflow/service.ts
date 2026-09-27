@@ -803,10 +803,13 @@ export async function startProcess(programmeId: string, actorId?: string, workfl
     });
 }
 
-export async function listActiveTasks(role?: string) {
+export async function listActiveTasks(role?: string, programmeId?: string) {
     const filters = [eq(workflowTaskInstances.status, "active")];
     if (role && role !== "admin") {
         filters.push(sql`${role} = ANY(${workflowTaskInstances.ownerRoles})`);
+    }
+    if (programmeId) {
+        filters.push(eq(workflowTaskInstances.programmeId, programmeId));
     }
 
     return db

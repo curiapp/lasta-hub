@@ -102,7 +102,8 @@ export default function createWorkflowRouter(upload: Multer) {
 
     workflowRouter.get("/tasks", async (req, res) => {
         const role = typeof req.query.role === "string" ? req.query.role : undefined;
-        res.json(await listActiveTasks(role));
+        const programmeId = typeof req.query.programmeId === "string" ? req.query.programmeId : undefined;
+        res.json(await listActiveTasks(role, programmeId));
     });
 
     workflowRouter.post("/tasks/:taskId/complete", async (req, res) => {

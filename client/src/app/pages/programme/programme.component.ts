@@ -206,8 +206,35 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   }
 
   get currentStageName() {
+    if (this.detail?.process?.status === 'completed') return 'All stages completed';
     const stageKey = this.detail?.process?.currentStageKey;
     return this.definition?.stages.find((stage) => stage.id === stageKey)?.name ?? 'Not started';
+  }
+
+  get currentActiveTask() {
+    return this.detail?.tasks.find((task) => task.status === 'active');
+  }
+
+  get latestCompletedTask() {
+    return [...(this.detail?.tasks ?? [])]
+      .filter((task) => task.status === 'completed')
+      .sort((first, second) =>
+        Date.parse(second.completedAt ?? second.createdAt) - Date.parse(first.completedAt ?? first.createdAt))[0];
+  }
+
+  get lastProgrammeActivity() {
+    const latestTask = [...(this.detail?.tasks ?? [])]
+      .sort((first, second) =>
+        Date.parse(second.completedAt ?? second.createdAt) - Date.parse(first.completedAt ?? first.createdAt))[0];
+    return latestTask?.completedAt ?? latestTask?.createdAt;
+  }
+
+  get currentResponsibleRoles() {
+    return (this.currentActiveTask?.ownerRoles ?? []).map((role) => this.roleLabel(role));
+  }
+
+  get currentUserRoleLabel() {
+    return this.roleLabel(this.currentUserRole) || 'Viewer';
   }
 
   get programmeSummaryRecipients() {
@@ -650,13 +677,21 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   }
 
   loadInbox() {
-    if (!this.currentUserRole) return;
+    if (!this.currentUserRole || !this.programme?.id) {
+      this.inbox = [];
+      return;
+    }
     this.apollo.query<{ tasks: WorkflowInboxItem[] }>({
       query: GET_ACTIVE_TASKS,
-      variables: { role: this.currentUserRole },
+      variables: {
+        role: this.currentUserRole,
+        programmeId: this.programme.id,
+      },
       fetchPolicy: 'network-only',
     }).subscribe({
-      next: ({ data }) => this.inbox = data.tasks ?? [],
+      next: ({ data }) => {
+        this.inbox = (data.tasks ?? []).filter((item) => item.programme.id === this.programme?.id);
+      },
       error: () => this.inbox = [],
     });
   }
@@ -1477,6 +1512,13 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
     return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  roleLabel(role?: string) {
+    const roleId = String(role ?? '').trim().toLowerCase();
+    if (!roleId) return '';
+    return this.definition?.roles?.find((item) => item.id.trim().toLowerCase() === roleId)?.name
+      ?? roleId.replaceAll('-', ' ').replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
   }
 
   private visibleMobileItems<T extends { id: string }>(items: T[], selectedId: string, limit: number) {

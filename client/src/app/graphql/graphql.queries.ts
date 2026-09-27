@@ -26,8 +26,8 @@ export const GET_PROGRAMME_WORKFLOW = gql`
 `;
 
 export const GET_ACTIVE_TASKS = gql`
-  query GetActiveTasks($role: String) {
-    tasks(role: $role) {
+  query GetActiveTasks($role: String, $programmeId: ID) {
+    tasks(role: $role, programmeId: $programmeId) {
       task {
         id processId programmeId taskKey stageKey name status ownerRoles formData
         decision transitionLabel causedByTaskId completedBy createdAt completedAt

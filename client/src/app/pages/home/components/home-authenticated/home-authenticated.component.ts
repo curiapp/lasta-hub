@@ -205,6 +205,10 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     return `${base} badge-ghost`;
   }
 
+  programmeStatusLabel(status?: string) {
+    return String(status || 'draft').trim().replaceAll('_', ' ');
+  }
+
   programmeDepartmentLabel(programme: Programme) {
     return this.unitLabel(programme.departmentName, programme.department, this.currentUser?.department);
   }

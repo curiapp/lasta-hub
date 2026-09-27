@@ -827,14 +827,14 @@
           <header class="mb-3 flex items-center justify-between">
             <div>
               <p class="text-xs font-bold uppercase text-base-content/50">Your work</p>
-              <h2 class="font-bold">My assigned tasks</h2>
+              <h2 class="font-bold">Your tasks in this programme</h2>
             </div>
             <span class="badge badge-ghost badge-sm">{{ inbox.length }}</span>
           </header>
 
           <div class="mb-3 flex items-center justify-between rounded-md border border-base-300 bg-base-100 px-3 py-2">
             <span class="text-xs text-base-content/55">Your role</span>
-            <span class="badge badge-outline badge-sm uppercase">{{ currentUserRole || 'viewer' }}</span>
+            <span class="badge badge-outline badge-sm">{{ currentUserRoleLabel }}</span>
           </div>
 
           <div class="grid gap-2 md:grid-cols-3 xl:grid-cols-1">
@@ -846,21 +846,55 @@
                 (click)="openInboxTask(item)">
                 <span class="block text-xs uppercase text-base-content/45">{{ item.task.stageKey }}</span>
                 <strong class="block text-xs">{{ item.task.name }}</strong>
-                <small class="mt-1 block truncate text-base-content/55">
-                  {{ item.programme.title }} · {{ item.programme.code }}
-                </small>
+                <small class="mt-1 block truncate text-base-content/55">Open assigned task</small>
                 <span class="material-symbols-rounded absolute right-2 top-1/2 -translate-y-1/2 text-base-content/45 group-hover:text-primary">
                   arrow_forward
                 </span>
               </button>
             } @empty {
-              <div class="grid min-h-48 place-items-center text-center text-xs text-base-content/50">
-                <div>
-                  <span class="material-symbols-rounded text-3xl">inbox</span>
-                  <p>You have no active tasks.</p>
-                  <p class="mt-2">You can still review programme progress and completed submissions.</p>
-                </div>
-              </div>
+              <section class="overflow-hidden rounded-md border border-base-300 bg-base-100">
+                <header class="border-b border-base-300 px-3 py-3">
+                  <div class="flex items-start gap-2">
+                    <span class="material-symbols-rounded text-xl text-success">check_circle</span>
+                    <div>
+                      <h3 class="text-sm font-semibold">No action required</h3>
+                      <p class="mt-0.5 text-xs leading-5 text-base-content/55">
+                        You have no assigned tasks at this stage.
+                      </p>
+                    </div>
+                  </div>
+                </header>
+
+                <dl class="divide-y divide-base-300 px-3">
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Current stage</dt>
+                    <dd class="mt-1 text-xs font-semibold">{{ currentStageName }}</dd>
+                  </div>
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Current task</dt>
+                    <dd class="mt-1 text-xs font-semibold">
+                      {{ currentActiveTask?.name || (detail?.process?.status === 'completed' ? 'Programme completed' : 'Awaiting the next task') }}
+                    </dd>
+                    @if (currentResponsibleRoles.length) {
+                      <div class="mt-2 flex flex-wrap gap-1">
+                        @for (role of currentResponsibleRoles; track role) {
+                          <span class="badge badge-ghost badge-xs">{{ role }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Latest completed task</dt>
+                    <dd class="mt-1 text-xs font-semibold">{{ latestCompletedTask?.name || 'No completed tasks yet' }}</dd>
+                  </div>
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Last activity</dt>
+                    <dd class="mt-1 text-xs font-semibold">
+                      {{ lastProgrammeActivity ? formatSummaryDate(lastProgrammeActivity) : 'No activity recorded' }}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
             }
           </div>
         </aside>
