@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-our-team',
-  standalone: true,
+  imports: [RouterLink],
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.css']
 })
 export class TeamComponent {
+  readonly serviceAreas = [
+    { icon: 'design_services', title: 'Programme design', text: 'Guidance from the first idea through curriculum design and institutional consultation.' },
+    { icon: 'fact_check', title: 'Quality review', text: 'Practical support with submissions, evidence, recommendations and approval requirements.' },
+    { icon: 'workspace_premium', title: 'NQF registration', text: 'Coordination and quality assurance through external review and qualification registration.' },
+  ];
 
-  teamMembers = [
+  readonly teamMembers = [
     {
       name: "Dr COLEN TUAUNDU",
       role: "Director",
       image: "assets/images/staff/Dr-Colen-Tuaundu.png",
       email: "ctuaundu@nust.na",
-      office: "Office: 405A PDU Building",
+      office: "405A PDU Building",
       phone: "+264612070000"
     },
     {
@@ -22,7 +28,7 @@ export class TeamComponent {
       role: "Senior Programme Development Coordinator",
       image: "assets/images/staff/Ms-Ester-Johannes.png",
       email: "ejohannes@nust.na",
-      office: "Office: 118 PDU Building",
+      office: "118 PDU Building",
       phone: "+264612070000"
     },
     {
@@ -30,7 +36,7 @@ export class TeamComponent {
       role: "Programme Development Coordinator",
       image: "assets/images/staff/lusia-shikongo.png",
       email: "lshikongo@nust.na",
-      office: "Office: 305 PDU Building",
+      office: "305 PDU Building",
       phone: "+264612070000"
     },
     {
@@ -38,17 +44,9 @@ export class TeamComponent {
       role: "Programme Development Coordinator",
       image: "assets/images/staff/olivia-itenge.jpg",
       email: "oitenge@nust.na",
-      office: "Office: 105X PDU Building",
+      office: "105X PDU Building",
       phone: "+264612070000"
-    },
-    {
-      name: "CHRISTINE AITANA",
-      role: "Office Administrator",
-      image: "assets/images/staff/Ms-Christine-Aitana.png",
-      email: "caitana@nust.na",
-      office: "Office: 895.2 PDU Building",
-      phone: "+264612070000"
-    },
+    }
 
   ];
 }

@@ -12,6 +12,12 @@ type HeroMetric = {
   accent: 'blue' | 'gold' | 'green' | 'rose';
 };
 
+type ProgrammePartner = {
+  shortName: string;
+  name: string;
+  logo?: string;
+};
+
 @Component({
   selector: 'home-guest',
   imports: [CommonModule, RouterModule],
@@ -46,6 +52,59 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
     transform: 'perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(0)',
   });
   previewActive = signal(false);
+
+  readonly partners: ProgrammePartner[] = [
+    {
+      shortName: 'NQA',
+      name: 'Namibia Qualifications Authority',
+      logo: '/assets/images/institutions/nqa.png',
+    },
+    {
+      shortName: 'NCHE',
+      name: 'National Council for Higher Education',
+      logo: '/assets/images/institutions/nche.png',
+    },
+    {
+      shortName: 'HPCNA',
+      name: 'Health Professions Council of Namibia',
+      logo: '/assets/images/institutions/hpcna.png',
+    },
+    {
+      shortName: 'ECSA',
+      name: 'Engineering Council of South Africa',
+      logo: '/assets/images/institutions/ecsa.jpg',
+    },
+    {
+      shortName: 'ASIIN',
+      name: 'Accreditation Agency for Study Programmes in Engineering, Informatics and Natural Sciences',
+      logo: '/assets/images/institutions/asiin.png',
+    },
+    {
+      shortName: 'RTPI',
+      name: 'Royal Town Planning Institute',
+      logo: '/assets/images/institutions/rtpi.svg',
+    },
+    {
+      shortName: 'IED',
+      name: 'Institution of Engineering Designers',
+      logo: '/assets/images/institutions/IED.jpg',
+    },
+    {
+      shortName: 'CAA',
+      name: 'Commonwealth Association of Architects / Joint Validation Panel',
+      logo: '/assets/images/institutions/CAA.svg',
+    },
+    {
+      shortName: 'ACCA',
+      name: 'Association of Chartered Certified Accountants',
+      logo: '/assets/images/institutions/ACCA.svg',
+    },
+    {
+      shortName: 'BGA / AMBA',
+      name: 'Business Graduates Association / Association of MBAs',
+      logo: '/assets/images/institutions/AMBA.svg',
+    },
+  ];
 
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -99,13 +158,13 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
         accent: 'blue',
       },
       {
-        label: 'Completed Tasks',
+        label: 'Programme Tasks Completed',
         value: String(dashboard.completedTaskCount || dashboard.processCounts?.['completed'] || 0),
         icon: 'task_alt',
         accent: 'green',
       },
       {
-        label: 'Tracked Stages',
+        label: 'Programme Process Stages',
         value: String(dashboard.stageCount || 0),
         icon: 'timeline',
         accent: 'gold',

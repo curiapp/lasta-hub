@@ -62,6 +62,8 @@ type EmailComposerState = {
   body: string;
   subjectTemplate: string;
   bodyTemplate: string;
+  attachmentIds: string[];
+  attachmentNames: string[];
 };
 
 type ProgrammeEditForm = {
@@ -132,6 +134,8 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     body: '',
     subjectTemplate: '',
     bodyTemplate: '',
+    attachmentIds: [],
+    attachmentNames: [],
   });
   sendingEmail = signal(false);
   emailRecipientSearch = signal('');
@@ -313,6 +317,16 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   get selectedTaskReviewMessage() {
     const decision = this.selectedTaskDecision || 'the recorded decision';
     return `Review this task because the previous decision was ${decision}. The existing details are kept for amendment.`;
+  }
+
+  get selectedTaskIsAmendment() {
+    const task = this.selectedTaskInstance;
+    return task?.status === 'active' && Boolean(task.decision || task.transitionLabel);
+  }
+
+  get selectedTaskAmendmentMessage() {
+    const decision = this.selectedTaskDecision || this.selectedTaskInstance?.transitionLabel || 'the previous review';
+    return `This task is open for amendment following ${decision}. Existing responses and attachments have been retained and can be edited or replaced.`;
   }
 
   get currentUserRole() {
@@ -549,6 +563,8 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       body: this.renderEmailTemplate(bodyTemplate, previewRecipient),
       subjectTemplate: subject,
       bodyTemplate,
+      attachmentIds: [],
+      attachmentNames: [],
     });
     this.resetEmailRecipientSearch();
   }
@@ -591,6 +607,9 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       multiple: artifact.multiple === true,
       maxFiles: artifact.multiple ? artifact.maxFiles : 1,
       maxFileSizeMb: Math.max(Number(artifact.maxFileSizeMb) || 20, 1),
+      emailAction: artifact.emailAction === true,
+      emailSubject: artifact.emailSubject,
+      emailMessage: artifact.emailMessage,
     }));
     this.refreshArtifactAttachmentMap();
   }
@@ -945,6 +964,36 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     this.showMessage('Attachment removed.', 'success');
   }
 
+  openArtifactEmailComposer(artifact: WorkflowArtifactInput, attachment: WorkflowArtifactRecord) {
+    if (!artifact.emailAction) return;
+    const subjectTemplate = artifact.emailSubject
+      || `${artifact.title}: {{programmeTitle}} ({{programmeCode}})`;
+    const bodyTemplate = artifact.emailMessage
+      || `Dear {{recipientName}},\n\nPlease find the attached ${artifact.title} for {{programmeTitle}} ({{programmeCode}}).\n\nKind regards,\n{{initiator}}`;
+    this.emailComposer.set({
+      open: true,
+      title: `Email ${artifact.title}`,
+      recipients: [],
+      selectedEmails: [],
+      subject: this.renderEmailTemplate(subjectTemplate),
+      body: this.renderEmailTemplate(bodyTemplate),
+      subjectTemplate,
+      bodyTemplate,
+      attachmentIds: [attachment.id],
+      attachmentNames: [attachment.reference || attachment.title],
+    });
+    this.resetEmailRecipientSearch();
+  }
+
+  artifactRequirement(type: string) {
+    return this.artifacts.find((artifact) => artifact.type === type);
+  }
+
+  emailCompletedAttachment(type: string, attachment: WorkflowArtifactRecord) {
+    const artifact = this.artifactRequirement(type);
+    if (artifact) this.openArtifactEmailComposer(artifact, attachment);
+  }
+
   displayValue(value: unknown): string {
     if (value === null || value === undefined || value === '') return 'Not provided';
     if (Array.isArray(value)) {
@@ -1018,6 +1067,8 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       body: this.renderEmailTemplate(bodyTemplate, previewRecipient),
       subjectTemplate,
       bodyTemplate,
+      attachmentIds: [],
+      attachmentNames: [],
     });
     this.resetEmailRecipientSearch();
   }
@@ -1126,6 +1177,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       this.selectedEmailRecipients,
       this.renderEmailTemplate(composer.subjectTemplate || composer.subject, recipient),
       this.renderEmailTemplate(composer.bodyTemplate || composer.body, recipient),
+      composer.attachmentIds,
     );
   }
 
@@ -1140,8 +1192,23 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
   reopenSelectedTask() {
     const task = this.selectedTaskInstance;
     if (!task || !this.canReopenSelectedTask || this.reopeningTask()) return;
+    const componentRef = this.viewContainer.createComponent(ConfirmModalComponent);
+    componentRef.instance.action = 'edit';
+    componentRef.instance.heading = 'Open task for amendment?';
+    componentRef.instance.confirmLabel = 'Open for amendment';
+    componentRef.instance.message = 'The existing responses and uploaded files will be kept. The assigned user can edit the information, remove individual files, or explicitly remove all files before submitting again.';
+    componentRef.instance.onClose.subscribe(() => {
+      if (!componentRef.hostView.destroyed) componentRef.destroy();
+    });
+    componentRef.instance.onConfirm.subscribe((result) => {
+      if (result === 'confirmed') this.performTaskReopen(task.id);
+    });
+  }
+
+  private performTaskReopen(taskId: string) {
+    if (this.reopeningTask()) return;
     this.reopeningTask.set(true);
-    this.http.post(`tasks/${task.id}/reopen`, {
+    this.http.post(`tasks/${taskId}/reopen`, {
       actor: {
         id: this.currentUserId,
         role: this.currentUserRole,
@@ -1149,7 +1216,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: () => {
         this.reopeningTask.set(false);
-        this.showMessage('Task reopened for amendments.', 'success');
+        this.showMessage('Task opened for amendment. Existing responses and files were retained.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
@@ -1399,7 +1466,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     return template.replace(/\{\{(\w+)\}\}/g, (_, key: string) => values[key] ?? '');
   }
 
-  private openMailClient(recipients: EmailRecipient[], subject: string, body: string) {
+  private openMailClient(recipients: EmailRecipient[], subject: string, body: string, attachmentIds: string[] = []) {
     if (this.sendingEmail()) return;
     this.sendingEmail.set(true);
     this.http.post('communications/send', {
@@ -1409,6 +1476,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
       subject,
       body,
       sendEmail: true,
+      attachmentIds,
       recipients: recipients.map((recipient) => ({
         id: recipient.id,
         email: recipient.email,

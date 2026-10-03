@@ -234,7 +234,7 @@ export class WorkflowDefinitionComponent implements OnInit {
 
   addStage() {
     const index = this.definition.stages.length + 1;
-    const stage: WorkflowStage = { id: `stage-${index}`, name: `Stage ${index}`, description: '', order: index };
+    const stage: WorkflowStage = { id: `stage-${index}`, name: `Stage ${index}`, description: '', order: index, runWithPrevious: false };
     this.definition.stages.push(stage);
     this.showStageEditor(stage.id);
     this.builderChanged();
@@ -248,6 +248,7 @@ export class WorkflowDefinitionComponent implements OnInit {
     }
     this.definition.stages.splice(index, 1);
     this.definition.stages.forEach((item, itemIndex) => item.order = itemIndex + 1);
+    if (this.definition.stages[0]) this.definition.stages[0].runWithPrevious = false;
     if (this.selectedStageId === stage.id) {
       this.selectedStageId = this.definition.stages[0]?.id ?? '';
     }
@@ -269,6 +270,7 @@ export class WorkflowDefinitionComponent implements OnInit {
     const [stage] = this.definition.stages.splice(index, 1);
     this.definition.stages.splice(targetIndex, 0, stage);
     this.definition.stages.forEach((item, itemIndex) => item.order = itemIndex + 1);
+    if (this.definition.stages[0]) this.definition.stages[0].runWithPrevious = false;
     this.builderChanged();
   }
 

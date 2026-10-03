@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import fs from "fs";
+import path from "path";
 import { db } from "../db";
 import {
     attachmentsInWorkflow as workflowArtifacts,
@@ -218,6 +219,91 @@ function resolveVisibleTaskTargets(
     }
 
     return { taskKeys: [...new Set(taskKeys)], outcome };
+}
+
+function concurrentStageIds(definition: WorkflowDefinition, stageId: string) {
+    const stages = [...(definition.stages ?? [])].sort((first, second) => first.order - second.order);
+    const stageIndex = stages.findIndex((stage) => stage.id === stageId);
+    if (stageIndex < 0) return [stageId];
+
+    let firstIndex = stageIndex;
+    while (firstIndex > 0 && stages[firstIndex].runWithPrevious) firstIndex -= 1;
+    let lastIndex = stageIndex;
+    while (lastIndex + 1 < stages.length && stages[lastIndex + 1].runWithPrevious) lastIndex += 1;
+    return stages.slice(firstIndex, lastIndex + 1).map((stage) => stage.id);
+}
+
+function firstTaskKeyForStage(definition: WorkflowDefinition, stageId: string) {
+    return definition.tasks.find((task) => task.stageId === stageId)?.id;
+}
+
+function expandConcurrentTargets(
+    definition: WorkflowDefinition,
+    targets: { taskKeys: string[]; outcome?: string },
+    formDataContext: Record<string, unknown>,
+) {
+    const expanded = new Set(targets.taskKeys);
+    for (const taskKey of targets.taskKeys) {
+        const target = getTaskDefinition(definition, taskKey);
+        if (firstTaskKeyForStage(definition, target.stageId) !== taskKey) continue;
+        for (const stageId of concurrentStageIds(definition, target.stageId)) {
+            const firstTaskKey = firstTaskKeyForStage(definition, stageId);
+            if (firstTaskKey) expanded.add(firstTaskKey);
+        }
+    }
+    const resolved = resolveVisibleTaskTargets(definition, [...expanded], formDataContext);
+    return { taskKeys: resolved.taskKeys, outcome: targets.outcome ?? resolved.outcome };
+}
+
+async function createInitialTasks(
+    tx: Transaction,
+    process: typeof workflowProcessInstances.$inferSelect,
+    definition: WorkflowDefinition,
+    causedByTaskId: string | null,
+) {
+    const initialDefinition = getTaskDefinition(definition, definition.initialTask);
+    const taskKeys = concurrentStageIds(definition, initialDefinition.stageId)
+        .map((stageId) => firstTaskKeyForStage(definition, stageId))
+        .filter((taskKey): taskKey is string => Boolean(taskKey));
+    return Promise.all(taskKeys.map((taskKey) => createTask(tx, process, definition, taskKey, causedByTaskId)));
+}
+
+async function resolveConcurrentExitTargets(
+    tx: Transaction,
+    processId: string,
+    definition: WorkflowDefinition,
+    stageIds: string[],
+    formDataContext: Record<string, unknown>,
+) {
+    const completedTasks = await tx.select({
+        taskKey: workflowTaskInstances.taskKey,
+        formData: workflowTaskInstances.formData,
+    }).from(workflowTaskInstances).where(and(
+        eq(workflowTaskInstances.processId, processId),
+        eq(workflowTaskInstances.status, "completed"),
+        inArray(workflowTaskInstances.stageKey, stageIds),
+    ));
+
+    const taskKeys = new Set<string>();
+    let outcome: string | undefined;
+    for (const completedTask of completedTasks) {
+        const taskDefinition = getTaskDefinition(definition, completedTask.taskKey);
+        const transition = selectTransition(taskDefinition, {
+            event: "submit",
+            formData: (completedTask.formData as Record<string, unknown> | null) ?? {},
+        });
+        const targets = Array.isArray(transition.to) ? transition.to : [transition.to];
+        const resolved = expandConcurrentTargets(
+            definition,
+            resolveVisibleTaskTargets(definition, targets, formDataContext),
+            formDataContext,
+        );
+        resolved.taskKeys
+            .filter((taskKey) => !stageIds.includes(getTaskDefinition(definition, taskKey).stageId))
+            .forEach((taskKey) => taskKeys.add(taskKey));
+        outcome ??= transition.outcome ?? resolved.outcome;
+    }
+    return { taskKeys: [...taskKeys], outcome };
 }
 
 export async function getPublishedDefinition(slug?: string) {
@@ -761,10 +847,11 @@ export async function createProgrammeAndStart(input: CreateProgrammeInput) {
         const [process] = await tx.insert(workflowProcessInstances).values({
             programmeId: programme.id,
             definitionVersionId: current.version.id,
-            currentStageKey: firstDefinition.stageId,
+            currentStageKey: concurrentStageIds(current.definition, firstDefinition.stageId)[0],
             startedBy: initiator.id,
         }).returning();
-        const firstTask = await createTask(tx, process, current.definition, current.definition.initialTask, null);
+        const initialTasks = await createInitialTasks(tx, process, current.definition, null);
+        const firstTask = initialTasks[0];
         await tx.insert(workflowAuditEvents).values({
             programmeId: programme.id,
             processId: process.id,
@@ -825,10 +912,14 @@ export async function startProcess(programmeId: string, actorId?: string, workfl
         const [process] = await tx.insert(workflowProcessInstances).values({
             programmeId,
             definitionVersionId: current.version.id,
-            currentStageKey: getTaskDefinition(current.definition, current.definition.initialTask).stageId,
+            currentStageKey: concurrentStageIds(
+                current.definition,
+                getTaskDefinition(current.definition, current.definition.initialTask).stageId,
+            )[0],
             startedBy: actor?.id,
         }).returning();
-        const firstTask = await createTask(tx, process, current.definition, current.definition.initialTask, null);
+        const initialTasks = await createInitialTasks(tx, process, current.definition, null);
+        const firstTask = initialTasks[0];
 
         await tx.update(workflowProgrammes)
             .set({ status: "in_progress" })
@@ -1182,6 +1273,29 @@ export async function sendCommunication(input: SendCommunicationInput) {
     if (!recipients.length) throw new WorkflowError("At least one recipient is required", 400);
     if (scope === "programme" && !input.programmeId) throw new WorkflowError("Programme is required", 400);
 
+    const attachmentIds = [...new Set((input.attachmentIds ?? []).map((id) => String(id).trim()).filter(Boolean))];
+    const attachmentRows = attachmentIds.length
+        ? await db.select().from(workflowArtifacts).where(inArray(workflowArtifacts.id, attachmentIds))
+        : [];
+    if (attachmentRows.length !== attachmentIds.length) {
+        throw new WorkflowError("One or more email attachments could not be found", 404);
+    }
+    if (input.programmeId && attachmentRows.some((attachment) => attachment.programmeId !== input.programmeId)) {
+        throw new WorkflowError("An attachment does not belong to this programme", 400);
+    }
+    const uploadRoot = path.resolve("uploads");
+    const emailAttachments = attachmentRows.map((attachment) => {
+        const filePath = attachment.path ? path.resolve(attachment.path) : "";
+        if (!filePath.startsWith(`${uploadRoot}${path.sep}`) || !fs.existsSync(filePath)) {
+            throw new WorkflowError(`${attachment.reference || attachment.title} could not be found on the server`, 404);
+        }
+        return {
+            filename: attachment.reference || attachment.title,
+            path: filePath,
+            contentType: attachment.mimeType || undefined,
+        };
+    });
+
     const recipientIds = recipients.map((recipient) => recipient.id).filter(Boolean) as string[];
     const knownUsers = recipientIds.length
         ? await db.select({
@@ -1242,6 +1356,7 @@ export async function sendCommunication(input: SendCommunicationInput) {
                 to: [{ email: message.recipientEmail, name: message.recipientName ?? undefined }],
                 subject: message.subject,
                 text: message.body,
+                attachments: emailAttachments,
             });
             const emailStatus = result.sent ? "sent" : "skipped";
             if (result.sent) sent += 1;
@@ -1379,9 +1494,40 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
         let programmeStatus = "in_progress";
 
         const nextTargets = Array.isArray(transition.to) ? transition.to : [transition.to];
-        const resolvedTargets = resolveVisibleTaskTargets(definition, nextTargets, formDataContext);
+        let resolvedTargets = expandConcurrentTargets(
+            definition,
+            resolveVisibleTaskTargets(definition, nextTargets, formDataContext),
+            formDataContext,
+        );
 
-        if (transition.to === "END" || (!resolvedTargets.taskKeys.length && resolvedTargets.outcome)) {
+        const concurrentStages = concurrentStageIds(definition, taskDefinition.stageId);
+        const leavesConcurrentGroup = concurrentStages.length > 1 && (
+            Boolean(resolvedTargets.outcome)
+            || resolvedTargets.taskKeys.some((taskKey) => !concurrentStages.includes(getTaskDefinition(definition, taskKey).stageId))
+        );
+        if (leavesConcurrentGroup) {
+            const activeConcurrentTasks = await tx.select({
+                id: workflowTaskInstances.id,
+                stageKey: workflowTaskInstances.stageKey,
+            }).from(workflowTaskInstances).where(and(
+                eq(workflowTaskInstances.processId, process.id),
+                eq(workflowTaskInstances.status, "active"),
+                inArray(workflowTaskInstances.stageKey, concurrentStages),
+            ));
+            if (activeConcurrentTasks.length) {
+                resolvedTargets = { taskKeys: [] };
+            } else {
+                resolvedTargets = await resolveConcurrentExitTargets(
+                    tx,
+                    process.id,
+                    definition,
+                    concurrentStages,
+                    formDataContext,
+                );
+            }
+        }
+
+        if (!resolvedTargets.taskKeys.length && resolvedTargets.outcome) {
             const outcome = transition.outcome ?? resolvedTargets.outcome ?? "completed";
             [updatedProcess] = await tx.update(workflowProcessInstances).set({
                 status: outcome,
@@ -1401,12 +1547,24 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
                 message: `Process ${outcome}`,
                 metadata: { outcome },
             });
-        } else {
+        } else if (resolvedTargets.taskKeys.length) {
             createdTasks = await Promise.all(resolvedTargets.taskKeys.map(
                 (taskKey) => createTask(tx, process, definition, taskKey, task.id),
             ));
             [updatedProcess] = await tx.update(workflowProcessInstances).set({
                 currentStageKey: createdTasks[0]?.stageKey ?? process.currentStageKey,
+            }).where(eq(workflowProcessInstances.id, process.id)).returning();
+        } else {
+            const [activeTask] = await tx.select({ stageKey: workflowTaskInstances.stageKey })
+                .from(workflowTaskInstances)
+                .where(and(
+                    eq(workflowTaskInstances.processId, process.id),
+                    eq(workflowTaskInstances.status, "active"),
+                ))
+                .orderBy(asc(workflowTaskInstances.createdAt))
+                .limit(1);
+            [updatedProcess] = await tx.update(workflowProcessInstances).set({
+                currentStageKey: activeTask?.stageKey ?? process.currentStageKey,
             }).where(eq(workflowProcessInstances.id, process.id)).returning();
         }
 

@@ -96,6 +96,40 @@
       </div>
     </div>
 
+    <div class="partner-band" aria-labelledby="partner-band-title">
+      <div class="partner-intro">
+        <span>External Engagement</span>
+        <h2 id="partner-band-title">Accreditation and Professional Bodies</h2>
+      </div>
+
+      <div class="partner-marquee">
+        <div class="partner-track">
+          @for (duplicate of [0, 1]; track duplicate) {
+            <div class="partner-group" [attr.aria-hidden]="duplicate === 1 ? true : null">
+              @for (partner of partners; track partner.shortName) {
+                <article class="partner-item" [title]="partner.name">
+                  @if (partner.logo) {
+                    <img [src]="partner.logo" [alt]="partner.shortName + ' logo'">
+                  } @else {
+                    <span class="partner-monogram">{{ partner.shortName }}</span>
+                  }
+                  <span>
+                    <strong>{{ partner.shortName }}</strong>
+                    <small>{{ partner.name }}</small>
+                  </span>
+                </article>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="guest-info-band">
+  <div class="guest-info-shell">
     <div class="metrics-bar">
       @for (metric of metrics(); track metric.label) {
         <article class="metric-card" [class]="'accent-' + metric.accent">
@@ -108,16 +142,6 @@
           </div>
         </article>
       }
-    </div>
-
-  </div>
-</section>
-
-<section class="guest-info-band">
-  <div class="guest-info-shell">
-    <div class="info-heading">
-      <span>Designed For Programme Teams</span>
-      <h2>Keep the full programme journey clear, documented and easier to follow.</h2>
     </div>
 
     <div class="info-card-grid">

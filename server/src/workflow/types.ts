@@ -23,6 +23,9 @@ export interface WorkflowArtifactRequirement {
     multiple?: boolean;
     maxFiles?: number;
     maxFileSizeMb?: number;
+    emailAction?: boolean;
+    emailSubject?: string;
+    emailMessage?: string;
 }
 
 export interface WorkflowCondition {
@@ -60,7 +63,7 @@ export interface WorkflowDefinition {
     description?: string;
     initialTask: string;
     roles?: Array<{ id: string; name: string }>;
-    stages?: Array<{ id: string; name: string; description?: string; order: number }>;
+    stages?: Array<{ id: string; name: string; description?: string; order: number; runWithPrevious?: boolean }>;
     tasks: WorkflowTaskDefinition[];
 }
 
@@ -95,4 +98,5 @@ export type SendCommunicationInput = {
     body?: string;
     recipients?: CommunicationRecipientInput[];
     sendEmail?: boolean;
+    attachmentIds?: string[];
 };

@@ -8,6 +8,7 @@ export type WorkflowStage = {
   name: string;
   description?: string;
   order: number;
+  runWithPrevious?: boolean;
 }
 
 export type WorkflowCondition = {
@@ -66,6 +67,9 @@ export type WorkflowArtifactRequirement = {
   multiple?: boolean;
   maxFiles?: number;
   maxFileSizeMb?: number;
+  emailAction?: boolean;
+  emailSubject?: string;
+  emailMessage?: string;
 }
 
 export type WorkflowDefinition = {

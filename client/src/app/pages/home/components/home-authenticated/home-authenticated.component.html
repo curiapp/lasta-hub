@@ -94,7 +94,7 @@
                 class="btn btn-sm btn-square border-2 border-base-content/20 bg-base-100 text-primary shadow-md hover:border-primary/50 hover:bg-primary/5">
                 <span class="material-symbols-rounded text-lg">{{ scopeIcon(programmeScope()) }}</span>
               </button>
-              <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-56 max-w-[calc(100vw-2rem)] rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+              <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
                 @for (option of programmeScopeOptions; track option.value) {
                   @if (option.value !== 'department' || currentUser?.department?.id || currentUser?.department?.name) {
                     @if (option.value !== 'faculty' || currentUser?.faculty?.id || currentUser?.faculty?.name) {
@@ -111,6 +111,30 @@
                       </li>
                     }
                   }
+                }
+                @if (faculties().length) {
+                  <li class="organisation-browser">
+                    <div class="organisation-head">
+                      <span class="material-symbols-rounded">domain</span>
+                      <span><strong>Browse another unit</strong><small>Choose a faculty, then narrow to a department.</small></span>
+                    </div>
+                    <div class="unit-options" aria-label="Faculties">
+                      @for (faculty of faculties(); track faculty.id) {
+                        <button type="button" [class.selected]="selectedFacultyId() === faculty.id"
+                          (click)="browseFaculty(faculty.id)">{{ faculty.name }}</button>
+                      }
+                    </div>
+                    @if (selectedFacultyId() && browseDepartments().length) {
+                      <div class="department-options" aria-label="Departments">
+                        @for (department of browseDepartments(); track department.id) {
+                          <button type="button" [class.selected]="selectedDepartmentId() === department.id"
+                            (click)="browseDepartment(department.id)">
+                            <span class="material-symbols-rounded">chevron_right</span>{{ department.name }}
+                          </button>
+                        }
+                      </div>
+                    }
+                  </li>
                 }
               </ul>
             </div>
