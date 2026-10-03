@@ -9,6 +9,11 @@ export type SendMailInput = {
     to: MailRecipient[];
     subject: string;
     text: string;
+    attachments?: Array<{
+        filename: string;
+        path: string;
+        contentType?: string;
+    }>;
 };
 
 export type MailResult = {
@@ -52,6 +57,7 @@ export async function sendMail(input: SendMailInput): Promise<MailResult> {
         to: input.to.map((recipient) => recipient.name ? `"${recipient.name}" <${recipient.email}>` : recipient.email),
         subject: input.subject,
         text: input.text,
+        attachments: input.attachments,
     });
 
     return {

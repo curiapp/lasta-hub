@@ -11,10 +11,11 @@ import { ModalComponent } from '../../../../components/modal/modal.component';
 import { CanEditDirective } from '../../../../directives/can-edit.directive';
 import { getGreeting } from '../../../../functions';
 import { GET_BOOTSTRAP, GET_PROGRAMMES } from '../../../../graphql/graphql.queries';
+import { ClientService } from '../../../../services/client.service';
 import { Programme, User } from '../../../../types';
 import { WorkflowDashboard } from '../../../../types/programme-workflow';
 
-type ProgrammeScope = 'mine' | 'all' | 'department' | 'faculty';
+type ProgrammeScope = 'mine' | 'all' | 'department' | 'faculty' | 'selected-department' | 'selected-faculty';
 type ProgrammeSort = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
 type ProgrammeViewMode = 'grid' | 'list';
 
@@ -23,6 +24,10 @@ type ProgrammeOption<T> = {
   label: string;
   icon: string;
 };
+
+type InstitutionalUnit = { id: string; name: string };
+type DepartmentOption = InstitutionalUnit & { facultyId?: string };
+type InstitutionalUnitsResponse = { faculties: InstitutionalUnit[]; departments: DepartmentOption[] };
 
 @Component({
   selector: 'home-authenticated',
@@ -40,9 +45,12 @@ type ProgrammeOption<T> = {
 })
 export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   private readonly apollo = inject(Apollo);
+  private readonly client = inject(ClientService);
   private readonly programmeScopeStorageKey = 'home.programmeScope';
   private readonly programmeSortStorageKey = 'home.programmeSort';
   private readonly programmeViewModeStorageKey = 'home.programmeViewMode';
+  private readonly selectedFacultyStorageKey = 'home.selectedFaculty';
+  private readonly selectedDepartmentStorageKey = 'home.selectedDepartment';
   private readonly minimumProgrammeLoadingMs = 650;
   private readonly uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   private readonly limit = 50;
@@ -60,6 +68,10 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   programmeSort = signal<ProgrammeSort>('newest');
   programmeViewMode = signal<ProgrammeViewMode>('grid');
   searchText = signal('');
+  faculties = signal<InstitutionalUnit[]>([]);
+  departments = signal<DepartmentOption[]>([]);
+  selectedFacultyId = signal('');
+  selectedDepartmentId = signal('');
   private readonly searchTextChanges = toObservable(this.searchText);
   dashboard = signal<WorkflowDashboard>({
     programmeCount: 0,
@@ -91,6 +103,9 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   filteredProgrammes = computed(() => this.programmes().filter((programme) => this.matchesScope(programme)));
   displayedProgrammes = computed(() => this.sortProgrammes(this.filteredProgrammes()));
+  browseDepartments = computed(() => this.departments().filter(
+    (department) => !this.selectedFacultyId() || department.facultyId === this.selectedFacultyId(),
+  ));
 
   private queryRef = this.apollo.watchQuery<{ programmes: Programme[] }>({
     query: GET_PROGRAMMES,
@@ -107,6 +122,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.greetingMessage = getGreeting();
     this.currentUser = this.readLoggedInUser();
     this.restoreProgrammePreferences();
+    this.loadInstitutionalUnits();
     this.seedProgrammesFromCache();
 
     this.subscriptions.add(this.queryRef.valueChanges.subscribe((result) => {
@@ -155,6 +171,27 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.showAll.set(false);
   }
 
+  browseFaculty(facultyId: string) {
+    this.selectedFacultyId.set(facultyId);
+    this.selectedDepartmentId.set('');
+    this.programmeScope.set('selected-faculty');
+    this.writeSessionValue(this.selectedFacultyStorageKey, facultyId);
+    this.writeSessionValue(this.selectedDepartmentStorageKey, '');
+    this.writeSessionValue(this.programmeScopeStorageKey, 'selected-faculty');
+    this.showAll.set(false);
+  }
+
+  browseDepartment(departmentId: string) {
+    const department = this.departments().find((item) => item.id === departmentId);
+    if (department?.facultyId) this.selectedFacultyId.set(department.facultyId);
+    this.selectedDepartmentId.set(departmentId);
+    this.programmeScope.set('selected-department');
+    this.writeSessionValue(this.selectedFacultyStorageKey, this.selectedFacultyId());
+    this.writeSessionValue(this.selectedDepartmentStorageKey, departmentId);
+    this.writeSessionValue(this.programmeScopeStorageKey, 'selected-department');
+    this.showAll.set(false);
+  }
+
   setProgrammeSort(sort: ProgrammeSort) {
     this.programmeSort.set(sort);
     this.writeSessionValue(this.programmeSortStorageKey, sort);
@@ -167,15 +204,29 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   portfolioHeading() {
     if (this.programmeScope() === 'all') return 'All programmes';
+    if (this.programmeScope() === 'selected-faculty') return `${this.selectedFacultyName()} programmes`;
+    if (this.programmeScope() === 'selected-department') return `${this.selectedDepartmentName()} programmes`;
     return this.scopeLabel();
   }
 
   scopeIcon(scope: ProgrammeScope) {
+    if (scope === 'selected-department') return 'domain';
+    if (scope === 'selected-faculty') return 'account_balance';
     return this.programmeScopeOptions.find((option) => option.value === scope)?.icon ?? 'filter_list';
   }
 
   scopeLabel(scope: ProgrammeScope = this.programmeScope()) {
+    if (scope === 'selected-department') return this.selectedDepartmentName();
+    if (scope === 'selected-faculty') return this.selectedFacultyName();
     return this.programmeScopeOptions.find((option) => option.value === scope)?.label ?? 'Programme view';
+  }
+
+  selectedFacultyName() {
+    return this.faculties().find((faculty) => faculty.id === this.selectedFacultyId())?.name ?? 'Selected faculty';
+  }
+
+  selectedDepartmentName() {
+    return this.departments().find((department) => department.id === this.selectedDepartmentId())?.name ?? 'Selected department';
   }
 
   sortIcon(sort: ProgrammeSort) {
@@ -251,7 +302,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   }
 
   scopeEmptyLabel() {
-    return this.programmeScopeOptions.find((option) => option.value === this.programmeScope())?.label.toLowerCase() ?? 'this view';
+    return this.scopeLabel().toLowerCase();
   }
 
   private restoreProgrammePreferences() {
@@ -260,6 +311,8 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     const savedSort = this.readProgrammeSort();
     const savedViewMode = this.readProgrammeViewMode();
 
+    this.selectedFacultyId.set(this.readSessionValue(this.selectedFacultyStorageKey) ?? '');
+    this.selectedDepartmentId.set(this.readSessionValue(this.selectedDepartmentStorageKey) ?? '');
     this.programmeScope.set(savedScope && this.scopeAvailable(savedScope) ? savedScope : defaultScope);
     if (savedSort) this.programmeSort.set(savedSort);
     if (savedViewMode) this.programmeViewMode.set(savedViewMode);
@@ -309,7 +362,8 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   private readProgrammeScope(): ProgrammeScope | null {
     const value = this.readSessionValue(this.programmeScopeStorageKey) as ProgrammeScope | null;
-    return value && this.programmeScopeOptions.some((option) => option.value === value) ? value : null;
+    const scopes: ProgrammeScope[] = ['mine', 'all', 'department', 'faculty', 'selected-department', 'selected-faculty'];
+    return value && scopes.includes(value) ? value : null;
   }
 
   private readProgrammeSort(): ProgrammeSort | null {
@@ -347,6 +401,8 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   private scopeAvailable(scope: ProgrammeScope) {
     if (scope === 'department') return Boolean(this.currentUser?.department?.id || this.currentUser?.department?.name);
     if (scope === 'faculty') return Boolean(this.currentUser?.faculty?.id || this.currentUser?.faculty?.name);
+    if (scope === 'selected-faculty') return Boolean(this.selectedFacultyId());
+    if (scope === 'selected-department') return Boolean(this.selectedDepartmentId());
     return true;
   }
 
@@ -357,7 +413,22 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     if (scope === 'department') {
       return this.matchesUnit(programme.department, programme.departmentName, this.currentUser.department);
     }
-    return this.matchesUnit(programme.faculty, programme.facultyName, this.currentUser.faculty);
+    if (scope === 'faculty') return this.matchesUnit(programme.faculty, programme.facultyName, this.currentUser.faculty);
+    if (scope === 'selected-department') return this.sameValue(programme.department, this.selectedDepartmentId());
+    return this.sameValue(programme.faculty, this.selectedFacultyId());
+  }
+
+  private loadInstitutionalUnits() {
+    this.subscriptions.add(this.client.get<InstitutionalUnitsResponse>('institutional-units').subscribe({
+      next: (units) => {
+        this.faculties.set(units.faculties ?? []);
+        this.departments.set(units.departments ?? []);
+      },
+      error: () => {
+        this.faculties.set([]);
+        this.departments.set([]);
+      },
+    }));
   }
 
   private matchesUnit(programmeValue: string | undefined, programmeName: string | undefined, userUnit?: { id: string; name: string }) {

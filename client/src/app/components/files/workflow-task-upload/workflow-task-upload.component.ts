@@ -29,8 +29,10 @@ export class WorkflowTaskUploadComponent implements OnChanges {
   @Input() maxFileSizeMb = 20;
   @Input() uploadedCount = 0;
   @Input() attachments: WorkflowArtifactRecord[] = [];
+  @Input() emailEnabled = false;
   @Output() uploaded = new EventEmitter<WorkflowArtifactRecord>();
   @Output() removed = new EventEmitter<string>();
+  @Output() emailRequested = new EventEmitter<WorkflowArtifactRecord>();
 
   selectedFiles = signal<File[]>([]);
   visibleAttachments = signal<WorkflowArtifactRecord[]>([]);
@@ -220,6 +222,7 @@ export class WorkflowTaskUploadComponent implements OnChanges {
       this.isUploading.set(false);
       if (errorMessage) {
         this.error.set(errorMessage);
+        this.selectedFiles.set([]);
         this.uploadProgress.set(0);
         this.uploadFinishTimer = undefined;
         return;

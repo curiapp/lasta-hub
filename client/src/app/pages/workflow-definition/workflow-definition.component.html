@@ -148,6 +148,13 @@
                   (ngModelChange)="builderChanged()">
                 <input class="stage-id" aria-label="Stage identifier" [ngModel]="stage.id"
                   (focus)="selectStage(stage.id)" (ngModelChange)="renameStage(stage, $event)">
+                <span class="concurrent-stage-slot">
+                  @if (stage.runWithPrevious) {
+                    <span class="concurrent-stage" title="Runs at the same time as the previous stage">
+                      <span class="material-symbols-rounded">sync_alt</span>
+                    </span>
+                  }
+                </span>
                 <button class="icon-button" type="button" title="Edit stage" (click)="selectStage(stage.id)">
                   <span class="material-symbols-rounded">edit</span>
                 </button>
@@ -658,7 +665,31 @@
                       (ngModelChange)="builderChanged()">
                     Required
                   </label>
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="artifact.emailAction"
+                      (ngModelChange)="builderChanged()">
+                    Allow this document to be emailed
+                  </label>
                 </div>
+                @if (artifact.emailAction) {
+                  <div class="grid gap-2 rounded-md border border-base-300 bg-base-200/45 p-3">
+                    <label>
+                      <span>Default email subject</span>
+                      <input class="input input-bordered input-sm" [(ngModel)]="artifact.emailSubject"
+                        [placeholder]="'Documents for {{programmeTitle}}'" (ngModelChange)="builderChanged()">
+                    </label>
+                    <label>
+                      <span>Default email message</span>
+                      <textarea class="textarea textarea-bordered min-h-24 w-full" [(ngModel)]="artifact.emailMessage"
+                        placeholder="Write the default message shown when this document is emailed."
+                        (ngModelChange)="builderChanged()"></textarea>
+                    </label>
+                    <small class="text-base-content/50">
+                      Templates can use {{ '{{programmeTitle}}' }}, {{ '{{programmeCode}}' }},
+                      {{ '{{recipientName}}' }} and {{ '{{initiator}}' }}.
+                    </small>
+                  </div>
+                }
               </div>
             }
             @if (!task.artifacts?.length) {
@@ -803,6 +834,14 @@
             <input class="input input-bordered input-sm" [ngModel]="stage.id"
               (ngModelChange)="renameStage(stage, $event)">
             <small>Changing this updates tasks already assigned to the stage.</small>
+          </label>
+          <label class="concurrent-control" [class.disabled]="definition.stages.indexOf(stage) === 0">
+            <input class="toggle toggle-primary toggle-sm" type="checkbox" [(ngModel)]="stage.runWithPrevious"
+              [disabled]="definition.stages.indexOf(stage) === 0" (ngModelChange)="builderChanged()">
+            <span>
+              <strong>Run with previous stage</strong>
+              <small>Start both stages together. Their next stage opens after both have finished.</small>
+            </span>
           </label>
           <div class="stage-editor-actions">
             <button class="btn btn-sm btn-ghost" type="button"

@@ -30,6 +30,10 @@ export function validateDefinition(definition: WorkflowDefinition) {
     if (!taskKeys.has(definition.initialTask)) {
         throw new WorkflowError(`Initial task does not exist: ${definition.initialTask}`, 400);
     }
+    const orderedStages = [...(definition.stages ?? [])].sort((first, second) => first.order - second.order);
+    if (orderedStages[0]?.runWithPrevious) {
+        throw new WorkflowError("The first stage cannot run with a previous stage", 400);
+    }
     for (const task of definition.tasks) {
         if (!task.stageId || !task.name || !task.ownerRoles?.length) {
             throw new WorkflowError(`Task ${task.id} must include stageId, name, and ownerRoles`, 400);

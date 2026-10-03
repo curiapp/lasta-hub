@@ -66,6 +66,9 @@ export type WorkflowArtifactInput = {
   multiple?: boolean;
   maxFiles?: number;
   maxFileSizeMb?: number;
+  emailAction?: boolean;
+  emailSubject?: string;
+  emailMessage?: string;
 };
 
 export type WorkflowArtifactRecord = {

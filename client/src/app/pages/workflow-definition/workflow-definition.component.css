@@ -330,12 +330,60 @@ h2 {
 
 .stage-band > header {
   display: grid;
-  grid-template-columns: 1.8rem minmax(120px, 1fr) minmax(100px, .8fr) 2rem 2rem;
+  grid-template-columns: 1.8rem minmax(120px, 1fr) minmax(100px, .8fr) auto 2rem 2rem;
   align-items: center;
   gap: .45rem;
   min-height: 2.75rem;
   padding: .35rem .55rem;
   background: #f5f7fa;
+}
+
+.concurrent-stage {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border-radius: 4px;
+  background: #e8eefc;
+  color: #1b2c5d;
+}
+
+.concurrent-stage-slot {
+  width: 1.7rem;
+}
+
+.concurrent-stage .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.concurrent-control {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  border: 1px solid #dce1ea;
+  border-radius: 6px;
+  background: #f7f9fc;
+  padding: .75rem;
+}
+
+.concurrent-control strong,
+.concurrent-control small {
+  display: block;
+}
+
+.concurrent-control strong {
+  font-size: .78rem;
+}
+
+.concurrent-control small {
+  margin-top: .2rem;
+  color: #69758e;
+  font-size: .68rem;
+  line-height: 1.4;
+}
+
+.concurrent-control.disabled {
+  opacity: .55;
 }
 
 .stage-band > header.selected {

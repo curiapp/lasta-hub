@@ -47,23 +47,33 @@
             <span class="truncate text-xs">{{ attachment.reference || attachment.title }}</span>
             <span class="badge badge-ghost badge-xs">{{ attachment.status || 'submitted' }}</span>
           </span>
-          <div class="tooltip tooltip-left" data-tip="Delete">
-            <button class="btn btn-ghost btn-square btn-xs text-error opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
-              type="button" aria-label="Delete attachment" [disabled]="isDeleting(attachment.id) || isDeletingAll()"
-              (click)="removeAttachment(attachment)">
-              <span class="material-symbols-rounded text-base">
-                {{ isDeleting(attachment.id) ? 'hourglass_empty' : 'delete' }}
-              </span>
-            </button>
+          <div class="flex shrink-0 items-center">
+            @if (emailEnabled) {
+              <div class="tooltip tooltip-left" data-tip="Email attachment">
+                <button class="btn btn-ghost btn-square btn-xs text-primary opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
+                  type="button" aria-label="Email attachment" (click)="emailRequested.emit(attachment)">
+                  <span class="material-symbols-rounded text-base">forward_to_inbox</span>
+                </button>
+              </div>
+            }
+            <div class="tooltip tooltip-left" data-tip="Delete">
+              <button class="btn btn-ghost btn-square btn-xs text-error opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
+                type="button" aria-label="Delete attachment" [disabled]="isDeleting(attachment.id) || isDeletingAll()"
+                (click)="removeAttachment(attachment)">
+                <span class="material-symbols-rounded text-base">
+                  {{ isDeleting(attachment.id) ? 'hourglass_empty' : 'delete' }}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       }
-      @if (visibleAttachments().length > 1) {
+      @if (visibleAttachments().length) {
         <div class="flex justify-end pt-1" animate.enter="file-row-enter" animate.leave="file-row-leave">
           <button class="btn btn-ghost btn-xs text-error" type="button" [disabled]="isDeletingAll()"
             (click)="clearAttachments()">
             <span class="material-symbols-rounded text-base">delete_sweep</span>
-            {{ isDeletingAll() ? 'Clearing' : 'Clear all' }}
+            {{ isDeletingAll() ? 'Removing' : 'Remove all files' }}
           </button>
         </div>
       }
