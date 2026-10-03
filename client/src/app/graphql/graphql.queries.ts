@@ -8,6 +8,10 @@ export const GET_BOOTSTRAP = gql`
   query GetBootstrap { bootstrap }
 `;
 
+export const GET_DUE_STAGE_REVIEWS = gql`
+  query GetDueStageReviews { stageReviewsDue }
+`;
+
 export const GET_PROGRAMMES = gql`
   query GetProgrammes($id: String, $searchText: String, $offset: Int = 0, $limit: Int = 50) {
     programmes(id: $id, searchText: $searchText, offset: $offset, limit: $limit) {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -10,7 +10,7 @@ import { ProgrammeTemplateComponent } from '../../../../components/loaders/progr
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { CanEditDirective } from '../../../../directives/can-edit.directive';
 import { getGreeting } from '../../../../functions';
-import { GET_BOOTSTRAP, GET_PROGRAMMES } from '../../../../graphql/graphql.queries';
+import { GET_BOOTSTRAP, GET_DUE_STAGE_REVIEWS, GET_PROGRAMMES } from '../../../../graphql/graphql.queries';
 import { ClientService } from '../../../../services/client.service';
 import { Programme, User } from '../../../../types';
 import { WorkflowDashboard } from '../../../../types/programme-workflow';
@@ -28,6 +28,15 @@ type ProgrammeOption<T> = {
 type InstitutionalUnit = { id: string; name: string };
 type DepartmentOption = InstitutionalUnit & { facultyId?: string };
 type InstitutionalUnitsResponse = { faculties: InstitutionalUnit[]; departments: DepartmentOption[] };
+type StageReviewDue = {
+  programmeId: string;
+  programmeTitle: string;
+  programmeCode: string;
+  stageId: string;
+  stageName: string;
+  dueAt: string;
+  basedOn: 'stage-started' | 'programme-created';
+};
 
 @Component({
   selector: 'home-authenticated',
@@ -44,6 +53,7 @@ type InstitutionalUnitsResponse = { faculties: InstitutionalUnit[]; departments:
   styleUrls: ['./home-authenticated.component.css'],
 })
 export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
+  @ViewChild('review_due_modal') private reviewDueModal?: ModalComponent;
   private readonly apollo = inject(Apollo);
   private readonly client = inject(ClientService);
   private readonly programmeScopeStorageKey = 'home.programmeScope';
@@ -51,6 +61,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   private readonly programmeViewModeStorageKey = 'home.programmeViewMode';
   private readonly selectedFacultyStorageKey = 'home.selectedFaculty';
   private readonly selectedDepartmentStorageKey = 'home.selectedDepartment';
+  private readonly reviewPromptSessionKey = 'home.reviewPromptShown';
   private readonly minimumProgrammeLoadingMs = 650;
   private readonly uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   private readonly limit = 50;
@@ -72,6 +83,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   departments = signal<DepartmentOption[]>([]);
   selectedFacultyId = signal('');
   selectedDepartmentId = signal('');
+  dueStageReviews = signal<StageReviewDue[]>([]);
   private readonly searchTextChanges = toObservable(this.searchText);
   dashboard = signal<WorkflowDashboard>({
     programmeCount: 0,
@@ -123,6 +135,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.currentUser = this.readLoggedInUser();
     this.restoreProgrammePreferences();
     this.loadInstitutionalUnits();
+    this.loadDueStageReviews();
     this.seedProgrammesFromCache();
 
     this.subscriptions.add(this.queryRef.valueChanges.subscribe((result) => {
@@ -243,6 +256,15 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   viewLabel(mode: ProgrammeViewMode = this.programmeViewMode()) {
     return this.programmeViewOptions.find((option) => option.value === mode)?.label ?? 'Programme layout';
+  }
+
+  reviewDueDate(review: StageReviewDue) {
+    return new Intl.DateTimeFormat('en-NA', { day: '2-digit', month: 'short', year: 'numeric' })
+      .format(new Date(review.dueAt));
+  }
+
+  reviewDateBasis(review: StageReviewDue) {
+    return review.basedOn === 'programme-created' ? 'programme creation' : 'stage start';
   }
 
   programmeStatusClasses(status?: string) {
@@ -396,6 +418,23 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
 
   private isLecturerUser() {
     return (this.currentUser?.role ?? '').toLowerCase() === 'lecturer';
+  }
+
+  private loadDueStageReviews() {
+    const role = String(this.currentUser?.role ?? '').trim().toLowerCase();
+    if (!['pdqa', 'admin'].includes(role) || this.readSessionValue(this.reviewPromptSessionKey)) return;
+    this.subscriptions.add(this.apollo.query<{ stageReviewsDue: StageReviewDue[] }>({
+      query: GET_DUE_STAGE_REVIEWS,
+      fetchPolicy: 'network-only',
+    }).subscribe({
+      next: ({ data }) => {
+        const reviews = data?.stageReviewsDue ?? [];
+        this.dueStageReviews.set(reviews);
+        if (!reviews.length) return;
+        this.writeSessionValue(this.reviewPromptSessionKey, 'true');
+        setTimeout(() => this.reviewDueModal?.open());
+      },
+    }));
   }
 
   private scopeAvailable(scope: ProgrammeScope) {

@@ -245,6 +245,31 @@
               }
             </select>
           </label>
+          <div class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-3">
+            <label class="flex cursor-pointer items-start justify-between gap-3">
+              <span>
+                <strong class="block text-sm">Allow email from this task</strong>
+                <small class="block text-xs text-base-content/55">Show a Write email button while users work on this task.</small>
+              </span>
+              <input class="toggle toggle-primary toggle-sm" type="checkbox" [(ngModel)]="task.emailAction"
+                (ngModelChange)="builderChanged()">
+            </label>
+            @if (task.emailAction) {
+              <label class="field">
+                <span>Default email subject</span>
+                <input class="input input-bordered input-sm" [(ngModel)]="task.emailSubject"
+                  (ngModelChange)="builderChanged()" [placeholder]="'Consultation for {{programmeTitle}}'">
+              </label>
+              <label class="field">
+                <span>Default email message</span>
+                <textarea class="textarea textarea-bordered min-h-24 w-full" [(ngModel)]="task.emailMessage"
+                  (ngModelChange)="builderChanged()"
+                  placeholder="Write the default message shown when composing this email."></textarea>
+                <small>Templates can use {{ '{{programmeTitle}}' }}, {{ '{{programmeCode}}' }},
+                  {{ '{{recipientName}}' }} and {{ '{{initiator}}' }}.</small>
+              </label>
+            }
+          </div>
           <div class="field">
             <span>Owner roles</span>
             <div class="dropdown dropdown-bottom w-full">
@@ -665,11 +690,23 @@
                       (ngModelChange)="builderChanged()">
                     Required
                   </label>
-                  <label class="required-toggle">
-                    <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="artifact.emailAction"
-                      (ngModelChange)="builderChanged()">
-                    Allow this document to be emailed
-                  </label>
+                  <fieldset class="grid gap-1">
+                    <legend class="text-xs text-base-content/60">Allow this document to be emailed?</legend>
+                    <div class="flex min-h-8 items-center gap-4 rounded border border-base-300 bg-base-100 px-3">
+                      <label class="flex cursor-pointer items-center gap-2 text-xs">
+                        <input type="radio" class="radio radio-xs"
+                          [name]="'artifact-email-' + artifactIndex" [value]="false"
+                          [(ngModel)]="artifact.emailAction" (ngModelChange)="builderChanged()">
+                        No
+                      </label>
+                      <label class="flex cursor-pointer items-center gap-2 text-xs">
+                        <input type="radio" class="radio radio-xs"
+                          [name]="'artifact-email-' + artifactIndex" [value]="true"
+                          [(ngModel)]="artifact.emailAction" (ngModelChange)="builderChanged()">
+                        Yes
+                      </label>
+                    </div>
+                  </fieldset>
                 </div>
                 @if (artifact.emailAction) {
                   <div class="grid gap-2 rounded-md border border-base-300 bg-base-200/45 p-3">
@@ -843,6 +880,40 @@
               <small>Start both stages together. Their next stage opens after both have finished.</small>
             </span>
           </label>
+          <div class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-3">
+            <label class="flex cursor-pointer items-start justify-between gap-3">
+              <span>
+                <strong class="block text-sm">Schedule a stage review</strong>
+                <small class="block text-xs text-base-content/55">Notify PDQA when this stage reaches its review date.</small>
+              </span>
+              <input class="toggle toggle-primary toggle-sm" type="checkbox" [checked]="!!stage.reviewAfter"
+                (change)="setStageReviewEnabled(stage, $any($event.target).checked)">
+            </label>
+            @if (stage.reviewAfter; as review) {
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="field">
+                  <span>Review after</span>
+                  <div class="grid grid-cols-[minmax(0,1fr)_7rem] gap-2">
+                    <input class="input input-bordered input-sm" type="number" min="1" step="1"
+                      [(ngModel)]="review.amount" (ngModelChange)="builderChanged()">
+                    <select class="select select-bordered select-sm" [(ngModel)]="review.unit"
+                      (ngModelChange)="builderChanged()">
+                      <option value="months">Months</option>
+                      <option value="years">Years</option>
+                    </select>
+                  </div>
+                </label>
+                <label class="field">
+                  <span>Count from</span>
+                  <select class="select select-bordered select-sm" [(ngModel)]="review.from"
+                    (ngModelChange)="builderChanged()">
+                    <option value="stage-started">When this stage starts</option>
+                    <option value="programme-created">When the programme is created</option>
+                  </select>
+                </label>
+              </div>
+            }
+          </div>
           <div class="stage-editor-actions">
             <button class="btn btn-sm btn-ghost" type="button"
               [disabled]="definition.stages.indexOf(stage) === 0"

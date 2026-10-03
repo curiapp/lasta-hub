@@ -41,6 +41,7 @@ export class LoginComponent {
         {
           next: (data) => {
             sessionStorage.setItem('loggedInUser', JSON.stringify(data));
+            sessionStorage.removeItem('home.reviewPromptShown');
             this.router.navigate(['/']);
           },
           error: (error: any) => {

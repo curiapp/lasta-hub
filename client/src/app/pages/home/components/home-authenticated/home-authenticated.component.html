@@ -200,6 +200,33 @@
           <modal #create_programme>
             <create-programme></create-programme>
           </modal>
+          <modal #review_due_modal panelClass="w-11/12 max-w-3xl">
+            <div class="pr-7">
+              <p class="text-xs font-bold uppercase text-warning">Review reminder</p>
+              <h2 class="mt-1 text-xl font-bold">Programme stages due for review</h2>
+              <p class="mt-1 text-sm text-base-content/60">These review dates are calculated from the published programme process.</p>
+            </div>
+            <div class="mt-5 grid max-h-[60vh] gap-2 overflow-y-auto pr-1">
+              @for (review of dueStageReviews(); track review.programmeId + review.stageId) {
+                <article class="flex flex-col gap-3 rounded-md border border-base-300 bg-base-100 p-3 sm:flex-row sm:items-center">
+                  <span class="grid size-10 shrink-0 place-items-center rounded bg-warning/15 text-warning-content">
+                    <span class="material-symbols-rounded">event_busy</span>
+                  </span>
+                  <div class="min-w-0 grow">
+                    <strong class="block truncate text-sm">{{ review.programmeTitle }}</strong>
+                    <span class="block text-xs text-base-content/55">{{ review.programmeCode }} · {{ review.stageName }}</span>
+                    <span class="mt-1 block text-xs font-semibold text-warning-content">
+                      Due {{ reviewDueDate(review) }} from {{ reviewDateBasis(review) }}
+                    </span>
+                  </div>
+                  <a class="btn btn-sm btn-primary shrink-0" [routerLink]="['/programme', review.programmeId]"
+                    (click)="review_due_modal.close()">
+                    View programme
+                  </a>
+                </article>
+              }
+            </div>
+          </modal>
         </div>
       </div>
 

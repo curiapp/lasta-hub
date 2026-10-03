@@ -9,6 +9,13 @@ export type WorkflowStage = {
   description?: string;
   order: number;
   runWithPrevious?: boolean;
+  reviewAfter?: WorkflowStageReviewRule;
+}
+
+export type WorkflowStageReviewRule = {
+  amount: number;
+  unit: 'months' | 'years';
+  from: 'stage-started' | 'programme-created';
 }
 
 export type WorkflowCondition = {
@@ -57,6 +64,9 @@ export type WorkflowTask = {
   visibleWhen?: WorkflowCondition;
   form?: WorkflowField[];
   artifacts?: WorkflowArtifactRequirement[];
+  emailAction?: boolean;
+  emailSubject?: string;
+  emailMessage?: string;
   transitions: WorkflowTransition[];
 }
 
