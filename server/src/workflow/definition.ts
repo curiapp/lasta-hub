@@ -34,6 +34,16 @@ export function validateDefinition(definition: WorkflowDefinition) {
     if (orderedStages[0]?.runWithPrevious) {
         throw new WorkflowError("The first stage cannot run with a previous stage", 400);
     }
+    for (const stage of orderedStages) {
+        if (!stage.reviewAfter) continue;
+        if (!Number.isInteger(stage.reviewAfter.amount) || stage.reviewAfter.amount < 1) {
+            throw new WorkflowError(`Stage ${stage.name} must have a positive review interval`, 400);
+        }
+        if (!["months", "years"].includes(stage.reviewAfter.unit)
+            || !["stage-started", "programme-created"].includes(stage.reviewAfter.from)) {
+            throw new WorkflowError(`Stage ${stage.name} has an invalid review schedule`, 400);
+        }
+    }
     for (const task of definition.tasks) {
         if (!task.stageId || !task.name || !task.ownerRoles?.length) {
             throw new WorkflowError(`Task ${task.id} must include stageId, name, and ownerRoles`, 400);

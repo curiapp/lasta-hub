@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { Router } from "express";
 import { buildSchema, GraphQLScalarType, Kind } from "graphql";
 import { createHandler } from "graphql-http/lib/use/express";
@@ -17,6 +17,7 @@ import {
     completeTask,
     createProgrammeAndStart,
     getBootstrap,
+    listDueStageReviews,
     getProgrammeWorkflow,
     getPublishedDefinition,
     listActiveTasks,
@@ -103,6 +104,7 @@ const schema = buildSchema(`
     type Query {
         workflowDefinition: JSON!
         bootstrap: JSON!
+        stageReviewsDue: JSON!
         programmes(id: String, searchText: String, offset: Int = 0, limit: Int = 50): [Programme!]!
         programmeWorkflow(programmeId: ID!): JSON!
         tasks(role: String, programmeId: ID): [TaskEnvelope!]!
@@ -144,10 +146,22 @@ Object.assign(jsonScalar, {
 const root = {
     workflowDefinition: () => getPublishedDefinition(),
     bootstrap: () => getBootstrap(),
+    stageReviewsDue: () => listDueStageReviews(),
     programmes: async ({ id, searchText, offset = 0, limit = 50 }) => {
         const filters = [];
         if (id) filters.push(eq(workflowProgrammes.id, id));
-        if (searchText) filters.push(ilike(workflowProgrammes.title, `%${searchText}%`));
+        if (searchText?.trim()) {
+            const search = `%${searchText.trim()}%`;
+            filters.push(or(
+                ilike(workflowProgrammes.title, search),
+                ilike(workflowProgrammes.code, search),
+                ilike(workflowDepartments.name, search),
+                ilike(workflowFaculty.name, search),
+                ilike(workflowUsers.firstName, search),
+                ilike(workflowUsers.lastName, search),
+                ilike(sql`concat_ws(' ', ${workflowUsers.firstName}, ${workflowUsers.lastName})`, search),
+            ));
+        }
 
         const programmes = await db.select({
             id: workflowProgrammes.id,
@@ -207,7 +221,7 @@ const root = {
             processTasks.push(task);
             tasksByProcess.set(task.processId, processTasks);
         }
-        const versionById = new Map(versions.map((version) => [version.id, version]));
+        const versionById = new Map(versions.map((version) => [version.id, version] as const));
 
         return programmes.map((programme) => {
             const process = latestProcessByProgramme.get(programme.id);

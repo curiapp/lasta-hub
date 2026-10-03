@@ -985,6 +985,27 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     this.resetEmailRecipientSearch();
   }
 
+  openTaskEmailComposer(task: WorkflowTask) {
+    if (!task.emailAction) return;
+    const subjectTemplate = task.emailSubject
+      || `${task.name}: {{programmeTitle}} ({{programmeCode}})`;
+    const bodyTemplate = task.emailMessage
+      || `Dear {{recipientName}},\n\nI am writing regarding ${task.name} for {{programmeTitle}} ({{programmeCode}}).\n\nKind regards,\n{{initiator}}`;
+    this.emailComposer.set({
+      open: true,
+      title: `Write email: ${task.name}`,
+      recipients: [],
+      selectedEmails: [],
+      subject: this.renderEmailTemplate(subjectTemplate),
+      body: this.renderEmailTemplate(bodyTemplate),
+      subjectTemplate,
+      bodyTemplate,
+      attachmentIds: [],
+      attachmentNames: [],
+    });
+    this.resetEmailRecipientSearch();
+  }
+
   artifactRequirement(type: string) {
     return this.artifacts.find((artifact) => artifact.type === type);
   }

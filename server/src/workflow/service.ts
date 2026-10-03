@@ -1515,7 +1515,7 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
                 inArray(workflowTaskInstances.stageKey, concurrentStages),
             ));
             if (activeConcurrentTasks.length) {
-                resolvedTargets = { taskKeys: [] };
+                resolvedTargets = { taskKeys: [], outcome: undefined };
             } else {
                 resolvedTargets = await resolveConcurrentExitTargets(
                     tx,
@@ -1798,6 +1798,64 @@ export async function getBootstrap() {
         artifacts,
         audit,
     };
+}
+
+export async function listDueStageReviews() {
+    const processRows = await db.select({
+        process: workflowProcessInstances,
+        programme: workflowProgrammes,
+        definition: workflowDefinitionVersions.definition,
+    })
+        .from(workflowProcessInstances)
+        .innerJoin(workflowProgrammes, eq(workflowProcessInstances.programmeId, workflowProgrammes.id))
+        .innerJoin(workflowDefinitionVersions, eq(workflowProcessInstances.definitionVersionId, workflowDefinitionVersions.id))
+        .orderBy(desc(workflowProcessInstances.startedAt));
+
+    const latestByProgramme = new Map<string, (typeof processRows)[number]>();
+    for (const row of processRows) {
+        if (!latestByProgramme.has(row.programme.id)) latestByProgramme.set(row.programme.id, row);
+    }
+
+    const currentRows = [...latestByProgramme.values()];
+    const processIds = currentRows.map((row) => row.process.id);
+    const tasks = processIds.length
+        ? await db.select().from(workflowTaskInstances).where(inArray(workflowTaskInstances.processId, processIds))
+        : [];
+    const tasksByProcess = new Map<string, typeof tasks>();
+    for (const task of tasks) {
+        const processTasks = tasksByProcess.get(task.processId) ?? [];
+        processTasks.push(task);
+        tasksByProcess.set(task.processId, processTasks);
+    }
+
+    const now = Date.now();
+    return currentRows.flatMap((row) => {
+        const definition = row.definition as WorkflowDefinition;
+        const processTasks = tasksByProcess.get(row.process.id) ?? [];
+        return (definition.stages ?? []).flatMap((stage) => {
+            const rule = stage.reviewAfter;
+            if (!rule) return [];
+            const stageStartedAt = processTasks
+                .filter((task) => task.stageKey === stage.id)
+                .map((task) => task.createdAt)
+                .sort()[0];
+            const baseDate = rule.from === "programme-created" ? row.programme.createdAt : stageStartedAt;
+            if (!baseDate) return [];
+            const dueDate = new Date(baseDate);
+            if (rule.unit === "years") dueDate.setUTCFullYear(dueDate.getUTCFullYear() + rule.amount);
+            else dueDate.setUTCMonth(dueDate.getUTCMonth() + rule.amount);
+            if (dueDate.getTime() > now) return [];
+            return [{
+                programmeId: row.programme.id,
+                programmeTitle: row.programme.title,
+                programmeCode: row.programme.code,
+                stageId: stage.id,
+                stageName: stage.name,
+                dueAt: dueDate.toISOString(),
+                basedOn: rule.from,
+            }];
+        });
+    }).sort((first, second) => first.dueAt.localeCompare(second.dueAt));
 }
 
 export async function searchWorkflowUsers(query = "") {

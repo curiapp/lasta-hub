@@ -39,6 +39,7 @@ export class AuthenticationService {
 
   logout() {
     sessionStorage.removeItem('loggedInUser');
+    sessionStorage.removeItem('home.reviewPromptShown');
     this.router.navigate(["/"])
     window.location.reload();
   }

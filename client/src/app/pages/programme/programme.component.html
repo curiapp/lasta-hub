@@ -281,9 +281,18 @@
                       <p class="mt-1 max-w-2xl text-xs leading-5 text-base-content/60">{{ taskDefinition.description }}</p>
                     }
                   </div>
-                  <span [class]="statusClasses(selectedTaskInstance?.status || 'pending')">
-                    {{ selectedTaskInstance?.status || 'pending' }}
-                  </span>
+                  <div class="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                    @if (taskDefinition.emailAction && selectedTaskInstance) {
+                      <button type="button" class="btn btn-outline btn-sm bg-base-100"
+                        (click)="openTaskEmailComposer(taskDefinition)">
+                        <span class="material-symbols-rounded text-base">mail</span>
+                        Write email
+                      </button>
+                    }
+                    <span [class]="statusClasses(selectedTaskInstance?.status || 'pending')">
+                      {{ selectedTaskInstance?.status || 'pending' }}
+                    </span>
+                  </div>
                 </header>
 
                 @if (!selectedTaskInstance) {

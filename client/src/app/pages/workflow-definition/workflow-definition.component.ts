@@ -288,11 +288,21 @@ export class WorkflowDefinitionComponent implements OnInit {
       ownerRoles: this.definition.roles[0]?.id ? [this.definition.roles[0].id] : [],
       form: [],
       artifacts: [],
+      emailAction: false,
       transitions: [{ event: 'submit', label: 'Continue', to: 'END', outcome: 'completed' }],
     };
     this.definition.tasks.push(task);
     this.showTaskEditor(task.id);
     if (!this.definition.initialTask) this.definition.initialTask = task.id;
+    this.builderChanged();
+  }
+
+  setStageReviewEnabled(stage: WorkflowStage, enabled: boolean) {
+    if (enabled) {
+      stage.reviewAfter ??= { amount: 12, unit: 'months', from: 'stage-started' };
+    } else {
+      delete stage.reviewAfter;
+    }
     this.builderChanged();
   }
 
@@ -655,6 +665,7 @@ export class WorkflowDefinitionComponent implements OnInit {
       multiple: false,
       maxFiles: 1,
       maxFileSizeMb: 20,
+      emailAction: false,
     });
     this.builderChanged();
   }
@@ -816,16 +827,23 @@ export class WorkflowDefinitionComponent implements OnInit {
     this.definition.stages ??= [];
     this.definition.tasks ??= [];
     this.definition.description ??= '';
-    this.definition.stages.forEach((stage) => stage.description ??= '');
+    this.definition.stages.forEach((stage) => {
+      stage.description ??= '';
+      if (stage.reviewAfter) {
+        stage.reviewAfter.amount = Math.max(1, Math.round(Number(stage.reviewAfter.amount) || 1));
+      }
+    });
     this.definition.tasks.forEach((task) => {
       task.description ??= '';
       task.ownerRoles ??= [];
       task.transitions ??= [];
       task.form ??= [];
       task.artifacts ??= [];
+      task.emailAction ??= false;
       task.artifacts.forEach((artifact) => {
         artifact.maxFileSizeMb ??= 20;
         if (!artifact.multiple) artifact.maxFiles ??= 1;
+        artifact.emailAction ??= false;
       });
     });
   }

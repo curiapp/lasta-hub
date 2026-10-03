@@ -53,7 +53,16 @@ export interface WorkflowTaskDefinition {
     visibleWhen?: WorkflowCondition;
     form?: WorkflowField[];
     artifacts?: WorkflowArtifactRequirement[];
+    emailAction?: boolean;
+    emailSubject?: string;
+    emailMessage?: string;
     transitions?: WorkflowTransition[];
+}
+
+export interface WorkflowStageReviewRule {
+    amount: number;
+    unit: "months" | "years";
+    from: "stage-started" | "programme-created";
 }
 
 export interface WorkflowDefinition {
@@ -63,7 +72,14 @@ export interface WorkflowDefinition {
     description?: string;
     initialTask: string;
     roles?: Array<{ id: string; name: string }>;
-    stages?: Array<{ id: string; name: string; description?: string; order: number; runWithPrevious?: boolean }>;
+    stages?: Array<{
+        id: string;
+        name: string;
+        description?: string;
+        order: number;
+        runWithPrevious?: boolean;
+        reviewAfter?: WorkflowStageReviewRule;
+    }>;
     tasks: WorkflowTaskDefinition[];
 }
 
