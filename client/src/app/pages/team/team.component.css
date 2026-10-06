@@ -24,7 +24,7 @@
 .member-card:hover { transform: translateY(-5px); box-shadow: 0 24px 55px rgba(15,23,42,.14); }
 .member-card img { width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: top center; }
 .member-body { padding: .9rem; }
-.member-role { min-height: 2rem; color: var(--red); font-size: .66rem; font-weight: 800; line-height: 1.4; }
+.member-role { min-height: 2.2rem; color: var(--red); font-size: .76rem; font-weight: 800; line-height: 1.4; }
 .member-body h3 { margin-top: .35rem; color: var(--blue); font-size: .86rem; font-weight: 900; }
 .member-meta { display: grid; gap: .45rem; margin-top: .85rem; padding-top: .75rem; border-top: 1px solid #e6eaf0; }
 .member-meta :is(a,span) { display: flex; min-width: 0; align-items: center; gap: .35rem; color: #68758b; font-size: .67rem; overflow-wrap: anywhere; }

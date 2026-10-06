@@ -309,23 +309,30 @@
   padding-block: clamp(2.5rem, 5vw, 4rem);
 }
 
-.footer-brand {
-  display: block;
-  color: white;
-  font-size: 1rem;
-}
-
 .footer-inner p,
 .footer-copy {
   color: rgba(255, 255, 255, 0.62);
   font-size: 0.76rem;
 }
 
-.footer-support-line {
-  max-width: 34rem;
-  margin-top: 0.55rem;
-  color: rgba(255, 255, 255, 0.48) !important;
-  line-height: 1.55;
+.footer-institution {
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.footer-institution-logo {
+  width: clamp(11rem, 15vw, 14rem);
+  height: auto;
+  opacity: 0.88;
+}
+
+.footer-institution span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .footer-links {
@@ -403,9 +410,14 @@
   }
 
   .footer-links,
-  .footer-status {
+  .footer-status,
+  .footer-institution {
     justify-content: center;
     margin-inline: auto;
+  }
+
+  .footer-institution {
+    align-items: center;
   }
 
   .footer-bg-word {
