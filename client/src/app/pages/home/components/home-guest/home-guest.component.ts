@@ -16,6 +16,7 @@ type ProgrammePartner = {
   shortName: string;
   name: string;
   logo?: string;
+  website: string;
 };
 
 @Component({
@@ -58,52 +59,62 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
       shortName: 'NQA',
       name: 'Namibia Qualifications Authority',
       logo: '/assets/images/institutions/nqa.png',
+      website: 'https://namqa.org/'
     },
     {
       shortName: 'NCHE',
       name: 'National Council for Higher Education',
       logo: '/assets/images/institutions/nche.png',
+      website: 'http://www.nche.org.na/'
+    },
+    {
+      shortName: 'ECN',
+      name: 'Engineering Council of Namibia',
+      logo: '/assets/images/institutions/ecn.png',
+      website: 'https://ecn.org.na/'
     },
     {
       shortName: 'HPCNA',
       name: 'Health Professions Council of Namibia',
       logo: '/assets/images/institutions/hpcna.png',
+      website: 'https://hpcna.com/'
     },
     {
-      shortName: 'ECSA',
-      name: 'Engineering Council of South Africa',
-      logo: '/assets/images/institutions/ecsa.jpg',
+      shortName: 'NCAQS',
+      name: 'The Namibia Council for Architects and Quantity Surveyors',
+      logo: '/assets/images/institutions/ncaqs.png',
+      website: 'https://www.ncaqs.org/',
     },
     {
-      shortName: 'ASIIN',
-      name: 'Accreditation Agency for Study Programmes in Engineering, Informatics and Natural Sciences',
-      logo: '/assets/images/institutions/asiin.png',
+      shortName: 'MEIYSAC',
+      name: 'Ministry of Education, Innovation, Youth, Sports, Arts and Culture',
+      logo: '/assets/images/institutions/meiysac.png',
+      website: 'https://mheti.gov.na/'
     },
-    {
-      shortName: 'RTPI',
-      name: 'Royal Town Planning Institute',
-      logo: '/assets/images/institutions/rtpi.svg',
-    },
-    {
-      shortName: 'IED',
-      name: 'Institution of Engineering Designers',
-      logo: '/assets/images/institutions/IED.jpg',
-    },
-    {
-      shortName: 'CAA',
-      name: 'Commonwealth Association of Architects / Joint Validation Panel',
-      logo: '/assets/images/institutions/CAA.svg',
-    },
-    {
-      shortName: 'ACCA',
-      name: 'Association of Chartered Certified Accountants',
-      logo: '/assets/images/institutions/ACCA.svg',
-    },
-    {
-      shortName: 'BGA / AMBA',
-      name: 'Business Graduates Association / Association of MBAs',
-      logo: '/assets/images/institutions/AMBA.svg',
-    },
+    // {
+    //   shortName: 'IED',
+    //   name: 'Institution of Engineering Designers',
+    //   logo: '/assets/images/institutions/IED.jpg',
+    //   website: ''
+    // },
+    // {
+    //   shortName: 'CAA',
+    //   name: 'Commonwealth Association of Architects / Joint Validation Panel',
+    //   logo: '/assets/images/institutions/CAA.svg',
+    //   website: ''
+    // },
+    // {
+    //   shortName: 'ACCA',
+    //   name: 'Association of Chartered Certified Accountants',
+    //   logo: '/assets/images/institutions/ACCA.svg',
+    //   website: ''
+    // },
+    // {
+    //   shortName: 'BGA / AMBA',
+    //   name: 'Business Graduates Association / Association of MBAs',
+    //   logo: '/assets/images/institutions/AMBA.svg',
+    //   website: ''
+    // },
   ];
 
   constructor(@Inject(PLATFORM_ID) platformId: object) {

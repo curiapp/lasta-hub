@@ -24,7 +24,7 @@
           Programme Development Application
         </span>
 
-        <h1>Transforming Ideas into Accredited Excellence.</h1>
+        <h1>Connecting Curriculum, Industry and the Future</h1>
 
         <p class="text-sm">
           The <span>Programme Development App</span> is a centralised digital solution for
@@ -107,7 +107,7 @@
           @for (duplicate of [0, 1]; track duplicate) {
             <div class="partner-group" [attr.aria-hidden]="duplicate === 1 ? true : null">
               @for (partner of partners; track partner.shortName) {
-                <article class="partner-item" [title]="partner.name">
+                <a [href]="partner.website" target="_blank" class="partner-item cursor-pointer" [title]="partner.name">
                   @if (partner.logo) {
                     <img [src]="partner.logo" [alt]="partner.shortName + ' logo'">
                   } @else {
@@ -117,7 +117,7 @@
                     <strong>{{ partner.shortName }}</strong>
                     <small>{{ partner.name }}</small>
                   </span>
-                </article>
+                </a>
               }
             </div>
           }
