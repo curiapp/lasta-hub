@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -78,6 +78,7 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
   programmeScope = signal<ProgrammeScope>('all');
   programmeSort = signal<ProgrammeSort>('newest');
   programmeViewMode = signal<ProgrammeViewMode>('grid');
+  filterDropdownOpen = signal(false);
   searchText = signal('');
   faculties = signal<InstitutionalUnit[]>([]);
   departments = signal<DepartmentOption[]>([]);
@@ -184,6 +185,25 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.showAll.set(false);
   }
 
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
+    this.filterDropdownOpen.update((open) => !open);
+  }
+
+  selectProgrammeScope(scope: ProgrammeScope) {
+    this.setProgrammeScope(scope);
+    this.filterDropdownOpen.set(false);
+  }
+
+  keepFilterDropdownOpen(event: Event) {
+    event.stopPropagation();
+  }
+
+  @HostListener('document:click')
+  closeFilterDropdown() {
+    this.filterDropdownOpen.set(false);
+  }
+
   browseFaculty(facultyId: string) {
     this.selectedFacultyId.set(facultyId);
     this.selectedDepartmentId.set('');
@@ -192,6 +212,20 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.writeSessionValue(this.selectedDepartmentStorageKey, '');
     this.writeSessionValue(this.programmeScopeStorageKey, 'selected-faculty');
     this.showAll.set(false);
+  }
+
+  onBrowseFacultyChange(event: Event) {
+    const facultyId = (event.target as HTMLSelectElement).value;
+    if (facultyId) {
+      this.browseFaculty(facultyId);
+      return;
+    }
+
+    this.selectedFacultyId.set('');
+    this.selectedDepartmentId.set('');
+    this.writeSessionValue(this.selectedFacultyStorageKey, '');
+    this.writeSessionValue(this.selectedDepartmentStorageKey, '');
+    this.setProgrammeScope('all');
   }
 
   browseDepartment(departmentId: string) {
@@ -203,6 +237,16 @@ export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
     this.writeSessionValue(this.selectedDepartmentStorageKey, departmentId);
     this.writeSessionValue(this.programmeScopeStorageKey, 'selected-department');
     this.showAll.set(false);
+  }
+
+  onBrowseDepartmentChange(event: Event) {
+    const departmentId = (event.target as HTMLSelectElement).value;
+    if (departmentId) {
+      this.browseDepartment(departmentId);
+      return;
+    }
+
+    if (this.selectedFacultyId()) this.browseFaculty(this.selectedFacultyId());
   }
 
   setProgrammeSort(sort: ProgrammeSort) {
