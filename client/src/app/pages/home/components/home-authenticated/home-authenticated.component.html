@@ -88,55 +88,75 @@
               }
             </label>
 
-            <div class="programme-control-tooltip dropdown dropdown-end tooltip tooltip-bottom md:shrink-0" [attr.data-tip]="'Filter: ' + scopeLabel()">
-              <button tabindex="0" role="button" type="button"
+            <div class="programme-control-tooltip dropdown dropdown-end tooltip tooltip-bottom md:shrink-0"
+              [class.dropdown-open]="filterDropdownOpen()"
+              [attr.data-tip]="filterDropdownOpen() ? null : 'Filter: ' + scopeLabel()">
+              <button role="button" type="button"
+                [attr.aria-expanded]="filterDropdownOpen()"
                 [attr.aria-label]="'Filter programmes. Current selection: ' + scopeLabel()"
+                (click)="toggleFilterDropdown($event)"
                 class="btn btn-sm btn-square border-2 border-base-content/20 bg-base-100 text-primary shadow-md hover:border-primary/50 hover:bg-primary/5">
                 <span class="material-symbols-rounded text-lg">{{ scopeIcon(programmeScope()) }}</span>
               </button>
-              <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
-                @for (option of programmeScopeOptions; track option.value) {
-                  @if (option.value !== 'department' || currentUser?.department?.id || currentUser?.department?.name) {
-                    @if (option.value !== 'faculty' || currentUser?.faculty?.id || currentUser?.faculty?.name) {
-                      <li>
-                        <button type="button" class="gap-3"
-                          [class.active]="programmeScope() === option.value"
-                          (click)="setProgrammeScope(option.value)">
-                          <span class="material-symbols-rounded text-lg">{{ option.icon }}</span>
-                          <span>{{ option.label }}</span>
-                          @if (programmeScope() === option.value) {
-                            <span class="material-symbols-rounded ml-auto text-base">check</span>
-                          }
-                        </button>
-                      </li>
+              <div class="dropdown-content z-20 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl"
+                (click)="keepFilterDropdownOpen($event)">
+                <ul class="menu p-0">
+                  @for (option of programmeScopeOptions; track option.value) {
+                    @if (option.value !== 'department' || currentUser?.department?.id || currentUser?.department?.name) {
+                      @if (option.value !== 'faculty' || currentUser?.faculty?.id || currentUser?.faculty?.name) {
+                        <li>
+                          <button type="button" class="gap-3"
+                            [class.active]="programmeScope() === option.value"
+                            (click)="selectProgrammeScope(option.value)">
+                            <span class="material-symbols-rounded text-lg">{{ option.icon }}</span>
+                            <span>{{ option.label }}</span>
+                            @if (programmeScope() === option.value) {
+                              <span class="material-symbols-rounded ml-auto text-base">check</span>
+                            }
+                          </button>
+                        </li>
+                      }
                     }
                   }
-                }
+                </ul>
                 @if (faculties().length) {
-                  <li class="organisation-browser">
+                  <div class="organisation-browser">
                     <div class="organisation-head">
                       <span class="material-symbols-rounded">domain</span>
-                      <span><strong>Browse another unit</strong><small>Choose a faculty, then narrow to a department.</small></span>
+                      <span><strong>Browse another unit</strong><small>Select a faculty, then optionally narrow the results by department.</small></span>
                     </div>
-                    <div class="unit-options" aria-label="Faculties">
-                      @for (faculty of faculties(); track faculty.id) {
-                        <button type="button" [class.selected]="selectedFacultyId() === faculty.id"
-                          (click)="browseFaculty(faculty.id)">{{ faculty.name }}</button>
-                      }
+                    <div class="unit-selectors">
+                      <label>
+                        <span>Faculty</span>
+                        <select class="select select-bordered select-sm w-full"
+                          aria-label="Browse programmes by faculty"
+                          [value]="selectedFacultyId()"
+                          (change)="onBrowseFacultyChange($event)">
+                          <option value="">Select a faculty</option>
+                          @for (faculty of faculties(); track faculty.id) {
+                            <option [value]="faculty.id">{{ faculty.name }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label>
+                        <span>Department</span>
+                        <select class="select select-bordered select-sm w-full"
+                          aria-label="Browse programmes by department"
+                          [disabled]="!selectedFacultyId()"
+                          [value]="selectedDepartmentId()"
+                          (change)="onBrowseDepartmentChange($event)">
+                          <option value="">
+                            {{ selectedFacultyId() ? 'All departments in this faculty' : 'Select a faculty first' }}
+                          </option>
+                          @for (department of browseDepartments(); track department.id) {
+                            <option [value]="department.id">{{ department.name }}</option>
+                          }
+                        </select>
+                      </label>
                     </div>
-                    @if (selectedFacultyId() && browseDepartments().length) {
-                      <div class="department-options" aria-label="Departments">
-                        @for (department of browseDepartments(); track department.id) {
-                          <button type="button" [class.selected]="selectedDepartmentId() === department.id"
-                            (click)="browseDepartment(department.id)">
-                            <span class="material-symbols-rounded">chevron_right</span>{{ department.name }}
-                          </button>
-                        }
-                      </div>
-                    }
-                  </li>
+                  </div>
                 }
-              </ul>
+              </div>
             </div>
 
             <div class="programme-control-tooltip dropdown dropdown-end tooltip tooltip-bottom md:shrink-0" [attr.data-tip]="'Sort: ' + sortLabel()">
