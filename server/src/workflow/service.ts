@@ -129,16 +129,34 @@ async function createTask(
     causedByTaskId: string | null,
 ) {
     const taskDefinition = getTaskDefinition(definition, taskKey);
-    const [existing] = await tx
+    const existingTasks = await tx
         .select()
         .from(workflowTaskInstances)
         .where(and(
             eq(workflowTaskInstances.processId, process.id),
             eq(workflowTaskInstances.taskKey, taskKey),
-            eq(workflowTaskInstances.status, "active"),
         ))
-        .limit(1);
-    if (existing) return existing;
+        .orderBy(desc(workflowTaskInstances.createdAt));
+    const existing = existingTasks.find((item) => item.status === "active")
+        ?? existingTasks.find((item) => item.status === "completed")
+        ?? existingTasks[0];
+    if (existing?.status === "active" || existing?.status === "completed") return existing;
+
+    if (existing?.status === "cancelled") {
+        const [resumedTask] = await tx.update(workflowTaskInstances).set({
+            status: "active",
+            causedByTaskId,
+        }).where(eq(workflowTaskInstances.id, existing.id)).returning();
+        await tx.insert(workflowAuditEvents).values({
+            programmeId: process.programmeId,
+            processId: process.id,
+            taskId: resumedTask.id,
+            type: "task.resumed_after_amendment",
+            message: `${taskDefinition.name} resumed after amendment review`,
+            metadata: { taskKey },
+        });
+        return resumedTask;
+    }
 
     const [task] = await tx.insert(workflowTaskInstances).values({
         processId: process.id,
@@ -253,6 +271,67 @@ function expandConcurrentTargets(
     }
     const resolved = resolveVisibleTaskTargets(definition, [...expanded], formDataContext);
     return { taskKeys: resolved.taskKeys, outcome: targets.outcome ?? resolved.outcome };
+}
+
+async function resolvePendingTaskTargets(
+    tx: Transaction,
+    processId: string,
+    definition: WorkflowDefinition,
+    targets: { taskKeys: string[]; outcome?: string },
+    formDataContext: Record<string, unknown>,
+    visited = new Set<string>(),
+): Promise<{ taskKeys: string[]; outcome: string | undefined }> {
+    const pendingTaskKeys = new Set<string>();
+    let outcome = targets.outcome;
+
+    for (const taskKey of targets.taskKeys) {
+        if (visited.has(taskKey)) {
+            throw new WorkflowError(`Completed task history creates a transition loop at ${taskKey}`, 409);
+        }
+
+        const [completedTask] = await tx.select({
+            formData: workflowTaskInstances.formData,
+        }).from(workflowTaskInstances).where(and(
+            eq(workflowTaskInstances.processId, processId),
+            eq(workflowTaskInstances.taskKey, taskKey),
+            eq(workflowTaskInstances.status, "completed"),
+        )).orderBy(desc(workflowTaskInstances.completedAt)).limit(1);
+
+        if (!completedTask) {
+            pendingTaskKeys.add(taskKey);
+            continue;
+        }
+
+        const nextVisited = new Set(visited);
+        nextVisited.add(taskKey);
+        const taskDefinition = getTaskDefinition(definition, taskKey);
+        const storedFormData = (completedTask.formData as Record<string, unknown> | null) ?? {};
+        const transition = selectTransition(taskDefinition, {
+            event: "submit",
+            formData: storedFormData,
+        });
+        const nextTargets = Array.isArray(transition.to) ? transition.to : [transition.to];
+        const resolved = expandConcurrentTargets(
+            definition,
+            resolveVisibleTaskTargets(definition, nextTargets, formDataContext),
+            formDataContext,
+        );
+        const pending = await resolvePendingTaskTargets(
+            tx,
+            processId,
+            definition,
+            { taskKeys: resolved.taskKeys, outcome: transition.outcome ?? resolved.outcome },
+            formDataContext,
+            nextVisited,
+        );
+        pending.taskKeys.forEach((key) => pendingTaskKeys.add(key));
+        outcome ??= pending.outcome;
+    }
+
+    return {
+        taskKeys: [...pendingTaskKeys],
+        outcome: pendingTaskKeys.size ? undefined : outcome,
+    };
 }
 
 async function createInitialTasks(
@@ -1526,6 +1605,14 @@ export async function completeTask(taskId: string, input: CompleteTaskInput) {
                 );
             }
         }
+
+        resolvedTargets = await resolvePendingTaskTargets(
+            tx,
+            process.id,
+            definition,
+            resolvedTargets,
+            formDataContext,
+        );
 
         if (!resolvedTargets.taskKeys.length && resolvedTargets.outcome) {
             const outcome = transition.outcome ?? resolvedTargets.outcome ?? "completed";

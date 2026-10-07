@@ -1217,7 +1217,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     componentRef.instance.action = 'edit';
     componentRef.instance.heading = 'Open task for amendment?';
     componentRef.instance.confirmLabel = 'Open for amendment';
-    componentRef.instance.message = 'The existing responses and uploaded files will be kept. The assigned user can edit the information, remove individual files, or explicitly remove all files before submitting again.';
+    componentRef.instance.message = 'The existing responses and uploaded files will be kept. Tasks completed after this one will remain completed and retain their data. Reopen those tasks separately only when they also need changes.';
     componentRef.instance.onClose.subscribe(() => {
       if (!componentRef.hostView.destroyed) componentRef.destroy();
     });
@@ -1237,7 +1237,7 @@ export class ProgrammeComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: () => {
         this.reopeningTask.set(false);
-        this.showMessage('Task opened for amendment. Existing responses and files were retained.', 'success');
+        this.showMessage('Task opened for amendment. Existing work, including later completed tasks, was retained.', 'success');
         this.loadProgramme();
       },
       error: (error) => {
