@@ -172,7 +172,7 @@ export class HomeGuestComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'Programme Tasks Completed',
         value: String(dashboard.completedTaskCount || dashboard.processCounts?.['completed'] || 0),
         icon: 'task_alt',
-        accent: 'green',
+        accent: 'rose',
       },
       {
         label: 'Programme Process Stages',
