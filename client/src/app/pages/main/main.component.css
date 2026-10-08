@@ -76,9 +76,9 @@
 }
 
 .brand-link:hover,
-.brand-area:hover .nav-logo-switch {
+/* .brand-area:hover .nav-logo-switch {
   transform: translateY(-1px);
-}
+} */
 
 .brand-area {
   display: inline-flex;
@@ -125,26 +125,7 @@
 }
 
 .brand-area:hover .nav-default-logo {
-  opacity: 0;
   transform: scale(0.82) rotate(-6deg);
-}
-
-.brand-area:hover .nav-brand-mark {
-  opacity: 1;
-  transform: scale(1);
-  filter: drop-shadow(0 0 16px rgba(252, 175, 23, 0.42));
-}
-
-.brand-area:hover .nav-brand-mark-path {
-  animation: navBrandDraw 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.brand-area:hover .nav-brand-mark-path:nth-child(2) {
-  animation-delay: 70ms;
-}
-
-.brand-area:hover .nav-brand-mark-path:nth-child(3) {
-  animation-delay: 130ms;
 }
 
 .brand-divider {
