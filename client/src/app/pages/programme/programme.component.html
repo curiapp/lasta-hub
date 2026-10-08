@@ -1,0 +1,1290 @@
+<main class="min-h-[calc(100vh-7rem)] bg-base-200 p-3 lg:p-5">
+  <div class="mx-auto max-w-450">
+    <header class="flex min-h-16 flex-col justify-between gap-3 py-2 md:flex-row md:items-center">
+      <div class="flex min-w-0 items-center gap-2">
+        <button type="button" class="btn btn-ghost btn-square btn-sm" title="Back to programmes"
+          (click)="router.navigate(['/'])">
+          <span class="material-symbols-rounded">arrow_back</span>
+        </button>
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase text-base-content/55">{{ programme?.code || 'Programme' }}</p>
+          <h1 class="truncate text-xl font-bold lg:text-2xl">{{ programme?.title || 'Programme details' }}</h1>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs text-base-content/60">
+        <button type="button" class="btn btn-ghost btn-sm border border-base-content/20 bg-base-100 shadow-sm"
+          title="Programme summary" (click)="openProgrammeSummary()">
+          <span class="material-symbols-rounded text-base">summarize</span>
+          Summary
+        </button>
+        @if (canEditProgrammeDetails) {
+          <button type="button" class="btn btn-ghost btn-square btn-sm border border-base-content/20 bg-base-100 shadow-sm"
+            title="Edit programme details" (click)="openProgrammeEdit()">
+            <span class="material-symbols-rounded text-base">edit</span>
+          </button>
+        }
+        <span class="badge badge-outline badge-sm">NQF Level {{ programme?.level }}</span>
+        <span [class]="statusClasses(detail?.process?.status || programme?.status)">
+          {{ detail?.process?.status || programme?.status || 'draft' }}
+        </span>
+        @if (detail?.definitionVersion) {
+          <span class="badge badge-outline badge-sm">
+            {{ workflowDisplayName }} · v{{ detail?.definitionVersion?.version }}
+          </span>
+        }
+      </div>
+    </header>
+
+    <section class="mb-3 grid grid-cols-2 border border-base-300 bg-base-100 md:grid-cols-4">
+      <div class="flex min-h-20 items-center gap-3 border-r border-b border-base-300 p-3 md:border-b-0">
+        <span class="material-symbols-rounded text-primary">person</span>
+        <div class="min-w-0">
+          <span class="block text-xs text-base-content/50">Coordinator</span>
+          <strong class="block truncate text-sm">{{ initiatorName }}</strong>
+        </div>
+      </div>
+      <div class="flex min-h-20 items-center gap-3 border-r border-b border-base-300 p-3 md:border-b-0">
+        <span class="material-symbols-rounded text-warning">pending_actions</span>
+        <div>
+          <span class="block text-xs text-base-content/50">Active tasks</span>
+          <strong class="text-xl">{{ activeTaskCount }}</strong>
+        </div>
+      </div>
+      <div class="flex min-h-20 items-center gap-3 border-b border-base-300 p-3 md:border-r md:border-b-0">
+        <span class="material-symbols-rounded text-success">task_alt</span>
+        <div>
+          <span class="block text-xs text-base-content/50">Completed tasks</span>
+          <strong class="text-xl">{{ completedTaskCount }}</strong>
+        </div>
+      </div>
+      <div class="flex min-h-20 items-center gap-3 p-3">
+        <span class="material-symbols-rounded text-info">account_tree</span>
+        <div class="min-w-0">
+          <span class="block text-xs text-base-content/50">Current stage</span>
+          <strong class="block truncate text-sm">{{ currentStageName }}</strong>
+        </div>
+      </div>
+    </section>
+
+    @if (canManageWorkflow && detail?.process) {
+      <section class="mb-3 flex flex-col gap-3 border border-base-300 bg-base-100 p-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase text-base-content/50">Development path</p>
+          <p class="mt-1 text-sm font-semibold">{{ workflowDisplayName }}</p>
+          <p class="text-xs text-base-content/55">
+            New versions of this path are applied automatically. Changing to another path keeps completed work as history and restarts active work after confirmation.
+          </p>
+        </div>
+        <div class="flex w-full gap-2 md:w-auto">
+          <select class="select select-bordered select-sm min-w-64 grow"
+            [(ngModel)]="selectedWorkflowSlug">
+            @if (workflowDefinitionsLoading) {
+              <option value="">Loading development paths...</option>
+            }
+            @for (workflow of workflowDefinitions; track workflow.id) {
+              <option [value]="workflow.slug">
+                {{ workflow.name }} · v{{ workflow.version }}{{ workflow.isDefault ? ' · Current' : '' }}
+              </option>
+            }
+          </select>
+          <button type="button" class="btn btn-primary btn-sm"
+            [disabled]="switchingWorkflow() || !selectedWorkflowSlug" (click)="switchWorkflow()">
+            <span class="material-symbols-rounded">swap_horiz</span>
+            {{ switchingWorkflow() ? 'Updating' : 'Update' }}
+          </button>
+        </div>
+      </section>
+    }
+
+    @if (loading()) {
+      <div class="grid min-h-136 place-items-center border border-base-300 bg-base-100">
+        <div class="flex items-center gap-2 text-sm text-base-content/60">
+          <span class="loading loading-spinner loading-md"></span>
+          Loading programme details
+        </div>
+      </div>
+    } @else {
+      <section class="grid min-h-180 border border-base-300 bg-base-100 xl:grid-cols-[240px_minmax(520px,1fr)_300px]">
+        <aside class="border-b border-base-300 bg-base-200/40 p-3 xl:border-r xl:border-b-0">
+          <header class="mb-3 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase text-base-content/50">Progress</p>
+              <h2 class="font-bold">Stages</h2>
+            </div>
+            <span class="badge badge-ghost badge-sm">{{ stages.length }}</span>
+          </header>
+
+          <div class="mb-3 grid gap-2 sm:hidden">
+            <span class="text-xs font-semibold text-base-content/55">Stages</span>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(5.5rem,1fr))] gap-2">
+              @for (stage of mobileVisibleStages; track stage.id) {
+                <button type="button"
+                  class="min-h-12 rounded-md border border-base-300 bg-base-100 px-2 py-1 text-left shadow-sm"
+                  [class.border-primary]="stage.id === selectedStageId"
+                  [class.bg-primary]="stage.id === selectedStageId"
+                  [class.text-primary-content]="stage.id === selectedStageId"
+                  (click)="selectStage(stage)">
+                  <span class="block text-xs font-bold">{{ stage.order }}. {{ stage.name }}</span>
+                  <span class="mt-1 block text-[0.65rem] capitalize opacity-70">{{ stageState(stage.id) }}</span>
+                </button>
+              }
+              @if (mobileOverflowStages.length) {
+                <div class="dropdown dropdown-end">
+                  <button tabindex="0" role="button" type="button"
+                    class="btn btn-sm min-h-12 w-full border border-base-300 bg-base-100 shadow-sm">
+                    <span class="material-symbols-rounded text-base">more_horiz</span>
+                    More
+                  </button>
+                  <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-64 rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+                    @for (stage of mobileOverflowStages; track stage.id) {
+                      <li>
+                        <button type="button" class="gap-3" [class.active]="stage.id === selectedStageId"
+                          (click)="selectStage(stage)">
+                          <span class="grid size-6 place-items-center rounded bg-base-200 text-xs font-bold">{{ stage.order }}</span>
+                          <span class="min-w-0 flex-1 truncate">{{ stage.name }}</span>
+                          @if (stage.id === selectedStageId) {
+                            <span class="material-symbols-rounded text-base">check</span>
+                          }
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          </div>
+
+          <nav class="programme-scroll hidden max-w-full gap-2 overflow-x-auto pb-1 sm:flex xl:grid xl:overflow-visible xl:pb-0" aria-label="Programme stages">
+            @for (stage of stages; track stage.id) {
+              <button type="button" [class]="stageClasses(stage)" (click)="selectStage(stage)">
+                <span class="grid size-7 place-items-center rounded bg-base-300 text-xs font-bold">{{ stage.order }}</span>
+                <span class="min-w-0">
+                  <strong class="block truncate text-xs">{{ stage.name }}</strong>
+                  @if (stage.description) {
+                    <small class="hidden text-base-content/45 xl:line-clamp-2">{{ stage.description }}</small>
+                  }
+                  <small class="block capitalize text-base-content/50">{{ stageState(stage.id) }}</small>
+                </span>
+                <span class="size-2 rounded-full"
+                  [class.bg-warning]="stageState(stage.id) === 'active'"
+                  [class.bg-success]="stageState(stage.id) === 'completed'"
+                  [class.bg-base-300]="stageState(stage.id) === 'pending'"></span>
+              </button>
+            }
+          </nav>
+
+          <div class="mt-4 hidden border-t border-base-300 pt-3 text-xs leading-relaxed text-base-content/55 xl:block">
+            <span class="material-symbols-rounded text-primary">account_tree</span>
+            <p class="mt-1">{{ definition?.description }}</p>
+          </div>
+        </aside>
+
+        <section class="min-w-0 p-3 lg:p-4">
+          @if (!detail?.process) {
+            <div class="grid min-h-128 place-items-center text-center">
+              <div>
+                <span class="material-symbols-rounded text-5xl text-primary">play_circle</span>
+                <h2 class="mt-2 text-lg font-bold">Ready to begin</h2>
+                <p class="mx-auto mt-1 max-w-md text-sm text-base-content/60">
+                  Start the programme development process for this programme.
+                </p>
+                <button class="btn btn-primary btn-sm mt-4" type="button" [disabled]="starting()"
+                  (click)="startWorkflow()">
+                  <span class="material-symbols-rounded">play_arrow</span>
+                  {{ starting() ? 'Starting' : 'Start development' }}
+                </button>
+              </div>
+            </div>
+          } @else {
+            <header class="flex min-h-12 items-center justify-between gap-3">
+              <div>
+                <p class="text-xs font-bold uppercase text-base-content/50">Current stage</p>
+                <h2 class="font-bold">{{ selectedStage?.name }}</h2>
+                @if (selectedStage?.description) {
+                  <p class="mt-1 max-w-2xl text-xs leading-5 text-base-content/60">{{ selectedStage?.description }}</p>
+                }
+              </div>
+              <span [class]="statusClasses(stageState(selectedStageId))">{{ stageState(selectedStageId) }}</span>
+            </header>
+
+            <div class="mb-3 grid gap-2 sm:hidden">
+              <span class="text-xs font-semibold text-base-content/55">Tasks</span>
+              <div class="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-2">
+                @for (task of mobileVisibleTasks; track task.id) {
+                  <button type="button"
+                    class="min-h-11 rounded-md border border-base-300 bg-base-100 px-2 py-1 text-left shadow-sm"
+                    [class.border-primary]="task.id === selectedTaskKey"
+                    [class.bg-primary]="task.id === selectedTaskKey"
+                    [class.text-primary-content]="task.id === selectedTaskKey"
+                    (click)="selectTask(task.id)">
+                    <span class="block truncate text-xs font-bold">{{ task.name }}</span>
+                    <span class="mt-1 block text-[0.65rem] capitalize opacity-70">{{ taskInstance(task.id)?.status || 'pending' }}</span>
+                  </button>
+                }
+                @if (mobileOverflowTasks.length) {
+                  <div class="dropdown dropdown-end">
+                    <button tabindex="0" role="button" type="button"
+                      class="btn btn-sm min-h-11 w-full border border-base-300 bg-base-100 shadow-sm">
+                      <span class="material-symbols-rounded text-base">more_horiz</span>
+                      More
+                    </button>
+                    <ul tabindex="-1" class="dropdown-content menu z-20 mt-2 w-72 rounded-box border border-base-200 bg-base-100 p-2 text-sm shadow-2xl">
+                      @for (task of mobileOverflowTasks; track task.id) {
+                        <li>
+                          <button type="button" class="gap-3" [class.active]="task.id === selectedTaskKey"
+                            (click)="selectTask(task.id)">
+                            <span class="material-symbols-rounded text-base"
+                              [class.text-success]="taskInstance(task.id)?.status === 'completed'">
+                              {{ taskInstance(task.id)?.status === 'completed' ? 'check_circle' : 'task_alt' }}
+                            </span>
+                            <span class="min-w-0 flex-1 truncate">{{ task.name }}</span>
+                            @if (task.id === selectedTaskKey) {
+                              <span class="material-symbols-rounded text-base">check</span>
+                            }
+                          </button>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div role="tablist" class="programme-scroll tabs tabs-border mb-3 hidden max-w-full flex-nowrap overflow-x-auto pb-1 sm:flex">
+              @for (task of stageTaskDefinitions; track task.id) {
+                <button type="button" role="tab" class="tab h-auto min-h-10 flex-none gap-1 px-3 text-xs"
+                  [class.tab-active]="task.id === selectedTaskKey" (click)="selectTask(task.id)">
+                  <span class="material-symbols-rounded text-base"
+                    [class.text-success]="taskInstance(task.id)?.status === 'completed'">
+                    {{ taskInstance(task.id)?.status === 'completed' ? 'check_circle' : 'task_alt' }}
+                  </span>
+                  {{ task.name }}
+                  @if (taskArtifacts(task.id).length) {
+                    <span class="badge badge-ghost badge-xs gap-1">
+                      <span class="material-symbols-rounded text-xs">attach_file</span>
+                      {{ taskArtifacts(task.id).length }}
+                    </span>
+                  }
+                </button>
+              }
+            </div>
+
+            <div class="grid">
+            @for (taskDefinition of selectedTaskDefinitionView; track taskDefinition.id) {
+              <article class="col-start-1 row-start-1 overflow-hidden rounded-md border border-base-300"
+                animate.enter="task-panel-enter" animate.leave="task-panel-leave">
+                <header class="flex items-start justify-between gap-3 bg-base-200/50 p-3">
+                  <div>
+                    <p class="font-mono text-xs uppercase text-base-content/45">{{ taskDefinition.id }}</p>
+                    <h2 class="font-bold">{{ taskDefinition.name }}</h2>
+                    @if (taskDefinition.description) {
+                      <p class="mt-1 max-w-2xl text-xs leading-5 text-base-content/60">{{ taskDefinition.description }}</p>
+                    }
+                  </div>
+                  <div class="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                    @if (taskDefinition.emailAction && selectedTaskInstance) {
+                      <button type="button" class="btn btn-outline btn-sm bg-base-100"
+                        (click)="openTaskEmailComposer(taskDefinition)">
+                        <span class="material-symbols-rounded text-base">mail</span>
+                        Write email
+                      </button>
+                    }
+                    <span [class]="statusClasses(selectedTaskInstance?.status || 'pending')">
+                      {{ selectedTaskInstance?.status || 'pending' }}
+                    </span>
+                  </div>
+                </header>
+
+                @if (!selectedTaskInstance) {
+                  <div class="grid min-h-48 place-items-center text-center text-sm text-base-content/55">
+                    <div>
+                      <span class="material-symbols-rounded text-3xl">schedule</span>
+                      <p>This task becomes available when the programme reaches it.</p>
+                    </div>
+                  </div>
+                } @else {
+                  @if (isReadOnly) {
+                    <section class="grid gap-4 p-4">
+                      @if (selectedTaskNeedsReview) {
+                        <div class="flex items-start gap-3 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">
+                          <span class="material-symbols-rounded text-warning">rate_review</span>
+                          <div>
+                            <strong class="block text-warning-content">Amendment required</strong>
+                            <p class="mt-1 text-base-content/70">{{ selectedTaskReviewMessage }}</p>
+                          </div>
+                        </div>
+                      }
+                      @if ((taskDefinition.form ?? []).length) {
+                        <dl class="grid gap-x-6 gap-y-4 rounded-md border border-base-300 bg-base-100 p-3 md:grid-cols-2">
+                          @for (field of visibleFields(taskDefinition.form); track field.key) {
+                            <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater' || field.type === 'user-search'">
+                              <dt class="flex items-center justify-between gap-2 text-xs font-semibold text-base-content/55">
+                                <span>{{ field.label }}</span>
+                                @if (canComposeEmail(field) && fieldEmailRecipients(field).length) {
+                                  <button type="button" class="btn btn-ghost btn-xs"
+                                    (click)="openEmailComposer(field.label, fieldEmailRecipients(field), field)">
+                                    <span class="material-symbols-rounded text-base">mail</span>
+                                    Write message
+                                  </button>
+                                }
+                              </dt>
+                              @if (field.type === 'repeater') {
+                                <dd class="mt-2">
+                                  @if (repeaterItems(field).length) {
+                                    <div class="grid gap-2">
+                                      @for (item of repeaterItems(field); track $index; let itemIndex = $index) {
+                                        <section class="overflow-hidden rounded-md border border-base-300 bg-base-200/30">
+                                          <header class="flex min-h-9 items-center justify-between border-b border-base-300 bg-base-200/60 px-3">
+                                            <strong class="text-xs">{{ field.label }} {{ itemIndex + 1 }}</strong>
+                                          </header>
+                                          <dl class="grid gap-3 p-3 sm:grid-cols-2">
+                                            @for (child of visibleFields(field.fields, item); track child.key) {
+                                              <div>
+                                                <dt class="flex items-center justify-between gap-2 text-xs font-semibold text-base-content/50">
+                                                  <span>{{ child.label }}</span>
+                                                  @if (canComposeEmail(child) && repeaterEmailRecipients(field, child).length) {
+                                                    <button type="button" class="btn btn-ghost btn-xs"
+                                                      (click)="openEmailComposer(child.label, repeaterEmailRecipients(field, child), child)">
+                                                      <span class="material-symbols-rounded text-base">mail</span>
+                                                      Write message
+                                                    </button>
+                                                  }
+                                                </dt>
+                                                @if (child.type === 'user-search') {
+                                                  <dd class="mt-2">
+                                                    @if (userDisplayCards(item[child.key]).length) {
+                                                      <div class="grid gap-2">
+                                                        @for (user of userDisplayCards(item[child.key]); track user.id || user.email) {
+                                                          <article class="rounded-md border border-base-300 bg-base-100 p-3 shadow-sm">
+                                                            <div class="flex items-start gap-3">
+                                                              <span class="grid size-9 shrink-0 place-items-center rounded bg-primary/10 text-primary">
+                                                                <span class="material-symbols-rounded text-xl">person</span>
+                                                              </span>
+                                                              <div class="min-w-0 flex-1">
+                                                                <strong class="block truncate text-sm text-base-content">{{ userLabel(user) }}</strong>
+                                                                @if (user.email) {
+                                                                  <span class="block truncate text-xs text-base-content/60">{{ user.email }}</span>
+                                                                }
+                                                                <div class="mt-2 flex flex-wrap gap-1">
+                                                                  @if (user.role) {
+                                                                    <span class="badge badge-ghost badge-xs uppercase">{{ user.role }}</span>
+                                                                  }
+                                                                  @if (user.departmentName) {
+                                                                    <span class="badge badge-outline badge-xs">{{ user.departmentName }}</span>
+                                                                  }
+                                                                </div>
+                                                              </div>
+                                                              @if (user.email && canComposeEmail(child)) {
+                                                                <button type="button" class="btn btn-ghost btn-square btn-xs"
+                                                                  title="Write message"
+                                                                  (click)="openUserEmailComposer(user, child)">
+                                                                  <span class="material-symbols-rounded text-base">mail</span>
+                                                                </button>
+                                                              }
+                                                            </div>
+                                                          </article>
+                                                        }
+                                                      </div>
+                                                    } @else {
+                                                      <p class="text-sm font-medium text-base-content">Not provided</p>
+                                                    }
+                                                  </dd>
+                                                } @else {
+                                                  <dd class="mt-0.5 wrap-break-word text-sm font-medium text-base-content">
+                                                    {{ displayValue(item[child.key]) }}
+                                                  </dd>
+                                                }
+                                              </div>
+                                            }
+                                          </dl>
+                                        </section>
+                                      }
+                                    </div>
+                                  } @else {
+                                    <p class="text-sm font-medium text-base-content">Not provided</p>
+                                  }
+                                </dd>
+                              } @else if (field.type === 'user-search') {
+                                <dd class="mt-2">
+                                  @if (userDisplayCards(formData[field.key]).length) {
+                                    <div class="grid gap-2 sm:grid-cols-2">
+                                      @for (user of userDisplayCards(formData[field.key]); track user.id || user.email) {
+                                        <article class="rounded-md border border-base-300 bg-base-100 p-3 shadow-sm">
+                                          <div class="flex items-start gap-3">
+                                            <span class="grid size-10 shrink-0 place-items-center rounded bg-primary/10 text-primary">
+                                              <span class="material-symbols-rounded text-2xl">person</span>
+                                            </span>
+                                            <div class="min-w-0 flex-1">
+                                              <strong class="block truncate text-sm text-base-content">{{ userLabel(user) }}</strong>
+                                              @if (user.email) {
+                                                <span class="block truncate text-xs text-base-content/60">{{ user.email }}</span>
+                                              }
+                                              <div class="mt-2 flex flex-wrap gap-1">
+                                                @if (user.role) {
+                                                  <span class="badge badge-ghost badge-xs uppercase">{{ user.role }}</span>
+                                                }
+                                                @if (user.departmentName) {
+                                                  <span class="badge badge-outline badge-xs">{{ user.departmentName }}</span>
+                                                }
+                                                @if (user.facultyName) {
+                                                  <span class="badge badge-outline badge-xs">{{ user.facultyName }}</span>
+                                                }
+                                              </div>
+                                            </div>
+                                            @if (user.email && canComposeEmail(field)) {
+                                              <button type="button" class="btn btn-ghost btn-square btn-xs"
+                                                title="Write message" (click)="openUserEmailComposer(user, field)">
+                                                <span class="material-symbols-rounded text-base">mail</span>
+                                              </button>
+                                            }
+                                          </div>
+                                        </article>
+                                      }
+                                    </div>
+                                  } @else {
+                                    <p class="text-sm font-medium text-base-content">Not provided</p>
+                                  }
+                                </dd>
+                              } @else {
+                                <dd class="mt-1 whitespace-pre-wrap wrap-break-word text-sm font-medium text-base-content">
+                                  {{ displayValue(formData[field.key]) }}
+                                </dd>
+                              }
+                            </div>
+                          }
+                        </dl>
+                      } @else {
+                        <div class="grid min-h-28 place-items-center rounded-md border border-base-300 bg-base-100 text-center">
+                          <div class="text-sm text-base-content/55">
+                            <span class="material-symbols-rounded text-3xl text-success">verified</span>
+                            <p>This step is complete.</p>
+                          </div>
+                        </div>
+                      }
+                    </section>
+                  } @else {
+                  <fieldset class="p-3 lg:p-4" [disabled]="!canCompleteSelectedTask">
+                    @if (selectedTaskIsAmendment) {
+                      <div class="mb-4 flex items-start gap-3 rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">
+                        <span class="material-symbols-rounded text-warning">rate_review</span>
+                        <div>
+                          <strong class="block text-warning-content">Review and amend</strong>
+                          <p class="mt-1 text-base-content/70">{{ selectedTaskAmendmentMessage }}</p>
+                        </div>
+                      </div>
+                    }
+                    <div class="grid gap-4 md:grid-cols-2">
+                      @for (field of visibleFields(taskDefinition.form); track field.key) {
+                        <div [class.md:col-span-2]="field.type === 'textarea' || field.type === 'repeater'">
+                          <label class="mb-1 block text-xs font-semibold" [for]="'field-' + field.key">
+                            {{ field.label }}
+                            @if (field.required) { <span class="text-error">*</span> }
+                          </label>
+
+                          @if (field.type === 'textarea') {
+                            <textarea class="textarea textarea-bordered w-full" [id]="'field-' + field.key"
+                              [(ngModel)]="formData[field.key]" rows="4"></textarea>
+                          } @else if (field.type === 'select') {
+                            <select class="select select-bordered w-full" [id]="'field-' + field.key"
+                              [(ngModel)]="formData[field.key]">
+                              <option value="">Select an option</option>
+                              @for (option of (field['options']) ?? []; track option) {
+                                <option [value]="option">{{ option }}</option>
+                              }
+                            </select>
+                          } @else if (field.type === 'radio') {
+                            <div class="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-base-300 px-3">
+                              @for (option of field.options ?? []; track option) {
+                                <label class="flex items-center gap-2 text-xs">
+                                  <input type="radio" class="radio radio-sm" [name]="field.key"
+                                    [value]="option" [(ngModel)]="formData[field.key]">
+                                  {{ option }}
+                                </label>
+                              }
+                            </div>
+                          } @else if (field.type === 'checkbox' && field.options?.length) {
+                            <div class="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-base-300 px-3">
+                              @for (option of field.options ?? []; track option) {
+                                <label class="flex items-center gap-2 text-xs">
+                                  <input type="checkbox" class="checkbox checkbox-sm"
+                                    [checked]="checkboxSelected(field, option)"
+                                    (change)="toggleCheckboxOption(field, option, $any($event.target).checked)">
+                                  {{ option }}
+                                </label>
+                              }
+                            </div>
+                          } @else if (field.type === 'checkbox') {
+                            <label class="flex min-h-10 items-center gap-2">
+                              <input type="checkbox" class="toggle toggle-sm" [(ngModel)]="formData[field.key]">
+                              <span class="text-xs">Yes</span>
+                            </label>
+                          } @else if (field.type === 'file') {
+                            <input class="file-input file-input-bordered w-full" type="file"
+                              [id]="'field-' + field.key" [accept]="fileAccept(field)"
+                              (change)="setFileField(field, $event)">
+                            @if (fileHelpText(field)) {
+                              <p class="mt-1 text-xs text-base-content/50">{{ fileHelpText(field) }}</p>
+                            }
+                            @if (fieldError(field)) {
+                              <p class="mt-1 text-xs text-error">{{ fieldError(field) }}</p>
+                            }
+                          } @else if (field.type === 'user-search') {
+                            <div class="relative">
+                              @if (field.multiple && selectedUsers(field).length) {
+                                <div class="mb-2 flex flex-wrap gap-2">
+                                  @for (user of selectedUsers(field); track user.id) {
+                                    <span class="inline-flex max-w-full items-center gap-2 rounded border border-base-300 bg-base-100 px-2 py-1 text-xs shadow-sm">
+                                      <span class="truncate">{{ userLabel(user) }}</span>
+                                      <button type="button" class="grid size-5 place-items-center rounded hover:bg-base-200"
+                                        title="Remove selected user" (click)="removeSelectedUser(field, user.id)">
+                                        <span class="material-symbols-rounded text-sm">close</span>
+                                      </button>
+                                    </span>
+                                  }
+                                  <button type="button" class="btn btn-ghost btn-xs" (click)="clearSelectedUser(field)">
+                                    Clear all
+                                  </button>
+                                </div>
+                              }
+                              @if (!field.multiple && selectedUserLabel(field)) {
+                                <div class="flex min-h-10 items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-3">
+                                  <span class="min-w-0 truncate text-sm font-medium">{{ selectedUserLabel(field) }}</span>
+                                  <button type="button" class="btn btn-ghost btn-square btn-xs" title="Remove selected user"
+                                    (click)="clearSelectedUser(field)">
+                                    <span class="material-symbols-rounded text-base">close</span>
+                                  </button>
+                                </div>
+                              } @else {
+                                <label class="input input-bordered flex w-full items-center gap-2">
+                                  <span class="material-symbols-rounded text-base text-base-content/45">person_search</span>
+                                  <input type="search" class="grow text-sm" placeholder="Search existing users"
+                                    [value]="userSearchText[fieldErrorKey(field)] || ''"
+                                    (input)="searchUsers(field, $event)">
+                                  @if (userFieldLoading(field)) {
+                                    <span class="loading loading-spinner loading-xs"></span>
+                                  }
+                                </label>
+                                @if (userFieldResults(field).length) {
+                                  <div class="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-1 shadow-lg">
+                                    @for (user of userFieldResults(field); track user.id) {
+                                      <button type="button" class="w-full rounded px-3 py-2 text-left hover:bg-base-200"
+                                        (click)="selectUser(field, user)">
+                                        <span class="block text-sm font-semibold">{{ userLabel(user) }}</span>
+                                        <span class="block truncate text-xs text-base-content/55">
+                                          {{ user.email }} · {{ user.role }}
+                                        </span>
+                                      </button>
+                                    }
+                                  </div>
+                                }
+                              }
+                            </div>
+                            @if (canComposeEmail(field) && fieldEmailRecipients(field).length) {
+                              <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                (click)="openEmailComposer(field.label, fieldEmailRecipients(field), field)">
+                                <span class="material-symbols-rounded text-base">mail</span>
+                                Write message
+                              </button>
+                            }
+                          } @else if (field.type === 'repeater') {
+                            <div class="grid gap-2">
+                              @for (item of repeaterItems(field); track $index; let itemIndex = $index) {
+                                <section class="overflow-hidden rounded-md border border-base-300">
+                                  <header class="flex min-h-10 items-center justify-between bg-base-200/60 px-3">
+                                    <strong class="text-xs">{{ field.label }} {{ itemIndex + 1 }}</strong>
+                                    <button type="button" class="btn btn-ghost btn-square btn-xs text-error"
+                                      title="Remove entry" (click)="removeRepeaterItem(field, itemIndex)">
+                                      <span class="material-symbols-rounded">delete</span>
+                                    </button>
+                                  </header>
+                                  <div class="grid gap-3 p-3 md:grid-cols-2">
+                                    @for (child of visibleFields(field.fields, item); track child.key) {
+                                      <div>
+                                        <label class="mb-1 block text-xs font-semibold">
+                                          {{ child.label }}
+                                          @if (child.required) { <span class="text-error">*</span> }
+                                        </label>
+                                        @if (child.type === 'select') {
+                                          <select class="select select-bordered w-full" [(ngModel)]="item[child.key]">
+                                            <option value="">Select an option</option>
+                                            @for (option of child.options ?? []; track option) {
+                                              <option [value]="option">{{ option }}</option>
+                                            }
+                                          </select>
+                                        } @else if (child.type === 'radio') {
+                                          <div class="flex min-h-10 flex-wrap items-center gap-3 rounded-md border border-base-300 px-3">
+                                            @for (option of child.options ?? []; track option) {
+                                              <label class="flex items-center gap-2 text-xs">
+                                                <input type="radio" class="radio radio-sm"
+                                                  [name]="field.key + '-' + itemIndex + '-' + child.key"
+                                                  [value]="option" [(ngModel)]="item[child.key]">
+                                                {{ option }}
+                                              </label>
+                                            }
+                                          </div>
+                                        } @else if (child.type === 'checkbox' && child.options?.length) {
+                                          <div class="flex min-h-10 flex-wrap items-center gap-3 rounded-md border border-base-300 px-3">
+                                            @for (option of child.options ?? []; track option) {
+                                              <label class="flex items-center gap-2 text-xs">
+                                                <input type="checkbox" class="checkbox checkbox-sm"
+                                                  [checked]="checkboxSelected(child, option, item)"
+                                                  (change)="toggleCheckboxOption(child, option, $any($event.target).checked, item)">
+                                                {{ option }}
+                                              </label>
+                                            }
+                                          </div>
+                                        } @else if (child.type === 'file') {
+                                          <input class="file-input file-input-bordered w-full" type="file"
+                                            [accept]="fileAccept(child)" (change)="setFileField(child, $event, item)">
+                                          @if (fileHelpText(child)) {
+                                            <p class="mt-1 text-xs text-base-content/50">{{ fileHelpText(child) }}</p>
+                                          }
+                                          @if (fieldError(child, item)) {
+                                            <p class="mt-1 text-xs text-error">{{ fieldError(child, item) }}</p>
+                                          }
+                                        } @else if (child.type === 'user-search') {
+                                          <div class="relative">
+                                            @if (child.multiple && selectedUsers(child, item).length) {
+                                              <div class="mb-2 flex flex-wrap gap-2">
+                                                @for (user of selectedUsers(child, item); track user.id) {
+                                                  <span class="inline-flex max-w-full items-center gap-2 rounded border border-base-300 bg-base-100 px-2 py-1 text-xs shadow-sm">
+                                                    <span class="truncate">{{ userLabel(user) }}</span>
+                                                    <button type="button" class="grid size-5 place-items-center rounded hover:bg-base-200"
+                                                      title="Remove selected user" (click)="removeSelectedUser(child, user.id, item)">
+                                                      <span class="material-symbols-rounded text-sm">close</span>
+                                                    </button>
+                                                  </span>
+                                                }
+                                                <button type="button" class="btn btn-ghost btn-xs" (click)="clearSelectedUser(child, item)">
+                                                  Clear all
+                                                </button>
+                                              </div>
+                                            }
+                                            @if (!child.multiple && selectedUserLabel(child, item)) {
+                                              <div class="flex min-h-10 items-center justify-between gap-2 rounded-md border border-base-300 bg-base-100 px-3">
+                                                <span class="min-w-0 truncate text-sm font-medium">{{ selectedUserLabel(child, item) }}</span>
+                                                <button type="button" class="btn btn-ghost btn-square btn-xs" title="Remove selected user"
+                                                  (click)="clearSelectedUser(child, item)">
+                                                  <span class="material-symbols-rounded text-base">close</span>
+                                                </button>
+                                              </div>
+                                            } @else {
+                                              <label class="input input-bordered flex w-full items-center gap-2">
+                                                <span class="material-symbols-rounded text-base text-base-content/45">person_search</span>
+                                                <input type="search" class="grow text-sm" placeholder="Search existing users"
+                                                  [value]="userSearchText[fieldErrorKey(child, item)] || ''"
+                                                  (input)="searchUsers(child, $event, item)">
+                                                @if (userFieldLoading(child, item)) {
+                                                  <span class="loading loading-spinner loading-xs"></span>
+                                                }
+                                              </label>
+                                              @if (userFieldResults(child, item).length) {
+                                                <div class="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-1 shadow-lg">
+                                                  @for (user of userFieldResults(child, item); track user.id) {
+                                                    <button type="button" class="w-full rounded px-3 py-2 text-left hover:bg-base-200"
+                                                      (click)="selectUser(child, user, item)">
+                                                      <span class="block text-sm font-semibold">{{ userLabel(user) }}</span>
+                                                      <span class="block truncate text-xs text-base-content/55">
+                                                        {{ user.email }} · {{ user.role }}
+                                                      </span>
+                                                    </button>
+                                                  }
+                                                </div>
+                                              }
+                                            }
+                                          </div>
+                                          @if (canComposeEmail(child) && fieldEmailRecipients(child, item).length) {
+                                            <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                              (click)="openEmailComposer(child.label, fieldEmailRecipients(child, item), child)">
+                                              <span class="material-symbols-rounded text-base">mail</span>
+                                              Write message
+                                            </button>
+                                          }
+                                        } @else {
+                                          <input class="input input-bordered w-full" [type]="child.type || 'text'"
+                                            [(ngModel)]="item[child.key]">
+                                          @if (canComposeEmail(child) && fieldEmailRecipients(child, item).length) {
+                                            <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                              (click)="openEmailComposer(child.label, fieldEmailRecipients(child, item), child)">
+                                              <span class="material-symbols-rounded text-base">mail</span>
+                                              Write message
+                                            </button>
+                                          }
+                                        }
+                                      </div>
+                                    }
+                                  </div>
+                                </section>
+                              }
+                              <button class="btn btn-outline btn-sm w-full justify-center bg-base-100 shadow-sm" type="button"
+                                (click)="addRepeaterItem(field)">
+                                <span class="material-symbols-rounded text-base">add</span>
+                                Add another {{ field.label }}
+                              </button>
+                            </div>
+                          } @else {
+                            <input class="input input-bordered w-full" [id]="'field-' + field.key"
+                              [type]="field.type || 'text'" [(ngModel)]="formData[field.key]">
+                            @if (canComposeEmail(field) && fieldEmailRecipients(field).length) {
+                              <button type="button" class="btn btn-ghost btn-xs mt-2"
+                                (click)="openEmailComposer(field.label, fieldEmailRecipients(field), field)">
+                                <span class="material-symbols-rounded text-base">mail</span>
+                                Write message
+                              </button>
+                            }
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    @if (artifacts.length) {
+                      <section class="mt-5 border-t border-base-300 pt-4">
+                        <div class="mb-3 flex items-center gap-2">
+                          <span class="material-symbols-rounded">attachment</span>
+                          <div>
+                            <strong class="block text-xs">Required documents</strong>
+                            <small class="text-base-content/50">Attach or reference each required document.</small>
+                          </div>
+                        </div>
+                        <div class="grid gap-3">
+                          @for (artifact of artifacts; track artifact.type) {
+                            <article class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-3 transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/15"
+                              [class.border-primary]="artifactUploadCount(artifact) > 0"
+                              [class.shadow-sm]="artifactUploadCount(artifact) > 0">
+                              <header class="flex flex-wrap items-start justify-between gap-2 border-b border-base-200 pb-2">
+                                <div class="min-w-0 text-xs">
+                                  <span class="block text-sm font-bold text-base-content">
+                                  {{ artifact.title }}
+                                  @if (artifact.required) { <b class="text-error">*</b> }
+                                  </span>
+                                  <small class="mt-1 block font-medium text-base-content/65">{{ artifactHelpText(artifact) }}</small>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-1">
+                                  <span class="badge badge-outline badge-sm">
+                                    {{ artifact.multiple ? 'Multiple files' : 'Single file' }}
+                                  </span>
+                                  @if (artifactUploadCount(artifact)) {
+                                    <span class="badge badge-primary badge-sm">{{ artifactUploadCount(artifact) }} uploaded</span>
+                                  }
+                                </div>
+                              </header>
+                              <workflow-task-upload
+                                [taskId]="selectedTaskInstance.id"
+                                [type]="artifact.type"
+                                [title]="artifact.title"
+                                [userId]="currentUserId"
+                                [disabled]="!canUploadArtifact(artifact)"
+                                [multiple]="artifact.multiple === true"
+                                [maxFiles]="artifactUploadLimit(artifact)"
+                                [maxFileSizeMb]="artifact.maxFileSizeMb || 20"
+                                [uploadedCount]="artifactUploadCount(artifact)"
+                                [attachments]="artifactAttachmentMap[artifact.type] || emptyAttachments"
+                                [emailEnabled]="artifact.emailAction === true"
+                                (uploaded)="attachmentUploaded($event)"
+                                (removed)="attachmentRemoved($event)"
+                                (emailRequested)="openArtifactEmailComposer(artifact, $event)" />
+                            </article>
+                          }
+                        </div>
+                      </section>
+                    }
+                  </fieldset>
+                  }
+
+                  @if (selectedTaskInstance.status === 'completed' && selectedTaskArtifacts.length) {
+                    <section class="border-t border-base-300 p-4">
+                      <div class="mb-2 flex items-center justify-between gap-2">
+                        <h3 class="text-xs font-bold uppercase text-base-content/55">Task attachments</h3>
+                        <span class="badge badge-ghost badge-sm">{{ selectedTaskArtifacts.length }}</span>
+                      </div>
+                      <div class="grid gap-3">
+                        @for (group of selectedTaskAttachmentGroups; track group.type) {
+                          <div class="grid gap-2">
+                            <h4 class="text-sm font-semibold">{{ group.title }}</h4>
+                            @for (attachment of group.attachments; track attachment.id) {
+                              <div class="group flex items-center justify-between gap-3 rounded-md border border-base-300 px-3 py-2 hover:border-primary">
+                                <span class="flex min-w-0 items-center gap-2">
+                                  <span class="material-symbols-rounded">description</span>
+                                  <span class="truncate text-sm font-medium">{{ attachment.reference || attachment.title }}</span>
+                                </span>
+                                <span class="flex shrink-0 items-center gap-1">
+                                  @if (artifactRequirement(group.type)?.emailAction) {
+                                    <button type="button" class="btn btn-ghost btn-square btn-xs text-primary"
+                                      title="Email attachment" (click)="emailCompletedAttachment(group.type, attachment)">
+                                      <span class="material-symbols-rounded text-base">forward_to_inbox</span>
+                                    </button>
+                                  }
+                                  <a class="btn btn-ghost btn-square btn-xs" title="Download attachment"
+                                    [href]="attachmentUrl(attachment)">
+                                    <span class="material-symbols-rounded text-base">download</span>
+                                  </a>
+                                </span>
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </section>
+                  }
+
+                  <footer class="flex min-h-14 items-center justify-between gap-3 border-t border-base-300 bg-base-200/40 px-3">
+                    <span class="text-xs text-base-content/55">
+                      <!-- Assigned to <strong>{{ taskDefinition.ownerRoles.join(', ') }}</strong> -->
+                    </span>
+                    @if (canCompleteSelectedTask) {
+                      <button class="btn btn-primary btn-sm" type="button"
+                        [disabled]="completing()" (click)="completeTask()">
+                        <span class="material-symbols-rounded">check</span>
+                        {{ completing() ? 'Completing' : 'Complete task' }}
+                      </button>
+                    } @else if (canReopenSelectedTask) {
+                      <button class="btn btn-outline btn-sm" type="button"
+                        [disabled]="reopeningTask()" (click)="reopenSelectedTask()">
+                        <span class="material-symbols-rounded">edit_square</span>
+                        {{ reopeningTask() ? 'Opening' : 'Review task' }}
+                      </button>
+                    } @else {
+                      <span></span>
+                    }
+                  </footer>
+                }
+              </article>
+            }
+            </div>
+          }
+        </section>
+
+        <aside class="border-t border-base-300 bg-base-200/40 p-3 xl:border-l xl:border-t-0">
+          <header class="mb-3 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase text-base-content/50">Your work</p>
+              <h2 class="font-bold">Your tasks in this programme</h2>
+            </div>
+            <span class="badge badge-ghost badge-sm">{{ inbox.length }}</span>
+          </header>
+
+          <div class="mb-3 flex items-center justify-between rounded-md border border-base-300 bg-base-100 px-3 py-2">
+            <span class="text-xs text-base-content/55">Your role</span>
+            <span class="badge badge-outline badge-sm">{{ currentUserRoleLabel }}</span>
+          </div>
+
+          <div class="grid gap-2 md:grid-cols-3 xl:grid-cols-1">
+            @for (item of inbox; track item.task.id) {
+              <button type="button"
+                class="group relative min-h-20 rounded-md border border-base-300 bg-base-100 p-3 pr-8 text-left hover:border-primary"
+                [class.border-l-4]="item.programme.id === programme?.id"
+                [class.border-l-secondary]="item.programme.id === programme?.id"
+                (click)="openInboxTask(item)">
+                <span class="block text-xs uppercase text-base-content/45">{{ item.task.stageKey }}</span>
+                <strong class="block text-xs">{{ item.task.name }}</strong>
+                <small class="mt-1 block truncate text-base-content/55">Open assigned task</small>
+                <span class="material-symbols-rounded absolute right-2 top-1/2 -translate-y-1/2 text-base-content/45 group-hover:text-primary">
+                  arrow_forward
+                </span>
+              </button>
+            } @empty {
+              <section class="overflow-hidden rounded-md border border-base-300 bg-base-100">
+                <header class="border-b border-base-300 px-3 py-3">
+                  <div class="flex items-start gap-2">
+                    <span class="material-symbols-rounded text-xl text-success">check_circle</span>
+                    <div>
+                      <h3 class="text-sm font-semibold">No action required</h3>
+                      <p class="mt-0.5 text-xs leading-5 text-base-content/55">
+                        You have no assigned tasks at this stage.
+                      </p>
+                    </div>
+                  </div>
+                </header>
+
+                <dl class="divide-y divide-base-300 px-3">
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Current stage</dt>
+                    <dd class="mt-1 text-xs font-semibold">{{ currentStageName }}</dd>
+                  </div>
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Current task</dt>
+                    <dd class="mt-1 text-xs font-semibold">
+                      {{ currentActiveTask?.name || (detail?.process?.status === 'completed' ? 'Programme completed' : 'Awaiting the next task') }}
+                    </dd>
+                    @if (currentResponsibleRoles.length) {
+                      <div class="mt-2 flex flex-wrap gap-1">
+                        @for (role of currentResponsibleRoles; track role) {
+                          <span class="badge badge-ghost badge-xs">{{ role }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Latest completed task</dt>
+                    <dd class="mt-1 text-xs font-semibold">{{ latestCompletedTask?.name || 'No completed tasks yet' }}</dd>
+                  </div>
+                  <div class="py-3">
+                    <dt class="text-[0.68rem] font-bold uppercase text-base-content/45">Last activity</dt>
+                    <dd class="mt-1 text-xs font-semibold">
+                      {{ lastProgrammeActivity ? formatSummaryDate(lastProgrammeActivity) : 'No activity recorded' }}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+            }
+          </div>
+        </aside>
+      </section>
+    }
+  </div>
+
+  @if (programmeEditOpen()) {
+    <div class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-xl border border-base-300 shadow-2xl">
+        <section class="w-full">
+          <header class="flex items-start justify-between gap-3 border-b border-base-300 pb-3">
+            <div>
+              <p class="text-xs font-bold uppercase text-base-content/50">Programme setup</p>
+              <h2 class="mt-1 text-xl font-bold">Edit programme details</h2>
+              <p class="mt-1 text-sm text-base-content/60">
+                Update the core programme information shown across the system.
+              </p>
+            </div>
+            <button type="button" class="btn btn-ghost btn-square btn-sm" title="Close" (click)="closeProgrammeEdit()">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          </header>
+
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="badge badge-ghost badge-sm">
+              <span class="material-symbols-rounded text-sm">person</span>
+              {{ initiatorName }}
+            </span>
+            <span class="badge badge-ghost badge-sm">
+              <span class="material-symbols-rounded text-sm">account_tree</span>
+              {{ currentStageName }}
+            </span>
+          </div>
+
+          <form class="mt-4 grid gap-4" (ngSubmit)="saveProgrammeDetails()">
+            <label class="form-control">
+              <span class="mb-1 text-xs font-semibold">
+                Programme title <b class="text-error">*</b>
+              </span>
+              <label class="input input-bordered flex items-center gap-2">
+                <span class="material-symbols-rounded text-lg text-base-content/40">school</span>
+                <input class="grow" name="programmeTitle" required
+                  [ngModel]="programmeEditForm().title"
+                  (ngModelChange)="updateProgrammeField('title', $event)"
+                  placeholder="e.g. Bachelor of Data Science">
+              </label>
+            </label>
+
+            <div class="grid gap-4 sm:grid-cols-[1fr_0.75fr]">
+              <label class="form-control">
+                <span class="mb-1 text-xs font-semibold">
+                  Programme code <b class="text-error">*</b>
+                </span>
+                <label class="input input-bordered flex items-center gap-2">
+                  <span class="material-symbols-rounded text-lg text-base-content/40">tag</span>
+                  <input class="grow uppercase" name="programmeCode" required
+                    [ngModel]="programmeEditForm().code"
+                    (ngModelChange)="updateProgrammeField('code', $event)"
+                    placeholder="e.g. BDS">
+                </label>
+                <span class="mt-1 text-xs text-base-content/50">Use the approved programme code.</span>
+              </label>
+
+              <label class="form-control">
+                <span class="mb-1 text-xs font-semibold">
+                  NQF level <b class="text-error">*</b>
+                </span>
+                <select class="select select-bordered w-full" name="programmeLevel" required
+                  [ngModel]="programmeEditForm().level"
+                  (ngModelChange)="updateProgrammeField('level', +$event)">
+                  @for (level of levels; track level) {
+                    <option [value]="level">Level {{ level }}</option>
+                  }
+                </select>
+              </label>
+            </div>
+
+            <div role="note" class="flex items-start gap-2 rounded-md bg-info/10 p-3 text-xs text-base-content/65">
+              <span class="material-symbols-rounded text-info">verified_user</span>
+              <span>Only PDQA, admin users, or the programme coordinator can update these details.</span>
+            </div>
+
+          <footer class="flex items-center justify-end gap-2 border-t border-base-300 pt-3">
+            <button type="button" class="btn btn-ghost btn-sm" (click)="closeProgrammeEdit()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm min-w-36" [disabled]="updatingProgramme()">
+              @if (updatingProgramme()) {
+                <span class="loading loading-spinner loading-sm"></span>
+                Saving
+              } @else {
+                <span class="material-symbols-rounded text-lg">save</span>
+                Save changes
+              }
+            </button>
+          </footer>
+          </form>
+        </section>
+      </div>
+      <button type="button" class="modal-backdrop" aria-label="Close programme editor" (click)="closeProgrammeEdit()"></button>
+    </div>
+  }
+
+  @if (programmeSummaryOpen()) {
+    <div class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-6xl overflow-hidden border border-base-300 p-0 shadow-2xl">
+        <header class="flex min-h-16 items-center justify-between gap-3 border-b border-base-300 px-5">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase text-base-content/50">Programme review</p>
+            <h2 class="truncate text-lg font-bold">{{ programme?.title || 'Programme summary' }}</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" class="btn btn-primary btn-sm"
+              (click)="openProgrammeSummaryEmail()">
+              <span class="material-symbols-rounded text-base">outgoing_mail</span>
+              Email summary
+            </button>
+            <button type="button" class="btn btn-ghost btn-square btn-sm" title="Close" (click)="closeProgrammeSummary()">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="grid max-h-[78vh] gap-4 overflow-y-auto bg-base-200/40 p-5">
+          <section class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-4 md:grid-cols-4">
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Code</span>
+              <strong class="text-sm">{{ programme?.code || 'Not available' }}</strong>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Coordinator</span>
+              <strong class="text-sm">{{ initiatorName }}</strong>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Current stage</span>
+              <strong class="text-sm">{{ currentStageName }}</strong>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold uppercase text-base-content/50">Tasks</span>
+              <strong class="text-sm">{{ completedTaskCount }} completed · {{ activeTaskCount }} active</strong>
+            </div>
+          </section>
+
+          <section class="grid gap-3 md:grid-cols-2">
+            @for (stage of stages; track stage.id) {
+              <article class="rounded-md border border-base-300 bg-base-100 p-4">
+                <header class="flex flex-wrap items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold uppercase text-base-content/45">Stage {{ stage.order }}</p>
+                    <h3 class="font-bold">{{ stage.name }}</h3>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span [class]="statusClasses(stageState(stage.id))">{{ stageState(stage.id) }}</span>
+                    <span class="badge badge-ghost badge-sm">
+                      {{ summaryStageCompletedCount(stage.id) }} / {{ summaryStageTaskCount(stage.id) }} done
+                    </span>
+                  </div>
+                </header>
+
+                @if (stage.description) {
+                  <p class="mt-2 line-clamp-2 text-xs leading-5 text-base-content/60">{{ stage.description }}</p>
+                }
+
+                <div class="mt-3 grid gap-2">
+                  @for (task of summaryHighlightsForStage(stage.id); track task.id) {
+                    <section class="rounded-md bg-base-200/55 p-3">
+                      <div class="flex flex-wrap items-start justify-between gap-2">
+                        <div class="min-w-0">
+                          <p class="text-[0.68rem] font-semibold uppercase text-base-content/45">
+                            {{ taskInstance(task.id)?.status === 'active' ? 'Needs attention' : 'Latest completed task' }}
+                          </p>
+                          <h4 class="text-sm font-bold">{{ task.name }}</h4>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                          <span [class]="statusClasses(taskInstance(task.id)?.status || 'pending')">
+                            {{ taskInstance(task.id)?.status || 'pending' }}
+                          </span>
+                          @if (summaryTaskAttachmentCount(task.id)) {
+                            <span class="badge badge-ghost badge-sm gap-1">
+                              <span class="material-symbols-rounded text-xs">attach_file</span>
+                              {{ summaryTaskAttachmentCount(task.id) }}
+                            </span>
+                          }
+                        </div>
+                      </div>
+
+                      @if (taskInstance(task.id)?.decision || taskInstance(task.id)?.completedAt) {
+                        <div class="mt-2 flex flex-wrap gap-2 text-xs">
+                          @if (taskInstance(task.id)?.decision) {
+                            <span class="badge badge-outline badge-sm">Decision: {{ taskInstance(task.id)?.decision }}</span>
+                          }
+                          @if (taskInstance(task.id)?.completedAt) {
+                            <span class="badge badge-outline badge-sm">
+                              Completed {{ formatSummaryDate(taskInstance(task.id)?.completedAt) }}
+                            </span>
+                          }
+                        </div>
+                      }
+
+                      @if (summaryTaskPreview(task.id).length) {
+                        <dl class="mt-2 grid gap-2">
+                          @for (item of summaryTaskPreview(task.id); track item.label) {
+                            <div>
+                              <dt class="text-[0.68rem] font-semibold uppercase text-base-content/45">{{ item.label }}</dt>
+                              <dd class="mt-0.5 whitespace-pre-wrap text-xs font-medium text-base-content/75">{{ item.value }}</dd>
+                            </div>
+                          }
+                        </dl>
+                      }
+                    </section>
+                  } @empty {
+                    <div class="grid min-h-20 place-items-center rounded-md border border-dashed border-base-300 text-center text-xs text-base-content/50">
+                      No recorded activity yet.
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+          </section>
+        </div>
+      </div>
+      <button type="button" class="modal-backdrop" aria-label="Close programme summary" (click)="closeProgrammeSummary()"></button>
+    </div>
+  }
+
+  @if (emailComposer().open) {
+    <div class="modal modal-open">
+      <div class="modal-box w-11/12 max-w-5xl overflow-hidden border border-base-300 p-0 shadow-2xl">
+        <header class="flex min-h-16 items-center justify-between gap-3 border-b border-base-300 px-6">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase text-base-content/50">Compose email</p>
+            <h2 class="truncate text-base font-bold">{{ emailComposer().title }}</h2>
+          </div>
+          <button type="button" class="btn btn-ghost btn-square btn-sm" title="Close" (click)="closeEmailComposer()">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </header>
+
+        <div class="grid gap-5 p-6 lg:grid-cols-[minmax(220px,.8fr)_1fr]">
+          <section class="rounded-md border border-base-300 bg-base-200/40 p-4">
+            <div class="mb-3 flex items-center justify-between gap-2">
+              <div>
+                <strong class="block text-xs uppercase text-base-content/55">Recipients</strong>
+                <small class="text-xs text-base-content/50">{{ selectedEmailRecipients.length }} selected</small>
+              </div>
+              @if (selectedEmailRecipients.length < emailComposer().recipients.length) {
+                <button type="button" class="btn btn-ghost btn-xs" (click)="selectAllEmailRecipients()">Select all</button>
+              }
+            </div>
+
+            <div class="mb-3 grid gap-2">
+              <label class="input input-bordered input-sm flex items-center gap-2 bg-base-100">
+                @if (emailRecipientSearchLoading()) {
+                  <span class="loading loading-spinner loading-xs"></span>
+                } @else {
+                  <span class="material-symbols-rounded text-base text-base-content/45">person_search</span>
+                }
+                <input type="text" class="grow" autocomplete="off" [value]="emailRecipientSearch()"
+                  (input)="searchEmailRecipients($event)"
+                  (keydown.enter)="$event.preventDefault(); canAddTypedEmailRecipient && addTypedEmailRecipient()"
+                  placeholder="Search users or enter an email">
+                @if (canAddTypedEmailRecipient) {
+                  <button type="button" class="btn btn-ghost btn-square btn-xs" title="Add email address"
+                    (click)="addTypedEmailRecipient()">
+                    <span class="material-symbols-rounded text-base">add</span>
+                  </button>
+                }
+              </label>
+
+              @if (emailRecipientSearchResults().length) {
+                <div class="grid max-h-40 gap-1 overflow-y-auto rounded-md border border-base-300 bg-base-100 p-1 shadow-lg">
+                  @for (user of emailRecipientSearchResults(); track user.id) {
+                    <button type="button" class="flex items-center gap-2 rounded px-2 py-2 text-left hover:bg-base-200"
+                      (click)="addSystemEmailRecipient(user)">
+                      <span class="material-symbols-rounded text-lg text-primary">person_add</span>
+                      <span class="min-w-0 grow">
+                        <strong class="block truncate text-xs">{{ userLabel(user) }}</strong>
+                        <span class="block truncate text-xs text-base-content/55">{{ user.email }} · {{ user.role }}</span>
+                      </span>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="grid max-h-72 gap-2 overflow-y-auto pr-1">
+              @for (recipient of emailComposer().recipients; track recipient.email) {
+                <article class="rounded-md border border-base-300 bg-base-100 p-2"
+                  [class.border-primary]="recipientSelected(recipient.email)"
+                  [class.bg-primary/5]="recipientSelected(recipient.email)">
+                  <div class="flex items-start gap-2">
+                    <label class="flex min-w-0 flex-1 cursor-pointer items-start gap-2">
+                      <input type="checkbox" class="checkbox checkbox-xs mt-1"
+                        [checked]="recipientSelected(recipient.email)"
+                        (change)="toggleEmailRecipient(recipient.email, $any($event.target).checked)">
+                      <span class="min-w-0">
+                        <strong class="block truncate text-sm">{{ recipient.name || recipient.email }}</strong>
+                        <span class="block truncate text-xs text-base-content/60">{{ recipient.email }}</span>
+                        @if (recipient.role) {
+                          <span class="badge badge-ghost badge-xs mt-2 uppercase">{{ recipient.role }}</span>
+                        }
+                      </span>
+                    </label>
+                  </div>
+                </article>
+              } @empty {
+                <div class="grid min-h-24 place-items-center rounded-md border border-dashed border-base-300 px-4 text-center">
+                  <div>
+                    <span class="material-symbols-rounded text-2xl text-base-content/35">person_add</span>
+                    <p class="text-xs text-base-content/55">Search for a system user or enter an email address above.</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+
+          <section class="grid min-w-0 gap-3">
+            @if (emailComposer().attachmentNames.length) {
+              <section class="rounded-md border border-primary/20 bg-primary/5 p-3">
+                <div class="flex items-center gap-2 text-xs font-semibold text-primary">
+                  <span class="material-symbols-rounded text-lg">attachment</span>
+                  Attached files
+                </div>
+                <div class="mt-2 grid gap-1">
+                  @for (name of emailComposer().attachmentNames; track name) {
+                    <div class="flex items-center gap-2 rounded bg-base-100 px-2 py-1.5 text-xs text-base-content/75">
+                      <span class="material-symbols-rounded text-base">description</span>
+                      <span class="truncate">{{ name }}</span>
+                    </div>
+                  }
+                </div>
+              </section>
+            }
+            <label class="grid gap-1">
+              <span class="text-xs font-semibold text-base-content/60">Subject</span>
+              <input class="input input-bordered input-sm" [value]="emailComposer().subject"
+                (input)="updateEmailSubject($any($event.target).value)">
+            </label>
+            <label class="grid gap-1">
+              <span class="text-xs font-semibold text-base-content/60">Message</span>
+              <textarea class="textarea textarea-bordered min-h-44 w-full" [value]="emailComposer().body"
+                (input)="updateEmailBody($any($event.target).value)"
+                placeholder="Write the message you want to send."></textarea>
+            </label>
+            <div class="flex flex-wrap justify-end gap-2">
+              <button type="button" class="btn btn-ghost btn-sm" (click)="closeEmailComposer()">Cancel</button>
+              <button type="button" class="btn btn-primary btn-sm" [disabled]="!selectedEmailRecipients.length || sendingEmail()"
+                (click)="sendSelectedEmail()">
+                @if (sendingEmail()) {
+                  <span class="loading loading-spinner loading-xs"></span>
+                } @else {
+                  <span class="material-symbols-rounded text-base">mark_email_unread</span>
+                }
+                {{ sendingEmail() ? 'Sending' : 'Send email' }}
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+      <button type="button" class="modal-backdrop" aria-label="Close email composer" (click)="closeEmailComposer()"></button>
+    </div>
+  }
+</main>

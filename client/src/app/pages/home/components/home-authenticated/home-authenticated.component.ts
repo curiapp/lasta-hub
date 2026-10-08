@@ -1,0 +1,577 @@
+import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { Apollo } from 'apollo-angular';
+import { debounceTime, distinctUntilChanged, skip, Subscription } from 'rxjs';
+import { ActionButtonsComponent } from '../../../../components/action-buttons/action-buttons.component';
+import { CreateProgrammeComponent } from '../../../../components/forms/create-programme/create-programme.component';
+import { ProgrammeTemplateComponent } from '../../../../components/loaders/programme-template/programme-template.component';
+import { ModalComponent } from '../../../../components/modal/modal.component';
+import { CanEditDirective } from '../../../../directives/can-edit.directive';
+import { getGreeting } from '../../../../functions';
+import { GET_BOOTSTRAP, GET_DUE_STAGE_REVIEWS, GET_PROGRAMMES } from '../../../../graphql/graphql.queries';
+import { ClientService } from '../../../../services/client.service';
+import { Programme, User } from '../../../../types';
+import { WorkflowDashboard } from '../../../../types/programme-workflow';
+
+type ProgrammeScope = 'mine' | 'all' | 'department' | 'faculty' | 'selected-department' | 'selected-faculty';
+type ProgrammeSort = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
+type ProgrammeViewMode = 'grid' | 'list';
+
+type ProgrammeOption<T> = {
+  value: T;
+  label: string;
+  icon: string;
+};
+
+type InstitutionalUnit = { id: string; name: string };
+type DepartmentOption = InstitutionalUnit & { facultyId?: string };
+type InstitutionalUnitsResponse = { faculties: InstitutionalUnit[]; departments: DepartmentOption[] };
+type StageReviewDue = {
+  programmeId: string;
+  programmeTitle: string;
+  programmeCode: string;
+  stageId: string;
+  stageName: string;
+  dueAt: string;
+  basedOn: 'stage-started' | 'programme-created';
+};
+
+@Component({
+  selector: 'home-authenticated',
+  imports: [
+    RouterModule,
+    FormsModule,
+    ProgrammeTemplateComponent,
+    ModalComponent,
+    CreateProgrammeComponent,
+    CanEditDirective,
+    ActionButtonsComponent,
+  ],
+  templateUrl: './home-authenticated.component.html',
+  styleUrls: ['./home-authenticated.component.css'],
+})
+export class HomeAuthenticatedComponent implements OnInit, OnDestroy {
+  @ViewChild('review_due_modal') private reviewDueModal?: ModalComponent;
+  private readonly apollo = inject(Apollo);
+  private readonly client = inject(ClientService);
+  private readonly programmeScopeStorageKey = 'home.programmeScope';
+  private readonly programmeSortStorageKey = 'home.programmeSort';
+  private readonly programmeViewModeStorageKey = 'home.programmeViewMode';
+  private readonly selectedFacultyStorageKey = 'home.selectedFaculty';
+  private readonly selectedDepartmentStorageKey = 'home.selectedDepartment';
+  private readonly reviewPromptSessionKey = 'home.reviewPromptShown';
+  private readonly minimumProgrammeLoadingMs = 650;
+  private readonly uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  private readonly limit = 50;
+  private programmeLoadingStartedAt = Date.now();
+  private programmeLoadingTimer?: ReturnType<typeof setTimeout>;
+  private attemptedUnitNameRefresh = false;
+  private subscriptions = new Subscription();
+
+  currentUser: User | null = null;
+  greetingMessage = '';
+  showAll = signal(false);
+  programmes = signal<Programme[]>([]);
+  programmesLoading = signal(true);
+  programmeScope = signal<ProgrammeScope>('all');
+  programmeSort = signal<ProgrammeSort>('newest');
+  programmeViewMode = signal<ProgrammeViewMode>('grid');
+  filterDropdownOpen = signal(false);
+  searchText = signal('');
+  faculties = signal<InstitutionalUnit[]>([]);
+  departments = signal<DepartmentOption[]>([]);
+  selectedFacultyId = signal('');
+  selectedDepartmentId = signal('');
+  dueStageReviews = signal<StageReviewDue[]>([]);
+  private readonly searchTextChanges = toObservable(this.searchText);
+  dashboard = signal<WorkflowDashboard>({
+    programmeCount: 0,
+    activeTaskCount: 0,
+    completedTaskCount: 0,
+    processCounts: {},
+    stageCount: 0,
+    taskDefinitionCount: 0,
+  });
+
+  readonly programmeScopeOptions: Array<ProgrammeOption<ProgrammeScope>> = [
+    { value: 'mine', label: 'My programmes', icon: 'person' },
+    { value: 'all', label: 'All programmes', icon: 'apps' },
+    { value: 'department', label: 'My department', icon: 'groups' },
+    { value: 'faculty', label: 'My faculty', icon: 'account_balance' },
+  ];
+
+  readonly programmeSortOptions: Array<ProgrammeOption<ProgrammeSort>> = [
+    { value: 'newest', label: 'Newest first', icon: 'calendar_month' },
+    { value: 'oldest', label: 'Oldest first', icon: 'event' },
+    { value: 'title-asc', label: 'A to Z', icon: 'sort_by_alpha' },
+    { value: 'title-desc', label: 'Z to A', icon: 'sort_by_alpha' },
+  ];
+
+  readonly programmeViewOptions: Array<ProgrammeOption<ProgrammeViewMode>> = [
+    { value: 'grid', label: 'Grid view', icon: 'grid_view' },
+    { value: 'list', label: 'List view', icon: 'view_list' },
+  ];
+
+  filteredProgrammes = computed(() => this.programmes().filter((programme) => this.matchesScope(programme)));
+  displayedProgrammes = computed(() => this.sortProgrammes(this.filteredProgrammes()));
+  browseDepartments = computed(() => this.departments().filter(
+    (department) => !this.selectedFacultyId() || department.facultyId === this.selectedFacultyId(),
+  ));
+
+  private queryRef = this.apollo.watchQuery<{ programmes: Programme[] }>({
+    query: GET_PROGRAMMES,
+    variables: { searchText: '', offset: 0, limit: this.limit },
+    fetchPolicy: 'cache-first',
+  });
+
+  private dashboardQueryRef = this.apollo.watchQuery<{ bootstrap: { dashboard: WorkflowDashboard } }>({
+    query: GET_BOOTSTRAP,
+    fetchPolicy: 'network-only',
+  });
+
+  ngOnInit() {
+    this.greetingMessage = getGreeting();
+    this.currentUser = this.readLoggedInUser();
+    this.restoreProgrammePreferences();
+    this.loadInstitutionalUnits();
+    this.loadDueStageReviews();
+    this.seedProgrammesFromCache();
+
+    this.subscriptions.add(this.queryRef.valueChanges.subscribe((result) => {
+      const programmes = (result?.data?.programmes || []) as Programme[];
+      this.setProgrammesLoading(result.loading && programmes.length === 0 && this.programmes().length === 0);
+      this.programmes.set(programmes);
+      this.refreshProgrammesIfUnitNamesMissing(programmes);
+    }));
+
+    this.subscriptions.add(this.dashboardQueryRef.valueChanges.subscribe((result) => {
+      if (result.data?.bootstrap?.dashboard) {
+        this.dashboard.set(result.data.bootstrap.dashboard as WorkflowDashboard);
+      }
+    }));
+
+    this.subscriptions.add(this.searchTextChanges.pipe(
+      skip(1),
+      debounceTime(400),
+      distinctUntilChanged(),
+    ).subscribe((searchText) => {
+      this.queryRef.refetch({ searchText, offset: 0 });
+    }));
+  }
+
+  ngOnDestroy() {
+    if (this.programmeLoadingTimer) clearTimeout(this.programmeLoadingTimer);
+    this.subscriptions.unsubscribe();
+  }
+
+  onSearch(event: Event) {
+    this.searchText.set((event.target as HTMLInputElement).value);
+  }
+
+  clearSearch() {
+    this.searchText.set('');
+    this.queryRef.refetch({ searchText: '', offset: 0 });
+  }
+
+  toggleView() {
+    this.showAll.update((showAll) => !showAll);
+  }
+
+  setProgrammeScope(scope: ProgrammeScope) {
+    this.programmeScope.set(scope);
+    this.writeSessionValue(this.programmeScopeStorageKey, scope);
+    this.showAll.set(false);
+  }
+
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
+    this.filterDropdownOpen.update((open) => !open);
+  }
+
+  selectProgrammeScope(scope: ProgrammeScope) {
+    this.setProgrammeScope(scope);
+    this.filterDropdownOpen.set(false);
+  }
+
+  keepFilterDropdownOpen(event: Event) {
+    event.stopPropagation();
+  }
+
+  @HostListener('document:click')
+  closeFilterDropdown() {
+    this.filterDropdownOpen.set(false);
+  }
+
+  browseFaculty(facultyId: string) {
+    this.selectedFacultyId.set(facultyId);
+    this.selectedDepartmentId.set('');
+    this.programmeScope.set('selected-faculty');
+    this.writeSessionValue(this.selectedFacultyStorageKey, facultyId);
+    this.writeSessionValue(this.selectedDepartmentStorageKey, '');
+    this.writeSessionValue(this.programmeScopeStorageKey, 'selected-faculty');
+    this.showAll.set(false);
+  }
+
+  onBrowseFacultyChange(event: Event) {
+    const facultyId = (event.target as HTMLSelectElement).value;
+    if (facultyId) {
+      this.browseFaculty(facultyId);
+      return;
+    }
+
+    this.selectedFacultyId.set('');
+    this.selectedDepartmentId.set('');
+    this.writeSessionValue(this.selectedFacultyStorageKey, '');
+    this.writeSessionValue(this.selectedDepartmentStorageKey, '');
+    this.setProgrammeScope('all');
+  }
+
+  browseDepartment(departmentId: string) {
+    const department = this.departments().find((item) => item.id === departmentId);
+    if (department?.facultyId) this.selectedFacultyId.set(department.facultyId);
+    this.selectedDepartmentId.set(departmentId);
+    this.programmeScope.set('selected-department');
+    this.writeSessionValue(this.selectedFacultyStorageKey, this.selectedFacultyId());
+    this.writeSessionValue(this.selectedDepartmentStorageKey, departmentId);
+    this.writeSessionValue(this.programmeScopeStorageKey, 'selected-department');
+    this.showAll.set(false);
+  }
+
+  onBrowseDepartmentChange(event: Event) {
+    const departmentId = (event.target as HTMLSelectElement).value;
+    if (departmentId) {
+      this.browseDepartment(departmentId);
+      return;
+    }
+
+    if (this.selectedFacultyId()) this.browseFaculty(this.selectedFacultyId());
+  }
+
+  setProgrammeSort(sort: ProgrammeSort) {
+    this.programmeSort.set(sort);
+    this.writeSessionValue(this.programmeSortStorageKey, sort);
+  }
+
+  setProgrammeViewMode(mode: ProgrammeViewMode) {
+    this.programmeViewMode.set(mode);
+    this.writeLocalValue(this.programmeViewModeStorageKey, mode);
+  }
+
+  portfolioHeading() {
+    if (this.programmeScope() === 'all') return 'All programmes';
+    if (this.programmeScope() === 'selected-faculty') return `${this.selectedFacultyName()} programmes`;
+    if (this.programmeScope() === 'selected-department') return `${this.selectedDepartmentName()} programmes`;
+    return this.scopeLabel();
+  }
+
+  scopeIcon(scope: ProgrammeScope) {
+    if (scope === 'selected-department') return 'domain';
+    if (scope === 'selected-faculty') return 'account_balance';
+    return this.programmeScopeOptions.find((option) => option.value === scope)?.icon ?? 'filter_list';
+  }
+
+  scopeLabel(scope: ProgrammeScope = this.programmeScope()) {
+    if (scope === 'selected-department') return this.selectedDepartmentName();
+    if (scope === 'selected-faculty') return this.selectedFacultyName();
+    return this.programmeScopeOptions.find((option) => option.value === scope)?.label ?? 'Programme view';
+  }
+
+  selectedFacultyName() {
+    return this.faculties().find((faculty) => faculty.id === this.selectedFacultyId())?.name ?? 'Selected faculty';
+  }
+
+  selectedDepartmentName() {
+    return this.departments().find((department) => department.id === this.selectedDepartmentId())?.name ?? 'Selected department';
+  }
+
+  sortIcon(sort: ProgrammeSort) {
+    return this.programmeSortOptions.find((option) => option.value === sort)?.icon ?? 'sort';
+  }
+
+  sortLabel(sort: ProgrammeSort = this.programmeSort()) {
+    return this.programmeSortOptions.find((option) => option.value === sort)?.label ?? 'Sort programmes';
+  }
+
+  viewIcon(mode: ProgrammeViewMode = this.programmeViewMode()) {
+    return this.programmeViewOptions.find((option) => option.value === mode)?.icon ?? 'grid_view';
+  }
+
+  viewLabel(mode: ProgrammeViewMode = this.programmeViewMode()) {
+    return this.programmeViewOptions.find((option) => option.value === mode)?.label ?? 'Programme layout';
+  }
+
+  reviewDueDate(review: StageReviewDue) {
+    return new Intl.DateTimeFormat('en-NA', { day: '2-digit', month: 'short', year: 'numeric' })
+      .format(new Date(review.dueAt));
+  }
+
+  reviewDateBasis(review: StageReviewDue) {
+    return review.basedOn === 'programme-created' ? 'programme creation' : 'stage start';
+  }
+
+  programmeStatusClasses(status?: string) {
+    const normalized = String(status || 'draft').trim().toLowerCase().replace(/\s+/g, '_');
+    const base = 'badge badge-sm shrink-0 capitalize font-semibold';
+
+    if (['completed', 'approved', 'registered'].includes(normalized)) return `${base} badge-success`;
+    if (['in_progress', 'running', 'active'].includes(normalized)) return `${base} badge-warning`;
+    if (['declined', 'rejected', 'stopped', 'cancelled'].includes(normalized)) return `${base} badge-error`;
+    if (['deferred', 'on_hold', 'returned', 'paused'].includes(normalized)) return `${base} badge-info`;
+    return `${base} badge-ghost`;
+  }
+
+  programmeStatusLabel(status?: string) {
+    return String(status || 'draft').trim().replaceAll('_', ' ');
+  }
+
+  programmeDepartmentLabel(programme: Programme) {
+    return this.unitLabel(programme.departmentName, programme.department, this.currentUser?.department);
+  }
+
+  programmeFacultyLabel(programme: Programme) {
+    return this.unitLabel(programme.facultyName, programme.faculty, this.currentUser?.faculty);
+  }
+
+  programmeCoordinatorLabel(programme: Programme) {
+    return programme.coordinatorName?.trim()
+      || [programme.initiatorFirstName, programme.initiatorLastName].filter(Boolean).join(' ')
+      || 'Not assigned';
+  }
+
+  programmeProgress(programme: Programme) {
+    const progress = Number(programme.progress ?? 0);
+    return Math.min(100, Math.max(0, Number.isFinite(progress) ? progress : 0));
+  }
+
+  programmeCurrentStage(programme: Programme) {
+    const status = String(programme.status ?? '').trim().toLowerCase().replace(/\s+/g, '_');
+    if (this.programmeProgress(programme) === 100 || ['completed', 'approved', 'registered'].includes(status)) {
+      return 'All stages completed';
+    }
+    return programme.currentStage?.trim() || 'Not started';
+  }
+
+  programmeCurrentTask(programme: Programme) {
+    return programme.currentTask?.trim() || 'No active task';
+  }
+
+  programmeInitials(programme: Programme) {
+    const words = programme.title.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+    return (words.length > 1 ? `${words[0][0]}${words[1][0]}` : words[0]?.slice(0, 2) || 'PD').toUpperCase();
+  }
+
+  programmeAnimationDelay(index: number, view: ProgrammeViewMode = this.programmeViewMode()) {
+    const staggerIndex = Math.min(index, 7);
+    return (view === 'list' ? 60 : 90) + staggerIndex * (view === 'list' ? 22 : 32);
+  }
+
+  scopeEmptyLabel() {
+    return this.scopeLabel().toLowerCase();
+  }
+
+  private restoreProgrammePreferences() {
+    const defaultScope = this.isLecturerUser() ? 'mine' : 'all';
+    const savedScope = this.readProgrammeScope();
+    const savedSort = this.readProgrammeSort();
+    const savedViewMode = this.readProgrammeViewMode();
+
+    this.selectedFacultyId.set(this.readSessionValue(this.selectedFacultyStorageKey) ?? '');
+    this.selectedDepartmentId.set(this.readSessionValue(this.selectedDepartmentStorageKey) ?? '');
+    this.programmeScope.set(savedScope && this.scopeAvailable(savedScope) ? savedScope : defaultScope);
+    if (savedSort) this.programmeSort.set(savedSort);
+    if (savedViewMode) this.programmeViewMode.set(savedViewMode);
+  }
+
+  private setProgrammesLoading(loading: boolean) {
+    if (this.programmeLoadingTimer) {
+      clearTimeout(this.programmeLoadingTimer);
+      this.programmeLoadingTimer = undefined;
+    }
+
+    if (loading) {
+      this.programmeLoadingStartedAt = Date.now();
+      this.programmesLoading.set(true);
+      return;
+    }
+
+    const elapsed = Date.now() - this.programmeLoadingStartedAt;
+    const remaining = Math.max(this.minimumProgrammeLoadingMs - elapsed, 220);
+    this.programmeLoadingTimer = setTimeout(() => {
+      this.programmesLoading.set(false);
+      this.programmeLoadingTimer = undefined;
+    }, remaining);
+  }
+
+  private seedProgrammesFromCache() {
+    const cached = this.apollo.client.readQuery<{ programmes: Programme[] }>({
+      query: GET_PROGRAMMES,
+      variables: { searchText: '', offset: 0, limit: this.limit },
+    });
+    if (cached?.programmes?.length) {
+      this.programmes.set(cached.programmes);
+      this.programmesLoading.set(false);
+      this.refreshProgrammesIfUnitNamesMissing(cached.programmes);
+    }
+  }
+
+  private readLoggedInUser(): User | null {
+    if (typeof sessionStorage === 'undefined') return null;
+    try {
+      const raw = sessionStorage.getItem('loggedInUser');
+      return raw ? JSON.parse(raw) as User : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private readProgrammeScope(): ProgrammeScope | null {
+    const value = this.readSessionValue(this.programmeScopeStorageKey) as ProgrammeScope | null;
+    const scopes: ProgrammeScope[] = ['mine', 'all', 'department', 'faculty', 'selected-department', 'selected-faculty'];
+    return value && scopes.includes(value) ? value : null;
+  }
+
+  private readProgrammeSort(): ProgrammeSort | null {
+    const value = this.readSessionValue(this.programmeSortStorageKey) as ProgrammeSort | null;
+    return value && this.programmeSortOptions.some((option) => option.value === value) ? value : null;
+  }
+
+  private readProgrammeViewMode(): ProgrammeViewMode | null {
+    const value = this.readLocalValue(this.programmeViewModeStorageKey) as ProgrammeViewMode | null;
+    return value && this.programmeViewOptions.some((option) => option.value === value) ? value : null;
+  }
+
+  private readSessionValue(key: string) {
+    if (typeof sessionStorage === 'undefined') return null;
+    return sessionStorage.getItem(key);
+  }
+
+  private writeSessionValue(key: string, value: string) {
+    if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(key, value);
+  }
+
+  private readLocalValue(key: string) {
+    if (typeof localStorage === 'undefined') return null;
+    return localStorage.getItem(key);
+  }
+
+  private writeLocalValue(key: string, value: string) {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
+  }
+
+  private isLecturerUser() {
+    return (this.currentUser?.role ?? '').toLowerCase() === 'lecturer';
+  }
+
+  private loadDueStageReviews() {
+    const role = String(this.currentUser?.role ?? '').trim().toLowerCase();
+    if (!['pdqa', 'admin'].includes(role) || this.readSessionValue(this.reviewPromptSessionKey)) return;
+    this.subscriptions.add(this.apollo.query<{ stageReviewsDue: StageReviewDue[] }>({
+      query: GET_DUE_STAGE_REVIEWS,
+      fetchPolicy: 'network-only',
+    }).subscribe({
+      next: ({ data }) => {
+        const reviews = data?.stageReviewsDue ?? [];
+        this.dueStageReviews.set(reviews);
+        if (!reviews.length) return;
+        this.writeSessionValue(this.reviewPromptSessionKey, 'true');
+        setTimeout(() => this.reviewDueModal?.open());
+      },
+    }));
+  }
+
+  private scopeAvailable(scope: ProgrammeScope) {
+    if (scope === 'department') return Boolean(this.currentUser?.department?.id || this.currentUser?.department?.name);
+    if (scope === 'faculty') return Boolean(this.currentUser?.faculty?.id || this.currentUser?.faculty?.name);
+    if (scope === 'selected-faculty') return Boolean(this.selectedFacultyId());
+    if (scope === 'selected-department') return Boolean(this.selectedDepartmentId());
+    return true;
+  }
+
+  private matchesScope(programme: Programme) {
+    const scope = this.programmeScope();
+    if (scope === 'all' || !this.currentUser) return true;
+    if (scope === 'mine') return this.sameValue(programme.initiator, this.currentUser.id);
+    if (scope === 'department') {
+      return this.matchesUnit(programme.department, programme.departmentName, this.currentUser.department);
+    }
+    if (scope === 'faculty') return this.matchesUnit(programme.faculty, programme.facultyName, this.currentUser.faculty);
+    if (scope === 'selected-department') return this.sameValue(programme.department, this.selectedDepartmentId());
+    return this.sameValue(programme.faculty, this.selectedFacultyId());
+  }
+
+  private loadInstitutionalUnits() {
+    this.subscriptions.add(this.client.get<InstitutionalUnitsResponse>('institutional-units').subscribe({
+      next: (units) => {
+        this.faculties.set(units.faculties ?? []);
+        this.departments.set(units.departments ?? []);
+      },
+      error: () => {
+        this.faculties.set([]);
+        this.departments.set([]);
+      },
+    }));
+  }
+
+  private matchesUnit(programmeValue: string | undefined, programmeName: string | undefined, userUnit?: { id: string; name: string }) {
+    return this.sameValue(programmeValue, userUnit?.id)
+      || this.sameValue(programmeValue, userUnit?.name)
+      || this.sameValue(programmeName, userUnit?.id)
+      || this.sameValue(programmeName, userUnit?.name);
+  }
+
+  private sameValue(first?: string, second?: string) {
+    return !!first && !!second && first.trim().toLowerCase() === second.trim().toLowerCase();
+  }
+
+  private unitLabel(name?: string, value?: string, currentUserUnit?: { id: string; name: string }) {
+    if (this.isReadableUnitName(name)) return name!.trim();
+    if (this.sameValue(value, currentUserUnit?.id) && this.isReadableUnitName(currentUserUnit?.name)) {
+      return currentUserUnit!.name.trim();
+    }
+    if (this.isReadableUnitName(value)) return value!.trim();
+    return 'Not available';
+  }
+
+  private isReadableUnitName(value?: string) {
+    const text = value?.trim();
+    return !!text && !this.uuidPattern.test(text);
+  }
+
+  private refreshProgrammesIfUnitNamesMissing(programmes: Programme[]) {
+    if (this.attemptedUnitNameRefresh || !programmes.length) return;
+
+    const hasUnitIdsWithoutNames = programmes.some((programme) => (
+      this.uuidPattern.test(programme.department?.trim() ?? '')
+      && !this.isReadableUnitName(programme.departmentName)
+    ) || (
+      this.uuidPattern.test(programme.faculty?.trim() ?? '')
+      && !this.isReadableUnitName(programme.facultyName)
+    ));
+
+    if (!hasUnitIdsWithoutNames) return;
+    this.attemptedUnitNameRefresh = true;
+    this.queryRef.refetch({ searchText: this.searchText(), offset: 0, limit: this.limit });
+  }
+
+  private sortProgrammes(programmes: Programme[]) {
+    return [...programmes].sort((first, second) => {
+      const sort = this.programmeSort();
+      if (sort === 'title-asc' || sort === 'title-desc') {
+        const comparison = (first.title ?? '').localeCompare(second.title ?? '', undefined, { sensitivity: 'base' });
+        return sort === 'title-asc' ? comparison : -comparison;
+      }
+
+      const firstDate = this.programmeCreatedTime(first);
+      const secondDate = this.programmeCreatedTime(second);
+      return sort === 'oldest' ? firstDate - secondDate : secondDate - firstDate;
+    });
+  }
+
+  private programmeCreatedTime(programme: Programme) {
+    const value = programme.createdAt ?? programme.created_at ?? '';
+    const time = Date.parse(value);
+    return Number.isFinite(time) ? time : 0;
+  }
+}

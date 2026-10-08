@@ -1,0 +1,984 @@
+<main class="workflow-page">
+  <header class="page-head" animate.enter="workflow-head-enter">
+    <div>
+      <p class="eyebrow">Process configuration</p>
+      <h1>Workflow Definition</h1>
+      <p class="subtitle">Design stages, assign task owners, and connect each decision to its next action.</p>
+    </div>
+    <div class="head-actions">
+      <label class="definition-select">
+        <span>Definition</span>
+        <select class="select select-bordered select-sm" [ngModel]="selectedDefinitionSlug()"
+          (ngModelChange)="loadDefinition($event)">
+          @for (item of definitions; track item.id) {
+            <option [value]="item.slug">
+              {{ item.name }} · v{{ item.version }}{{ item.isDefault ? ' · Current' : '' }}
+            </option>
+          }
+        </select>
+      </label>
+      @if (selectedDefinitionSummary?.isDefault) {
+        <span class="badge badge-primary badge-sm gap-1 px-3 py-3">
+          <span class="material-symbols-rounded text-sm">check_circle</span>
+          Current path
+        </span>
+      } @else if (selectedDefinitionSummary) {
+        <button class="btn btn-sm btn-outline" type="button" [disabled]="settingDefault() || loading()"
+          (click)="setAsDefault()">
+          <span class="material-symbols-rounded text-base">task_alt</span>
+          {{ settingDefault() ? 'Updating' : 'Set as current' }}
+        </button>
+      }
+      <button class="btn btn-sm btn-ghost" type="button" (click)="createWorkflow()">
+        <span class="material-symbols-rounded">add</span>
+        New workflow
+      </button>
+      <button class="btn btn-sm btn-ghost text-error" type="button" [disabled]="!canDeleteDefinition"
+        (click)="deleteWorkflow()">
+        <span class="material-symbols-rounded">{{ deleting() ? 'hourglass_empty' : 'delete' }}</span>
+        {{ deleting() ? 'Deleting' : 'Delete' }}
+      </button>
+      <button class="btn btn-sm btn-secondary" type="button" [disabled]="publishing() || loading()" (click)="publish()">
+        <span class="material-symbols-rounded">publish</span>
+        {{ publishing() ? 'Publishing' : 'Publish' }}
+      </button>
+    </div>
+  </header>
+
+  @if (message) {
+    <div class="notice" [class.error]="messageType === 'error'" animate.enter="workflow-notice-enter">
+      <span class="material-symbols-rounded">{{ messageType === 'error' ? 'error' : 'check_circle' }}</span>
+      <span>{{ message }}</span>
+      <button type="button" title="Dismiss" (click)="message = ''">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+  }
+
+  <div class="mode-tabs" role="tablist" aria-label="Editor mode" animate.enter="workflow-tabs-enter">
+    <button type="button" [class.active]="mode === 'builder'" (click)="setMode('builder')">
+      <span class="material-symbols-rounded">account_tree</span>
+      Builder
+    </button>
+    <button type="button" [class.active]="mode === 'json'" (click)="setMode('json')">
+      <span class="material-symbols-rounded">data_object</span>
+      JSON
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state" animate.enter="workflow-panel-enter">
+      <span class="loading loading-spinner loading-md"></span> Loading definition
+    </div>
+  } @else if (mode === 'builder') {
+    <section class="builder" animate.enter="workflow-builder-enter">
+      <aside class="definition-panel workflow-column-enter" style="animation-delay: 80ms">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Settings</p>
+            <h2>Definition</h2>
+          </div>
+          <span class="version">v{{ definition.version }}</span>
+        </div>
+
+        <label class="field">
+          <span>Name</span>
+          <input class="input input-bordered input-sm" [(ngModel)]="definition.name" (ngModelChange)="builderChanged()">
+        </label>
+        <label class="field">
+          <span>Identifier</span>
+          <input class="input input-bordered input-sm" [(ngModel)]="definition.id" (ngModelChange)="builderChanged()">
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <textarea class="textarea textarea-bordered" rows="3" [(ngModel)]="definition.description"
+            (ngModelChange)="builderChanged()"></textarea>
+        </label>
+        <label class="field">
+          <span>Initial task</span>
+          <select class="select select-bordered select-sm" [(ngModel)]="definition.initialTask"
+            (ngModelChange)="builderChanged()">
+            <option value="">Select a task</option>
+            @for (task of definition.tasks; track task.id) {
+              <option [value]="task.id">{{ task.name }}</option>
+            }
+          </select>
+        </label>
+
+        <div class="section-heading compact">
+          <div><p class="eyebrow">Access</p><h2>Roles</h2></div>
+          <button class="icon-button" type="button" title="Add role" (click)="addRole()">
+            <span class="material-symbols-rounded">add</span>
+          </button>
+        </div>
+        <div class="role-list">
+          @for (role of definition.roles; track role.id; let index = $index) {
+            <div class="role-row">
+              <input class="input input-bordered input-sm" aria-label="Role name" [(ngModel)]="role.name"
+                (ngModelChange)="builderChanged()">
+              <input class="input input-bordered input-sm role-id" aria-label="Role identifier" [ngModel]="role.id"
+                (ngModelChange)="renameRole(index, $event)">
+              <button class="icon-button danger" type="button" title="Remove role" (click)="removeRole(index)">
+                <span class="material-symbols-rounded">delete</span>
+              </button>
+            </div>
+          }
+        </div>
+      </aside>
+
+      <section class="flow-panel workflow-column-enter" style="animation-delay: 140ms">
+        <div class="section-heading">
+          <div><p class="eyebrow">Sequence</p><h2>Stages and tasks</h2></div>
+          <div class="inline-actions">
+            <button class="btn btn-xs btn-ghost" type="button" (click)="addStage()">
+              <span class="material-symbols-rounded">add</span> Stage
+            </button>
+            <button class="btn btn-xs btn-primary" type="button" (click)="addTask()">
+              <span class="material-symbols-rounded">add</span> Task
+            </button>
+          </div>
+        </div>
+
+        <div class="stage-list">
+          @for (stage of definition.stages; track stage.id; let stageIndex = $index) {
+            <section class="stage-band" animate.enter="workflow-stage-enter" [style.animation-delay.ms]="180 + (stageIndex * 60)">
+              <header [class.selected]="stage.id === selectedStageId && !selectedTask">
+                <span class="stage-number">{{ stage.order }}</span>
+                <input aria-label="Stage name" [(ngModel)]="stage.name" (focus)="selectStage(stage.id)"
+                  (ngModelChange)="builderChanged()">
+                <input class="stage-id" aria-label="Stage identifier" [ngModel]="stage.id"
+                  (focus)="selectStage(stage.id)" (ngModelChange)="renameStage(stage, $event)">
+                <span class="concurrent-stage-slot">
+                  @if (stage.runWithPrevious) {
+                    <span class="concurrent-stage" title="Runs at the same time as the previous stage">
+                      <span class="material-symbols-rounded">sync_alt</span>
+                    </span>
+                  }
+                </span>
+                <button class="icon-button" type="button" title="Edit stage" (click)="selectStage(stage.id)">
+                  <span class="material-symbols-rounded">edit</span>
+                </button>
+                <button class="icon-button danger" type="button" title="Remove stage" (click)="removeStage(stageIndex)">
+                  <span class="material-symbols-rounded">delete</span>
+                </button>
+              </header>
+              <textarea class="textarea textarea-bordered textarea-sm stage-description"
+                aria-label="Stage description" rows="2" [(ngModel)]="stage.description"
+                (focus)="selectStage(stage.id)" (ngModelChange)="builderChanged()"
+                placeholder="Explain what happens in this stage and what users should prepare."></textarea>
+              <div class="stage-actions">
+                <button type="button" title="Move stage up" [disabled]="stageIndex === 0"
+                  (click)="moveStage(stageIndex, -1)">
+                  <span class="material-symbols-rounded">arrow_upward</span>
+                  Move up
+                </button>
+                <button type="button" title="Move stage down" [disabled]="stageIndex === definition.stages.length - 1"
+                  (click)="moveStage(stageIndex, 1)">
+                  <span class="material-symbols-rounded">arrow_downward</span>
+                  Move down
+                </button>
+                <button type="button" title="Add task to this stage" (click)="addTask(stage.id)">
+                  <span class="material-symbols-rounded">add_task</span>
+                  Add task here
+                </button>
+              </div>
+              <div class="task-list">
+                @for (task of stageTasks(stage.id); track task.id; let taskIndex = $index) {
+                    <article class="task-item" [class.selected]="task.id === selectedTaskId"
+                      [class.moved]="task.id === movedTaskId"
+                      animate.enter="workflow-task-enter" [style.animation-delay.ms]="230 + (stageIndex * 60) + (taskIndex * 35)">
+                      <button type="button" class="grid min-h-10 w-full grid-cols-[1.4rem_minmax(0,1fr)_1.8rem] items-center gap-2 px-1 py-0.5 text-left" (click)="selectTask(task.id)">
+                      <span class="material-symbols-rounded">task_alt</span>
+                      <span><strong>{{ task.name }}</strong><small>{{ task.id }}</small></span>
+                      <span class="owner-count">{{ task.ownerRoles.length }}</span>
+                      </button>
+                      <span class="flex gap-0.5">
+                        <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task up" [disabled]="!canMoveTask(task, -1)"
+                          (click)="moveTask(task.id, -1)">
+                          <span class="material-symbols-rounded">arrow_upward</span>
+                        </button>
+                        <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task down" [disabled]="!canMoveTask(task, 1)"
+                          (click)="moveTask(task.id, 1)">
+                          <span class="material-symbols-rounded">arrow_downward</span>
+                        </button>
+                      </span>
+                    </article>
+                } @empty {
+                  <p class="empty">Add the first task to this stage.</p>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      </section>
+
+      <aside class="task-panel workflow-column-enter" style="animation-delay: 200ms">
+        @if (editorVisible && selectedTask; as task) {
+          <div class="editor-panel" animate.enter="editor-panel-enter">
+          <div class="section-heading">
+            <div><p class="eyebrow">Selected task</p><h2>{{ task.name }}</h2></div>
+            <button class="icon-button danger" type="button" title="Remove task" (click)="removeTask(task.id)">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>
+          <label class="field">
+            <span>Task name</span>
+            <input class="input input-bordered input-sm" [(ngModel)]="task.name" (ngModelChange)="builderChanged()">
+          </label>
+          <label class="field">
+            <span>Task description</span>
+            <textarea class="textarea textarea-bordered" rows="3" [(ngModel)]="task.description"
+              (ngModelChange)="builderChanged()"
+              placeholder="Explain what the user should do and which evidence may be needed."></textarea>
+          </label>
+          <label class="field">
+            <span>Task identifier</span>
+            <input class="input input-bordered input-sm" [ngModel]="task.id"
+              (ngModelChange)="renameTask(task, $event)">
+          </label>
+          <label class="field">
+            <span>Stage</span>
+            <select class="select select-bordered select-sm" [(ngModel)]="task.stageId"
+              (ngModelChange)="builderChanged()">
+              @for (stage of definition.stages; track stage.id) {
+                <option [value]="stage.id">{{ stage.name }}</option>
+              }
+            </select>
+          </label>
+          <div class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-3">
+            <label class="flex cursor-pointer items-start justify-between gap-3">
+              <span>
+                <strong class="block text-sm">Allow email from this task</strong>
+                <small class="block text-xs text-base-content/55">Show a Write email button while users work on this task.</small>
+              </span>
+              <input class="toggle toggle-primary toggle-sm" type="checkbox" [(ngModel)]="task.emailAction"
+                (ngModelChange)="builderChanged()">
+            </label>
+            @if (task.emailAction) {
+              <label class="field">
+                <span>Default email subject</span>
+                <input class="input input-bordered input-sm" [(ngModel)]="task.emailSubject"
+                  (ngModelChange)="builderChanged()" [placeholder]="'Consultation for {{programmeTitle}}'">
+              </label>
+              <label class="field">
+                <span>Default email message</span>
+                <textarea class="textarea textarea-bordered min-h-24 w-full" [(ngModel)]="task.emailMessage"
+                  (ngModelChange)="builderChanged()"
+                  placeholder="Write the default message shown when composing this email."></textarea>
+                <small>Templates can use {{ '{{programmeTitle}}' }}, {{ '{{programmeCode}}' }},
+                  {{ '{{recipientName}}' }} and {{ '{{initiator}}' }}.</small>
+              </label>
+            }
+          </div>
+          <div class="field">
+            <span>Owner roles</span>
+            <div class="dropdown dropdown-bottom w-full">
+              <button type="button" tabindex="0"
+                class="select select-bordered select-sm flex min-h-8 w-full items-center justify-between gap-2 bg-base-100 text-left">
+                <span class="truncate">{{ ownerRoleSummary(task) }}</span>
+                <span class="material-symbols-rounded text-base text-base-content/45">expand_more</span>
+              </button>
+              <div tabindex="0"
+                class="dropdown-content z-30 mt-1 max-h-64 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-2 shadow-lg">
+              @for (role of definition.roles; track role.id) {
+                <label
+                  class="flex min-h-9 cursor-pointer items-center gap-2 rounded px-2 text-xs transition-colors hover:bg-base-200"
+                  [class.bg-primary/10]="ownsRole(task, role.id)">
+                  <input type="checkbox" class="checkbox checkbox-xs"
+                    [checked]="ownsRole(task, role.id)"
+                    (change)="toggleOwnerRole(task, role.id, $any($event.target).checked)">
+                  <span class="min-w-0 flex-1">
+                    <span class="block truncate font-semibold">{{ role.name }}</span>
+                    <span class="block truncate font-mono text-[0.62rem] text-base-content/50">{{ role.id }}</span>
+                  </span>
+                </label>
+              } @empty {
+                <p class="empty px-2 py-3">Add roles before assigning task ownership.</p>
+              }
+              </div>
+            </div>
+            @if (selectedOwnerRoles(task).length) {
+              <div class="mt-2 flex flex-wrap gap-1">
+                @for (role of selectedOwnerRoles(task); track role.id) {
+                  <span class="badge badge-ghost badge-sm max-w-full gap-1">
+                    <span class="material-symbols-rounded text-sm">group</span>
+                    <span class="truncate">{{ role.name }}</span>
+                  </span>
+                }
+              </div>
+            }
+          </div>
+
+          <section class="my-4 rounded-md border border-primary/20 bg-primary/5 p-3">
+            <header class="mb-3 flex items-start gap-2">
+              <span class="material-symbols-rounded mt-0.5 text-primary">rule</span>
+              <div>
+                <h3 class="text-sm font-bold text-base-content">Task availability</h3>
+                <p class="mt-0.5 text-xs text-base-content/60">
+                  Use this when a full task should only appear after a specific answer is selected in an earlier step.
+                </p>
+              </div>
+            </header>
+            <label class="flex min-h-9 cursor-pointer items-center gap-2 rounded-md border border-base-300 bg-base-100 px-3 text-xs font-semibold shadow-sm">
+              <input type="checkbox" class="checkbox checkbox-xs" [checked]="!!task.visibleWhen"
+                (change)="toggleTaskVisibilityRule(task, $any($event.target).checked)">
+              Show this task only when an earlier answer matches
+            </label>
+            @if (task.visibleWhen) {
+              <div class="field-grid mt-2">
+                <label>
+                  <span>Answer field</span>
+                  <select class="select select-bordered select-sm" [ngModel]="task.visibleWhen.field"
+                    (ngModelChange)="setTaskVisibilityField(task, $event)">
+                    <option value="">Select field</option>
+                    @for (group of workflowConditionFieldGroups(); track group.taskId) {
+                      <optgroup [label]="group.taskName">
+                        @for (sourceField of group.fields; track sourceField.key) {
+                          <option [value]="sourceField.key">{{ sourceField.label }}</option>
+                        }
+                      </optgroup>
+                    } @empty {
+                      <option value="" disabled>No answer fields available yet</option>
+                    }
+                  </select>
+                </label>
+                <label>
+                  <span>Answer value</span>
+                  @if (taskVisibilityValueOptions(task).length) {
+                    <select class="select select-bordered select-sm" [ngModel]="task.visibleWhen.equals"
+                      (ngModelChange)="setTaskVisibilityValue(task, $event)">
+                      @for (option of taskVisibilityValueOptions(task); track option) {
+                        <option [value]="option">{{ option }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <input class="input input-bordered input-sm" [ngModel]="task.visibleWhen.equals"
+                      (ngModelChange)="setTaskVisibilityValue(task, $event)" placeholder="Yes">
+                  }
+                </label>
+              </div>
+            }
+          </section>
+
+          <div class="section-heading compact">
+            <div><p class="eyebrow">Task form</p><h2>Input fields</h2></div>
+            <div class="field-actions">
+              <button type="button" title="Add text field" (click)="addField('text')">
+                <span class="material-symbols-rounded">text_fields</span> Text
+              </button>
+              <button type="button" title="Add choice field" (click)="addField('select')">
+                <span class="material-symbols-rounded">list</span> Choices
+              </button>
+              <button type="button" title="Add repeatable member group" (click)="addField('repeater')">
+                <span class="material-symbols-rounded">group_add</span> Member group
+              </button>
+            </div>
+          </div>
+          <div class="field-list">
+            @for (inputField of task.form; track $index; let fieldIndex = $index) {
+              <div class="field-row">
+                <div class="field-row-head">
+                  <span class="material-symbols-rounded">input</span>
+                  <input class="input input-bordered input-sm" aria-label="Field label"
+                    [(ngModel)]="inputField.label" (ngModelChange)="builderChanged()">
+                  <button class="icon-button danger" type="button" title="Remove input field"
+                    (click)="removeField(fieldIndex)">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    <span>Key</span>
+                    <input class="input input-bordered input-sm" [(ngModel)]="inputField.key"
+                      (ngModelChange)="builderChanged()">
+                  </label>
+                  <label>
+                    <span>Type</span>
+                    <select class="select select-bordered select-sm" [ngModel]="inputField.type"
+                      (ngModelChange)="setFieldType(inputField, $event)">
+                      @for (fieldType of fieldTypes; track fieldType.value) {
+                        <option [value]="fieldType.value">{{ fieldType.label }}</option>
+                      }
+                    </select>
+                  </label>
+                </div>
+                @if (inputField.type === 'select' || inputField.type === 'radio' || inputField.type === 'checkbox') {
+                  <label class="option-editor">
+                    <span>Choice style</span>
+                    <span class="choice-kind">
+                      <button type="button" [class.active]="inputField.type === 'select'"
+                        (click)="setFieldType(inputField, 'select')">Select</button>
+                      <button type="button" [class.active]="inputField.type === 'radio'"
+                        (click)="setFieldType(inputField, 'radio')">Radio</button>
+                      <button type="button" [class.active]="inputField.type === 'checkbox'"
+                        (click)="setFieldType(inputField, 'checkbox')">Checkboxes</button>
+                    </span>
+                    <span>Options {{ inputField.type === 'checkbox' ? '(blank creates one yes/no checkbox)' : '' }}</span>
+                    <input class="input input-bordered input-sm" [ngModel]="fieldOptions(inputField)"
+                      (blur)="setFieldOptions(inputField, $any($event.target).value)"
+                      placeholder="Approved, Revision required">
+                  </label>
+                }
+                @if (inputField.type === 'file') {
+                  <div class="field-grid">
+                    <label>
+                      <span>Accepted file types</span>
+                      <input class="input input-bordered input-sm" [ngModel]="fieldAcceptedTypes(inputField)"
+                        (blur)="setFieldAcceptedTypes(inputField, $any($event.target).value)"
+                        placeholder=".pdf, .docx, image/png">
+                    </label>
+                    <label>
+                      <span>Maximum file size (MB)</span>
+                      <input type="number" min="1" class="input input-bordered input-sm"
+                        [(ngModel)]="inputField.maxFileSizeMb" (ngModelChange)="builderChanged()">
+                    </label>
+                  </div>
+                }
+                @if (inputField.type === 'user-search') {
+                  <label class="option-editor">
+                    <span>Selection mode</span>
+                    <span class="choice-kind">
+                      <button type="button" [class.active]="!inputField.multiple"
+                        (click)="setUserSearchMode(inputField, false)">Single</button>
+                      <button type="button" [class.active]="inputField.multiple"
+                        (click)="setUserSearchMode(inputField, true)">Multiple</button>
+                    </span>
+                  </label>
+                }
+                @if (canConfigureEmailAction(inputField)) {
+                  <div class="grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                    <label class="required-toggle">
+                      <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="inputField.emailAction"
+                        (ngModelChange)="builderChanged()">
+                      Allow email composer
+                    </label>
+                    @if (inputField.emailAction) {
+                      <input class="input input-bordered input-sm" [(ngModel)]="inputField.emailSubject"
+                        (ngModelChange)="builderChanged()" placeholder="Default subject">
+                      <textarea class="textarea textarea-bordered textarea-sm min-h-24 w-full" rows="4"
+                        [(ngModel)]="inputField.emailMessage" (ngModelChange)="builderChanged()"
+                        [placeholder]="'Default message. You can use {{programmeTitle}}, {{programmeCode}}, {{initiator}}, {{recipientName}}.'"></textarea>
+                    }
+                  </div>
+                }
+                <div class="grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs" [checked]="!!inputField.visibleWhen"
+                      (change)="toggleFieldVisibilityRule(inputField, $any($event.target).checked, task.form)">
+                    Show only when another answer matches
+                  </label>
+                  @if (inputField.visibleWhen) {
+                    <div class="field-grid">
+                      <label>
+                        <span>Answer field</span>
+                        <select class="select select-bordered select-sm" [ngModel]="inputField.visibleWhen.field"
+                          (ngModelChange)="setVisibilityField(inputField, $event, task.form)">
+                          <option value="">Select field</option>
+                          @for (group of conditionFieldGroups(inputField, task.form); track group.taskId) {
+                            <optgroup [label]="group.taskName">
+                              @for (sourceField of group.fields; track sourceField.key) {
+                                <option [value]="sourceField.key">{{ sourceField.label }}</option>
+                              }
+                            </optgroup>
+                          }
+                        </select>
+                      </label>
+                      <label>
+                        <span>Answer value</span>
+                        @if (visibilityValueOptions(inputField, task.form).length) {
+                          <select class="select select-bordered select-sm" [ngModel]="inputField.visibleWhen.equals"
+                            (ngModelChange)="setVisibilityValue(inputField, $event)">
+                            @for (option of visibilityValueOptions(inputField, task.form); track option) {
+                              <option [value]="option">{{ option }}</option>
+                            }
+                          </select>
+                        } @else {
+                          <input class="input input-bordered input-sm" [ngModel]="inputField.visibleWhen.equals"
+                            (ngModelChange)="setVisibilityValue(inputField, $event)" placeholder="Yes">
+                        }
+                      </label>
+                    </div>
+                  }
+                </div>
+                @if (inputField.type === 'repeater') {
+                  <div class="repeater-config">
+                    <div class="repeater-limits">
+                      <label>
+                        <span>Minimum entries</span>
+                        <input type="number" min="0" class="input input-bordered input-sm"
+                          [(ngModel)]="inputField.minItems" (ngModelChange)="builderChanged()">
+                      </label>
+                      <label>
+                        <span>Maximum entries</span>
+                        <input type="number" min="1" class="input input-bordered input-sm"
+                          [(ngModel)]="inputField.maxItems" (ngModelChange)="builderChanged()">
+                      </label>
+                    </div>
+                    <div class="child-heading">
+                      <span>Fields for each entry</span>
+                      <button class="icon-button" type="button" title="Add group field"
+                        (click)="addChildField(inputField)">
+                        <span class="material-symbols-rounded">add</span>
+                      </button>
+                    </div>
+                    <div class="child-fields">
+                      @for (childField of inputField.fields; track $index; let childIndex = $index) {
+                        <div class="child-field">
+                          <input class="input input-bordered input-sm" aria-label="Child field label"
+                            [(ngModel)]="childField.label" (ngModelChange)="builderChanged()">
+                          <input class="input input-bordered input-sm child-key" aria-label="Child field key"
+                            [(ngModel)]="childField.key" (ngModelChange)="builderChanged()">
+                          <select class="select select-bordered select-sm" [ngModel]="childField.type"
+                            (ngModelChange)="setFieldType(childField, $event)">
+                            @for (fieldType of childFieldTypes; track fieldType.value) {
+                              <option [value]="fieldType.value">{{ fieldType.label }}</option>
+                            }
+                          </select>
+                          <label class="child-required">
+                            <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="childField.required"
+                              (ngModelChange)="builderChanged()">
+                            Required
+                          </label>
+                          <button class="icon-button danger" type="button" title="Remove group field"
+                            (click)="removeChildField(inputField, childIndex)">
+                            <span class="material-symbols-rounded">close</span>
+                          </button>
+                          @if (childField.type === 'select' || childField.type === 'radio' || childField.type === 'checkbox') {
+                            <input class="input input-bordered input-sm child-options" aria-label="Child field options"
+                              [ngModel]="fieldOptions(childField)"
+                              (blur)="setFieldOptions(childField, $any($event.target).value)"
+                              placeholder="Options separated by commas">
+                          }
+                          @if (childField.type === 'file') {
+                            <input class="input input-bordered input-sm child-options" aria-label="Accepted file types"
+                              [ngModel]="fieldAcceptedTypes(childField)"
+                              (blur)="setFieldAcceptedTypes(childField, $any($event.target).value)"
+                              placeholder=".pdf, .docx, image/png">
+                            <input type="number" min="1" class="input input-bordered input-sm child-key"
+                              aria-label="Maximum file size in MB"
+                              [(ngModel)]="childField.maxFileSizeMb" (ngModelChange)="builderChanged()">
+                          }
+                          @if (childField.type === 'user-search') {
+                            <span class="choice-kind child-options">
+                              <button type="button" [class.active]="!childField.multiple"
+                                (click)="setUserSearchMode(childField, false)">Single user</button>
+                              <button type="button" [class.active]="childField.multiple"
+                                (click)="setUserSearchMode(childField, true)">Multiple users</button>
+                            </span>
+                          }
+                          <div class="child-options grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                            <label class="child-required">
+                              <input type="checkbox" class="checkbox checkbox-xs" [checked]="!!childField.visibleWhen"
+                                (change)="toggleFieldVisibilityRule(childField, $any($event.target).checked, inputField.fields, task.form)">
+                              Show only when another answer matches
+                            </label>
+                            @if (childField.visibleWhen) {
+                              <div class="grid gap-2 md:grid-cols-2">
+                                <select class="select select-bordered select-sm" [ngModel]="childField.visibleWhen.field"
+                                  (ngModelChange)="setVisibilityField(childField, $event, inputField.fields, task.form)">
+                                  <option value="">Select field</option>
+                                  @for (group of conditionFieldGroups(childField, inputField.fields, task.form); track group.taskId) {
+                                    <optgroup [label]="group.taskName">
+                                      @for (sourceField of group.fields; track sourceField.key) {
+                                        <option [value]="sourceField.key">{{ sourceField.label }}</option>
+                                      }
+                                    </optgroup>
+                                  }
+                                </select>
+                                @if (visibilityValueOptions(childField, inputField.fields, task.form).length) {
+                                  <select class="select select-bordered select-sm" [ngModel]="childField.visibleWhen.equals"
+                                    (ngModelChange)="setVisibilityValue(childField, $event)">
+                                    @for (option of visibilityValueOptions(childField, inputField.fields, task.form); track option) {
+                                      <option [value]="option">{{ option }}</option>
+                                    }
+                                  </select>
+                                } @else {
+                                  <input class="input input-bordered input-sm" [ngModel]="childField.visibleWhen.equals"
+                                    (ngModelChange)="setVisibilityValue(childField, $event)" placeholder="Yes">
+                                }
+                              </div>
+                            }
+                          </div>
+                          @if (canConfigureEmailAction(childField)) {
+                            <div class="child-options grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                              <label class="child-required">
+                                <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="childField.emailAction"
+                                  (ngModelChange)="builderChanged()">
+                                Email composer
+                              </label>
+                              @if (childField.emailAction) {
+                                <input class="input input-bordered input-sm" [(ngModel)]="childField.emailSubject"
+                                  (ngModelChange)="builderChanged()" placeholder="Default subject">
+                                <textarea class="textarea textarea-bordered textarea-sm min-h-24 w-full" rows="4"
+                                  [(ngModel)]="childField.emailMessage" (ngModelChange)="builderChanged()"
+                                  [placeholder]="'Default message. You can use {{programmeTitle}}, {{programmeCode}}, {{initiator}}, {{recipientName}}.'"></textarea>
+                              }
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <label class="required-toggle">
+                  <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="inputField.required"
+                    (ngModelChange)="builderChanged()">
+                  Required
+                </label>
+              </div>
+            }
+            @if (!task.form?.length) {
+              <p class="empty">No input fields configured for this task.</p>
+            }
+          </div>
+
+          <div class="section-heading compact">
+            <div><p class="eyebrow">Evidence</p><h2>Required documents</h2></div>
+            <button class="icon-button" type="button" title="Add required document" (click)="addArtifact()">
+              <span class="material-symbols-rounded">add</span>
+            </button>
+          </div>
+          <div class="field-list">
+            @for (artifact of task.artifacts; track $index; let artifactIndex = $index) {
+              <div class="field-row">
+                <div class="field-row-head">
+                  <span class="material-symbols-rounded">attach_file</span>
+                  <input class="input input-bordered input-sm" aria-label="Document label"
+                    [(ngModel)]="artifact.label" (ngModelChange)="builderChanged()">
+                  <button class="icon-button danger" type="button" title="Remove document requirement"
+                    (click)="removeArtifact(artifactIndex)">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    <span>Key</span>
+                    <input class="input input-bordered input-sm" [(ngModel)]="artifact.key"
+                      (ngModelChange)="builderChanged()">
+                  </label>
+                  <label>
+                    <span>File count</span>
+                    <span class="choice-kind">
+                      <button type="button" class="w-full" [class.active]="!artifact.multiple"
+                        (click)="setArtifactMode(artifactIndex, false)">Single</button>
+                      <button type="button" [class.active]="artifact.multiple"
+                        (click)="setArtifactMode(artifactIndex, true)">Multiple</button>
+                    </span>
+                  </label>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    <span>Maximum files</span>
+                    <input type="number" min="1" class="input input-bordered input-sm"
+                      placeholder="Blank for unlimited"
+                      [(ngModel)]="artifact.maxFiles" [disabled]="!artifact.multiple"
+                      (ngModelChange)="updateArtifactMaxFiles(artifactIndex)">
+                    @if (artifact.multiple) {
+                      <small class="text-base-content/50">Leave blank when there is no file limit.</small>
+                    }
+                  </label>
+                  <label>
+                    <span>Maximum file size (MB)</span>
+                    <input type="number" min="1" class="input input-bordered input-sm"
+                      [(ngModel)]="artifact.maxFileSizeMb"
+                      (ngModelChange)="updateArtifactMaxFileSize(artifactIndex)">
+                  </label>
+                </div>
+                <div class="field-grid">
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs" [(ngModel)]="artifact.required"
+                      (ngModelChange)="builderChanged()">
+                    Required
+                  </label>
+                  <fieldset class="grid gap-1">
+                    <legend class="text-xs text-base-content/60">Allow this document to be emailed?</legend>
+                    <div class="flex min-h-8 items-center gap-4 rounded border border-base-300 bg-base-100 px-3">
+                      <label class="flex cursor-pointer items-center gap-2 text-xs">
+                        <input type="radio" class="radio radio-xs"
+                          [name]="'artifact-email-' + artifactIndex" [value]="false"
+                          [(ngModel)]="artifact.emailAction" (ngModelChange)="builderChanged()">
+                        No
+                      </label>
+                      <label class="flex cursor-pointer items-center gap-2 text-xs">
+                        <input type="radio" class="radio radio-xs"
+                          [name]="'artifact-email-' + artifactIndex" [value]="true"
+                          [(ngModel)]="artifact.emailAction" (ngModelChange)="builderChanged()">
+                        Yes
+                      </label>
+                    </div>
+                  </fieldset>
+                </div>
+                @if (artifact.emailAction) {
+                  <div class="grid gap-2 rounded-md border border-base-300 bg-base-200/45 p-3">
+                    <label>
+                      <span>Default email subject</span>
+                      <input class="input input-bordered input-sm" [(ngModel)]="artifact.emailSubject"
+                        [placeholder]="'Documents for {{programmeTitle}}'" (ngModelChange)="builderChanged()">
+                    </label>
+                    <label>
+                      <span>Default email message</span>
+                      <textarea class="textarea textarea-bordered min-h-24 w-full" [(ngModel)]="artifact.emailMessage"
+                        placeholder="Write the default message shown when this document is emailed."
+                        (ngModelChange)="builderChanged()"></textarea>
+                    </label>
+                    <small class="text-base-content/50">
+                      Templates can use {{ '{{programmeTitle}}' }}, {{ '{{programmeCode}}' }},
+                      {{ '{{recipientName}}' }} and {{ '{{initiator}}' }}.
+                    </small>
+                  </div>
+                }
+              </div>
+            }
+            @if (!task.artifacts?.length) {
+              <p class="empty">No required documents configured for this task.</p>
+            }
+          </div>
+
+          <div class="section-heading compact">
+            <div><p class="eyebrow">Routing</p><h2>Transitions</h2></div>
+            <button class="icon-button" type="button" title="Add transition" (click)="addTransition()">
+              <span class="material-symbols-rounded">add</span>
+            </button>
+          </div>
+          <div class="transition-list">
+            @for (transition of task.transitions; track $index; let index = $index) {
+              <div class="transition-row">
+                <div class="transition-line">
+                  <span class="material-symbols-rounded">arrow_forward</span>
+                  <input class="input input-bordered input-sm" aria-label="Transition label"
+                    [(ngModel)]="transition.label" (ngModelChange)="builderChanged()">
+                  <button class="icon-button danger" type="button" title="Remove transition"
+                    (click)="removeTransition(index)">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
+                </div>
+                <select class="select select-bordered select-sm" aria-label="Next task"
+                  [ngModel]="transitionTarget(transition)"
+                  (ngModelChange)="setTransitionTarget(transition, $event)">
+                  <option value="END">End workflow</option>
+                  @for (option of taskOptions; track option.id) {
+                    <option [value]="option.id" [disabled]="option.id === task.id">{{ option.name }}</option>
+                  }
+                </select>
+                <div class="grid gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+                  <label class="required-toggle">
+                    <input type="checkbox" class="checkbox checkbox-xs"
+                      [checked]="transitionConditionEnabled(transition)"
+                      (change)="toggleTransitionCondition(transition, $any($event.target).checked)">
+                    Only use this route when an answer matches
+                  </label>
+                  @if (transition.when) {
+                    <div class="field-grid">
+                      <label>
+                        <span>Answer field</span>
+                        <select class="select select-bordered select-sm" [ngModel]="transition.when.field"
+                          (ngModelChange)="setTransitionConditionField(transition, $event)">
+                          <option value="">Select field</option>
+                          @for (field of transitionConditionFields(); track field.key) {
+                            <option [value]="field.key">{{ field.label }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label>
+                        <span>Answer value</span>
+                        @if (transitionConditionOptions(transition).length) {
+                          <select class="select select-bordered select-sm" [ngModel]="transition.when.equals"
+                            (ngModelChange)="setTransitionConditionValue(transition, $event)">
+                            @for (option of transitionConditionOptions(transition); track option) {
+                              <option [value]="option">{{ option }}</option>
+                            }
+                          </select>
+                        } @else {
+                          <input class="input input-bordered input-sm" [ngModel]="transition.when.equals"
+                            (ngModelChange)="setTransitionConditionValue(transition, $event)"
+                            placeholder="Value to match">
+                        }
+                      </label>
+                    </div>
+                  } @else {
+                    <p class="text-xs text-base-content/55">
+                      This route is used when no earlier conditional route matches, or when it is the only route.
+                    </p>
+                  }
+                </div>
+                <div class="notification-config">
+                  <span class="notification-label">
+                    <span class="material-symbols-rounded">notifications</span>
+                    Notify after completion
+                  </span>
+                  <div class="dropdown dropdown-top w-full">
+                    <button type="button" tabindex="0"
+                      class="select select-bordered select-sm flex min-h-8 w-full items-center justify-between gap-2 bg-base-100 text-left">
+                      <span class="truncate">{{ notificationRoleSummary(transition) }}</span>
+                      <span class="material-symbols-rounded text-base text-base-content/45">expand_more</span>
+                    </button>
+                    <div tabindex="0"
+                      class="dropdown-content z-30 mb-1 max-h-64 w-full overflow-y-auto rounded-md border border-base-300 bg-base-100 p-2 shadow-lg">
+                      @for (role of definition.roles; track role.id) {
+                        <label
+                          class="flex min-h-9 cursor-pointer items-center gap-2 rounded px-2 text-xs transition-colors hover:bg-base-200"
+                          [class.bg-primary/10]="notifiesRole(transition, role.id)">
+                          <input type="checkbox" class="checkbox checkbox-xs"
+                            [checked]="notifiesRole(transition, role.id)"
+                            (change)="toggleNotificationRole(transition, role.id, $any($event.target).checked)">
+                          <span class="min-w-0 flex-1">
+                            <span class="block truncate font-semibold">{{ role.name }}</span>
+                            <span class="block truncate font-mono text-[0.62rem] text-base-content/50">{{ role.id }}</span>
+                          </span>
+                        </label>
+                      } @empty {
+                        <p class="empty px-2 py-3">Add roles before configuring notifications.</p>
+                      }
+                    </div>
+                  </div>
+                  @if (selectedNotificationRoles(transition).length) {
+                    <div class="mt-2 flex flex-wrap gap-1">
+                      @for (role of selectedNotificationRoles(transition); track role.id) {
+                        <span class="badge badge-ghost badge-sm max-w-full gap-1">
+                          <span class="material-symbols-rounded text-sm">notifications</span>
+                          <span class="truncate">{{ role.name }}</span>
+                        </span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <p class="json-hint">Conditional branches and advanced routing remain editable in JSON mode.</p>
+          </div>
+        } @else if (editorVisible && selectedStage; as stage) {
+          <div class="editor-panel" animate.enter="editor-panel-enter">
+          <div class="section-heading">
+            <div><p class="eyebrow">Selected stage</p><h2>{{ stage.name }}</h2></div>
+            <button class="icon-button danger" type="button" title="Remove stage"
+              (click)="removeStage(definition.stages.indexOf(stage))">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>
+          <label class="field">
+            <span>Stage name</span>
+            <input class="input input-bordered input-sm" [(ngModel)]="stage.name" (ngModelChange)="builderChanged()">
+          </label>
+          <label class="field">
+            <span>Stage description</span>
+            <textarea class="textarea textarea-bordered" rows="5" [(ngModel)]="stage.description"
+              (ngModelChange)="builderChanged()"
+              placeholder="Explain what happens in this stage and what users should prepare."></textarea>
+          </label>
+          <label class="field">
+            <span>Stage identifier</span>
+            <input class="input input-bordered input-sm" [ngModel]="stage.id"
+              (ngModelChange)="renameStage(stage, $event)">
+            <small>Changing this updates tasks already assigned to the stage.</small>
+          </label>
+          <label class="concurrent-control" [class.disabled]="definition.stages.indexOf(stage) === 0">
+            <input class="toggle toggle-primary toggle-sm" type="checkbox" [(ngModel)]="stage.runWithPrevious"
+              [disabled]="definition.stages.indexOf(stage) === 0" (ngModelChange)="builderChanged()">
+            <span>
+              <strong>Run with previous stage</strong>
+              <small>Start both stages together. Their next stage opens after both have finished.</small>
+            </span>
+          </label>
+          <div class="grid gap-3 rounded-md border border-base-300 bg-base-100 p-3">
+            <label class="flex cursor-pointer items-start justify-between gap-3">
+              <span>
+                <strong class="block text-sm">Schedule a stage review</strong>
+                <small class="block text-xs text-base-content/55">Notify PDQA when this stage reaches its review date.</small>
+              </span>
+              <input class="toggle toggle-primary toggle-sm" type="checkbox" [checked]="!!stage.reviewAfter"
+                (change)="setStageReviewEnabled(stage, $any($event.target).checked)">
+            </label>
+            @if (stage.reviewAfter; as review) {
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="field">
+                  <span>Review after</span>
+                  <div class="grid grid-cols-[minmax(0,1fr)_7rem] gap-2">
+                    <input class="input input-bordered input-sm" type="number" min="1" step="1"
+                      [(ngModel)]="review.amount" (ngModelChange)="builderChanged()">
+                    <select class="select select-bordered select-sm" [(ngModel)]="review.unit"
+                      (ngModelChange)="builderChanged()">
+                      <option value="months">Months</option>
+                      <option value="years">Years</option>
+                    </select>
+                  </div>
+                </label>
+                <label class="field">
+                  <span>Count from</span>
+                  <select class="select select-bordered select-sm" [(ngModel)]="review.from"
+                    (ngModelChange)="builderChanged()">
+                    <option value="stage-started">When this stage starts</option>
+                    <option value="programme-created">When the programme is created</option>
+                  </select>
+                </label>
+              </div>
+            }
+          </div>
+          <div class="stage-editor-actions">
+            <button class="btn btn-sm btn-ghost" type="button"
+              [disabled]="definition.stages.indexOf(stage) === 0"
+              (click)="moveStage(definition.stages.indexOf(stage), -1)">
+              <span class="material-symbols-rounded">arrow_upward</span>
+              Move up
+            </button>
+            <button class="btn btn-sm btn-ghost" type="button"
+              [disabled]="definition.stages.indexOf(stage) === definition.stages.length - 1"
+              (click)="moveStage(definition.stages.indexOf(stage), 1)">
+              <span class="material-symbols-rounded">arrow_downward</span>
+              Move down
+            </button>
+            <button class="btn btn-sm btn-primary" type="button" (click)="addTask(stage.id)">
+              <span class="material-symbols-rounded">add_task</span>
+              Add task to stage
+            </button>
+          </div>
+          <div class="stage-task-summary">
+            <p class="eyebrow">Tasks in this stage</p>
+            @for (task of stageTasks(stage.id); track task.id) {
+                <article class="task-item" [class.selected]="task.id === selectedTaskId"
+                  [class.moved]="task.id === movedTaskId">
+                  <button type="button" class="grid min-h-10 w-full grid-cols-[1.4rem_minmax(0,1fr)_1.8rem] items-center gap-2 px-1 py-0.5 text-left" (click)="selectTask(task.id)">
+                  <span class="material-symbols-rounded">task_alt</span>
+                  <span><strong>{{ task.name }}</strong><small>{{ task.id }}</small></span>
+                  <span class="owner-count">{{ task.ownerRoles.length }}</span>
+                  </button>
+                  <span class="flex gap-0.5">
+                    <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task up" [disabled]="!canMoveTask(task, -1)"
+                      (click)="moveTask(task.id, -1)">
+                      <span class="material-symbols-rounded">arrow_upward</span>
+                    </button>
+                    <button type="button" class="btn btn-ghost btn-square btn-xs" title="Move task down" [disabled]="!canMoveTask(task, 1)"
+                      (click)="moveTask(task.id, 1)">
+                      <span class="material-symbols-rounded">arrow_downward</span>
+                    </button>
+                  </span>
+                </article>
+            } @empty {
+              <p class="empty">Add the first task to this stage.</p>
+            }
+          </div>
+          </div>
+        } @else {
+          <div class="empty task-empty editor-panel" animate.enter="editor-panel-enter">
+            <span class="material-symbols-rounded">touch_app</span>
+            Select a stage or task to edit it.
+          </div>
+        }
+      </aside>
+    </section>
+  } @else {
+    <section class="json-workspace" animate.enter="workflow-panel-enter">
+      <header>
+        <div><p class="eyebrow">Source</p><h2>Workflow JSON</h2></div>
+        <button class="btn btn-sm btn-primary" type="button" (click)="applyJson()">
+          <span class="material-symbols-rounded">check</span>
+          Apply JSON
+        </button>
+      </header>
+      <textarea class="json-editor" spellcheck="false" [(ngModel)]="jsonText"></textarea>
+      @if (jsonError) {
+        <p class="json-error"><span class="material-symbols-rounded">error</span>{{ jsonError }}</p>
+      }
+    </section>
+  }
+</main>

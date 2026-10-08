@@ -1,0 +1,56 @@
+<main class="team-page">
+  <section class="team-hero">
+    <div>
+      <p class="eyebrow">Programme Development and Quality Assurance</p>
+      <h1>The people behind programme quality</h1>
+      <p class="hero-copy">
+        Our team works with faculties, departments and external bodies to guide programme development,
+        review and registration from the first conversation to the final submission.
+      </p>
+    </div>
+    <aside class="contact-panel">
+      <span class="material-symbols-rounded">support_agent</span>
+      <div>
+        <strong>Not sure who to contact?</strong>
+        <p>Start with Support and we will guide you to the right person.</p>
+      </div>
+      <a routerLink="/support" class="btn btn-sm">Get support</a>
+    </aside>
+  </section>
+
+  <section class="service-strip" aria-label="How the PDQA team supports programme development">
+    @for (area of serviceAreas; track area.title; let index = $index) {
+      <article [style.animation-delay.ms]="120 + index * 90">
+        <span class="material-symbols-rounded">{{ area.icon }}</span>
+        <div><strong>{{ area.title }}</strong><p>{{ area.text }}</p></div>
+      </article>
+    }
+  </section>
+
+  <section class="team-directory">
+    <header>
+      <div>
+        <p class="eyebrow">Meet the department</p>
+        <h2>Our team</h2>
+      </div>
+      <!-- <p>Contact details are available directly on each profile.</p> -->
+    </header>
+
+    <div class="team-grid">
+      @for (member of teamMembers; track member.email; let index = $index) {
+        <article class="member-card" [style.animation-delay.ms]="240 + index * 80">
+          <img [src]="member.image" [alt]="member.name">
+          <div class="member-body">
+            <p class="member-role">{{ member.role }}</p>
+            <h3>{{ member.name }}</h3>
+            <div class="member-meta">
+              <span><span class="material-symbols-rounded">location_on</span>{{ member.office }}</span>
+              <a [href]="'mailto:' + member.email"><span class="material-symbols-rounded">mail</span>{{ member.email }}</a>
+              <a [href]="'tel:' + member.phone"><span class="material-symbols-rounded">call</span>{{ member.phone }}</a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+</main>

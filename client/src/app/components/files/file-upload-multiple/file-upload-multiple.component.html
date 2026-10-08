@@ -1,0 +1,83 @@
+<div class="flex justify-between items-center my-2">
+  <label class="font-semibold">Attach Documents</label>
+  <button class="btn btn-xs btn-outline btn-primary" type="button" (click)="toggle()">
+    Add Document
+    {{isAttachShown()?'-':'+'}}
+  </button>
+</div>
+
+@if(isAttachShown()) {
+<div class="flex flex-col border-2 border-dashed border-gray-300 rounded-box p-2 attach-file-container"
+  [class.open]="isAttachShown()">
+  <div class="fieldset">
+    <select class="select select-sm select-bordered" name="documentName" id="documentName" [(ngModel)]="documentType"
+      #docType="ngModel">
+      @for (filetag of fileTypeList; track $index) {
+      <option [value]="filetag" [selected]="filetag===''" [disabled]="filetag===''">
+        {{filetag===''?'Select Document type':filetag}}
+      </option>
+      }
+    </select>
+  </div>
+
+  <div class="divider my-0.5"></div>
+
+  <div class="fieldset flex-auto relative group">
+    @if (docType.value === "") {
+    <div
+      class="absolute top-0 left-0 w-full h-full hover:bg-gray-300/15 backdrop-blur-xs rounded-lg hidden group-hover:grid place-items-center">
+      <label class="text-xs text-error">Please select document type</label>
+    </div>
+    }
+    <div class="flex items-center justify-center w-full">
+      <label for="dropzone-file"
+        class="flex flex-col items-center justify-center w-full p-2 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+        ng2FileDrop [uploader]="uploader" (change)="addFile()">
+        <div class="flex flex-col items-center justify-center">
+          <svg class="size-6 mb-1 text-gray-500 dark:text-gray-400" aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+          </svg>
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            <span class="font-semibold">Click to upload</span>
+            or drag and drop
+          </span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 50MB)</span>
+        </div>
+        <input [disabled]="fileTypeList.length===0" required name="file" ngModel #doc="ngModel" id="dropzone-file"
+          type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
+      </label>
+    </div>
+  </div>
+
+</div>
+}
+
+@if(uploader?.queue.length){
+<fieldset class="p-1 pb-3 border-2 border-dashed border-gray-300 rounded-lg fieldset">
+  <legend class="fieldset-legend">{{uploader?.queue.length}} document{{uploader?.queue.length>1?'s':''}} attached
+  </legend>
+  <div class="space-y-1">
+    @for (item of selectedFiles; track $index) {
+    <div class="rounded-lg p-1 bg-gray-50 flex items-center gap-4 group">
+      <div class="size-10 rounded-lg bg-gray-200 grid place-items-center">
+        <file-icon [fileName]="item.fileName"></file-icon>
+      </div>
+      <div class="flex flex-col grow">
+        <span class="font-normal text-sm break-all">{{item.fileName}}</span>
+        <span class="text-xs text-gray-500">{{item.documentType}}</span>
+      </div>
+      <div
+        class="size-8 hidden group-hover:grid hover:bg-gray-200 hover:scale-90 rounded-full place-items-center cursor-pointer transition-all">
+        <span class="material-symbols-rounded cursor-pointer text-gray-700 text-[20px]!"
+          (click)="removeFile(item.fileName , item.documentType)">
+          delete
+        </span>
+      </div>
+      @if(uploader.isUploading){<span class="loading loading-spinner loading-md"></span>}
+    </div>
+    }
+  </div>
+</fieldset>
+}

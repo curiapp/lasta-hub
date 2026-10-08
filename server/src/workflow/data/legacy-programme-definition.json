@@ -1,0 +1,182 @@
+{
+  "id": "legacy-programme-capture",
+  "name": "Existing Programme Capture",
+  "description": "Capture an existing programme that completed its approval process before the system was introduced, upload its final records, and submit them to PDQA for verification.",
+  "version": 1,
+  "roles": [
+    {
+      "id": "initiator",
+      "name": "Programme Coordinator"
+    },
+    {
+      "id": "pdqa",
+      "name": "PDQA Administrator"
+    }
+  ],
+  "stages": [
+    {
+      "id": "programme-record",
+      "name": "Programme Record",
+      "description": "Record the key registration and review details already held for the programme.",
+      "order": 1
+    },
+    {
+      "id": "final-documents",
+      "name": "Final Documents",
+      "description": "Upload the final approved programme and any available approval or registration evidence.",
+      "order": 2
+    },
+    {
+      "id": "pdqa-verification",
+      "name": "PDQA Verification",
+      "description": "PDQA checks that the programme record is complete and ready for institutional use.",
+      "order": 3
+    }
+  ],
+  "initialTask": "record-existing-programme",
+  "tasks": [
+    {
+      "id": "record-existing-programme",
+      "stageId": "programme-record",
+      "name": "Record Existing Programme Details",
+      "description": "Capture the known registration, approval, and review information for this existing programme.",
+      "ownerRoles": [
+        "initiator"
+      ],
+      "form": [
+        {
+          "key": "registrationNumber",
+          "type": "text",
+          "label": "Registration Number",
+          "required": false
+        },
+        {
+          "key": "originalApprovalDate",
+          "type": "date",
+          "label": "Original Approval Date",
+          "required": false
+        },
+        {
+          "key": "registrationDate",
+          "type": "date",
+          "label": "NQF Registration Date",
+          "required": false
+        },
+        {
+          "key": "nextReviewDate",
+          "type": "date",
+          "label": "Next Review Date",
+          "required": false
+        },
+        {
+          "key": "recordNotes",
+          "type": "textarea",
+          "label": "Record Notes",
+          "required": false
+        }
+      ],
+      "transitions": [
+        {
+          "event": "submit",
+          "label": "Continue to final documents",
+          "to": "upload-final-programme-documents",
+          "notifyRoles": []
+        }
+      ]
+    },
+    {
+      "id": "upload-final-programme-documents",
+      "stageId": "final-documents",
+      "name": "Upload Final Programme Documents",
+      "description": "Upload the final approved programme document and any supporting approval or registration records that are available.",
+      "ownerRoles": [
+        "initiator"
+      ],
+      "artifacts": [
+        {
+          "key": "final-approved-programme",
+          "label": "Final Approved Programme",
+          "required": true,
+          "multiple": false,
+          "maxFiles": 1,
+          "maxFileSizeMb": 20
+        },
+        {
+          "key": "approval-and-registration-evidence",
+          "label": "Approval and Registration Evidence",
+          "required": false,
+          "multiple": true,
+          "maxFileSizeMb": 20
+        }
+      ],
+      "transitions": [
+        {
+          "event": "submit",
+          "label": "Send to PDQA for verification",
+          "to": "verify-existing-programme-record",
+          "notifyRoles": [
+            "pdqa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verify-existing-programme-record",
+      "stageId": "pdqa-verification",
+      "name": "Verify Existing Programme Record",
+      "description": "Confirm that the final programme record is complete, or return it to the coordinator for correction.",
+      "ownerRoles": [
+        "pdqa"
+      ],
+      "form": [
+        {
+          "key": "legacyVerificationDecision",
+          "type": "radio",
+          "label": "Verification Decision",
+          "required": true,
+          "options": [
+            "Verified",
+            "Return for correction"
+          ]
+        },
+        {
+          "key": "legacyCorrectionReason",
+          "type": "textarea",
+          "label": "Correction Required",
+          "required": true,
+          "visibleWhen": {
+            "field": "legacyVerificationDecision",
+            "equals": "Return for correction"
+          }
+        }
+      ],
+      "transitions": [
+        {
+          "event": "submit",
+          "label": "Verified",
+          "to": "END",
+          "outcome": "completed",
+          "notifyRoles": [
+            "initiator"
+          ],
+          "when": {
+            "field": "legacyVerificationDecision",
+            "equals": "Verified"
+          }
+        },
+        {
+          "event": "submit",
+          "label": "Return for correction",
+          "to": "upload-final-programme-documents",
+          "notifyRoles": [
+            "initiator"
+          ],
+          "when": {
+            "field": "legacyVerificationDecision",
+            "equals": "Return for correction"
+          }
+        }
+      ]
+    }
+  ]
+}

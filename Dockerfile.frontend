@@ -1,0 +1,18 @@
+FROM node:24.15.0-alpine AS build
+
+# ARG PORT
+# ENV PORT=${PORT}
+
+WORKDIR /app
+
+COPY ./client/package.json ./client/yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+COPY ./client ./
+
+RUN yarn build
+
+EXPOSE 4000
+
+CMD ["npm", "run", "serve:ssr:app"]

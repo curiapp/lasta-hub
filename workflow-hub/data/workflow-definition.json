@@ -1,0 +1,324 @@
+{
+  "id": "curriculum-development",
+  "version": 1,
+  "name": "Curriculum Development",
+  "description": "Workflow definition for creating or revising a university programme.",
+  "roles": [
+    { "id": "hod", "name": "Head of Department" },
+    { "id": "dean", "name": "Executive Dean" },
+    { "id": "pdu", "name": "PDU / PDQA" },
+    { "id": "cdc", "name": "CDC" },
+    { "id": "pac", "name": "PAC" },
+    { "id": "tlu", "name": "TLU" },
+    { "id": "qau", "name": "QAU" },
+    { "id": "bos", "name": "Board of Studies" },
+    { "id": "senate", "name": "Senate" },
+    { "id": "nqa", "name": "NQA Liaison" }
+  ],
+  "stages": [
+    { "id": "need-analysis", "name": "Need Analysis", "order": 1 },
+    { "id": "curriculum-development", "name": "Curriculum Development", "order": 2 },
+    { "id": "consultations", "name": "Consultations", "order": 3 },
+    { "id": "pac-endorsement", "name": "PAC Endorsement", "order": 4 },
+    { "id": "tlu-review", "name": "TLU Review", "order": 5 },
+    { "id": "qau-review", "name": "QAU Review", "order": 6 },
+    { "id": "bos-approval", "name": "BOS Approval", "order": 7 },
+    { "id": "senate-approval", "name": "Senate Approval", "order": 8 },
+    { "id": "nqa-registration", "name": "NQA Registration", "order": 9 }
+  ],
+  "initialTask": "programme-resume",
+  "tasks": [
+    {
+      "id": "programme-resume",
+      "stageId": "need-analysis",
+      "name": "Programme Resume",
+      "ownerRoles": ["hod", "dean"],
+      "form": [
+        { "key": "rationale", "label": "Rationale", "type": "textarea", "required": true },
+        { "key": "targetMarket", "label": "Target Market", "type": "text", "required": true },
+        { "key": "expectedLevel", "label": "NQF Level", "type": "select", "required": true, "options": ["5", "6", "7", "8", "9"] }
+      ],
+      "artifacts": [
+        { "key": "concept-note", "label": "Concept Note", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Submit Resume", "to": "stakeholders-consultation", "notifyRoles": ["pdu"] }
+      ]
+    },
+    {
+      "id": "stakeholders-consultation",
+      "stageId": "need-analysis",
+      "name": "Stakeholder Consultation",
+      "ownerRoles": ["pdu", "hod"],
+      "form": [
+        { "key": "organizations", "label": "Organizations Consulted", "type": "textarea", "required": true },
+        { "key": "startDate", "label": "Start Date", "type": "date", "required": true },
+        { "key": "endDate", "label": "End Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "questionnaire", "label": "Questionnaire", "required": true },
+        { "key": "survey-results", "label": "Survey Results", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Record Consultation", "to": "pdqa-recommendation", "notifyRoles": ["pdu"] }
+      ]
+    },
+    {
+      "id": "pdqa-recommendation",
+      "stageId": "need-analysis",
+      "name": "PDQA Recommendation",
+      "ownerRoles": ["pdu"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["proceed", "inconclusive"] },
+        { "key": "notes", "label": "Notes", "type": "textarea", "required": false }
+      ],
+      "artifacts": [
+        { "key": "recommendation-report", "label": "Recommendation Report", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Proceed", "when": { "field": "decision", "equals": "proceed" }, "to": "bos-need-analysis", "notifyRoles": ["bos"] },
+        { "event": "submit", "label": "Close", "when": { "field": "decision", "equals": "inconclusive" }, "to": "END", "outcome": "stopped" }
+      ]
+    },
+    {
+      "id": "bos-need-analysis",
+      "stageId": "need-analysis",
+      "name": "BOS Need Analysis Recommendation",
+      "ownerRoles": ["bos"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["recommended", "revision-required", "rejected"] },
+        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "bos-minutes", "label": "BOS Minutes", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Recommended", "when": { "field": "decision", "equals": "recommended" }, "to": "senate-need-analysis", "notifyRoles": ["senate"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "stakeholders-consultation", "notifyRoles": ["hod", "pdu"] },
+        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+      ]
+    },
+    {
+      "id": "senate-need-analysis",
+      "stageId": "need-analysis",
+      "name": "Senate Need Analysis Approval",
+      "ownerRoles": ["senate"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["approved", "revision-required", "rejected"] },
+        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "senate-extract", "label": "Senate Extract", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Approved", "when": { "field": "decision", "equals": "approved" }, "to": "cdc-and-pac-appointment", "notifyRoles": ["pdu", "cdc"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "bos-need-analysis", "notifyRoles": ["bos", "pdu"] },
+        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+      ]
+    },
+    {
+      "id": "cdc-and-pac-appointment",
+      "stageId": "curriculum-development",
+      "name": "CDC and PAC Appointment",
+      "ownerRoles": ["pdu", "dean"],
+      "form": [
+        { "key": "cdcMembers", "label": "CDC Members", "type": "textarea", "required": true },
+        { "key": "pacMembers", "label": "PAC Members", "type": "textarea", "required": true },
+        { "key": "appointmentDate", "label": "Appointment Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "appointment-letter", "label": "Appointment Letter", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Appoint Committees", "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+      ]
+    },
+    {
+      "id": "curriculum-drafting",
+      "stageId": "curriculum-development",
+      "name": "Curriculum Drafting",
+      "ownerRoles": ["cdc"],
+      "form": [
+        { "key": "draftVersion", "label": "Draft Version", "type": "text", "required": true },
+        { "key": "summary", "label": "Summary", "type": "textarea", "required": true }
+      ],
+      "artifacts": [
+        { "key": "curriculum-draft", "label": "Curriculum Draft", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Submit Draft", "to": "pac-consultation", "notifyRoles": ["pac", "pdu"] }
+      ]
+    },
+    {
+      "id": "pac-consultation",
+      "stageId": "consultations",
+      "name": "PAC Consultation and Benchmarking",
+      "ownerRoles": ["pac", "pdu"],
+      "form": [
+        { "key": "benchmarkInstitutions", "label": "Benchmark Institutions", "type": "textarea", "required": true },
+        { "key": "consultationSummary", "label": "Consultation Summary", "type": "textarea", "required": true }
+      ],
+      "artifacts": [
+        { "key": "benchmark-report", "label": "Benchmark Report", "required": true },
+        { "key": "pac-feedback", "label": "PAC Feedback", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Record Consultation", "to": "pac-endorsement", "notifyRoles": ["pac"] }
+      ]
+    },
+    {
+      "id": "pac-endorsement",
+      "stageId": "pac-endorsement",
+      "name": "PAC Endorsement",
+      "ownerRoles": ["pac"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["endorsed", "revision-required"] },
+        { "key": "endorsementDate", "label": "Endorsement Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "pac-endorsement-letter", "label": "PAC Endorsement Letter", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Endorsed", "when": { "field": "decision", "equals": "endorsed" }, "to": "tlu-review", "notifyRoles": ["tlu"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+      ]
+    },
+    {
+      "id": "tlu-review",
+      "stageId": "tlu-review",
+      "name": "TLU Review",
+      "ownerRoles": ["tlu"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["recommended", "revision-required"] },
+        { "key": "notes", "label": "Review Notes", "type": "textarea", "required": false }
+      ],
+      "artifacts": [
+        { "key": "tlu-review-report", "label": "TLU Review Report", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Recommended", "when": { "field": "decision", "equals": "recommended" }, "to": "qau-review", "notifyRoles": ["qau"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+      ]
+    },
+    {
+      "id": "qau-review",
+      "stageId": "qau-review",
+      "name": "QAU Review",
+      "ownerRoles": ["qau"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["recommended", "revision-required"] },
+        { "key": "notes", "label": "Review Notes", "type": "textarea", "required": false }
+      ],
+      "artifacts": [
+        { "key": "qau-review-report", "label": "QAU Review Report", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Recommended", "when": { "field": "decision", "equals": "recommended" }, "to": "bos-final-approval", "notifyRoles": ["bos"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] }
+      ]
+    },
+    {
+      "id": "bos-final-approval",
+      "stageId": "bos-approval",
+      "name": "BOS Final Approval",
+      "ownerRoles": ["bos"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["approved", "revision-required", "rejected"] },
+        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "bos-final-minutes", "label": "BOS Final Minutes", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Approved", "when": { "field": "decision", "equals": "approved" }, "to": "senate-final-approval", "notifyRoles": ["senate"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "curriculum-drafting", "notifyRoles": ["cdc"] },
+        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+      ]
+    },
+    {
+      "id": "senate-final-approval",
+      "stageId": "senate-approval",
+      "name": "Senate Final Approval",
+      "ownerRoles": ["senate"],
+      "form": [
+        { "key": "decision", "label": "Decision", "type": "select", "required": true, "options": ["approved", "revision-required", "rejected"] },
+        { "key": "meetingDate", "label": "Meeting Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "senate-final-extract", "label": "Senate Final Extract", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Approved", "when": { "field": "decision", "equals": "approved" }, "to": "nqf-documentation", "notifyRoles": ["pdu", "nqa"] },
+        { "event": "submit", "label": "Revise", "when": { "field": "decision", "equals": "revision-required" }, "to": "bos-final-approval", "notifyRoles": ["bos"] },
+        { "event": "submit", "label": "Reject", "when": { "field": "decision", "equals": "rejected" }, "to": "END", "outcome": "rejected" }
+      ]
+    },
+    {
+      "id": "nqf-documentation",
+      "stageId": "nqa-registration",
+      "name": "NQF Documentation Preparation",
+      "ownerRoles": ["pdu", "nqa"],
+      "form": [
+        { "key": "submissionType", "label": "Submission Type", "type": "select", "required": true, "options": ["new-programme", "revision"] },
+        { "key": "notes", "label": "Notes", "type": "textarea", "required": false }
+      ],
+      "artifacts": [
+        { "key": "qualification-document", "label": "Qualification Document", "required": true },
+        { "key": "support-pack", "label": "Support Pack", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Prepare Submission", "to": "nqf-submission", "notifyRoles": ["nqa"] }
+      ]
+    },
+    {
+      "id": "nqf-submission",
+      "stageId": "nqa-registration",
+      "name": "NQF Submission",
+      "ownerRoles": ["nqa", "pdu"],
+      "form": [
+        { "key": "submissionDate", "label": "Submission Date", "type": "date", "required": true },
+        { "key": "referenceNumber", "label": "Reference Number", "type": "text", "required": false }
+      ],
+      "artifacts": [
+        { "key": "nqa-submission-pack", "label": "NQA Submission Pack", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Submit to NQA", "to": "nqf-feedback", "notifyRoles": ["pdu"] }
+      ]
+    },
+    {
+      "id": "nqf-feedback",
+      "stageId": "nqa-registration",
+      "name": "NQF Feedback",
+      "ownerRoles": ["nqa", "pdu"],
+      "form": [
+        { "key": "decision", "label": "Feedback", "type": "select", "required": true, "options": ["accepted", "amendments-required"] },
+        { "key": "feedbackDate", "label": "Feedback Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "nqa-feedback-letter", "label": "NQA Feedback Letter", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Accepted", "when": { "field": "decision", "equals": "accepted" }, "to": "nqf-registration", "notifyRoles": ["pdu"] },
+        { "event": "submit", "label": "Amend", "when": { "field": "decision", "equals": "amendments-required" }, "to": "nqf-documentation", "notifyRoles": ["pdu", "cdc"] }
+      ]
+    },
+    {
+      "id": "nqf-registration",
+      "stageId": "nqa-registration",
+      "name": "NQF Registration",
+      "ownerRoles": ["nqa", "pdu"],
+      "form": [
+        { "key": "nqfId", "label": "NQF ID", "type": "text", "required": true },
+        { "key": "qualificationTitle", "label": "Qualification Title", "type": "text", "required": true },
+        { "key": "registrationDate", "label": "Registration Date", "type": "date", "required": true }
+      ],
+      "artifacts": [
+        { "key": "registration-certificate", "label": "Registration Certificate", "required": true }
+      ],
+      "transitions": [
+        { "event": "submit", "label": "Register Programme", "to": "END", "outcome": "completed" }
+      ]
+    }
+  ]
+}

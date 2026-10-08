@@ -1,0 +1,23 @@
+<div class="space-y-4">
+  <h3 class="text-xl">Final Senate - Recommendation</h3>
+  <form #senateForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Senate Date</legend>
+      <input id="date" type="Date" class="input input-sm input-bordered" required [(ngModel)]="date" ng2-datetime-picker
+        date-only="true" name="date" placeholder="DD-MM-YYYY" #cdate="ngModel" />
+      @if(cdate.invalid && cdate.touched) {
+      <span class="label text-error">Consultation date required*</span>
+      }
+    </fieldset>
+
+    <file-upload-multiple [pid]="pid" [url]="url" [fileTypeList]="fileTypeList" />
+
+    <div class="mt-3">
+      <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
+        [disabled]="fileUpload?.uploader?.queue?.length < 1 || senateForm.invalid">
+        Submit
+        <span class="material-symbols-rounded">cloud_upload</span>
+      </button>
+    </div>
+  </form>
+</div>

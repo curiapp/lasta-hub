@@ -1,0 +1,43 @@
+<div class="space-y-2">
+  <h3 class="text-xl">NQF Registration</h3>
+  <form #consultForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Qualification Title</legend>
+      <input id="qualificationTitle" type="text" class="input input-bordered" required
+        [(ngModel)]="model.qualificationTitle" name="title" #qualificationTitle="ngModel">
+      @if (qualificationTitle.invalid && qualificationTitle.touched) {
+      <span class="legend text-error">Qualification title required*</span>
+      }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="legend legend-text font-bold">NQF ID</legend>
+      <input id="nqfId" type="text" class="input input-bordered" required [(ngModel)]="model.nqfId" name="nqfId"
+        #nqfId="ngModel">
+      @if(nqfId.invalid && nqfId.touched){
+      <span class="label text-error">NQF ID required*</span>
+      }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Registration Date</legend>
+      <input id="date" type="Date" class="input input-bordered" required [(ngModel)]="model.regDate" ng2-datetime-picker
+        date-only="true" name="regDate" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      @if (cdate.invalid && cdate.touched) {
+      <span class="label text-error">Registration Date is required*</span>
+      }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Registered Qualification Document</legend>
+      <file-upload [pid]="pid" [url]="url"></file-upload>
+    </fieldset>
+
+    <div class="flex gap-2 justify-center">
+      <button type="submit" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
+        [disabled]="!fileUpload?.uploader?.queue.length || !consultForm.form.valid">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

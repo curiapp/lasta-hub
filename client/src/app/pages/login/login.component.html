@@ -1,0 +1,109 @@
+<div class="login-page">
+
+  <div class="login-shell">
+    <div class="login-card">
+
+      <div class="login-visual">
+        <div class="login-visual-overlay">
+          <div class="flex items-start justify-between gap-3">
+            <img class="h-8 md:h-10" src="assets/logo-white.png" alt="NUST Logo">
+            <a routerLink="/"
+              class="btn btn-sm border-white/30 bg-black/25 text-white shadow-none hover:border-white/50 hover:bg-black/40 group"><span
+                class="transition-all group-hover:scale-105">Back to Website</span> <span
+                class="transition-all group-hover:translate-x-1">&rarr;</span></a>
+          </div>
+
+          <div class="login-visual-copy">
+            <span>Programme Development Application</span>
+            <h1>Develop, review, and modernise programmes with confidence.</h1>
+            <p>
+              One connected space for curriculum development, maintenance, approvals, and quality assurance records.
+            </p>
+          </div>
+        </div>
+
+        <img src="assets/images/bg.png" alt="bg-image"
+          class="pointer-events-none absolute left-0 top-0 z-0 h-full w-full select-none object-cover" />
+      </div>
+
+      <div class="login-form-panel">
+
+        <div class="mobile-login-header">
+          <img class="h-9" src="assets/logo.png" alt="NUST Logo">
+          <a routerLink="/"
+            class="btn btn-sm border-base-300 bg-base-100 text-base-content shadow-sm hover:border-primary group">
+            <span class="transition-all group-hover:scale-105">Back</span>
+            <span class="transition-all group-hover:translate-x-1">&rarr;</span>
+          </a>
+        </div>
+
+        <div class="mobile-login-copy">
+          <span>PDQA Portal</span>
+          <h1>Streamline academic programme development.</h1>
+          <p>Sign in to continue with programme reviews, approvals, and development records.</p>
+        </div>
+
+        <div class="login-heading">
+          <span>Sign In</span>
+          <p>Welcome back. Continue where your programme work left off.</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+
+          <div class="form-control w-full">
+            <label class="login-label" for="email">Email address</label>
+            <input id="email" type="text"
+              class="input input-bordered w-full bg-base-100 text-base-content placeholder:text-base-content/40"
+              placeholder="Enter your email" required [(ngModel)]="model.email" name="email" #email="ngModel">
+            @if(email.invalid && loginForm.submitted){
+            <div class="label">
+              <span class="label-text-alt text-error">Email is required*</span>
+            </div>
+            }
+          </div>
+
+          <div class="form-control w-full">
+            <label class="login-label" for="password">Password</label>
+            <label class="relative">
+              <input #pass class="input input-bordered w-full bg-base-100 text-base-content placeholder:text-base-content/40" id="password"
+                [type]="showPassword?'text':'password'" placeholder="Enter your password" [(ngModel)]="model.password"
+                required name="password" #password="ngModel">
+              <button type="button" class="btn btn-ghost btn-circle btn-sm absolute right-1 top-1/2 -translate-y-1/2 text-base-content/55"
+                title="{{ showPassword ? 'Hide password' : 'Show password' }}"
+                (click)="togglePasswordVisibility();pass.focus()">
+                <!-- <i [class]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i> -->
+                <span class="material-symbols-rounded">
+                  {{showPassword ? 'visibility_off' : 'visibility'}}
+                </span>
+              </button>
+            </label>
+            @if(password.invalid && loginForm.submitted){
+            <div class="label">
+              <span class="label-text-alt text-error">Password is required*</span>
+            </div>
+            }
+          </div>
+
+          <div class="form-control w-full space-y-4">
+            <button type="submit"
+              class="btn btn-primary w-full disabled:border-primary disabled:bg-primary disabled:text-primary-content disabled:opacity-100"
+              [disabled]="!loginForm.form.valid || isLoading()">
+              @if(isLoading()){
+              <span class="loading loading-spinner"></span>
+              }@else {
+              <span>Sign In</span>
+              }
+            </button>
+
+            @if (message()) {
+            <div class="text-error transition-all text-sm text-center w-full message-container"
+              [class.open]="message()">{{message()}}</div>
+            }
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

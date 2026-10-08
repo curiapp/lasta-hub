@@ -1,0 +1,25 @@
+<div class="space-y-4">
+  <h3 class="text-xl">Circulation of Draft Programme</h3>
+  <form #consultForm="ngForm" class="space-y-4">
+    <fieldset class="fieldset">
+      <legend class="fieldset-label">Date</legend>
+      <input id="date" type="date" class="input input-sm input-bordered w-full" required
+        [(ngModel)]="model.consultationDate" ng2-datetime-picker date-only="true" name="consultationDate"
+        placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      @if (cdate.invalid && cdate.touched) {
+        <span class="label text-error">Consultation date required*</span>
+      }
+    </fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Programme Draft</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="pac-start"></file-upload>
+    </fieldset>
+    <div class="flex items-center justify-center">
+      <button type="button" class="btn btn-primary btn-sm w-full" (click)="onUpload()"
+        [disabled]="!fileUpload?.uploader?.queue.length || !consultForm.form.valid">
+        submit
+        <span class="material-symbols-rounded">cloud_upload</span>
+      </button>
+    </div>
+  </form>
+</div>

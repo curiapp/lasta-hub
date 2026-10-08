@@ -1,0 +1,44 @@
+.toast-container {
+  bottom: 1.5rem;
+  pointer-events: none;
+  position: fixed;
+  right: 1rem;
+  width: min(24rem, calc(100vw - 2rem));
+  z-index: 50;
+}
+
+.toast-stack {
+  display: grid;
+  min-height: 3.5rem;
+  pointer-events: auto;
+  position: relative;
+}
+
+.toast-card {
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 1;
+  position: relative;
+  transform: translateY(calc(var(--toast-index) * -0.55rem)) scale(calc(1 - (var(--toast-index) * 0.025)));
+  transform-origin: bottom right;
+  transition:
+    margin 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease;
+  z-index: calc(20 - var(--toast-index));
+}
+
+.toast-card:nth-child(n + 4) {
+  opacity: 0;
+}
+
+.toast-stack:hover {
+  gap: 0.5rem;
+  min-height: auto;
+}
+
+.toast-stack:hover .toast-card {
+  grid-row: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}

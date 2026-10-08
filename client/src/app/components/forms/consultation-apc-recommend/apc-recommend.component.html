@@ -1,0 +1,30 @@
+<div class="space-y-2">
+  <h3 class="text-xl">Academic Planning Committee Recommendations </h3>
+  <form #concludeForm="ngForm" class="space-y-2">
+    <fieldset class="fieldset">
+      <label class="fieldset-legend">APC Date</label>
+      <input id="date" type="date" class="input input-sm input-bordered" required [(ngModel)]="model.consultationDate"
+        ng2-datetime-picker date-only="true" name="date" placeholder="YYYY-MM-DD" #cdate="ngModel" />
+      @if(cdate.invalid && cdate.touched) {
+      <span class="label text-error">Consultation date required*</span>
+      }
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Programme Draft</legend>
+      <file-upload [pid]="pid" [url]="url" itemAlias="apc-recommendation"></file-upload>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">APC Decision</legend>
+      <div class="flex gap-2">
+        <button type="button" class="btn btn-primary btn-sm flex-auto" (click)="onUpload('recommend')"
+          [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+          Recommend (Senate) &nbsp; </button>
+        <button type="button" class="btn btn-secondary btn-sm w-4/12" (click)="onUpload('defer')"
+          [disabled]="!fileUpload?.uploader?.queue.length || !concludeForm.form.valid">
+          Defer (Faculty) &nbsp; </button>
+      </div>
+    </fieldset>
+  </form>
+</div>

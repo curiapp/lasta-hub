@@ -1,0 +1,8 @@
+.attach-file-container {
+  visibility: hidden;
+  transition: visibility 1s;
+}
+
+.open {
+  visibility: visible;
+}

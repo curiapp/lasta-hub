@@ -1,0 +1,131 @@
+name: PDQA CI CD
+run-name: ${{ github.actor }} Running Pipeline
+on:
+    push:
+      branches:
+        - develop
+
+jobs: 
+    build_develop:
+        name: Build and Push Docker Image
+        environment: develop
+        runs-on: ubuntu-latest
+        outputs:
+          output1: ${{ steps.step1.outputs.sha }}
+
+        steps:
+            - name: Checkout develop
+              uses: actions/checkout@v4
+
+            - id: step1
+              run: |
+                echo "sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+                echo "$GITHUB_SHA" > "$GITHUB_WORKSPACE/_meta"
+
+            -   name: Log in to GitHub Container Registry
+                uses: docker/login-action@v2
+                with:
+                    registry: ghcr.io
+                    username: ${{ github.actor }}
+                    password: ${{ secrets.GITHUB_TOKEN }}
+
+            -   name: Build Server Container Image
+                # if: steps.filter.outputs.server == 'true'
+
+                run: |
+                    docker build \
+                    -f ./Dockerfile.backend \
+                    -t ghcr.io/curiapp/lasta-hub/pdqa-backend:$(echo $GITHUB_SHA | head -c7) .
+
+            -   name: Push Server Image to GitHub Container Registry
+                # if: steps.filter.outputs.server == 'true'
+                run: |
+                      docker push ghcr.io/curiapp/lasta-hub/pdqa-backend:$(echo $GITHUB_SHA | head -c7)
+
+            -   name: Build Frontend Container Image
+                # if: steps.filter.outputs.client == 'true'
+                # env: 
+                #     FRONTEND_PORT: ${{ vars.FRONTEND_PORT }}
+
+                run: |
+                    docker build -f ./Dockerfile.frontend \
+                    -t ghcr.io/curiapp/lasta-hub/pdqa-frontend:$(echo $GITHUB_SHA | head -c7) .
+
+            -   name: Push Frontend Image to GitHub Container Registry
+                # if: steps.filter.outputs.client == 'true'
+                run: |
+                      docker push ghcr.io/curiapp/lasta-hub/pdqa-frontend:$(echo $GITHUB_SHA | head -c7)
+              
+    gitops_develop:
+        name: Update GitOps Image Tag
+        needs: build_develop
+        environment: develop
+        runs-on: ubuntu-latest
+        steps:
+        -   name: Clone GitOps repository
+            uses: actions/checkout@v4
+            with:
+                repository: curiapp/dev-ops
+                token: ${{ secrets.PAT }}
+                ref: master
+        
+        -   name: Kustomize PDQA-develop Server
+            if: github.repository == 'curiapp/lasta-hub'
+            run: |
+                cd overlays/develop
+                SHA=$(echo ${{needs.build_develop.outputs.output1}} | head -c7)
+                kustomize edit set image ghcr.io/curiapp/lasta-hub/pdqa-backend:$SHA
+                git config user.name github-actions[bot]
+                git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+                git add .
+                git commit -m "version-$SHA"
+                git push https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
+
+        -   name: Kustomize PDQA-develop Frontend
+            if: github.repository == 'curiapp/lasta-hub'
+            run: |
+                cd overlays/develop
+                SHA=$(echo ${{needs.build_develop.outputs.output1}} | head -c7)
+                kustomize edit set image ghcr.io/curiapp/lasta-hub/pdqa-frontend:$SHA
+                git config user.name github-actions[bot]
+                git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+                git add .
+                git commit -m "version-$SHA"
+                git push https://x-access-token:${{ secrets.PAT }}@github.com/curiapp/dev-ops.git
+ 
+    # deploy_develop:
+    #   name: Apply Kustomize on Server
+    #   needs: gitops_develop
+    #   environment: develop
+    #   runs-on: ubuntu-latest
+
+    #   steps:
+    #     - name: Configure SSH key
+    #       run: |
+    #         mkdir -p ~/.ssh
+
+    #         # Write the private key safely, stripping any Windows CR characters
+    #         echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
+    #         chmod 600 ~/.ssh/id_ed25519
+
+    #         # Disable strict host key checking for this session
+    #         echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
+
+    #         # Verify key file exists and has content
+    #         ls -l ~/.ssh
+
+
+    #     - name: Deploy to server
+    #       run: |
+    #         ssh -i ~/.ssh/id_ed25519 root@196.216.167.190 "
+    #           set -e && \
+
+    #           export KUBECONFIG=/etc/kubernetes/admin.conf && \
+
+    #           kubectl cluster-info && \
+
+    #           cd ~/dev-ops && \
+    #           git pull && \
+
+    #           kubectl apply -k ./overlays/develop
+    #         "

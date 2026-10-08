@@ -1,0 +1,438 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.programmes": {
+      "name": "programmes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "department": {
+          "name": "department",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "faculty": {
+          "name": "faculty",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "level": {
+          "name": "level",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "initator": {
+          "name": "initator",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coordinators": {
+          "name": "coordinators",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "advisories": {
+          "name": "advisories",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "programmes_id_not_null": {
+          "name": "programmes_id_not_null",
+          "value": "NOT NULL id"
+        },
+        "programmes_title_not_null": {
+          "name": "programmes_title_not_null",
+          "value": "NOT NULL title"
+        },
+        "programmes_code_not_null": {
+          "name": "programmes_code_not_null",
+          "value": "NOT NULL code"
+        },
+        "programmes_department_not_null": {
+          "name": "programmes_department_not_null",
+          "value": "NOT NULL department"
+        },
+        "programmes_faculty_not_null": {
+          "name": "programmes_faculty_not_null",
+          "value": "NOT NULL faculty"
+        },
+        "programmes_level_not_null": {
+          "name": "programmes_level_not_null",
+          "value": "NOT NULL level"
+        },
+        "programmes_status_not_null": {
+          "name": "programmes_status_not_null",
+          "value": "NOT NULL status"
+        },
+        "programmes_initator_not_null": {
+          "name": "programmes_initator_not_null",
+          "value": "NOT NULL initator"
+        },
+        "programmes_created_at_not_null": {
+          "name": "programmes_created_at_not_null",
+          "value": "NOT NULL created_at"
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.phase_steps": {
+      "name": "phase_steps",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "phases_id_not_null": {
+          "name": "phases_id_not_null",
+          "value": "NOT NULL id"
+        },
+        "phases_name_not_null": {
+          "name": "phases_name_not_null",
+          "value": "NOT NULL name"
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.program_phase_steps": {
+      "name": "program_phase_steps",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "programme_phase_id": {
+          "name": "programme_phase_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phase_step_id": {
+          "name": "phase_step_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decision": {
+          "name": "decision",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed": {
+          "name": "completed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "extra_data": {
+          "name": "extra_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "programme_phase_steps_phase_step_id_fkey": {
+          "name": "programme_phase_steps_phase_step_id_fkey",
+          "tableFrom": "program_phase_steps",
+          "tableTo": "phase_steps",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "phase_step_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "programme_phase_steps_programme_phase_id_fkey": {
+          "name": "programme_phase_steps_programme_phase_id_fkey",
+          "tableFrom": "program_phase_steps",
+          "tableTo": "programme_phases",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "programme_phase_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "program_phase_steps_program_phase_id_phase_step_id_key": {
+          "columns": [
+            "programme_phase_id",
+            "phase_step_id"
+          ],
+          "nullsNotDistinct": false,
+          "name": "program_phase_steps_program_phase_id_phase_step_id_key"
+        }
+      },
+      "checkConstraints": {
+        "program_phase_steps_id_not_null": {
+          "name": "program_phase_steps_id_not_null",
+          "value": "NOT NULL id"
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.events": {
+      "name": "events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "events_id_not_null": {
+          "name": "events_id_not_null",
+          "value": "NOT NULL id"
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.programme_phases": {
+      "name": "programme_phases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "program_id": {
+          "name": "program_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phase_id": {
+          "name": "phase_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'not_started'"
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "program_phases_program_id_fkey": {
+          "name": "program_phases_program_id_fkey",
+          "tableFrom": "programme_phases",
+          "tableTo": "programmes",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "program_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "program_phases_phase_id_fkey": {
+          "name": "program_phases_phase_id_fkey",
+          "tableFrom": "programme_phases",
+          "tableTo": "phase_steps",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "phase_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "program_phases_program_id_phase_id_key": {
+          "columns": [
+            "program_id",
+            "phase_id"
+          ],
+          "nullsNotDistinct": false,
+          "name": "program_phases_program_id_phase_id_key"
+        }
+      },
+      "checkConstraints": {
+        "program_phases_status_check": {
+          "name": "program_phases_status_check",
+          "value": "status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'completed'::text])"
+        },
+        "program_phases_id_not_null": {
+          "name": "program_phases_id_not_null",
+          "value": "NOT NULL id"
+        }
+      },
+      "policies": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {
+      "programmes": {
+        "columns": {
+          "coordinators": {
+            "isArray": true,
+            "dimensions": 1,
+            "rawType": "uuid"
+          }
+        }
+      }
+    }
+  }
+}

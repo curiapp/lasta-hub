@@ -1,0 +1,118 @@
+export interface WorkflowField {
+    key: string;
+    label: string;
+    type: "text" | "textarea" | "date" | "file" | "select" | "radio" | "number" | "email" | "tel" | "url" | "checkbox" | "repeater" | "user-search";
+    required?: boolean;
+    options?: string[];
+    fields?: WorkflowField[];
+    minItems?: number;
+    maxItems?: number;
+    multiple?: boolean;
+    emailAction?: boolean;
+    emailSubject?: string;
+    emailMessage?: string;
+    acceptedFileTypes?: string[];
+    maxFileSizeMb?: number;
+    visibleWhen?: WorkflowCondition;
+}
+
+export interface WorkflowArtifactRequirement {
+    key: string;
+    label: string;
+    required?: boolean;
+    multiple?: boolean;
+    maxFiles?: number;
+    maxFileSizeMb?: number;
+    emailAction?: boolean;
+    emailSubject?: string;
+    emailMessage?: string;
+}
+
+export interface WorkflowCondition {
+    field: string;
+    equals?: unknown;
+    notEquals?: unknown;
+    in?: unknown[];
+}
+
+export interface WorkflowTransition {
+    event: string;
+    label: string;
+    to: string | string[];
+    outcome?: string;
+    notifyRoles?: string[];
+    when?: WorkflowCondition;
+}
+
+export interface WorkflowTaskDefinition {
+    id: string;
+    stageId: string;
+    name: string;
+    description?: string;
+    ownerRoles: string[];
+    visibleWhen?: WorkflowCondition;
+    form?: WorkflowField[];
+    artifacts?: WorkflowArtifactRequirement[];
+    emailAction?: boolean;
+    emailSubject?: string;
+    emailMessage?: string;
+    transitions?: WorkflowTransition[];
+}
+
+export interface WorkflowStageReviewRule {
+    amount: number;
+    unit: "months" | "years";
+    from: "stage-started" | "programme-created";
+}
+
+export interface WorkflowDefinition {
+    id: string;
+    version: number;
+    name: string;
+    description?: string;
+    initialTask: string;
+    roles?: Array<{ id: string; name: string }>;
+    stages?: Array<{
+        id: string;
+        name: string;
+        description?: string;
+        order: number;
+        runWithPrevious?: boolean;
+        reviewAfter?: WorkflowStageReviewRule;
+    }>;
+    tasks: WorkflowTaskDefinition[];
+}
+
+export interface CompleteTaskInput {
+    event?: string;
+    actor?: {
+        id?: string;
+        role?: string;
+    };
+    formData?: Record<string, unknown>;
+    artifacts?: Array<{
+        type: string;
+        title?: string;
+        reference?: string;
+        path?: string;
+        mimeType?: string;
+        size?: number;
+    }>;
+}
+
+export type CommunicationRecipientInput = {
+    id?: string;
+    email: string;
+    name?: string;
+};
+
+export type SendCommunicationInput = {
+    programmeId?: string;
+    senderId?: string;
+    scope?: "programme" | "system";
+    subject?: string;
+    body?: string;
+    recipients?: CommunicationRecipientInput[];
+    sendEmail?: boolean;
+    attachmentIds?: string[];
+};

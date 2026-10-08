@@ -1,0 +1,181 @@
+<div class="space-y-4">
+  <h3 class="text-xl">Stakeholders' Consultation</h3>
+  <form #consultForm="ngForm" class="space-y-2">
+
+    @if (!isShown()) {
+    <div class="space-y-2" animate.enter="enter-animation1">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Consultation Start Date</legend>
+        <input id="sdate" type="date" class="input" required [(ngModel)]="needAnalysis.startDate" date-only="true"
+          name="sDate" placeholder="YYYY-MM-DD" #sdate="ngModel" />
+        @if(sdate.invalid && sdate.touched){
+        <span class="label text-error">Start date required*</span>
+        }
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend" for="date">Consultation End Date</legend>
+        <input id="edate" type="date" class="input input-sm" required [(ngModel)]="needAnalysis.endDate"
+          date-only="true" name="eDate" placeholder="YYYY-MM-DD" #edate="ngModel" />
+        @if(edate.invalid && edate.touched){
+        <label class="fieldset-label">
+          <span class="label-text-alt text-error">End date required*</span>
+        </label>
+        }
+      </fieldset>
+
+      <div class="space-y-2">
+        <div class="flex justify-between gap-2">
+          <label class="text-base font-semibold">Stakeholders List</label>
+          <button class="btn btn-xs btn-outline btn-primary" (click)="toggleAdd()">
+            add stakeholder {{isStakeholderShown()?'-':'+'}}
+          </button>
+        </div>
+        @if(isStakeholderShown()) {
+        <fieldset class="stakeholder-input-container" [class.open]="isStakeholderShown()">
+          <div class="flex h-fit items-center gap-1 border-2 border-dashed border-gray-300 rounded-box p-2">
+            <div class="w-auto flex-auto">
+              <label class="input input-sm border-b-0 rounded-b-none rounded-r-none flex flex-auto gap-2 items-center ">
+                <span class="material-symbols-rounded">
+                  contact_page
+                </span>
+                <input type="text" placeholder="Enter stakeholder name" id="organisation" name="organisation" required
+                  class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.name" #stakename="ngModel" />
+              </label>
+
+              <label class="input input-sm  rounded-r-none rounded-t-none flex flex-auto gap-2 items-center ">
+                <span class="material-symbols-rounded">
+                  account_tree
+                </span>
+                <input type="text" placeholder="Enter stakeholder organisation" id="organisation" name="organisation"
+                  required class="flex-auto" [(ngModel)]="needAnalysis.stakeholder.organisation" #stakeorg="ngModel" />
+              </label>
+            </div>
+            <button [disabled]="stakeorg.invalid || stakename.invalid" (click)="addOrganisation()"
+              class="btn rounded-l-none btn-primary h-18!">Add +</button>
+          </div>
+        </fieldset>
+        }
+
+        <div class="flex gap-2 flex-wrap p-2 rounded-xl border-dashed border-2 border-gray-300">
+          @for (item of stakeholders; track item) {
+          <div class="group px-2 py-2 rounded-md bg-gray-200 flex gap-4 items-center justify-between transition-all">
+            <div class="space-y-1">
+              <p class="line-clamp-2 text-sm capitalize">{{item.name}}</p>
+              <p class="line-clamp-2 text-xs capitalize">{{item.organisation}}</p>
+            </div>
+            <button class="btn btn-ghost btn-circle transition btn-xs hidden group-hover:block"
+              (click)="removeOrganisation(item.organisation)">
+              <span class="material-symbols-rounded text-xs">
+                close
+              </span>
+            </button>
+          </div>
+          }@empty {
+          <span class="text-xs pl-2 font-semibold">No Stakeholders</span>
+          }
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-sm w-full mt-4" (click)="toggle()">
+        Next
+      </button>
+    </div>
+    }
+
+    @if (isShown()) {
+    <div class="next-page space-y-2" animate.enter="enter-animation">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Upload Questionnaires from Respondents</legend>
+        <div class="flex items-center justify-center w-full">
+          <label for="dropzone-file"
+            class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-box cursor-pointer bg-gray-50 hover:bg-gray-100"
+            ng2FileDrop [uploader]="uploader">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+              </svg>
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                <span class="font-semibold">Click to upload</span>
+                or drag and drop
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, TXT or XLSX (MAX. 50MB)</p>
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" ng2FileSelect [uploader]="uploader" />
+          </label>
+        </div>
+
+        <div class="h-40 overflow-y-scroll border-2 border-gray-300 border-dashed rounded-box p-2 space-y-2">
+          @for (item of uploader.queue; track $index) {
+          <div class="flex items-center gap-4 p-1 border-b border-b-gray-500/5 group transition-all">
+            <div class="icon size-8 rounded-md bg-gray-200 grid place-items-center">
+              @switch (item.file.name | Extension) {
+              @case ('pdf') {
+              <span class="material-symbols-rounded text-[24px]">
+                draft
+              </span>
+              }
+              @case ('docs') {
+              <span class="material-symbols-rounded text-[24px]">
+                docs
+              </span>
+              }
+              @case ('docx') {
+              <span class="material-symbols-rounded text-[24px]">
+                docs
+              </span>
+              }
+              @case ('xlsx') {
+              <span class="material-symbols-rounded text-[24px]">
+                csv
+              </span>
+              }
+              @case ('csv') {
+              <span class="material-symbols-rounded text-[24px]">
+                csv
+              </span>
+              }
+              @default {
+              <span class="material-symbols-rounded text-[24px]">
+                draft
+              </span>
+              }
+              }
+            </div>
+            <div class="grow w-[70%] tooltip text-left">
+              <p class="line-clamp-1 w-full text-xs">{{item.file.name}} <b>{{item.file.size | file}}</b></p>
+            </div>
+            @if(uploader.isUploading){
+            <span class="loading loading-spinner loading-1xl"></span>
+            }
+            <button
+              class="size-8 hidden group-hover:grid hover:rotate-90  place-items-center cursor-pointer transition-all hover:bg-gray-200 btn-circle btn-sm"
+              (click)="removeFile(item)">
+              <span class=" text-[20px]! material-symbols-rounded">
+                close
+              </span>
+            </button>
+          </div>
+          }@empty {
+          <span class="text-xs text-center my-2 w-full h-full">No file selected</span>
+          }
+        </div>
+      </fieldset>
+
+      <div class="flex justify-start gap-2">
+        <button class="btn btn-secondary btn-sm w-4/12" (click)="toggle()">Prev</button>
+        <button type="button" class="btn btn-primary btn-sm join-item flex-auto" (click)="uploadAll(consultForm)"
+          [disabled]="!uploader.queue.length">
+          submit
+          <span class="material-symbols-rounded">
+            cloud_upload
+          </span>
+        </button>
+      </div>
+    </div>
+    }
+
+  </form>
+</div>

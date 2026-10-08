@@ -1,0 +1,28 @@
+<div class="space-y-4">
+  <h3 class="text-xl mb-4">PDQA Recommendation of Need Analysis </h3>
+  <label class="text-sm font-bold">Final Need Analysis Report:</label>
+
+  <file-upload [pid]="pid" [url]="url" itemAlias="check-list"></file-upload>
+
+  <div class="w-full flex flex-col sm:flex-row justify-center mt-4!">
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn btn-primary btn-sm grow rounded-b-none sm:rounded-r-none sm:rounded-l-lg" (click)="onUpload('recommend')">
+      Recommend
+    </button>
+    <!-- [disabled]="!uploader.getNotUploadedItems().length || !concludeForm.form.valid" -->
+
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn btn-success btn-sm  rounded-none! grow" (click)="onUpload('approve')">
+      Approve
+    </button>
+
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn  btn-error btn-sm  rounded-none! grow" (click)="onUpload('decline')">
+      Decline
+    </button>
+
+    <button [disabled]="!fileUpload?.uploader?.queue.length" type="button"
+      class="btn btn-warning btn-sm grow rounded-t-none sm:rounded-l-none sm:rounded-r-lg" (click)="onUpload('defer')">
+      Defer
+    </button>
+  </div>
