@@ -1,3 +1,64 @@
+.programme-search {
+  flex: 1 1 100%;
+  width: 100%;
+  height: 2.25rem;
+  border: 1px solid color-mix(in srgb, var(--color-base-content) 18%, transparent);
+  border-radius: .65rem;
+  box-shadow: none;
+}
+
+.programme-search:focus-within {
+  border-color: var(--color-primary);
+  outline: 2px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  outline-offset: 2px;
+}
+
+.programme-toolbar-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid transparent;
+  border-radius: .5rem;
+  color: color-mix(in srgb, var(--color-base-content) 65%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+
+.programme-toolbar-button:hover {
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.programme-toolbar-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.programme-layout-controls {
+  display: flex;
+  flex-shrink: 0;
+  gap: .2rem;
+  margin-left: .2rem;
+  padding-left: .6rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-base-content) 15%, transparent);
+}
+
+.programme-toolbar-button.programme-control-active {
+  color: var(--color-primary);
+  border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100));
+}
+
+@media (min-width: 768px) {
+  .programme-search {
+    flex: 1 1 16rem;
+    width: clamp(12rem, 20vw, 20rem);
+  }
+
+  .programme-toolbar-controls {
+    flex-wrap: nowrap;
+  }
+}
+
 .portfolio-stage {
   position: relative;
   min-height: clamp(30rem, 52vh, 42rem);

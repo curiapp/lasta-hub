@@ -1,0 +1,85 @@
+@let selectedProgramme = selected();
+@let programmeDetail = detail();
+<div class="grid gap-5">
+  <section class="min-w-0 rounded-xl border border-base-300 bg-base-100 p-5">
+    <div class="flex flex-col items-start gap-4">
+      <h2 class="text-lg font-bold">Programme management</h2>
+      <div class="flex w-full max-w-lg flex-nowrap items-center gap-2">
+        <label class="input input-bordered input-sm min-w-0 max-w-64 flex-1 gap-2 shadow-none">
+          <span class="material-symbols-rounded text-lg text-base-content/50" aria-hidden="true">search</span>
+          <input type="search" class="min-w-0" placeholder="Search programmes" aria-label="Search programmes" [ngModel]="query()" (ngModelChange)="query.set($event)">
+        </label>
+        <div class="relative shrink-0">
+          <button type="button" class="btn btn-sm btn-ghost btn-square" [class.bg-primary/10]="facultyFilter() || departmentFilter()" [class.text-primary]="facultyFilter() || departmentFilter()" aria-label="Filter programmes" title="Filter programmes" [attr.aria-expanded]="filterOpen()" (click)="filterOpen.set(!filterOpen())">
+            <span class="material-symbols-rounded text-lg" aria-hidden="true">filter_list</span>
+          </button>
+          @if (filterOpen()) {
+            <div class="absolute right-0 top-full z-20 mt-2 grid w-72 max-w-[calc(100vw-6rem)] gap-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-lg" (keydown.escape)="filterOpen.set(false)">
+              <div class="flex items-center justify-between"><strong class="text-sm">Filter programmes</strong><button class="btn btn-ghost btn-xs" type="button" aria-label="Close filters" (click)="filterOpen.set(false)"><span class="material-symbols-rounded text-base" aria-hidden="true">close</span></button></div>
+              <label class="grid gap-1 text-xs">Faculty<select class="select select-bordered select-sm w-full" [ngModel]="facultyFilter()" (ngModelChange)="facultyFilter.set($event); departmentFilter.set('')"><option value="">All faculties</option>@for (faculty of faculties(); track faculty.id) { <option [value]="faculty.id">{{ faculty.name }}</option> }</select></label>
+              <label class="grid gap-1 text-xs">Department<select class="select select-bordered select-sm w-full" [ngModel]="departmentFilter()" (ngModelChange)="departmentFilter.set($event)"><option value="">All departments</option>@for (department of filterDepartments; track department.id) { <option [value]="department.id">{{ department.name }}</option> }</select></label>
+              <button class="btn btn-sm btn-ghost" type="button" (click)="facultyFilter.set(''); departmentFilter.set('')">Clear filters</button>
+            </div>
+          }
+        </div>
+        <button class="btn btn-primary btn-sm shrink-0 whitespace-nowrap" [disabled]="saving()" (click)="addProgramme()"><span class="material-symbols-rounded" aria-hidden="true">add</span>Add programme</button>
+      </div>
+    </div>
+    @if (optionsError()) { <p class="mt-3 text-error" role="alert">Faculty and workflow options could not be loaded. <button class="btn btn-sm btn-ghost" (click)="loadOptions()">Retry</button></p> }
+    @if (loading()) {
+      <div class="mt-5 grid gap-4" role="status" aria-label="Loading programmes" aria-busy="true">
+        @for (row of [1, 2, 3, 4, 5]; track row) {
+          <div class="grid grid-cols-4 gap-4" aria-hidden="true"><div class="skeleton h-10"></div><div class="skeleton h-10"></div><div class="skeleton h-10"></div><div class="skeleton h-10"></div></div>
+        }
+      </div>
+    }
+    @else if (loadError()) { <p class="py-4 text-error" role="alert">Programmes could not be loaded.</p><button class="btn btn-sm" (click)="loadProgrammes()">Retry</button> }
+    @else {
+      <div class="mt-4 overflow-x-auto"><table class="table"><thead><tr><th>Programme</th><th>Department / faculty</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+      @for (programme of filteredProgrammes(); track programme.id) {
+        <tr><td><strong>{{ programme.title }}</strong><span class="block text-xs text-base-content/60">{{ programme.code }} · NQF {{ programme.level }}</span></td><td>{{ programme.departmentName }}<span class="block text-xs text-base-content/60">{{ programme.facultyName }}</span></td><td><span class="badge badge-sm">{{ programme.status }}</span></td><td><div class="flex gap-1"><button class="btn btn-sm btn-ghost" [disabled]="saving()" (click)="selectProgramme(programme)">Summary</button><button class="btn btn-sm btn-ghost" [disabled]="saving()" (click)="selectProgramme(programme, true)">Edit</button><button class="btn btn-sm btn-ghost text-error" [disabled]="saving()" (click)="requestDelete(programme)">Delete</button></div></td></tr>
+      } @empty { <tr><td colspan="4" class="py-6 text-center">No programmes found.</td></tr> }
+      </tbody></table></div>
+    }
+  </section>
+  @if (formVisible() || summaryVisible()) {
+    <management-dialog [title]="formVisible() ? (editingId() ? 'Edit programme' : 'Add programme') : 'Programme summary'" [busy]="saving()" (closed)="closePanel()">
+      @if (formVisible()) {
+        <form #programmeForm="ngForm" (ngSubmit)="programmeForm.valid && saveProgramme()" class="grid gap-4">
+          <fieldset class="grid gap-4 md:grid-cols-2" [disabled]="saving()">
+            <label class="grid gap-1 text-sm">Programme title<input class="input input-bordered w-full" name="title" required maxlength="100" [(ngModel)]="model.title"></label>
+            <label class="grid gap-1 text-sm">Programme code<input class="input input-bordered w-full" name="code" required maxlength="20" [(ngModel)]="model.code"></label>
+            <label class="grid gap-1 text-sm">NQF level<select class="select select-bordered w-full" name="level" required [(ngModel)]="model.level">@for (level of levels; track level) { <option [ngValue]="level">{{ level }}</option> }</select></label>
+            <label class="grid gap-1 text-sm">Faculty<select class="select select-bordered w-full" name="faculty" required [(ngModel)]="model.faculty" (ngModelChange)="model.department = ''" [disabled]="optionsLoading() || optionsError()"><option value="" disabled>Select faculty</option>@for (faculty of faculties(); track faculty.id) { <option [value]="faculty.id">{{ faculty.name }}</option> }</select></label>
+            <label class="grid gap-1 text-sm">Department<select class="select select-bordered w-full" name="department" required [(ngModel)]="model.department" [disabled]="optionsLoading() || optionsError() || !model.faculty"><option value="" disabled>Select department</option>@for (unit of availableDepartments; track unit.id) { <option [value]="unit.id">{{ unit.name }}</option> }</select></label>
+            @if (!editingId()) { <label class="grid gap-1 text-sm">Workflow<select class="select select-bordered w-full" name="workflow" required [(ngModel)]="model.workflowSlug" [disabled]="optionsLoading() || optionsError()"><option value="" disabled>Select workflow</option>@for (definition of definitions(); track definition.id) { <option [value]="definition.slug">{{ definition.name }} · v{{ definition.version }}</option> }</select></label> }
+          </fieldset>
+          @if (editingId()) { <p class="text-xs text-base-content/60">Changing faculty and department moves this programme. Its workflow history remains attached.</p> }
+          @if (optionsLoading()) { <div role="status" aria-label="Loading programme options"><span class="loading loading-spinner loading-sm text-primary" aria-hidden="true"></span></div> }
+          <div class="flex justify-end gap-2"><button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="closePanel()">Cancel</button><button type="submit" class="btn btn-primary" [disabled]="saving() || programmeForm.invalid || optionsLoading() || optionsError() || !model.department">@if (saving()) { <span class="loading loading-spinner loading-sm" aria-label="Saving programme"></span> } @else { {{ editingId() ? 'Save programme' : 'Add programme' }} }</button></div>
+        </form>
+      }
+      @if (selectedProgramme && summaryVisible()) {
+        @if (detailLoading()) { <div class="grid gap-4 py-5" role="status" aria-label="Loading programme summary" aria-busy="true"><div class="skeleton h-6 w-2/3" aria-hidden="true"></div><div class="skeleton h-24 w-full" aria-hidden="true"></div><div class="skeleton h-10 w-full" aria-hidden="true"></div></div> }
+        @else if (detailError()) { <p role="alert" class="py-4 text-error">Summary could not be loaded.</p><button class="btn btn-sm" (click)="loadDetail(selectedProgramme.id)">Retry</button> }
+        @else if (programmeDetail) {
+          <div class="mt-4 grid gap-4 border-t border-base-300 pt-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div><span class="text-xs text-base-content/60">Programme</span><strong class="block">{{ selectedProgramme.title }}</strong><span class="text-sm">{{ selectedProgramme.code }} · NQF {{ selectedProgramme.level }}</span></div>
+            <div><span class="text-xs text-base-content/60">Workflow</span><strong class="block">{{ programmeDetail.definition?.name || 'No workflow' }}</strong><span class="text-sm">Version {{ programmeDetail.definitionVersion?.version || '—' }} · {{ programmeDetail.process?.status || 'Not started' }}</span></div>
+            <div><span class="text-xs text-base-content/60">Current stage</span><strong class="block">{{ currentStage }}</strong></div>
+            <div><span class="text-xs text-base-content/60">Tasks</span><strong class="block">{{ completedTasks }} completed · {{ activeTasks.length }} active</strong><a [routerLink]="['/programme', selectedProgramme.id]" class="link link-primary text-sm">View full programme</a></div>
+          </div>
+          <div class="mt-4"><span class="text-xs text-base-content/60">Active tasks</span>@for (task of activeTasks; track task.id) { <p class="mt-1 text-sm">{{ task.name }}</p> } @empty { <p class="mt-1 text-sm">No active tasks.</p> }</div>
+          <div class="mt-5 border-t border-base-300 pt-4"><h3 class="font-bold">Quick workflow update</h3><p class="mt-1 text-sm text-base-content/60">Apply the latest published version, or choose a different workflow for this programme.</p><div class="mt-3 flex flex-wrap gap-3"><select class="select select-bordered grow" aria-label="Programme workflow" [ngModel]="workflowSlug()" (ngModelChange)="workflowSlug.set($event)" [disabled]="saving() || optionsLoading() || optionsError()"><option value="" disabled>Select workflow</option>@for (definition of definitions(); track definition.id) { <option [value]="definition.slug">{{ definition.name }} · v{{ definition.version }}</option> }</select><button type="button" class="btn btn-primary" [disabled]="saving() || !workflowSlug() || !programmeDetail.process || optionsLoading() || optionsError()" (click)="pendingAction.set('workflow')">Update workflow</button></div></div>
+        }
+      }
+    </management-dialog>
+  }
+</div>
+@if (pendingAction() && selectedProgramme) {
+  <client-confirm-modal [action]="pendingAction() === 'delete' ? 'delete' : 'edit'"
+    [heading]="pendingAction() === 'delete' ? 'Delete programme' : 'Update programme workflow'"
+    [confirmLabel]="pendingAction() === 'delete' ? 'Delete programme' : 'Update workflow'"
+    [message]="pendingAction() === 'delete' ? 'Delete ' + selectedProgramme.title + '? Its tasks, attachments, and workflow history will also be deleted. This cannot be undone.' : workflowMessage"
+    (onConfirm)="confirmAction()" (onClose)="pendingAction.set(null)" />
+}

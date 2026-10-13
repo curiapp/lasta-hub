@@ -29,7 +29,10 @@
         </span>
         @if (detail?.definitionVersion) {
           <span class="badge badge-outline badge-sm">
-            {{ workflowDisplayName }} · v{{ detail?.definitionVersion?.version }}
+            {{ workflowDisplayName }}
+            @if (canManageWorkflow) {
+              · v{{ detail?.definitionVersion?.version }}
+            }
           </span>
         }
       </div>

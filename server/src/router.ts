@@ -4,6 +4,7 @@ import healthRouter from "./routes/health";
 import graphqlRouter from "./routes/graphql";
 import workflowRouter from "./routes/workflow";
 import usersRouter from "./routes/users";
+import dashboardRouter from "./routes/dashboard";
 import { WorkflowError } from "./workflow/errors";
 
 interface ApiInfo {
@@ -33,6 +34,7 @@ export default function createRouter(upload: Multer): Router {
 
     router.use("/health", healthRouter);
     router.use(usersRouter);
+    router.use(dashboardRouter);
     router.use(graphqlRouter);
     router.use(workflowRouter(upload));
 

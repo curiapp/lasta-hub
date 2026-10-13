@@ -1,15 +1,37 @@
-<main class="min-h-[calc(100vh-7rem)] bg-base-200 p-3 lg:p-5">
-  <section class="mx-auto grid max-w-3xl gap-4">
-    <header>
-      <p class="text-xs font-bold uppercase text-base-content/50">Testing utility</p>
-      <h1 class="text-2xl font-bold">Create App User</h1>
-      <p class="mt-1 text-sm text-base-content/60">
-        Internal form for creating test users during app validation.
-      </p>
-    </header>
-
-    <form #registerForm="ngForm" class="grid gap-4 border border-base-300 bg-base-100 p-4 shadow-sm"
-      (ngSubmit)="createUser()">
+@let userToDelete = pendingDelete();
+<div>
+  <section class="min-w-0 rounded-xl border border-base-300 bg-base-100 p-5">
+    <div class="flex items-center gap-2"><h2 class="text-lg font-bold">User management</h2><span class="badge badge-ghost">{{ users().length }} users</span></div>
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+      <input class="input input-bordered input-sm max-w-sm" type="search" placeholder="Search users, roles, or departments" aria-label="Search users" [ngModel]="query()" (ngModelChange)="query.set($event)">
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="saving() || deleting()" (click)="addUser()"><span class="material-symbols-rounded" aria-hidden="true">person_add</span>Add user</button>
+    </div>
+    @if (usersLoading()) {
+      <div class="mt-5 grid gap-4" role="status" aria-label="Loading users" aria-busy="true">
+        @for (row of [1, 2, 3, 4, 5]; track row) {
+          <div class="grid grid-cols-3 gap-4" aria-hidden="true"><div class="skeleton h-10"></div><div class="skeleton h-10"></div><div class="skeleton h-10"></div></div>
+        }
+      </div>
+    }
+    @else if (usersError()) { <p class="py-4 text-error" role="alert">Users could not be loaded.</p><button class="btn btn-sm" (click)="loadUsers()">Retry</button> }
+    @else {
+      <div class="overflow-x-auto mt-4"><table class="table"><thead><tr><th>User</th><th>Role / department</th><th>Actions</th></tr></thead><tbody>
+      @for (user of filteredUsers(); track user.id) {
+        <tr><td><strong>{{ user.firstName }} {{ user.lastName }}</strong><span class="block text-xs text-base-content/60">{{ user.email }}</span></td><td><span class="badge badge-sm">{{ user.role }}</span><span class="mt-1 block text-xs">{{ user.departmentName || 'Unassigned' }}</span></td><td><div class="flex gap-1">
+          <button class="btn btn-sm btn-ghost" [disabled]="saving() || deleting()" (click)="editUser(user)">Edit</button>
+          <button class="btn btn-sm btn-ghost text-error" [disabled]="saving() || deleting() || user.id === auth.user?.id" (click)="pendingDelete.set(user)">Delete</button>
+        </div></td></tr>
+      } @empty { <tr><td colspan="3" class="py-6 text-center">No users found.</td></tr> }
+      </tbody></table></div>
+    }
+  </section>
+  @if (formVisible()) {
+    <management-dialog [title]="editingId() ? 'Edit user' : 'Add user'" [busy]="saving()" (closed)="cancelEdit()">
+    <form id="admin-users" #registerForm="ngForm" class="grid min-w-0 gap-4"
+      (ngSubmit)="registerForm.valid && createUser()">
+      <div>
+        <p class="mt-1 text-sm text-base-content/60">Choose the user's role and department to set up their workspace.</p>
+      </div>
       <div class="grid gap-4 md:grid-cols-2">
         <label class="form-control">
           <span class="label-text mb-1 text-xs font-semibold">First name</span>
@@ -29,7 +51,8 @@
       <div class="grid gap-4 md:grid-cols-2">
         <label class="form-control">
           <span class="label-text mb-1 text-xs font-semibold">Password</span>
-          <input class="input input-bordered" type="password" name="password" required [(ngModel)]="model.password">
+          <input class="input input-bordered" type="password" name="password" [required]="!editingId()" [(ngModel)]="model.password" autocomplete="new-password">
+          @if (editingId()) { <span class="mt-1 text-xs text-base-content/60">Leave blank to keep the current password. Saving requires this user to sign in again.</span> }
         </label>
         <label class="form-control">
           <span class="label-text mb-1 text-xs font-semibold">Role</span>
@@ -41,23 +64,54 @@
         </label>
       </div>
 
-      <label class="form-control">
-        <span class="label-text mb-1 text-xs font-semibold">Department ID</span>
-        <input class="input input-bordered font-mono text-sm" name="department" required
-          placeholder="Paste workflow department UUID" [(ngModel)]="model.department">
-      </label>
+      <div class="grid gap-4 md:grid-cols-2">
+        <label class="form-control">
+          <span class="label-text mb-1 text-xs font-semibold">Faculty filter</span>
+          <select class="select select-bordered w-full" name="faculty" [ngModel]="selectedFacultyId()" (ngModelChange)="selectedFacultyId.set($event); changeFaculty()" [disabled]="loadingDepartments() || departmentsError()">
+            <option value="">All faculties</option>
+            @for (faculty of faculties(); track faculty.id) {
+              <option [value]="faculty.id">{{ faculty.name }}</option>
+            }
+          </select>
+        </label>
+        <label class="form-control">
+          <span class="label-text mb-1 text-xs font-semibold">Department</span>
+          <select class="select select-bordered w-full" name="department" required [(ngModel)]="model.department"
+            [disabled]="loadingDepartments() || departmentsError() || !availableDepartments().length">
+            <option value="" disabled>Select a department</option>
+            @for (department of availableDepartments(); track department.id) {
+              <option [value]="department.id">{{ department.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+      @if (loadingDepartments()) { <div role="status" aria-label="Loading departments"><span class="loading loading-spinner loading-sm text-primary" aria-hidden="true"></span></div> }
+      @if (departmentsError()) {
+        <div class="flex items-center justify-between gap-3 text-sm text-error" role="alert">
+          <span>Departments could not be loaded.</span>
+          <button class="btn btn-sm btn-ghost" type="button" (click)="loadDepartments()">Retry</button>
+        </div>
+      } @else if (!loadingDepartments() && !availableDepartments().length) {
+        <p class="text-sm text-base-content/60" role="status">No departments are available{{ selectedFacultyId() ? ' in this faculty' : '' }}.</p>
+      }
 
-      <footer class="flex justify-end border-t border-base-300 pt-4">
-        <button class="btn btn-primary" type="submit" [disabled]="saving || registerForm.invalid">
-          @if (saving) {
-            <span class="loading loading-spinner"></span>
-            Creating
+      <footer class="flex justify-end gap-2 border-t border-base-300 pt-4">
+        <button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="cancelEdit()">Cancel</button>
+        <button class="btn btn-primary" type="submit" [disabled]="saving() || deleting() || registerForm.invalid || loadingDepartments() || departmentsError() || !model.department">
+          @if (saving()) {
+            <span class="loading loading-spinner loading-sm" role="status" aria-label="Saving user"></span>
           } @else {
             <span class="material-symbols-rounded">person_add</span>
-            Create user
+            {{ editingId() ? 'Save user' : 'Add user' }}
           }
         </button>
       </footer>
     </form>
-  </section>
-</main>
+    </management-dialog>
+  }
+</div>
+@if (userToDelete) {
+  <client-confirm-modal action="delete" heading="Delete user" confirmLabel="Delete user"
+    [message]="'Delete ' + userToDelete.firstName + ' ' + userToDelete.lastName + '? This cannot be undone. Users referenced by programmes or history cannot be deleted.'"
+    (onConfirm)="deleteUser()" (onClose)="pendingDelete.set(null)" />
+}

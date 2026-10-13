@@ -159,6 +159,13 @@ exports.CurriculumDevelopmentController = class CurriculumDevelopmentController 
             @continueWithHandler null, handlerObject, null, documentBosAmendmentResult
 
     appointCDCMembers: (cdcMemberData, handlerObject) ->
+        if not cdcMemberData.organization?
+            cdcMemberData["organization"] = "None"
+        end
+
+        if not cdcMemberData.occupation?
+            cdcMemberData["occupation"] = "None"
+        end
         @messageGenerator.generate cdcMemberData, (cdcMemberMessageError, cdcMemberMessage) =>
             if cdcMemberMessageError?
                 @continueWithHandler null, handlerObject, cdcMemberMessageError, null
