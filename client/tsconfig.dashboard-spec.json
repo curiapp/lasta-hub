@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "files": ["src/app/pages/dashboard/dashboard-loading.spec.ts"],
+  "include": []
+}

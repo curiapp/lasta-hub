@@ -592,7 +592,7 @@ export async function deleteProgramme(programmeId: string, actorId: string) {
 
 export async function updateProgramme(
     programmeId: string,
-    input: { title?: string; code?: string; level?: number; actorId?: string },
+    input: { title?: string; code?: string; level?: number; actorId?: string; department?: string; faculty?: string },
 ) {
     if (!programmeId) throw new WorkflowError("Programme is required", 400);
     if (!input.actorId) throw new WorkflowError("An authenticated user is required", 401);
@@ -617,6 +617,8 @@ export async function updateProgramme(
             code: workflowProgrammes.code,
             level: workflowProgrammes.level,
             initiator: workflowProgrammes.initiator,
+            department: workflowProgrammes.department,
+            faculty: workflowProgrammes.faculty,
         }).from(workflowProgrammes)
             .where(eq(workflowProgrammes.id, programmeId))
             .for("update");
@@ -628,10 +630,21 @@ export async function updateProgramme(
             throw new WorkflowError("Only PDQA or the programme coordinator can update this programme", 403);
         }
 
+        const department = input.department ?? programme.department;
+        const faculty = input.faculty ?? programme.faculty;
+        if (department !== programme.department || faculty !== programme.faculty) {
+            if (actorRole !== "pdqa") throw new WorkflowError("Only PDQA can move programmes between departments", 403);
+            const [unit] = await tx.select({ facultyId: workflowDepartments.facultyId }).from(workflowDepartments)
+                .where(eq(workflowDepartments.id, department)).limit(1);
+            if (!unit || unit.facultyId !== faculty) throw new WorkflowError("Select a department belonging to the chosen faculty", 400);
+        }
+
         const [updated] = await tx.update(workflowProgrammes).set({
             title,
             code,
             level,
+            department,
+            faculty,
         }).where(eq(workflowProgrammes.id, programme.id)).returning();
 
         const [process] = await tx.select({ id: workflowProcessInstances.id })
@@ -651,8 +664,10 @@ export async function updateProgramme(
                     title: programme.title,
                     code: programme.code,
                     level: programme.level,
+                    department: programme.department,
+                    faculty: programme.faculty,
                 },
-                updated: { title, code, level },
+                updated: { title, code, level, department, faculty },
             },
         });
 

@@ -14,8 +14,7 @@
           <li><a routerLink='/' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
               class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           @if (isPdqa) {
-          <li><a routerLink='/workflow-definition' routerLinkActive="active">Workflow</a></li>
-          <li><a routerLink='/register-user' routerLinkActive="active">Register User</a></li>
+          <li><a routerLink='/dashboard' routerLinkActive="active">Dashboard</a></li>
           }
           <!-- <li><a routerLink='/resume'>Getting Started</a></li> -->
           @if (isLoggedIn) {
@@ -38,8 +37,7 @@
           <li><a routerLink='/' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
               class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
           @if (isPdqa) {
-          <li><a routerLink='/workflow-definition' routerLinkActive="active">Workflow</a></li>
-          <li><a routerLink='/register-user' routerLinkActive="active">Register User</a></li>
+          <li><a routerLink='/dashboard' routerLinkActive="active">Dashboard</a></li>
           }
           <!-- <li [hidden]="!loggedIn()" routerLinkActive="active"><a routerLink='/resume'>Getting Started</a></li> -->
           @if (isLoggedIn) {
@@ -73,6 +71,7 @@
   <!--Main layout-->
 
   <!--Footer-->
+  @if (!isDashboard) {
   <footer class="app-footer page-footer bottom text-white">
     <div class="footer-bg-word" aria-hidden="true">PDQA</div>
     <svg class="footer-wireframe footer-logo-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121 124" fill="none" aria-hidden="true">
@@ -125,4 +124,5 @@
       </div>
     </div>
   </footer>
+  }
 </div>

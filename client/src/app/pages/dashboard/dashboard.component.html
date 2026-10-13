@@ -1,0 +1,20 @@
+<main class="admin-shell min-h-[calc(100dvh-4rem)] bg-base-200">
+  <nav class="admin-rail" aria-label="Dashboard sections">
+    <a routerLink="/" class="admin-rail-item" aria-label="Home">
+      <span class="material-symbols-rounded" aria-hidden="true">home</span><span class="admin-rail-label">Home</span>
+    </a>
+    <span class="admin-rail-divider" aria-hidden="true"></span>
+    <a routerLink="/dashboard/workflow" routerLinkActive="is-active" ariaCurrentWhenActive="page" class="admin-rail-item" aria-label="Workflow">
+      <span class="material-symbols-rounded" aria-hidden="true">account_tree</span><span class="admin-rail-label">Workflow</span>
+    </a>
+    <a routerLink="/dashboard/users" routerLinkActive="is-active" ariaCurrentWhenActive="page" class="admin-rail-item" aria-label="User management">
+      <span class="material-symbols-rounded" aria-hidden="true">group</span><span class="admin-rail-label">User management</span>
+    </a>
+    <a routerLink="/dashboard/programmes" routerLinkActive="is-active" ariaCurrentWhenActive="page" class="admin-rail-item" aria-label="Programme management">
+      <span class="material-symbols-rounded" aria-hidden="true">school</span><span class="admin-rail-label">Programme management</span>
+    </a>
+  </nav>
+  <section class="admin-content mx-auto w-full max-w-450 p-3 lg:p-5">
+    <router-outlet />
+  </section>
+</main>

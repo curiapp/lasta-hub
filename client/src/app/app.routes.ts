@@ -14,8 +14,14 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent, data: { title: 'PDQA - Home' } },
       { path: 'home', redirectTo: '', pathMatch: 'full', data: { title: 'PDQA - Home' } },
-      { path: 'workflow-definition', loadComponent: () => import('./pages/workflow-definition/workflow-definition.component').then(m => m.WorkflowDefinitionComponent), canActivate: [pdqaGuard], data: { title: 'PDQA - Workflow Definition' } },
-      { path: 'register-user', loadComponent: () => import('./pages/register-user/register-user.component').then(m => m.RegisterUserComponent), canActivate: [pdqaGuard], data: { title: 'PDQA - Register User' } },
+      { path: 'workflow-definition', redirectTo: 'dashboard/workflow', pathMatch: 'full' },
+      { path: 'register-user', redirectTo: 'dashboard/users', pathMatch: 'full' },
+      { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent), canActivate: [pdqaGuard], canActivateChild: [pdqaGuard], data: { title: 'PDQA - Dashboard' }, children: [
+        { path: '', redirectTo: 'users', pathMatch: 'full' },
+        { path: 'users', loadComponent: () => import('./pages/register-user/register-user.component').then(m => m.RegisterUserComponent) },
+        { path: 'programmes', loadComponent: () => import('./pages/dashboard/programme-management.component').then(m => m.ProgrammeManagementComponent) },
+        { path: 'workflow', loadComponent: () => import('./pages/workflow-definition/workflow-definition.component').then(m => m.WorkflowDefinitionComponent) },
+      ] },
       { path: 'reports-reviews', loadComponent: () => import('./pages/reports-reviews/reports-reviews.component').then(m => m.ReportsReviewsComponent), canActivate: [authGuard], data: { title: 'PDQA - Reports & Reviews' } },
       { path: 'support', loadComponent: () => import('./pages/support/support.component').then(m => m.SupportComponent), data: { title: 'PDQA - Support' } },
       { path: 'about-us', loadComponent: () => import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent), data: { title: 'PDQA - About Us' } },

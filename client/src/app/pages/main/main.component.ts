@@ -67,6 +67,11 @@ export class MainComponent {
     return !this.isLoggedIn && url === '/';
   }
 
+  get isDashboard() {
+    const url = this.router.url.split('?')[0].split('#')[0];
+    return url === '/dashboard' || url.startsWith('/dashboard/');
+  }
+
   private updateScrollState() {
     this.hasScrolled = typeof window !== 'undefined' && window.scrollY > 24;
   }
