@@ -6,25 +6,11 @@
     [class.guest-navbar]="isGuestHome"
     [class.is-scrolled]="isGuestHome && hasScrolled">
     <div class="navbar-start">
-      <div class="dropdown">
-        <div tabindex="0" role="button" class="btn btn-ghost btn-square lg:hidden text-white hover:bg-white/10">
-          <span class="material-symbols-rounded">menu</span>
-        </div>
-        <ul tabindex="-1" class="menu menu-sm dropdown-content app-dropdown rounded-box z-30 mt-3 w-56 p-2">
-          <li><a routerLink='/' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-              class="active:btn-secondary">{{user?.firstName?"Programmes":"Home"}}</a></li>
-          @if (isPdqa) {
-          <li><a routerLink='/dashboard' routerLinkActive="active">Dashboard</a></li>
-          }
-          <!-- <li><a routerLink='/resume'>Getting Started</a></li> -->
-          @if (isLoggedIn) {
-          <li><a routerLink='/reports-reviews' routerLinkActive="active">Reports & Reviews</a></li>
-          }
-          <li><a routerLink='/support' routerLinkActive="active">Support</a></li>
-          <li><a routerLink='/our-team' routerLinkActive="active">Our Team</a></li>
-          <li><a routerLink='/about-us' routerLinkActive="active">About Us</a></li>
-        </ul>
-      </div>
+      <button #mobileMenuToggle type="button" class="mobile-menu-toggle lg:hidden" [class.is-open]="mobileMenuOpen"
+        [attr.aria-expanded]="mobileMenuOpen" aria-controls="mobile-navigation"
+        [attr.aria-label]="mobileMenuOpen ? 'Close navigation' : 'Open navigation'" (keydown.escape)="closeMobileMenu()" (click)="mobileMenuOpen = !mobileMenuOpen">
+        <span></span><span></span><span></span>
+      </button>
       <a routerLink="/" class="brand-area">
         <span class="nav-logo-switch" aria-hidden="true">
         <img alt="NUST Logo" src="/logo.png" class="nav-default-logo" />
@@ -57,12 +43,33 @@
       <notification [user]="user" />
       <profile [user]="user" />
       }@else {
-      <a routerLink='/login' routerLinkActive="active" class="login-button btn btn-sm px-5">Sign in</a>
+      <a routerLink='/login' routerLinkActive="active" class="login-button">Sign in <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></a>
       }
     </div>
 
   </div>
   <!--/.Navbar-->
+  <div class="mobile-navigation-shell lg:hidden" [class.is-open]="mobileMenuOpen" [attr.inert]="mobileMenuOpen ? null : ''"
+    (keydown.escape)="closeMobileMenu(); mobileMenuToggle.focus()">
+    <button type="button" class="mobile-menu-backdrop" aria-label="Close navigation" tabindex="-1" (click)="closeMobileMenu()"></button>
+    <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
+      <div class="mobile-navigation-heading"><span>Explore PDQA</span><button type="button" aria-label="Close navigation" (click)="closeMobileMenu(); mobileMenuToggle.focus()"><span class="material-symbols-rounded" aria-hidden="true">close</span></button></div>
+        <ul class="mobile-navigation-links">
+          <li><a (click)="closeMobileMenu()" routerLink='/' routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+              ><span class="material-symbols-rounded" aria-hidden="true">home</span>{{user?.firstName?"Programmes":"Home"}}<span class="nav-arrow material-symbols-rounded" aria-hidden="true">arrow_outward</span></a></li>
+          @if (isPdqa) {
+          <li><a (click)="closeMobileMenu()" routerLink='/dashboard' routerLinkActive="active"><span class="material-symbols-rounded" aria-hidden="true">space_dashboard</span>Dashboard<span class="nav-arrow material-symbols-rounded" aria-hidden="true">arrow_outward</span></a></li>
+          }
+          @if (isLoggedIn) {
+          <li><a (click)="closeMobileMenu()" routerLink='/reports-reviews' routerLinkActive="active"><span class="material-symbols-rounded" aria-hidden="true">analytics</span>Reports & Reviews<span class="nav-arrow material-symbols-rounded" aria-hidden="true">arrow_outward</span></a></li>
+          }
+          <li><a (click)="closeMobileMenu()" routerLink='/support' routerLinkActive="active"><span class="material-symbols-rounded" aria-hidden="true">help</span>Support<span class="nav-arrow material-symbols-rounded" aria-hidden="true">arrow_outward</span></a></li>
+          <li><a (click)="closeMobileMenu()" routerLink='/our-team' routerLinkActive="active"><span class="material-symbols-rounded" aria-hidden="true">groups</span>Our Team<span class="nav-arrow material-symbols-rounded" aria-hidden="true">arrow_outward</span></a></li>
+          <li><a (click)="closeMobileMenu()" routerLink='/about-us' routerLinkActive="active"><span class="material-symbols-rounded" aria-hidden="true">info</span>About Us<span class="nav-arrow material-symbols-rounded" aria-hidden="true">arrow_outward</span></a></li>
+        </ul>
+      <p class="mobile-navigation-footer">Programme Development &amp; Quality Assurance</p>
+    </nav>
+  </div>
 
   <!--Main layout-->
   <div class="grow">

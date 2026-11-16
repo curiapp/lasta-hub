@@ -425,6 +425,7 @@
 
 .partner-band {
   display: grid;
+  width: 100%;
   grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 2.3fr);
   margin: clamp(4rem, 10vw, 5.5rem) 0 0;
   overflow: hidden;
@@ -723,7 +724,6 @@
     line-height: 1.75;
   }
 
-  .partner-band,
   .guest-info-shell {
     width: min(100% - 2.25rem, 86rem);
   }
