@@ -16,36 +16,74 @@ export class TeamComponent {
 
   readonly teamMembers = [
     {
-      name: "Dr COLEN TUAUNDU",
-      role: "Director",
+      name: "Dr Colen Tuaundu   ",
+      role: "Director: Academic Development and Support ",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
       image: "assets/images/staff/Dr-Colen-Tuaundu.png",
       email: "ctuaundu@nust.na",
-      office: "405A PDU Building",
-      phone: "+264612070000"
+      office: "Room 402, Fourth Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2779"
     },
     {
-      name: "ESTER JOHANNES",
+      name: "Ms Ester Johannes",
       role: "Senior Programme Development Coordinator",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
       image: "assets/images/staff/Ms-Ester-Johannes.png",
       email: "ejohannes@nust.na",
-      office: "118 PDU Building",
-      phone: "+264612070000"
+      office: "Room 103, First Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2759"
     },
     {
-      name: "LUSIA SHIKONGO",
+      name: "Ms Lusia Shikongo",
       role: "Programme Development Coordinator",
-      image: "assets/images/staff/lusia-shikongo.png",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
+      image: "assets/images/staff/Ms-Lusia-Shikongo.png",
       email: "lshikongo@nust.na",
-      office: "305 PDU Building",
-      phone: "+264612070000"
+      office: "Room 107, First Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2495"
     },
     {
-      name: "OLIVIA ITENGE",
+      name: "Ms Olivia Itenge",
       role: "Programme Development Coordinator",
-      image: "assets/images/staff/olivia-itenge.jpg",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
+      image: "assets/images/staff/Ms-Olivia-itenge.jpg",
       email: "oitenge@nust.na",
-      office: "105X PDU Building",
-      phone: "+264612070000"
+      office: "Room 107, First Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2422"
+    },
+    {
+      name: "Ms Raimi Shikulo",
+      role: "Programme Development Coordinator",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
+      image: "assets/images/staff/Ms-Raimi-Shikulo.jpeg",
+      email: "rshikulo@nust.na",
+      office: "Room 107, First Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2796"
+    },
+    {
+      name: "Ms Leena Akooko",
+      role: "Programme Development Coordinator",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
+      image: "assets/images/staff/Ms_Leena_Akooko.jpeg",
+      email: "lakooko@nust.na",
+      office: "Room 107, First Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2948"
+    },
+    {
+      name: "Ms Christeline Januarie",
+      role: "Office Administrator: Programme Development and Quality Assurance",
+      department: "Programme Development and Quality Assurance",
+      institution: "Namibia University of Science and Technology",
+      image: "assets/images/staff/Ms-Christeline-Januarie.jpeg",
+      email: "cjanuarie@nust.na",
+      office: "Room 103, First Floor, Poly Heights, NUST Main Campus",
+      phone: "+264 61 207 2762"
     }
 
   ];

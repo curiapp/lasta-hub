@@ -19,6 +19,7 @@ export class MainComponent {
   title = 'PDU - Home'
   currentYear: number = new Date().getFullYear();
   hasScrolled = false;
+  mobileMenuOpen = false;
   user: User;
   auth = inject(AuthenticationService);
   router = inject(Router);
@@ -44,6 +45,7 @@ export class MainComponent {
           return appTitle;
         })
       ).subscribe((ttl: string) => {
+        this.closeMobileMenu();
         this.titleService.setTitle(ttl);
         this.updateScrollState();
       });
@@ -52,6 +54,15 @@ export class MainComponent {
   @HostListener('window:scroll')
   onWindowScroll() {
     this.updateScrollState();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    if (window.innerWidth >= 1024) this.closeMobileMenu();
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
   }
 
   get isLoggedIn() {
